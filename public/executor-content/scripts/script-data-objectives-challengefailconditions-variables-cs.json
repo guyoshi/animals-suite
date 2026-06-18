@@ -1,0 +1,90 @@
+{
+  "path": "Data/Objectives/ChallengeFailConditions_Variables.cs",
+  "filename": "ChallengeFailConditions_Variables.cs",
+  "category": "Data",
+  "primary": "FailCondition_BoolVariable",
+  "kind": "Definição",
+  "summary": "Falha imediata quando uma variável global bool (GameVariables) tem o valor \"failValue\". Genérico — cobre \"o NPC defendido foi derrotado\" (uma Action_SetBoolVariable já existente marca isso ao acontecer), \"armadilha ativada\", \"jogada errada do puzzle\", etc., sem precisar de nenhum script novo por desafio.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "FailCondition_BoolVariable",
+      "kind": "class",
+      "bases": "ChallengeFailCondition",
+      "attrs": ""
+    },
+    {
+      "name": "FailCondition_IntVariableThreshold",
+      "kind": "class",
+      "bases": "ChallengeFailCondition",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "variableName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como tendo o valor por omissão (false).\")]",
+      "inspector": true,
+      "description": "Nome da variável global (GameVariables). Se não existir, é tratada como tendo o valor por omissão (false)."
+    },
+    {
+      "name": "failValue",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Valor que, ao ser atingido pela variável, causa a falha imediata do desafio.\")]",
+      "inspector": true,
+      "description": "Valor que, ao ser atingido pela variável, causa a falha imediata do desafio."
+    },
+    {
+      "name": "comparison",
+      "type": "Comparison",
+      "mods": "public",
+      "default": "Comparison.GreaterOrEqual",
+      "section": "",
+      "attrs": "[Tooltip(\"Como comparar o valor actual da variável com \\\"value\\\".\")]",
+      "inspector": true,
+      "description": "Como comparar o valor atual da variável com \"value\"."
+    },
+    {
+      "name": "value",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "IsFailed",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação IsFailed."
+    }
+  ],
+  "dependencies": [
+    "Action_SetBoolVariable",
+    "ChallengeFailCondition",
+    "Comparison",
+    "GameVariables",
+    "NpcConditionUtil"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Falha imediata quando uma variável global bool (GameVariables) tem o valor\n/// \"failValue\". Genérico — cobre \"o NPC defendido foi derrotado\" (uma\n/// Action_SetBoolVariable já existente marca isso ao acontecer), \"armadilha\n/// activada\", \"jogada errada do puzzle\", etc., sem precisar de nenhum script\n/// novo por desafio.\n/// </summary>\n[System.Serializable]\npublic class FailCondition_BoolVariable : ChallengeFailCondition\n{\n    [Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como tendo o valor por omissão (false).\")]\n    public string variableName;\n\n    [Tooltip(\"Valor que, ao ser atingido pela variável, causa a falha imediata do desafio.\")]\n    public bool failValue = true;\n\n    public override bool IsFailed()\n    {\n        bool actual = GameVariables.Instance != null && GameVariables.Instance.GetBool(variableName);\n        return actual == failValue;\n    }\n}\n\n/// <summary>\n/// Falha imediata quando uma variável global int (GameVariables) cumpre\n/// \"comparison\" face a \"value\". Genérico — cobre limites como \"inimigos\n/// fugidos &gt;= 3\", \"erros do puzzle &gt;= 2\", etc., usando contadores já\n/// mantidos por Action_IncrementIntVariable.\n/// </summary>\n[System.Serializable]\npublic class FailCondition_IntVariableThreshold : ChallengeFailCondition\n{\n    [Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como tendo o valor por omissão (0).\")]\n    public string variableName;\n\n    [Tooltip(\"Como comparar o valor actual da variável com \\\"value\\\".\")]\n    public Comparison comparison = Comparison.GreaterOrEqual;\n\n    public int value;\n\n    public override bool IsFailed()\n    {\n        int actual = GameVariables.Instance != null ? GameVariables.Instance.GetInt(variableName) : 0;\n        return NpcConditionUtil.Compare(actual, comparison, value);\n    }\n}\n",
+  "id": "script-data-objectives-challengefailconditions-variables-cs",
+  "dependencyIds": [
+    "script-data-challengefailcondition-cs",
+    "script-data-gamevariables-cs",
+    "script-npc-npcconditionutil-cs"
+  ],
+  "usedByIds": []
+}

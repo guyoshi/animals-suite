@@ -1,0 +1,155 @@
+{
+  "path": "NPC/Actions/CoreActions.cs",
+  "filename": "CoreActions.cs",
+  "category": "NPC",
+  "primary": "Action_Dialogue",
+  "kind": "Acção de NPC",
+  "summary": "Mostra uma ou mais linhas de diálogo, cada uma com o seu próprio falante (Self/Player/Outro NPC, ver DialogueLine), com efeito de escrita se houver um INpcDialogueDisplay configurado em \"Dialogue Display\" no NpcController.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Action_Dialogue",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_Wait",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_MoveNpc",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_ShowChoices",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "lines",
+      "type": "List<DialogueLine>",
+      "mods": "public",
+      "default": "new List<DialogueLine>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "charsPerSecond",
+      "type": "float",
+      "mods": "public",
+      "default": "30f",
+      "section": "",
+      "attrs": "[Tooltip(\"Caracteres por segundo do efeito de escrita. 0 = instantâneo.\")]",
+      "inspector": true,
+      "description": "Caracteres por segundo do efeito de escrita. 0 = instantâneo."
+    },
+    {
+      "name": "seconds",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "direction",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "Vector2.right",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "speed",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "duration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "waitForCompletion",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, espera o movimento terminar antes de avançar para a próxima ação. Se desactivo, o movimento corre em paralelo com as ações seguintes.\")]",
+      "inspector": true,
+      "description": "Se ativo, espera o movimento terminar antes de avançar para a próxima ação. Se desactivo, o movimento corre em paralelo com as ações seguintes."
+    },
+    {
+      "name": "choices",
+      "type": "List<NpcChoice>",
+      "mods": "public",
+      "default": "new List<NpcChoice>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "DialogueLine",
+    "INpcDialogueDisplay",
+    "NpcAction",
+    "NpcActionUtil",
+    "NpcChoice",
+    "NpcController",
+    "NpcEvent",
+    "NpcMovement"
+  ],
+  "used_by": [
+    "INpcDialogueDisplay",
+    "NpcController"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Mostra uma ou mais linhas de diálogo, cada uma com o seu próprio falante\n/// (Self/Player/Outro NPC, ver DialogueLine), com efeito de escrita se houver\n/// um INpcDialogueDisplay configurado em \"Dialogue Display\" no NpcController.\n/// </summary>\n[System.Serializable]\npublic class Action_Dialogue : NpcAction\n{\n    public List<DialogueLine> lines = new List<DialogueLine>();\n\n    [Tooltip(\"Caracteres por segundo do efeito de escrita. 0 = instantâneo.\")]\n    public float charsPerSecond = 30f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var display = npc.DialogueDisplay;\n\n        foreach (var line in lines)\n        {\n            if (line == null) continue;\n\n            string speakerName = line.ResolveSpeakerName(npc);\n\n            if (display != null)\n            {\n                yield return display.ShowLine(npc, speakerName, line.text, charsPerSecond, line.ResolveSpeakerTransform(npc));\n            }\n            else\n            {\n                Debug.Log(string.IsNullOrEmpty(speakerName) ? line.text : $\"{speakerName}: {line.text}\");\n                yield return null;\n            }\n        }\n\n        display?.Hide(npc);\n    }\n}\n\n/// <summary>Espera um número de segundos antes de continuar para a próxima ação.</summary>\n[System.Serializable]\npublic class Action_Wait : NpcAction\n{\n    public float seconds = 1f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (seconds > 0f) yield return NpcActionUtil.Wait(seconds);\n    }\n}\n\n/// <summary>Move o NPC numa direção fixa, a uma velocidade, durante um tempo (via NpcMovement).</summary>\n[System.Serializable]\npublic class Action_MoveNpc : NpcAction\n{\n    public Vector2 direction = Vector2.right;\n    public float speed = 2f;\n    public float duration = 1f;\n\n    [Tooltip(\"Se activo, espera o movimento terminar antes de avançar para a próxima ação. Se desactivo, o movimento corre em paralelo com as ações seguintes.\")]\n    public bool waitForCompletion = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var movement = npc.Movement;\n        if (movement == null)\n        {\n            Debug.LogWarning($\"[{npc.name}] Action_MoveNpc: NpcMovement não encontrado.\");\n            yield break;\n        }\n\n        if (waitForCompletion)\n        {\n            yield return movement.MoveDirectionForTime(direction, speed, duration);\n        }\n        else\n        {\n            npc.StartCoroutine(movement.MoveDirectionForTime(direction, speed, duration));\n        }\n    }\n}\n\n/// <summary>Mostra um menu de escolhas ao player; a escolha seleccionada pode activar outro NpcEvent.</summary>\n[System.Serializable]\npublic class Action_ShowChoices : NpcAction\n{\n    public List<NpcChoice> choices = new List<NpcChoice>();\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var menu = npc.ChoiceMenu;\n        if (menu == null || choices.Count == 0)\n        {\n            Debug.LogWarning($\"[{npc.name}] Action_ShowChoices: nenhum menu de escolhas atribuído ou lista de escolhas vazia.\");\n            yield break;\n        }\n\n        int selected = -1;\n        yield return menu.Show(npc, choices, result => selected = result);\n\n        if (selected >= 0 && selected < choices.Count)\n        {\n            string targetId = choices[selected].targetEventId;\n            if (!string.IsNullOrEmpty(targetId))\n                npc.ActivateEventById(targetId);\n        }\n    }\n}\n",
+  "id": "script-npc-actions-coreactions-cs",
+  "dependencyIds": [
+    "script-npc-dialogue-dialogueline-cs",
+    "script-npc-npcinterfaces-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-actions-npcactionutil-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-npcevent-cs",
+    "script-npc-npcmovement-cs"
+  ],
+  "usedByIds": [
+    "script-npc-npcinterfaces-cs",
+    "script-npc-npccontroller-cs"
+  ]
+}

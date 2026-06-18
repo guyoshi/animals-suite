@@ -1,0 +1,136 @@
+{
+  "path": "Data/Objectives/ChallengeObjectives_Enemy.cs",
+  "filename": "ChallengeObjectives_Enemy.cs",
+  "category": "Data",
+  "primary": "Objective_DefeatSpecificEnemy",
+  "kind": "Definição",
+  "summary": "Objetivo cumprido quando o inimigo com \"Enemy Instance Id\" = entra num estado terminal (Morto/Desativado — EnemyController.OnAnyEnemyDefeated, Tarefa #22). Pensado para \"derrota o guardião X antes de avançar\" — reaproveita o mesmo \"Enemy Instance Id\" já usado por EnemyCondition/puzzles (ver EnemyController). Se o inimigo já estiver num estado terminal (ex: já derrotado numa sessão anterior — EnemyRespawn/PlayerProgress, Tarefa 7.3) ao iniciar o desafio, o objetivo já começa cumprido. Objetivo binário (sem contador) — devolve -1.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Objective_DefeatSpecificEnemy",
+      "kind": "class",
+      "bases": "ChallengeObjective",
+      "attrs": ""
+    },
+    {
+      "name": "Objective_DefeatEnemyCount",
+      "kind": "class",
+      "bases": "ChallengeObjective",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "enemyInstanceId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"\\\"Enemy Instance Id\\\" (campo no EnemyController do inimigo) a derrotar.\")]",
+      "inspector": true,
+      "description": "\"Enemy Instance Id\" (campo no EnemyController do inimigo) a derrotar."
+    },
+    {
+      "name": "defeated",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[System.NonSerialized]",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enemyFilter",
+      "type": "EnemyData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se definido, só conta derrotas de inimigos com este EnemyData. Se vazio, conta qualquer inimigo.\")]",
+      "inspector": true,
+      "description": "Se definido, só conta derrotas de inimigos com este EnemyData. Se vazio, conta qualquer inimigo."
+    },
+    {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "",
+      "attrs": "[Tooltip(\"Número de inimigos a derrotar durante o desafio.\")] [Min(1)]",
+      "inspector": true,
+      "description": "Número de inimigos a derrotar durante o desafio."
+    },
+    {
+      "name": "count",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[System.NonSerialized]",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "ResetState",
+      "ret": "void",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação ResetState."
+    },
+    {
+      "name": "HandleEnemyDefeated",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyController enemy",
+      "description": "Executa a operação HandleEnemyDefeated."
+    },
+    {
+      "name": "IsComplete",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação IsComplete."
+    },
+    {
+      "name": "CurrentProgress",
+      "ret": "int",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação CurrentProgress."
+    },
+    {
+      "name": "TargetProgress",
+      "ret": "int",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação TargetProgress."
+    }
+  ],
+  "dependencies": [
+    "ChallengeObjective",
+    "EnemyCondition",
+    "EnemyController",
+    "EnemyData",
+    "EnemyRespawn",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "EnemyController"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Objectivo cumprido quando o inimigo com \"Enemy Instance Id\" =\n/// <see cref=\"enemyInstanceId\"/> entra num estado terminal (Morto/Desactivado —\n/// EnemyController.OnAnyEnemyDefeated, Tarefa #22). Pensado para \"derrota o\n/// guardião X antes de avançar\" — reaproveita o mesmo \"Enemy Instance Id\" já\n/// usado por EnemyCondition/puzzles (ver EnemyController).\n///\n/// Se o inimigo já estiver num estado terminal (ex: já derrotado numa sessão\n/// anterior — EnemyRespawn/PlayerProgress, Tarefa 7.3) ao iniciar o desafio, o\n/// objectivo já começa cumprido.\n///\n/// Objectivo binário (sem contador) — <see cref=\"TargetProgress\"/> devolve -1.\n/// </summary>\n[System.Serializable]\npublic class Objective_DefeatSpecificEnemy : ChallengeObjective\n{\n    [Tooltip(\"\\\"Enemy Instance Id\\\" (campo no EnemyController do inimigo) a derrotar.\")]\n    public string enemyInstanceId;\n\n    [System.NonSerialized] private bool defeated;\n\n    public override void ResetState()\n    {\n        EnemyController.OnAnyEnemyDefeated -= HandleEnemyDefeated;\n        EnemyController.OnAnyEnemyDefeated += HandleEnemyDefeated;\n\n        var existing = EnemyController.FindById(enemyInstanceId);\n        defeated = existing != null && existing.IsTerminal;\n    }\n\n    private void HandleEnemyDefeated(EnemyController enemy)\n    {\n        if (enemy.EnemyInstanceId == enemyInstanceId)\n            defeated = true;\n    }\n\n    public override bool IsComplete() => defeated;\n}\n\n/// <summary>\n/// Objectivo cumprido ao derrotar pelo menos <see cref=\"amount\"/> inimigos\n/// DURANTE o desafio (EnemyController.OnAnyEnemyDefeated, Tarefa #22).\n/// Contador global — não precisa de listar inimigos no Inspector, conta\n/// qualquer inimigo que entre num estado terminal (Morto/Desactivado) enquanto\n/// o desafio estiver activo, incluindo inimigos criados/spawnados depois do\n/// início.\n///\n/// Mostra \"derrotados/amount\" no HUD (Tarefa #12).\n/// </summary>\n[System.Serializable]\npublic class Objective_DefeatEnemyCount : ChallengeObjective\n{\n    [Tooltip(\"Se definido, só conta derrotas de inimigos com este EnemyData. Se vazio, conta qualquer inimigo.\")]\n    public EnemyData enemyFilter;\n\n    [Tooltip(\"Número de inimigos a derrotar durante o desafio.\")]\n    [Min(1)] public int amount = 1;\n\n    [System.NonSerialized] private int count;\n\n    public override void ResetState()\n    {\n        EnemyController.OnAnyEnemyDefeated -= HandleEnemyDefeated;\n        EnemyController.OnAnyEnemyDefeated += HandleEnemyDefeated;\n        count = 0;\n    }\n\n    private void HandleEnemyDefeated(EnemyController enemy)\n    {\n        if (enemyFilter != null && enemy.Data != enemyFilter) return;\n        count++;\n    }\n\n    public override bool IsComplete() => count >= amount;\n\n    public override int CurrentProgress() => Mathf.Min(count, amount);\n\n    public override int TargetProgress() => amount;\n}\n",
+  "id": "script-data-objectives-challengeobjectives-enemy-cs",
+  "dependencyIds": [
+    "script-data-challengeobjective-cs",
+    "script-enemy-enemycondition-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemyrespawn-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemycontroller-cs"
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "path": "UI/ChallengeHudUI.cs",
+  "filename": "ChallengeHudUI.cs",
+  "category": "UI",
+  "primary": "ChallengeHudUI",
+  "kind": "Componente",
+  "summary": "HUD do Desafio ativo (Sistema de Missões/Desafios, Tarefa #12): painel persistente mostrado enquanto — nome do desafio, cronómetro (se 'hasTimeLimit', ou tempo decorrido) e lista de objetivos com progresso, atualizados a partir de / / . Singleton com auto-fallback (mesmo padrão de MissionCompleteUI/PickupPopupUI — funciona sem UI montada, apenas sem mostrar nada). Montagem no Editor (tudo opcional — campos não atribuídos são simplesmente ignorados): - \"panelRoot\": GameObject do painel (ativado/desativado automaticamente). - \"iconImage\" (Image): ChallengeDefinition.icon. - \"titleText\" (TMP_Text): ChallengeDefinition.displayName. - \"timerText\" (TMP_Text): \"MM:SS\" — tempo restante (hasTime",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ChallengeHudUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "panelRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[Header(\"Painel\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "iconImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "titleText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "timerText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "objectivesText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "showTimerWithoutLimit",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Cronómetro",
+      "attrs": "[Header(\"Cronómetro\")] [Tooltip(\"Se o desafio não tiver 'hasTimeLimit', mostra o tempo decorrido (a contar para cima) em vez de esconder 'timerText'.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Se o desafio não tiver 'hasTimeLimit', mostra o tempo decorrido (a contar para cima) em vez de esconder 'timerText'."
+    },
+    {
+      "name": "pendingPrefix",
+      "type": "string",
+      "mods": "private",
+      "default": "\"• \"",
+      "section": "Lista de Objectivos",
+      "attrs": "[Header(\"Lista de Objectivos\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "completedPrefix",
+      "type": "string",
+      "mods": "private",
+      "default": "\"✓ \"",
+      "section": "Lista de Objectivos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "completedColorHex",
+      "type": "string",
+      "mods": "private",
+      "default": "\"#7CFC00\"",
+      "section": "Lista de Objectivos",
+      "attrs": "[Tooltip(\"Cor (hex) usada nas linhas de objectivos já cumpridos.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Cor (hex) usada nas linhas de objetivos já cumpridos."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Lista de Objectivos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_sb",
+      "type": "StringBuilder",
+      "mods": "private readonly",
+      "default": "new StringBuilder()",
+      "section": "Lista de Objectivos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "HandleStarted",
+      "ret": "void",
+      "mods": "private",
+      "params": "ChallengeDefinition challenge",
+      "description": "Executa a operação HandleStarted."
+    },
+    {
+      "name": "HandleEnded",
+      "ret": "void",
+      "mods": "private",
+      "params": "ChallengeDefinition challenge, ChallengeEndReason reason, string message",
+      "description": "Executa a operação HandleEnded."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "RefreshTimer",
+      "ret": "void",
+      "mods": "private",
+      "params": "ChallengeDefinition challenge",
+      "description": "Executa a operação RefreshTimer."
+    },
+    {
+      "name": "RefreshObjectives",
+      "ret": "void",
+      "mods": "private",
+      "params": "ChallengeDefinition challenge",
+      "description": "Executa a operação RefreshObjectives."
+    }
+  ],
+  "dependencies": [
+    "ChallengeDefinition",
+    "ChallengeEndReason",
+    "ChallengeManager",
+    "ChallengeObjective",
+    "MissionCompleteUI",
+    "PickupPopupUI"
+  ],
+  "used_by": [
+    "HUDController"
+  ],
+  "source": "using System.Text;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// HUD do Desafio activo (Sistema de Missões/Desafios, Tarefa #12): painel\n/// persistente mostrado enquanto <see cref=\"ChallengeManager.IsActive\"/> —\n/// nome do desafio, cronómetro (se 'hasTimeLimit', ou tempo decorrido) e lista\n/// de objectivos com progresso, actualizados a partir de\n/// <see cref=\"ChallengeObjective.CurrentProgress\"/>/<see cref=\"ChallengeObjective.TargetProgress\"/>/<see cref=\"ChallengeObjective.IsComplete\"/>.\n///\n/// Singleton com auto-fallback (mesmo padrão de MissionCompleteUI/PickupPopupUI\n/// — funciona sem UI montada, apenas sem mostrar nada).\n///\n/// Montagem no Editor (tudo opcional — campos não atribuídos são simplesmente\n/// ignorados):\n/// - \"panelRoot\": GameObject do painel (activado/desactivado automaticamente).\n/// - \"iconImage\" (Image): ChallengeDefinition.icon.\n/// - \"titleText\" (TMP_Text): ChallengeDefinition.displayName.\n/// - \"timerText\" (TMP_Text): \"MM:SS\" — tempo restante (hasTimeLimit) ou tempo\n///   decorrido (sem limite). Vazio/inactivo se o desafio não usar cronómetro\n///   no HUD (ver <see cref=\"showTimerWithoutLimit\"/>).\n/// - \"objectivesText\" (TMP_Text, multi-linha): uma linha por objectivo —\n///   \"<see cref=\"ChallengeObjective.displayText\"/>\" + \" (actual/meta)\" se\n///   TargetProgress() != -1. Objectivos cumpridos usam\n///   <see cref=\"completedColorHex\"/> e <see cref=\"completedPrefix\"/>; os\n///   restantes usam <see cref=\"pendingPrefix\"/>.\n/// </summary>\npublic class ChallengeHudUI : MonoBehaviour\n{\n    public static ChallengeHudUI Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private Image iconImage;\n    [SerializeField] private TMP_Text titleText;\n    [SerializeField] private TMP_Text timerText;\n    [SerializeField] private TMP_Text objectivesText;\n\n    [Header(\"Cronómetro\")]\n    [Tooltip(\"Se o desafio não tiver 'hasTimeLimit', mostra o tempo decorrido (a contar para cima) em vez de esconder 'timerText'.\")]\n    [SerializeField] private bool showTimerWithoutLimit = true;\n\n    [Header(\"Lista de Objectivos\")]\n    [SerializeField] private string pendingPrefix = \"• \";\n    [SerializeField] private string completedPrefix = \"✓ \";\n    [Tooltip(\"Cor (hex) usada nas linhas de objectivos já cumpridos.\")]\n    [SerializeField] private string completedColorHex = \"#7CFC00\";\n\n    private bool isAutoFallback;\n    private readonly StringBuilder _sb = new StringBuilder();\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(ChallengeHudUI) + \" (Fallback)\");\n        var instance = go.AddComponent<ChallengeHudUI>();\n        instance.isAutoFallback = true;\n    }\n\n    private void OnEnable()\n    {\n        ChallengeManager.OnChallengeStarted += HandleStarted;\n        ChallengeManager.OnChallengeEnded += HandleEnded;\n    }\n\n    private void OnDisable()\n    {\n        ChallengeManager.OnChallengeStarted -= HandleStarted;\n        ChallengeManager.OnChallengeEnded -= HandleEnded;\n    }\n\n    private void HandleStarted(ChallengeDefinition challenge)\n    {\n        if (titleText != null) titleText.text = challenge.displayName;\n        if (iconImage != null)\n        {\n            iconImage.sprite = challenge.icon;\n            iconImage.enabled = challenge.icon != null;\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        RefreshObjectives(challenge);\n        RefreshTimer(challenge);\n    }\n\n    private void HandleEnded(ChallengeDefinition challenge, ChallengeEndReason reason, string message)\n    {\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    private void Update()\n    {\n        var manager = ChallengeManager.Instance;\n        if (manager == null || !manager.IsActive) return;\n\n        var challenge = manager.CurrentChallenge;\n        RefreshTimer(challenge);\n        RefreshObjectives(challenge);\n    }\n\n    private void RefreshTimer(ChallengeDefinition challenge)\n    {\n        if (timerText == null) return;\n\n        var manager = ChallengeManager.Instance;\n        if (manager == null) return;\n\n        if (challenge.hasTimeLimit)\n        {\n            timerText.gameObject.SetActive(true);\n            timerText.text = ChallengeManager.FormatTime(manager.RemainingSeconds);\n        }\n        else if (showTimerWithoutLimit)\n        {\n            timerText.gameObject.SetActive(true);\n            timerText.text = ChallengeManager.FormatTime(manager.ElapsedSeconds);\n        }\n        else\n        {\n            timerText.gameObject.SetActive(false);\n        }\n    }\n\n    private void RefreshObjectives(ChallengeDefinition challenge)\n    {\n        if (objectivesText == null) return;\n        if (challenge.objectives == null || challenge.objectives.Count == 0)\n        {\n            objectivesText.text = string.Empty;\n            return;\n        }\n\n        _sb.Clear();\n\n        for (int i = 0; i < challenge.objectives.Count; i++)\n        {\n            var objective = challenge.objectives[i];\n            if (objective == null) continue;\n\n            bool complete = objective.IsComplete();\n\n            if (i > 0) _sb.Append('\\n');\n\n            if (complete) _sb.Append(\"<color=\").Append(completedColorHex).Append('>');\n\n            _sb.Append(complete ? completedPrefix : pendingPrefix);\n            _sb.Append(objective.displayText);\n\n            int target = objective.TargetProgress();\n            if (target >= 0)\n                _sb.Append(\" (\").Append(objective.CurrentProgress()).Append('/').Append(target).Append(')');\n\n            if (complete) _sb.Append(\"</color>\");\n        }\n\n        objectivesText.text = _sb.ToString();\n    }\n}\n",
+  "id": "script-ui-challengehudui-cs",
+  "dependencyIds": [
+    "script-data-challengedefinition-cs",
+    "script-data-challengemanager-cs",
+    "script-data-challengeobjective-cs",
+    "script-ui-missioncompleteui-cs",
+    "script-ui-pickuppopupui-cs"
+  ],
+  "usedByIds": [
+    "script-ui-hudcontroller-cs"
+  ]
+}

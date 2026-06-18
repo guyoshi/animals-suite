@@ -1,0 +1,63 @@
+{
+  "path": "NPC/NpcCondition.cs",
+  "filename": "NpcCondition.cs",
+  "category": "NPC",
+  "primary": "NpcCondition",
+  "kind": "Definição",
+  "summary": "Classe-base de todas as condições de eventos de NPC. Cada subclasse representa uma condição configurável no Inspector (estado do player ou do mundo). Para adicionar uma nova condição: cria uma subclasse [System.Serializable] e implementa Evaluate(). Ela aparece automaticamente no botão \"+ Adicionar Condição\" do Inspector do NpcController.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "NpcCondition",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [],
+  "dependencies": [
+    "NpcController"
+  ],
+  "used_by": [
+    "Action_RemoveItem",
+    "Condition_BoolVariable",
+    "Condition_HasClue",
+    "Condition_HasItemQuantity",
+    "Condition_NpcReactionState",
+    "Condition_TimeOfDay",
+    "EnemyAttack",
+    "MissionData",
+    "MusicZone",
+    "MusicZoneEditor",
+    "NpcConditionUtil",
+    "NpcController",
+    "NpcControllerEditor",
+    "NpcEvent",
+    "NpcPlayerConditionUtil",
+    "PolymorphicListDrawer"
+  ],
+  "source": "/// <summary>\n/// Classe-base de todas as condições de eventos de NPC. Cada subclasse\n/// representa uma condição configurável no Inspector (estado do player ou do mundo).\n///\n/// Para adicionar uma nova condição: cria uma subclasse [System.Serializable]\n/// e implementa Evaluate(). Ela aparece automaticamente no botão\n/// \"+ Adicionar Condição\" do Inspector do NpcController.\n/// </summary>\n[System.Serializable]\npublic abstract class NpcCondition\n{\n    /// <summary>Devolve true se a condição está cumprida neste momento.</summary>\n    public abstract bool Evaluate(NpcController npc);\n}\n",
+  "id": "script-npc-npccondition-cs",
+  "dependencyIds": [
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-missionactions-cs",
+    "script-npc-conditions-variableconditions-cs",
+    "script-npc-conditions-journalconditions-cs",
+    "script-npc-conditions-missionconditions-cs",
+    "script-npc-conditions-npcstateconditions-cs",
+    "script-npc-conditions-worldconditions-cs",
+    "script-enemy-enemyattack-cs",
+    "script-data-missiondata-cs",
+    "script-audio-musiczone-cs",
+    "script-audio-editor-musiczoneeditor-cs",
+    "script-npc-npcconditionutil-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-editor-npccontrollereditor-cs",
+    "script-npc-npcevent-cs",
+    "script-npc-conditions-playerconditions-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ]
+}

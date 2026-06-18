@@ -1,0 +1,230 @@
+{
+  "path": "Enemy/EnemyPuzzleInteraction.cs",
+  "filename": "EnemyPuzzleInteraction.cs",
+  "category": "Enemy",
+  "primary": "EnemyPuzzleInteraction",
+  "kind": "Componente",
+  "summary": "Interação de um inimigo com puzzles (Enemy Creator — Etapa 6.2), baseada nas flags de (Etapa 1.1): - canPressWeightPlate / stats.weight: consumido diretamente por WeightPlate (Etapa 6.1 — \"peso necessário vs peso do inimigo\"). - canActivateButton: consumido diretamente por Switch (Etapa 6.1). - canBePushed: consumido por EnemyHealth.ApplyKnockback e por habilidades de empurrar do player (\"pode ser empurrado para posição\"). - canBeUsedAsPlatform: o inimigo deve ter um collider sólido; este componente expõe a flag para as habilidades/checks do player. - canBlockLaser: consumido por ProjectileController (projécteis e lasers são bloqueados pelo inimigo-escudo, mesmo sem dano). - canDestroyObj",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyPuzzleInteraction",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "requiredAliveForPuzzle",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Necessário Para o Puzzle (Etapa 6.2)",
+      "attrs": "[Header(\"Necessário Para o Puzzle (Etapa 6.2)\")] [Tooltip(\"Este inimigo tem de continuar vivo para o puzzle ser solúvel (ver também weaknesses.canBeUsedToSolvePuzzle).\")]",
+      "inspector": true,
+      "description": "Este inimigo tem de continuar vivo para o puzzle ser solúvel (ver também weaknesses.canBeUsedToSolvePuzzle)."
+    },
+    {
+      "name": "autoRespawnIfLost",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Necessário Para o Puzzle (Etapa 6.2)",
+      "attrs": "[Tooltip(\"Se o inimigo necessário morrer/desactivar, respawna automaticamente após 'respawnDelay' (reset controlado).\")]",
+      "inspector": true,
+      "description": "Se o inimigo necessário morrer/desativar, respawna automaticamente após 'respawnDelay' (reset controlado)."
+    },
+    {
+      "name": "respawnDelay",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "Necessário Para o Puzzle (Etapa 6.2)",
+      "attrs": "[Min(0f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onPuzzleEnemyLost",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")] [Tooltip(\"Disparado quando um inimigo 'necessário para o puzzle' morre/desactiva (ex: mostrar aviso, resetar sala).\")]",
+      "inspector": true,
+      "description": "Disparado quando um inimigo 'necessário para o puzzle' morre/desactiva (ex: mostrar aviso, resetar sala)."
+    },
+    {
+      "name": "_controller",
+      "type": "EnemyController",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_health",
+      "type": "EnemyHealth",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_dropTable",
+      "type": "EnemyDropTable",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_respawnRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Weaknesses",
+      "type": "EnemyWeaknessConfig",
+      "mods": "private",
+      "default": "> _controller.Data != null ? _controller.Data.weaknesses : null",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanBePushed",
+      "type": "bool",
+      "mods": "public",
+      "default": "> Weaknesses != null && Weaknesses.canBePushed",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanBeUsedAsPlatform",
+      "type": "bool",
+      "mods": "public",
+      "default": "> Weaknesses != null && Weaknesses.canBeUsedAsPlatform",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanBeUsedToSolvePuzzle",
+      "type": "bool",
+      "mods": "public",
+      "default": "> Weaknesses != null && Weaknesses.canBeUsedToSolvePuzzle",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "HandleStateChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyState oldState, EnemyState newState",
+      "description": "Executa a operação HandleStateChanged."
+    },
+    {
+      "name": "RespawnRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RespawnRoutine."
+    },
+    {
+      "name": "ResetEnemy",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetEnemy."
+    },
+    {
+      "name": "ApplyAttackToObjects",
+      "ret": "void",
+      "mods": "public",
+      "params": "Vector2 center, float radius",
+      "description": "Executa a operação ApplyAttackToObjects."
+    }
+  ],
+  "dependencies": [
+    "EnemyAttack",
+    "EnemyController",
+    "EnemyData",
+    "EnemyDropTable",
+    "EnemyHealth",
+    "EnemyState",
+    "EnemyWeaknessConfig",
+    "IProjectileActivatable",
+    "IProjectileDestructible",
+    "ProjectileController",
+    "Switch",
+    "WeightPlate"
+  ],
+  "used_by": [
+    "BreakableObject",
+    "EnemyController",
+    "EnemyData",
+    "EnemyMultiPartBoss",
+    "PlayerDeathHandler"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Interacção de um inimigo com puzzles (Enemy Creator — Etapa 6.2), baseada\n/// nas flags de <see cref=\"EnemyData.weaknesses\"/> (Etapa 1.1):\n///\n/// - canPressWeightPlate / stats.weight: consumido directamente por WeightPlate\n///   (Etapa 6.1 — \"peso necessário vs peso do inimigo\").\n/// - canActivateButton: consumido directamente por Switch (Etapa 6.1).\n/// - canBePushed: consumido por EnemyHealth.ApplyKnockback e por habilidades\n///   de empurrar do player (\"pode ser empurrado para posição\").\n/// - canBeUsedAsPlatform: o inimigo deve ter um collider sólido; este\n///   componente expõe a flag para as habilidades/checks do player.\n/// - canBlockLaser: consumido por ProjectileController (projécteis e lasers\n///   são bloqueados pelo inimigo-escudo, mesmo sem dano).\n/// - canDestroyObjectsOnAttack: ataques deste inimigo destroem objectos\n///   (IProjectileDestructible) e activam switches (IProjectileActivatable) —\n///   os EnemyAttack chamam <see cref=\"ApplyAttackToObjects\"/>.\n/// - canHurtOtherEnemies / canTakeDamageFromOtherEnemyProjectiles: wiring em\n///   ProjectileController (\"pode ferir/ser destruído por outros inimigos\").\n///\n/// \"Necessário manter vivo para puzzle\": se \"requiredAliveForPuzzle\" e o\n/// inimigo morrer/desactivar, dispara \"onPuzzleEnemyLost\" e (opcional) faz um\n/// respawn controlado após \"respawnDelay\" — via <see cref=\"ResetEnemy\"/>,\n/// também reutilizado pela Etapa 7.3.\n/// </summary>\n[DisallowMultipleComponent]\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyPuzzleInteraction : MonoBehaviour\n{\n    [Header(\"Necessário Para o Puzzle (Etapa 6.2)\")]\n    [Tooltip(\"Este inimigo tem de continuar vivo para o puzzle ser solúvel (ver também weaknesses.canBeUsedToSolvePuzzle).\")]\n    public bool requiredAliveForPuzzle = false;\n\n    [Tooltip(\"Se o inimigo necessário morrer/desactivar, respawna automaticamente após 'respawnDelay' (reset controlado).\")]\n    public bool autoRespawnIfLost = true;\n\n    [Min(0f)] public float respawnDelay = 2f;\n\n    [Header(\"Eventos\")]\n    [Tooltip(\"Disparado quando um inimigo 'necessário para o puzzle' morre/desactiva (ex: mostrar aviso, resetar sala).\")]\n    public UnityEvent onPuzzleEnemyLost;\n\n    private EnemyController _controller;\n    private EnemyHealth _health;\n    private EnemyDropTable _dropTable;\n    private Coroutine _respawnRoutine;\n\n    private EnemyWeaknessConfig Weaknesses => _controller.Data != null ? _controller.Data.weaknesses : null;\n\n    // Atalhos de leitura para habilidades do player/outros sistemas.\n    public bool CanBePushed => Weaknesses != null && Weaknesses.canBePushed;\n    public bool CanBeUsedAsPlatform => Weaknesses != null && Weaknesses.canBeUsedAsPlatform;\n    public bool CanBeUsedToSolvePuzzle => Weaknesses != null && Weaknesses.canBeUsedToSolvePuzzle;\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n        _health = GetComponent<EnemyHealth>();\n        _dropTable = GetComponent<EnemyDropTable>();\n    }\n\n    private void OnEnable()\n    {\n        _controller.OnStateChanged += HandleStateChanged;\n    }\n\n    private void OnDisable()\n    {\n        _controller.OnStateChanged -= HandleStateChanged;\n\n        if (_respawnRoutine != null)\n        {\n            StopCoroutine(_respawnRoutine);\n            _respawnRoutine = null;\n        }\n    }\n\n    private void HandleStateChanged(EnemyState oldState, EnemyState newState)\n    {\n        if (!requiredAliveForPuzzle) return;\n        if (newState != EnemyState.Morto && newState != EnemyState.Desactivado) return;\n\n        onPuzzleEnemyLost?.Invoke();\n\n        if (autoRespawnIfLost && _respawnRoutine == null)\n            _respawnRoutine = StartCoroutine(RespawnRoutine());\n    }\n\n    private IEnumerator RespawnRoutine()\n    {\n        yield return new WaitForSeconds(respawnDelay);\n        ResetEnemy();\n        _respawnRoutine = null;\n    }\n\n    /// <summary>\n    /// Reset/respawn controlado (Etapa 6.2; reutilizado pela Etapa 7.3): volta\n    /// à HomePosition, repõe a vida, rearma os drops comuns e sai do estado\n    /// terminal (ResetState → Idle). Nota: se uma condição de desactivação por\n    /// variável global (Etapa 5.4) continuar verdadeira, o inimigo volta a\n    /// desactivar-se imediatamente — comportamento desejado.\n    /// </summary>\n    public void ResetEnemy()\n    {\n        transform.position = _controller.HomePosition;\n\n        if (_controller.Rb != null)\n            _controller.Rb.velocity = Vector2.zero;\n\n        if (_health != null) _health.ResetHealth();\n        if (_dropTable != null) _dropTable.ResetDrops();\n\n        _controller.Target = null;\n        _controller.ResetState(EnemyState.Idle);\n    }\n\n    /// <summary>\n    /// Aplica o efeito \"destruir objectos / activar switches ao atacar\" numa\n    /// área (EnemyWeaknessConfig.canDestroyObjectsOnAttack). Os EnemyAttack\n    /// de melee/investida podem chamar isto no momento do impacto:\n    /// \"ctx.Controller.GetEnemyComponent&lt;EnemyPuzzleInteraction&gt;()?.ApplyAttackToObjects(centro, raio)\".\n    /// </summary>\n    public void ApplyAttackToObjects(Vector2 center, float radius)\n    {\n        var weaknesses = Weaknesses;\n        if (weaknesses == null || !weaknesses.canDestroyObjectsOnAttack) return;\n\n        var hits = Physics2D.OverlapCircleAll(center, radius);\n\n        foreach (var hit in hits)\n        {\n            if (hit.gameObject == gameObject) continue;\n\n            var destructible = hit.GetComponent<IProjectileDestructible>();\n            if (destructible != null)\n            {\n                destructible.DestroyByProjectile(null); // null = destruído por ataque corpo-a-corpo\n                continue;\n            }\n\n            var activatable = hit.GetComponent<IProjectileActivatable>();\n            if (activatable != null)\n                activatable.ActivateByProjectile(null);\n        }\n    }\n}\n",
+  "id": "script-enemy-enemypuzzleinteraction-cs",
+  "dependencyIds": [
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-interactables-switch-cs",
+    "script-interactables-weightplate-cs"
+  ],
+  "usedByIds": [
+    "script-interactables-breakableobject-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-player-playerdeathhandler-cs"
+  ]
+}

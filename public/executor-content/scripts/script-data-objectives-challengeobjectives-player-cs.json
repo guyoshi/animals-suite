@@ -1,0 +1,180 @@
+{
+  "path": "Data/Objectives/ChallengeObjectives_Player.cs",
+  "filename": "ChallengeObjectives_Player.cs",
+  "category": "Data",
+  "primary": "Objective_ItemCollected",
+  "kind": "Definição",
+  "summary": "Objetivo cumprido ao coletar pelo menos \"amount\" unidades de \"item\" DURANTE o desafio (a partir da quantidade que o jogador já tinha ao iniciar — itens já possuídos não contam, e perder/usar o item depois de o objetivo estar cumprido não o \"descumpre\"). Pensado para \"Coleta Cronometrada\" usando os mesmos pickups/ItemData já existentes no mundo, sem precisar de configurar variáveis/contadores à parte. Mostra \"coletados/amount\" no HUD (Tarefa #12).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Objective_ItemCollected",
+      "kind": "class",
+      "bases": "ChallengeObjective",
+      "attrs": ""
+    },
+    {
+      "name": "Objective_SurviveTime",
+      "kind": "class",
+      "bases": "ChallengeObjective",
+      "attrs": ""
+    },
+    {
+      "name": "Objective_SeedsCollected",
+      "kind": "class",
+      "bases": "ChallengeObjective",
+      "attrs": ""
+    },
+    {
+      "name": "Objective_SpecificPickupCollected",
+      "kind": "class",
+      "bases": "ChallengeObjective",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "item",
+      "type": "ItemData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Item a recolher (ver ItemData).\")]",
+      "inspector": true,
+      "description": "Item a coletar (ver ItemData)."
+    },
+    {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "",
+      "attrs": "[Tooltip(\"Quantidade a recolher DURANTE o desafio (além da que o jogador já possuía ao iniciar).\")] [Min(1)]",
+      "inspector": true,
+      "description": "Quantidade a coletar DURANTE o desafio (além da que o jogador já possuía ao iniciar)."
+    },
+    {
+      "name": "baselineQuantity",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[System.NonSerialized]",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "targetSeconds",
+      "type": "float",
+      "mods": "public",
+      "default": "30f",
+      "section": "",
+      "attrs": "[Tooltip(\"Segundos que o desafio tem de permanecer activo para este objectivo estar cumprido.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Segundos que o desafio tem de permanecer ativo para este objetivo estar cumprido."
+    },
+    {
+      "name": "count",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[System.NonSerialized]",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "targetPickupId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"PickupBase.pickupId do coleccionável a recolher durante a Provação (ex: 'runa_floresta_03', 'runa_apolo_mundo1', 'melodia_floresta_01').\")]",
+      "inspector": true,
+      "description": "PickupBase.pickupId do colecionável a coletar durante a Provação (ex: 'runa_floresta_03', 'runa_apolo_mundo1', 'melodia_floresta_01')."
+    },
+    {
+      "name": "collected",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[System.NonSerialized]",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "ResetState",
+      "ret": "void",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação ResetState."
+    },
+    {
+      "name": "CollectedSinceStart",
+      "ret": "int",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação CollectedSinceStart."
+    },
+    {
+      "name": "IsComplete",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação IsComplete."
+    },
+    {
+      "name": "CurrentProgress",
+      "ret": "int",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação CurrentProgress."
+    },
+    {
+      "name": "TargetProgress",
+      "ret": "int",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação TargetProgress."
+    },
+    {
+      "name": "OnPickupCollected",
+      "ret": "void",
+      "mods": "private",
+      "params": "PickupType type, string _",
+      "description": "Executa a operação OnPickupCollected."
+    },
+    {
+      "name": "OnPickupCollected",
+      "ret": "void",
+      "mods": "private",
+      "params": "PickupType _, string pickupId",
+      "description": "Executa a operação OnPickupCollected."
+    }
+  ],
+  "dependencies": [
+    "ChallengeManager",
+    "ChallengeObjective",
+    "FailCondition_PlayerDamaged",
+    "FailCondition_PlayerDefeated",
+    "ItemData",
+    "PickupBase",
+    "PickupType",
+    "PlayerProgress"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Objectivo cumprido ao recolher pelo menos \"amount\" unidades de \"item\"\n/// DURANTE o desafio (a partir da quantidade que o jogador já tinha ao\n/// iniciar — itens já possuídos não contam, e perder/usar o item depois de o\n/// objectivo estar cumprido não o \"descumpre\"). Pensado para \"Coleta\n/// Cronometrada\" usando os mesmos pickups/ItemData já existentes no mundo, sem\n/// precisar de configurar variáveis/contadores à parte.\n///\n/// Mostra \"recolhidos/amount\" no HUD (Tarefa #12).\n/// </summary>\n[System.Serializable]\npublic class Objective_ItemCollected : ChallengeObjective\n{\n    [Tooltip(\"Item a recolher (ver ItemData).\")]\n    public ItemData item;\n\n    [Tooltip(\"Quantidade a recolher DURANTE o desafio (além da que o jogador já possuía ao iniciar).\")]\n    [Min(1)] public int amount = 1;\n\n    [System.NonSerialized] private int baselineQuantity;\n\n    public override void ResetState()\n    {\n        baselineQuantity = (PlayerProgress.Instance != null && item != null) ? PlayerProgress.Instance.GetItemQuantity(item) : 0;\n    }\n\n    private int CollectedSinceStart()\n    {\n        if (item == null || PlayerProgress.Instance == null) return 0;\n        return Mathf.Max(0, PlayerProgress.Instance.GetItemQuantity(item) - baselineQuantity);\n    }\n\n    public override bool IsComplete() => CollectedSinceStart() >= amount;\n\n    public override int CurrentProgress() => Mathf.Min(CollectedSinceStart(), amount);\n\n    public override int TargetProgress() => amount;\n}\n\n/// <summary>\n/// Objectivo cumprido quando o cronómetro do desafio (ChallengeManager.ElapsedSeconds)\n/// atinge \"targetSeconds\" — base de desafios de \"Sobrevivência\" (sobreviver X\n/// segundos sem ser derrotado; combinar com FailCondition_PlayerDefeated e/ou\n/// FailCondition_PlayerDamaged para definir o que conta como \"falhar\").\n///\n/// Mostra \"decorridos/targetSeconds\" (segundos, arredondados) no HUD (Tarefa #12).\n/// </summary>\n[System.Serializable]\npublic class Objective_SurviveTime : ChallengeObjective\n{\n    [Tooltip(\"Segundos que o desafio tem de permanecer activo para este objectivo estar cumprido.\")]\n    [Min(0f)] public float targetSeconds = 30f;\n\n    public override bool IsComplete() =>\n        ChallengeManager.Instance != null && ChallengeManager.Instance.ElapsedSeconds >= targetSeconds;\n\n    public override int CurrentProgress() =>\n        ChallengeManager.Instance != null ? Mathf.FloorToInt(Mathf.Min(ChallengeManager.Instance.ElapsedSeconds, targetSeconds)) : 0;\n\n    public override int TargetProgress() => Mathf.CeilToInt(targetSeconds);\n}\n\n/// <summary>\n/// Objectivo cumprido ao recolher <see cref=\"amount\"/> Sementes durante a Provação\n/// de Gaia. Conta pickups de tipo <see cref=\"PickupType.Semente\"/> recolhidos\n/// depois de o desafio ter iniciado (via <c>PlayerProgress.PickupCollected</c>).\n///\n/// Para \"coleta todas as sementes da área\", configurar <see cref=\"amount\"/> com o\n/// número total de Sementes existentes na zona do desafio.\n///\n/// Mostra \"recolhidas/amount\" no HUD.\n/// </summary>\n[System.Serializable]\npublic class Objective_SeedsCollected : ChallengeObjective\n{\n    [Tooltip(\"Sementes a recolher durante a Provação (além das que o jogador já tinha). Para 'recolhe todas', usar o total de sementes da área.\")]\n    [Min(1)] public int amount = 1;\n\n    [System.NonSerialized] private int count;\n\n    public override void ResetState()\n    {\n        count = 0;\n        if (PlayerProgress.Instance != null)\n        {\n            PlayerProgress.Instance.PickupCollected -= OnPickupCollected;\n            PlayerProgress.Instance.PickupCollected += OnPickupCollected;\n        }\n    }\n\n    private void OnPickupCollected(PickupType type, string _)\n    {\n        if (type == PickupType.Semente) count++;\n    }\n\n    public override bool IsComplete() => count >= amount;\n    public override int CurrentProgress() => Mathf.Min(count, amount);\n    public override int TargetProgress() => amount;\n}\n\n/// <summary>\n/// Objectivo cumprido ao recolher o coleccionável com\n/// <see cref=\"PickupBase.pickupId\"/> == <see cref=\"targetPickupId\"/> durante\n/// a Provação de Gaia. Funciona com qualquer pickup registado via\n/// <c>PlayerProgress.PickupCollected</c>: Runas de Gaia, Fragmentos Vitais,\n/// Runas de Apolo, Melodias Selvagens, itens específicos, etc.\n///\n/// Objectivo binário — o HUD mostra apenas o texto e ✓/✗ (sem contador).\n/// </summary>\n[System.Serializable]\npublic class Objective_SpecificPickupCollected : ChallengeObjective\n{\n    [Tooltip(\"PickupBase.pickupId do coleccionável a recolher durante a Provação (ex: 'runa_floresta_03', 'runa_apolo_mundo1', 'melodia_floresta_01').\")]\n    public string targetPickupId;\n\n    [System.NonSerialized] private bool collected;\n\n    public override void ResetState()\n    {\n        // Se o pickup já tinha sido recolhido antes do desafio (anti-duplicação),\n        // o objectivo começa cumprido (raro, mas cobre o edge-case).\n        collected = PlayerProgress.Instance != null\n            && !string.IsNullOrEmpty(targetPickupId)\n            && PlayerProgress.Instance.HasCollectedPickup(targetPickupId);\n\n        if (PlayerProgress.Instance != null)\n        {\n            PlayerProgress.Instance.PickupCollected -= OnPickupCollected;\n            PlayerProgress.Instance.PickupCollected += OnPickupCollected;\n        }\n    }\n\n    private void OnPickupCollected(PickupType _, string pickupId)\n    {\n        if (pickupId == targetPickupId) collected = true;\n    }\n\n    public override bool IsComplete() => collected;\n    // Objectivo binário — TargetProgress -1 faz o HUD mostrar só displayText.\n    public override int TargetProgress() => -1;\n}\n",
+  "id": "script-data-objectives-challengeobjectives-player-cs",
+  "dependencyIds": [
+    "script-data-challengemanager-cs",
+    "script-data-challengeobjective-cs",
+    "script-data-objectives-challengefailconditions-player-cs",
+    "script-data-itemdata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": []
+}

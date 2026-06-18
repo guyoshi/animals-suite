@@ -1,0 +1,216 @@
+{
+  "path": "Platforms/SeesawPlatform.cs",
+  "filename": "SeesawPlatform.cs",
+  "category": "Platforms",
+  "primary": "SeesawPlatform",
+  "kind": "Componente",
+  "summary": "Gangorra/balança de peso (puzzle de peso — Etapa 6.1, mesma família da WeightPlate, partilha GameWeightUtil): tem duas \"pontas\" (pontaA/pontaB, Transforms filhos colocados nas extremidades do braço). Compara o peso em cima de cada ponta e: 1. Inclina gradualmente o braço para o lado mais leve subir e o mais pesado descer (até \"anguloMaximo\"). 2. Se algo aterrar com força num lado (peso desse lado sobe de repente \"limiarImpacto\" ou mais num único frame — ex: um objeto pesado é largado ali), lança quem estiver no lado OPOSTO para cima: \"forcaLancamentoBase / peso de quem é lançado\" — quanto mais leve, mais alto voa; quanto mais pesado, menos é afectado. Setup: cria 2 GameObjects filhos (plata",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SeesawPlatform",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "pontaA",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "Pontas",
+      "attrs": "[Header(\"Pontas\")] [Tooltip(\"Plataforma na ponta A (gira com a gangorra).\")]",
+      "inspector": true,
+      "description": "Plataforma na ponta A (gira com a gangorra)."
+    },
+    {
+      "name": "pontaB",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "Pontas",
+      "attrs": "[Tooltip(\"Plataforma na ponta B (gira com a gangorra).\")]",
+      "inspector": true,
+      "description": "Plataforma na ponta B (gira com a gangorra)."
+    },
+    {
+      "name": "raioDeteccao",
+      "type": "float",
+      "mods": "public",
+      "default": "0.6f",
+      "section": "Pontas",
+      "attrs": "[Tooltip(\"Raio usado para detectar quem está em cima de cada ponta.\")] [Min(0.1f)]",
+      "inspector": true,
+      "description": "Raio usado para detectar quem está em cima de cada ponta."
+    },
+    {
+      "name": "ocupantesLayer",
+      "type": "LayerMask",
+      "mods": "public",
+      "default": "~0",
+      "section": "Pontas",
+      "attrs": "[Tooltip(\"Camadas verificadas ao detectar ocupantes (Player, Inimigos, Objectos com peso, etc).\")]",
+      "inspector": true,
+      "description": "Camadas verificadas ao detectar ocupantes (Player, Inimigos, Objetos com peso, etc)."
+    },
+    {
+      "name": "anguloMaximo",
+      "type": "float",
+      "mods": "public",
+      "default": "25f",
+      "section": "Inclinação",
+      "attrs": "[Header(\"Inclinação\")] [Tooltip(\"Ângulo máximo (graus) para cada lado.\")] [Range(1f, 89f)]",
+      "inspector": true,
+      "description": "Ângulo máximo (graus) para cada lado."
+    },
+    {
+      "name": "pesoParaAnguloMaximo",
+      "type": "float",
+      "mods": "public",
+      "default": "5f",
+      "section": "Inclinação",
+      "attrs": "[Tooltip(\"Diferença de peso necessária para atingir o ângulo máximo (menor = mais sensível).\")] [Min(0.1f)]",
+      "inspector": true,
+      "description": "Diferença de peso necessária para atingir o ângulo máximo (menor = mais sensível)."
+    },
+    {
+      "name": "velocidadeInclinacao",
+      "type": "float",
+      "mods": "public",
+      "default": "90f",
+      "section": "Inclinação",
+      "attrs": "[Tooltip(\"Velocidade (graus/segundo) com que a gangorra se inclina até ao ângulo alvo.\")] [Min(1f)]",
+      "inspector": true,
+      "description": "Velocidade (graus/segundo) com que a gangorra se inclina até ao ângulo alvo."
+    },
+    {
+      "name": "limiarImpacto",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Lançamento (Impulso)",
+      "attrs": "[Header(\"Lançamento (Impulso)\")] [Tooltip(\"Aumento súbito de peso (num único frame) considerado 'algo aterrou com força' — lança o lado oposto.\")] [Min(0.05f)]",
+      "inspector": true,
+      "description": "Aumento súbito de peso (num único frame) considerado 'algo aterrou com força' — lança o lado oposto."
+    },
+    {
+      "name": "forcaLancamentoBase",
+      "type": "float",
+      "mods": "public",
+      "default": "10f",
+      "section": "Lançamento (Impulso)",
+      "attrs": "[Tooltip(\"Força base do lançamento, dividida pelo peso de quem é lançado (mais leve = voa mais alto, mais pesado = quase não sente).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Força base do lançamento, dividida pelo peso de quem é lançado (mais leve = voa mais alto, mais pesado = quase não sente)."
+    },
+    {
+      "name": "onLancouLadoA",
+      "type": "UnityEvent<Transform>",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")] [Tooltip(\"Disparado com o Transform lançado (algo aterrou em B, lançou quem estava em A).\")]",
+      "inspector": true,
+      "description": "Disparado com o Transform lançado (algo aterrou em B, lançou quem estava em A)."
+    },
+    {
+      "name": "onLancouLadoB",
+      "type": "UnityEvent<Transform>",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Tooltip(\"Disparado com o Transform lançado (algo aterrou em A, lançou quem estava em B).\")]",
+      "inspector": true,
+      "description": "Disparado com o Transform lançado (algo aterrou em A, lançou quem estava em B)."
+    },
+    {
+      "name": "_currentAngle",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_prevWeightA",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_prevWeightB",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "FixedUpdate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FixedUpdate."
+    },
+    {
+      "name": "SumWeight",
+      "ret": "float",
+      "mods": "private static",
+      "params": "Collider2D[] colliders",
+      "description": "Executa a operação SumWeight."
+    },
+    {
+      "name": "Launch",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D[] colliders, UnityEvent<Transform> evt",
+      "description": "Executa a operação Launch."
+    },
+    {
+      "name": "CarryOccupants",
+      "ret": "void",
+      "mods": "private static",
+      "params": "Collider2D[] colliders, Vector2 delta",
+      "description": "Executa a operação CarryOccupants."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "GameWeightUtil",
+    "WeightPlate"
+  ],
+  "used_by": [
+    "FloatingPlatform",
+    "GameWeightUtil",
+    "WeightPlate"
+  ],
+  "source": "using UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Gangorra/balança de peso (puzzle de peso — Etapa 6.1, mesma família da\n/// WeightPlate, partilha GameWeightUtil): tem duas \"pontas\" (pontaA/pontaB,\n/// Transforms filhos colocados nas extremidades do braço). Compara o peso em\n/// cima de cada ponta e:\n///\n/// 1. Inclina gradualmente o braço para o lado mais leve subir e o mais\n///    pesado descer (até \"anguloMaximo\").\n/// 2. Se algo aterrar com força num lado (peso desse lado sobe de repente\n///    \"limiarImpacto\" ou mais num único frame — ex: um objecto pesado é\n///    largado ali), lança quem estiver no lado OPOSTO para cima:\n///    \"forcaLancamentoBase / peso de quem é lançado\" — quanto mais leve,\n///    mais alto voa; quanto mais pesado, menos é afectado.\n///\n/// Setup: cria 2 GameObjects filhos (plataformas das pontas, com Collider2D\n/// sólido) e arrasta-os para \"pontaA\"/\"pontaB\". O pivô da rotação é a\n/// posição deste GameObject (o \"eixo\" da gangorra).\n/// </summary>\n[DisallowMultipleComponent]\npublic class SeesawPlatform : MonoBehaviour\n{\n    [Header(\"Pontas\")]\n    [Tooltip(\"Plataforma na ponta A (gira com a gangorra).\")]\n    public Transform pontaA;\n\n    [Tooltip(\"Plataforma na ponta B (gira com a gangorra).\")]\n    public Transform pontaB;\n\n    [Tooltip(\"Raio usado para detectar quem está em cima de cada ponta.\")]\n    [Min(0.1f)] public float raioDeteccao = 0.6f;\n\n    [Tooltip(\"Camadas verificadas ao detectar ocupantes (Player, Inimigos, Objectos com peso, etc).\")]\n    public LayerMask ocupantesLayer = ~0;\n\n    [Header(\"Inclinação\")]\n    [Tooltip(\"Ângulo máximo (graus) para cada lado.\")]\n    [Range(1f, 89f)] public float anguloMaximo = 25f;\n\n    [Tooltip(\"Diferença de peso necessária para atingir o ângulo máximo (menor = mais sensível).\")]\n    [Min(0.1f)] public float pesoParaAnguloMaximo = 5f;\n\n    [Tooltip(\"Velocidade (graus/segundo) com que a gangorra se inclina até ao ângulo alvo.\")]\n    [Min(1f)] public float velocidadeInclinacao = 90f;\n\n    [Header(\"Lançamento (Impulso)\")]\n    [Tooltip(\"Aumento súbito de peso (num único frame) considerado 'algo aterrou com força' — lança o lado oposto.\")]\n    [Min(0.05f)] public float limiarImpacto = 0.5f;\n\n    [Tooltip(\"Força base do lançamento, dividida pelo peso de quem é lançado (mais leve = voa mais alto, mais pesado = quase não sente).\")]\n    [Min(0f)] public float forcaLancamentoBase = 10f;\n\n    [Header(\"Eventos\")]\n    [Tooltip(\"Disparado com o Transform lançado (algo aterrou em B, lançou quem estava em A).\")]\n    public UnityEvent<Transform> onLancouLadoA;\n\n    [Tooltip(\"Disparado com o Transform lançado (algo aterrou em A, lançou quem estava em B).\")]\n    public UnityEvent<Transform> onLancouLadoB;\n\n    private float _currentAngle;\n    private float _prevWeightA;\n    private float _prevWeightB;\n\n    private void FixedUpdate()\n    {\n        if (pontaA == null || pontaB == null) return;\n\n        Vector2 oldPosA = pontaA.position;\n        Vector2 oldPosB = pontaB.position;\n\n        var collidersA = Physics2D.OverlapCircleAll(pontaA.position, raioDeteccao, ocupantesLayer);\n        var collidersB = Physics2D.OverlapCircleAll(pontaB.position, raioDeteccao, ocupantesLayer);\n\n        float weightA = SumWeight(collidersA);\n        float weightB = SumWeight(collidersB);\n\n        // Inclinação gradual: o lado mais pesado desce, o mais leve sobe.\n        float targetAngle = Mathf.Clamp((weightB - weightA) / pesoParaAnguloMaximo, -1f, 1f) * anguloMaximo;\n        _currentAngle = Mathf.MoveTowards(_currentAngle, targetAngle, velocidadeInclinacao * Time.fixedDeltaTime);\n        transform.localRotation = Quaternion.Euler(0f, 0f, _currentAngle);\n\n        // Lançamento: aumento súbito de peso num lado lança quem está no lado oposto.\n        if (weightA - _prevWeightA >= limiarImpacto)\n            Launch(collidersB, onLancouLadoB);\n        else if (weightB - _prevWeightB >= limiarImpacto)\n            Launch(collidersA, onLancouLadoA);\n\n        _prevWeightA = weightA;\n        _prevWeightB = weightB;\n\n        // Arrasta quem está em cima conforme a rotação moveu cada ponta.\n        CarryOccupants(collidersA, (Vector2)pontaA.position - oldPosA);\n        CarryOccupants(collidersB, (Vector2)pontaB.position - oldPosB);\n    }\n\n    private static float SumWeight(Collider2D[] colliders)\n    {\n        float total = 0f;\n        foreach (var c in colliders)\n            total += GameWeightUtil.GetWeightOf(c);\n        return total;\n    }\n\n    private void Launch(Collider2D[] colliders, UnityEvent<Transform> evt)\n    {\n        foreach (var c in colliders)\n        {\n            var rb = c.attachedRigidbody;\n            if (rb == null) continue;\n\n            // Quanto mais leve, maior a velocidade de lançamento; quanto mais pesado, menos é afectado.\n            float weight = Mathf.Max(0.1f, GameWeightUtil.GetWeightOf(c));\n            float launchSpeed = forcaLancamentoBase / weight;\n\n            rb.velocity = new Vector2(rb.velocity.x, launchSpeed);\n            evt?.Invoke(c.transform);\n        }\n    }\n\n    private static void CarryOccupants(Collider2D[] colliders, Vector2 delta)\n    {\n        if (delta.sqrMagnitude <= 0f) return;\n\n        foreach (var c in colliders)\n        {\n            var rb = c.attachedRigidbody;\n            if (rb != null) rb.position += delta;\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = Color.yellow;\n        if (pontaA != null) Gizmos.DrawWireSphere(pontaA.position, raioDeteccao);\n        if (pontaB != null) Gizmos.DrawWireSphere(pontaB.position, raioDeteccao);\n        Gizmos.color = Color.white;\n        Gizmos.DrawWireSphere(transform.position, 0.1f);\n    }\n}\n",
+  "id": "script-platforms-seesawplatform-cs",
+  "dependencyIds": [
+    "script-interactables-gameweightutil-cs",
+    "script-interactables-weightplate-cs"
+  ],
+  "usedByIds": [
+    "script-platforms-floatingplatform-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-interactables-weightplate-cs"
+  ]
+}

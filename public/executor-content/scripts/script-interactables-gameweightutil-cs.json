@@ -1,0 +1,72 @@
+{
+  "path": "Interactables/GameWeightUtil.cs",
+  "filename": "GameWeightUtil.cs",
+  "category": "Interactables",
+  "primary": "GameWeightUtil",
+  "kind": "Definição",
+  "summary": "Utilitário partilhado para obter o \"peso de jogo\" de um Collider2D — extraído de (Etapa 6.1) para ser reutilizado por outros sistemas baseados em peso (ex: SeesawPlatform, FloatingPlatform). Prioridade: ObjectWeight (override explícito) > player (peso da forma atual — AnimalFormData.weightMultiplier) > inimigo (EnemyData.stats.weight, só se 'canPressWeightPlate') > Rigidbody2D.mass (fallback) > 0.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "GameWeightUtil",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "GetWeightOf",
+      "ret": "float",
+      "mods": "public static",
+      "params": "Collider2D other, float playerFallbackWeight = 1f, bool useRigidbodyMassFallback = true",
+      "description": "Executa a operação GetWeightOf."
+    },
+    {
+      "name": "GetWindWeightOf",
+      "ret": "float",
+      "mods": "public static",
+      "params": "Collider2D other",
+      "description": "Executa a operação GetWindWeightOf."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "EnemyController",
+    "EnemyData",
+    "FloatingPlatform",
+    "FormSwitcher",
+    "ObjectWeight",
+    "SeesawPlatform",
+    "WeightPlate",
+    "WindZone"
+  ],
+  "used_by": [
+    "FloatingPlatform",
+    "SeesawPlatform",
+    "WeightPlate",
+    "WindAffectable",
+    "WindZone"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Utilitário partilhado para obter o \"peso de jogo\" de um Collider2D —\n/// extraído de <see cref=\"WeightPlate\"/> (Etapa 6.1) para ser reutilizado por\n/// outros sistemas baseados em peso (ex: SeesawPlatform, FloatingPlatform).\n///\n/// Prioridade: ObjectWeight (override explícito) > player (peso da forma\n/// actual — AnimalFormData.weightMultiplier) > inimigo (EnemyData.stats.weight,\n/// só se 'canPressWeightPlate') > Rigidbody2D.mass (fallback) > 0.\n/// </summary>\npublic static class GameWeightUtil\n{\n    /// <summary>Peso de jogo de \"other\", pela prioridade descrita no cabeçalho.</summary>\n    public static float GetWeightOf(Collider2D other, float playerFallbackWeight = 1f, bool useRigidbodyMassFallback = true)\n    {\n        if (other == null) return 0f;\n\n        // 1. Override explícito (caixas, pedras, ou casos especiais em player/inimigo).\n        var objectWeight = other.GetComponent<ObjectWeight>();\n        if (objectWeight != null) return Mathf.Max(0f, objectWeight.weight);\n\n        // 2. Player: peso da forma animal actual.\n        if (other.CompareTag(\"Player\"))\n        {\n            var switcher = other.GetComponent<FormSwitcher>();\n            if (switcher != null && switcher.CurrentForm != null)\n                return Mathf.Max(0f, switcher.CurrentForm.weightMultiplier);\n\n            return playerFallbackWeight;\n        }\n\n        // 3. Inimigo: peso do EnemyData (só conta se puder pressionar placas de peso).\n        var enemy = other.GetComponent<EnemyController>();\n        if (enemy != null)\n        {\n            if (enemy.Data == null || !enemy.Data.weaknesses.canPressWeightPlate || enemy.IsDead) return 0f;\n            return Mathf.Max(0f, enemy.Data.stats.weight);\n        }\n\n        // 4. Fallback: massa física do Unity.\n        if (!useRigidbodyMassFallback) return 0f;\n\n        var rb = other.attachedRigidbody;\n        return rb != null ? Mathf.Max(0f, rb.mass) : 0f;\n    }\n\n    /// <summary>\n    /// Tarefa #6 — Vento (WindZone): peso de \"other\" para calcular a força do\n    /// vento (aceleração = força do vento / peso — quanto mais leve, mais se\n    /// desloca). Diferente de <see cref=\"GetWeightOf\"/>:\n    ///\n    /// - Inimigos contam pelo 'EnemyData.stats.weight' independentemente de\n    ///   'canPressWeightPlate' (o vento não é uma placa de peso).\n    /// - Nunca devolve 0 (mínimo 0.05) — um peso 0 daria divisão por zero /\n    ///   aceleração infinita.\n    /// </summary>\n    public static float GetWindWeightOf(Collider2D other)\n    {\n        if (other == null) return 1f;\n\n        var objectWeight = other.GetComponent<ObjectWeight>();\n        if (objectWeight != null) return Mathf.Max(0.05f, objectWeight.weight);\n\n        if (other.CompareTag(\"Player\"))\n        {\n            var switcher = other.GetComponent<FormSwitcher>();\n            if (switcher != null && switcher.CurrentForm != null)\n                return Mathf.Max(0.05f, switcher.CurrentForm.weightMultiplier);\n\n            return 1f;\n        }\n\n        var enemy = other.GetComponent<EnemyController>();\n        if (enemy != null && enemy.Data != null)\n            return Mathf.Max(0.05f, enemy.Data.stats.weight);\n\n        var rb = other.attachedRigidbody;\n        if (rb != null) return Mathf.Max(0.05f, rb.mass);\n\n        return 1f;\n    }\n}\n",
+  "id": "script-interactables-gameweightutil-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-platforms-floatingplatform-cs",
+    "script-forms-formswitcher-cs",
+    "script-interactables-objectweight-cs",
+    "script-platforms-seesawplatform-cs",
+    "script-interactables-weightplate-cs",
+    "script-interactables-windzone-cs"
+  ],
+  "usedByIds": [
+    "script-platforms-floatingplatform-cs",
+    "script-platforms-seesawplatform-cs",
+    "script-interactables-weightplate-cs",
+    "script-interactables-windaffectable-cs",
+    "script-interactables-windzone-cs"
+  ]
+}

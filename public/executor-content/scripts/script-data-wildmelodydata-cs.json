@@ -1,0 +1,104 @@
+{
+  "path": "Data/WildMelodyData.cs",
+  "filename": "WildMelodyData.cs",
+  "category": "Data",
+  "primary": "WildMelodyData",
+  "kind": "Asset de dados",
+  "summary": "Define uma Melodia Selvagem — faixa musical especial encontrada pelo mundo que desbloqueia no Jukebox e conta para os 100% do save. Fontes de obtenção: Collectible no mundo (pickup ). Recompensa de missão (via ou Action NPC). Recompensa de desafio. Montagem no Editor: - Criar via menu \"Animals/Wild Melody Data\". - \"melodyId\": ID único (ex: \"floresta_canto_noturno\"). - \"displayName\": nome exibido no Jukebox. - \"area\": AreaData da área onde esta melodia é encontrada (usada para contagem de progresso por área — ). - \"clip\": AudioClip da faixa (pode ser null se não tiver clip próprio — o Jukebox toca o clip do JukeboxTrack equivalente).",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "WildMelodyData",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "melodyId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Identificador único desta melodia (ex: 'floresta_canto_noturno'). Usado para persistência.\")]",
+      "inspector": true,
+      "description": "Identificador único desta melodia (ex: 'floresta_canto_noturno'). Usado para persistência."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Nome mostrado no Jukebox ao desbloquear esta melodia.\")]",
+      "inspector": true,
+      "description": "Nome mostrado no Jukebox ao desbloquear esta melodia."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Descrição curta (opcional) — mostrada no popup de coleta ou no Jukebox.\")] [TextArea(1, 3)]",
+      "inspector": true,
+      "description": "Descrição curta (opcional) — mostrada no popup de coleta ou no Jukebox."
+    },
+    {
+      "name": "icon",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Ícone/sprite desta melodia (opcional).\")]",
+      "inspector": true,
+      "description": "Ícone/sprite desta melodia (opcional)."
+    },
+    {
+      "name": "area",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "Área",
+      "attrs": "[Header(\"Área\")] [Tooltip(\"Área do jogo onde esta melodia é encontrada — para contagem de progresso por área (AreaData.totalMelodies).\")]",
+      "inspector": true,
+      "description": "Área do jogo onde esta melodia é encontrada — para contagem de progresso por área (AreaData.totalMelodies)."
+    },
+    {
+      "name": "clip",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "[Header(\"Áudio\")] [Tooltip(\"Clip de áudio desta faixa. Pode ser null se a faixa apenas desbloqueia uma entrada existente no Jukebox.\")]",
+      "inspector": true,
+      "description": "Clip de áudio desta faixa. Pode ser null se a faixa apenas desbloqueia uma entrada existente no Jukebox."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "AreaData",
+    "ChallengeReward",
+    "JukeboxTrack",
+    "WildMelodyPickup"
+  ],
+  "used_by": [
+    "JukeboxSectionUI",
+    "PlayerProgress",
+    "SaveData",
+    "WildMelodyPickup"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Define uma Melodia Selvagem — faixa musical especial encontrada pelo mundo\n/// que desbloqueia no Jukebox e conta para os 100% do save.\n///\n/// <b>Fontes de obtenção:</b>\n/// <list type=\"bullet\">\n///   <item>Collectible no mundo (pickup <see cref=\"WildMelodyPickup\"/>).</item>\n///   <item>Recompensa de missão (via <see cref=\"ChallengeReward\"/> ou Action NPC).</item>\n///   <item>Recompensa de desafio.</item>\n/// </list>\n///\n/// <b>Montagem no Editor:</b>\n/// - Criar via menu \"Animals/Wild Melody Data\".\n/// - \"melodyId\": ID único (ex: \"floresta_canto_noturno\").\n/// - \"displayName\": nome exibido no Jukebox.\n/// - \"area\": AreaData da área onde esta melodia é encontrada (usada para\n///   contagem de progresso por área — <see cref=\"AreaData.totalMelodies\"/>).\n/// - \"clip\": AudioClip da faixa (pode ser null se não tiver clip próprio —\n///   o Jukebox toca o clip do JukeboxTrack equivalente).\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Wild Melody Data\", fileName = \"NewWildMelody\")]\npublic class WildMelodyData : ScriptableObject\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Identificador único desta melodia (ex: 'floresta_canto_noturno'). Usado para persistência.\")]\n    public string melodyId;\n\n    [Tooltip(\"Nome mostrado no Jukebox ao desbloquear esta melodia.\")]\n    public string displayName;\n\n    [Tooltip(\"Descrição curta (opcional) — mostrada no popup de coleta ou no Jukebox.\")]\n    [TextArea(1, 3)] public string description;\n\n    [Tooltip(\"Ícone/sprite desta melodia (opcional).\")]\n    public Sprite icon;\n\n    [Header(\"Área\")]\n    [Tooltip(\"Área do jogo onde esta melodia é encontrada — para contagem de progresso por área (AreaData.totalMelodies).\")]\n    public AreaData area;\n\n    [Header(\"Áudio\")]\n    [Tooltip(\"Clip de áudio desta faixa. Pode ser null se a faixa apenas desbloqueia uma entrada existente no Jukebox.\")]\n    public AudioClip clip;\n}\n",
+  "id": "script-data-wildmelodydata-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-collectibles-wildmelodypickup-cs"
+  ],
+  "usedByIds": [
+    "script-ui-jukeboxsectionui-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savedata-cs",
+    "script-collectibles-wildmelodypickup-cs"
+  ]
+}

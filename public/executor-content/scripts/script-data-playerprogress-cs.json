@@ -1,0 +1,2408 @@
+{
+  "path": "Data/PlayerProgress.cs",
+  "filename": "PlayerProgress.cs",
+  "category": "Data",
+  "primary": "PlayerProgress",
+  "kind": "Componente",
+  "summary": "\"Banco de dados\" do progresso do jogador: vida, recursos, inventário, animais libertados, upgrades, modo de jogo e progressão por área/mundo. As condições de eventos de NPC (Etapa 1) leem este estado através de PlayerProgress.Instance, e as ações de recompensa (Etapa 5) escrevem nele.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PlayerProgress",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "InventoryEntry",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "WorldProgress",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "AreaProgress",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "PlayerSnapshot",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "currentHearts",
+      "type": "int",
+      "mods": "public",
+      "default": "6",
+      "section": "Vida",
+      "attrs": "[Header(\"Vida\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "maxHearts",
+      "type": "int",
+      "mods": "public",
+      "default": "6",
+      "section": "Vida",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "MaxHeartsCap",
+      "type": "int",
+      "mods": "public const",
+      "default": "12",
+      "section": "Vida",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sementes",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "[Header(\"Recursos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasDeGaia",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "brotosDeVida",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fragmentosVitais",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasDeApolo",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "[Tooltip(\"Runas de Apolo recolhidas (0–6). Ao atingir 6, o EmblemManager desbloqueia o Emblema de Apolo + Aura de Fogo.\")]",
+      "inspector": true,
+      "description": "Runas de Apolo coletadas (0–6). Ao atingir 6, o EmblemManager desbloqueia o Emblema de Apolo + Aura de Fogo."
+    },
+    {
+      "name": "ecosPerdidos",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "[Tooltip(\"Saldo de Ecos Perdidos disponíveis para comprar Sussurros da Terra no Contador de Histórias.\")]",
+      "inspector": true,
+      "description": "Saldo de Ecos Perdidos disponíveis para comprar Sussurros da Terra no Contador de Histórias."
+    },
+    {
+      "name": "totalRunasDeGaiaCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "[Tooltip(\"Total de Runas de Gaia recolhidas ao longo do jogo (nunca desce, mesmo ao gastar). 'runasDeGaia' acima é o saldo disponível/gasto.\")]",
+      "inspector": true,
+      "description": "Total de Runas de Gaia coletadas ao longo do jogo (nunca desce, mesmo ao gastar). 'runasDeGaia' acima é o saldo disponível/gasto."
+    },
+    {
+      "name": "fragmentsPerHeart",
+      "type": "int",
+      "mods": "private",
+      "default": "3",
+      "section": "Fragmentos Vitais → Corações",
+      "attrs": "[Header(\"Fragmentos Vitais → Corações\")] [Tooltip(\"Quantos Fragmentos Vitais são necessários para desbloquear +1 coração extra (recipiente), até ao limite de MaxHeartsCap (12). GDD: 3 Fragmentos Vitais = +1 coração. 0 = conversão desactivada.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Quantos Fragmentos Vitais são necessários para desbloquear +1 coração extra (recipiente), até ao limite de MaxHeartsCap (12). GDD: 3 Fragmentos Vitais = +1 coração. 0 = conversão desativada."
+    },
+    {
+      "name": "inventory",
+      "type": "List<InventoryEntry>",
+      "mods": "public",
+      "default": "new List<InventoryEntry>()",
+      "section": "Inventário (com quantidades — Etapa 4.2)",
+      "attrs": "[Header(\"Inventário (com quantidades — Etapa 4.2)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equippedItemId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Inventário (com quantidades — Etapa 4.2)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "collectedSpecialItemIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Itens Especiais Já Recolhidos (drops únicos — Etapa 4.3)",
+      "attrs": "[Header(\"Itens Especiais Já Recolhidos (drops únicos — Etapa 4.3)\")] [Tooltip(\"IDs de itens especiais registados permanentemente como colectados (ItemData.savedAsCollected / dropsOnlyOnce). Não saem desta lista mesmo que o item seja removido do inventário.\")]",
+      "inspector": true,
+      "description": "IDs de itens especiais registados permanentemente como coletados (ItemData.savedAsCollected / dropsOnlyOnce). Não saem desta lista mesmo que o item seja removido do inventário."
+    },
+    {
+      "name": "collectedPickupIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Coleccionáveis do Mundo Já Recolhidos (Pickups)",
+      "attrs": "[Header(\"Coleccionáveis do Mundo Já Recolhidos (Pickups)\")] [Tooltip(\"IDs persistentes (PickupBase.pickupId) de coleccionáveis do mundo (Runas, Sementes, Fragmentos, Brotos, Sussurros, baús, recompensas de missão, ...) já recolhidos — impede recolha duplicada (ex: ao voltar à área ou recarregar um save).\")]",
+      "inspector": true,
+      "description": "IDs persistentes (PickupBase.pickupId) de colecionáveis do mundo (Runas, Sementes, Fragmentos, Brotos, Sussurros, baús, recompensas de missão, ...) já coletados — impede coleta duplicada (ex: ao voltar à área ou recarregar um save)."
+    },
+    {
+      "name": "totalSementesCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Contadores Globais de Coleccionáveis",
+      "attrs": "[Header(\"Contadores Globais de Coleccionáveis\")] [Tooltip(\"Total de Sementes recolhidas ao longo do jogo (nunca desce, mesmo ao gastar).\")]",
+      "inspector": true,
+      "description": "Total de Sementes coletadas ao longo do jogo (nunca desce, mesmo ao gastar)."
+    },
+    {
+      "name": "totalFragmentosVitaisCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Contadores Globais de Coleccionáveis",
+      "attrs": "[Tooltip(\"Total de Fragmentos Vitais recolhidos ao longo do jogo (nunca desce — distinto de 'fragmentosVitais', que é consumido na conversão em corações extra).\")]",
+      "inspector": true,
+      "description": "Total de Fragmentos Vitais coletados ao longo do jogo (nunca desce — distinto de 'fragmentosVitais', que é consumido na conversão em corações extra)."
+    },
+    {
+      "name": "totalBrotosDeVidaCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Contadores Globais de Coleccionáveis",
+      "attrs": "[Tooltip(\"Total de Brotos de Vida recolhidos ao longo do jogo (nunca desce).\")]",
+      "inspector": true,
+      "description": "Total de Brotos de Vida coletados ao longo do jogo (nunca desce)."
+    },
+    {
+      "name": "totalEcosPerdidosCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Contadores Globais de Coleccionáveis",
+      "attrs": "[Tooltip(\"Total de Ecos Perdidos recolhidos ao longo do jogo (nunca desce, mesmo ao gastar).\")]",
+      "inspector": true,
+      "description": "Total de Ecos Perdidos coletados ao longo do jogo (nunca desce, mesmo ao gastar)."
+    },
+    {
+      "name": "totalSussurrosCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Contadores Globais de Coleccionáveis",
+      "attrs": "[Tooltip(\"Total de Sussurros da Terra encontrados em todas as áreas (soma de AreaProgress.whispersFound).\")]",
+      "inspector": true,
+      "description": "Total de Sussurros da Terra encontrados em todas as áreas (soma de AreaProgress.whispersFound)."
+    },
+    {
+      "name": "totalChestsOpenedGlobal",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Contadores Globais de Coleccionáveis",
+      "attrs": "[Tooltip(\"Total de baús abertos em todas as áreas (soma de AreaProgress.chestsFound).\")]",
+      "inspector": true,
+      "description": "Total de baús abertos em todas as áreas (soma de AreaProgress.chestsFound)."
+    },
+    {
+      "name": "defeatedEnemyIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Inimigos Derrotados Permanentemente (Etapa 7.3)",
+      "attrs": "[Header(\"Inimigos Derrotados Permanentemente (Etapa 7.3)\")] [Tooltip(\"IDs de persistência de inimigos especiais/mini-bosses derrotados que nunca respawnam (EnemyRespawn).\")]",
+      "inspector": true,
+      "description": "IDs de persistência de inimigos especiais/mini-bosses derrotados que nunca respawnam (EnemyRespawn)."
+    },
+    {
+      "name": "collectedMelodyIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Melodias Selvagens",
+      "attrs": "[Header(\"Melodias Selvagens\")] [Tooltip(\"IDs (WildMelodyData.melodyId) de Melodias Selvagens já colectadas. Cada melodia conta para a % de conclusão da sua área e do save.\")]",
+      "inspector": true,
+      "description": "IDs (WildMelodyData.melodyId) de Melodias Selvagens já coletadas. Cada melodia conta para a % de conclusão da sua área e do save."
+    },
+    {
+      "name": "completedChallengeIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Desafios (Sistema de Missões/Desafios)",
+      "attrs": "[Header(\"Desafios (Sistema de Missões/Desafios)\")] [Tooltip(\"IDs (ChallengeDefinition.challengeId) de desafios já concluídos pelo menos uma vez — controla recompensa primária única vs. secundária em repetições.\")]",
+      "inspector": true,
+      "description": "IDs (ChallengeDefinition.challengeId) de desafios já concluídos pelo menos uma vez — controla recompensa primária única vs. secundária em repetições."
+    },
+    {
+      "name": "challengeRecords",
+      "type": "List<ChallengeRecord>",
+      "mods": "public",
+      "default": "new List<ChallengeRecord>()",
+      "section": "Desafios (Sistema de Missões/Desafios)",
+      "attrs": "[Tooltip(\"Melhores tempos registados por desafio (apenas desafios com 'hasTimeLimit') — ranking/recordes pessoais.\")]",
+      "inspector": true,
+      "description": "Melhores tempos registados por desafio (apenas desafios com 'hasTimeLimit') — ranking/recordes pessoais."
+    },
+    {
+      "name": "freedAnimalIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Animais e Upgrades",
+      "attrs": "[Header(\"Animais e Upgrades\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unlockedUpgradeIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Animais e Upgrades",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledUpgradeIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Animais e Upgrades",
+      "attrs": "[Tooltip(\"IDs de upgrades 'Instinto' (UpgradeData.toggleable) actualmente LIGADOS. Upgrades não-toggleable ficam sempre activos depois de desbloqueados, independentemente desta lista.\")]",
+      "inspector": true,
+      "description": "IDs de upgrades 'Instinto' (UpgradeData.toggleable) atualmente LIGADOS. Upgrades não-toggleable ficam sempre ativos depois de desbloqueados, independentemente desta lista."
+    },
+    {
+      "name": "lastCheckpointId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Checkpoint",
+      "attrs": "[Header(\"Checkpoint\")] [Tooltip(\"ID do último Refúgio Seguro (SafeHaven) usado — checkpoint para reaparecimento/contexto de save.\")]",
+      "inspector": true,
+      "description": "ID do último Refúgio Seguro (SafeHaven) usado — checkpoint para reaparecimento/contexto de save."
+    },
+    {
+      "name": "hasTemporaryCheckpoint",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Checkpoint",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "temporaryCheckpointPosition",
+      "type": "Vector2",
+      "mods": "private",
+      "default": "",
+      "section": "Checkpoint",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "temporaryCheckpointAreaId",
+      "type": "string",
+      "mods": "private",
+      "default": "",
+      "section": "Checkpoint",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaProgress",
+      "type": "List<AreaProgress>",
+      "mods": "private",
+      "default": "new List<AreaProgress>()",
+      "section": "Progressão por Área",
+      "attrs": "[Header(\"Progressão por Área\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "defeatedBossWorldIds",
+      "type": "List<string>",
+      "mods": "private",
+      "default": "new List<string>()",
+      "section": "Progressão por Mundo (Bosses)",
+      "attrs": "[Header(\"Progressão por Mundo (Bosses)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "pendingPostBossReturnWorldIds",
+      "type": "List<string>",
+      "mods": "private",
+      "default": "new List<string>()",
+      "section": "Progressão por Mundo (Bosses)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "worldProgress",
+      "type": "List<WorldProgress>",
+      "mods": "private",
+      "default": "new List<WorldProgress>()",
+      "section": "Progressão por Mundo (Menu de Pausa: Progresso — Tarefa #11)",
+      "attrs": "[Header(\"Progressão por Mundo (Menu de Pausa: Progresso — Tarefa #11)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unlockedAreaIds",
+      "type": "List<string>",
+      "mods": "private",
+      "default": "new List<string>()",
+      "section": "Mapa-Múndi — Áreas Desbloqueadas",
+      "attrs": "[Header(\"Mapa-Múndi — Áreas Desbloqueadas\")] [Tooltip(\"areaId (AreaData.areaId) de cada área já desbloqueada no Mapa-Múndi (botão \\\"Desbloquear\\\" pago, vila auto-desbloqueada, ou área de boss liberta pela missão principal). Controla o estado bloqueado/desbloqueado de cada WorldMapNode e quais caminhos a bola de luz pode atravessar.\")] [SerializeField]",
+      "inspector": true,
+      "description": "areaId (AreaData.areaId) de cada área já desbloqueada no Mapa-Múndi (botão \"Desbloquear\" pago, vila auto-desbloqueada, ou área de boss liberta pela missão principal). Controla o estado bloqueado/desbloqueado de cada WorldMapNode e quais caminhos a bola de luz pode atravessar."
+    },
+    {
+      "name": "discoveredBossWorldIds",
+      "type": "List<string>",
+      "mods": "private",
+      "default": "new List<string>()",
+      "section": "Mapa-Múndi — Bosses",
+      "attrs": "[Header(\"Mapa-Múndi — Bosses\")] [Tooltip(\"worldId (WorldData.worldId) dos mundos cujo boss já foi encontrado pelo menos uma vez (vitória OU derrota). A partir daqui o painel da área do boss mostra AreaData.bossDisplayName em vez de \\\"????????\\\".\")] [SerializeField]",
+      "inspector": true,
+      "description": "worldId (WorldData.worldId) dos mundos cujo boss já foi encontrado pelo menos uma vez (vitória OU derrota). A partir daqui o painel da área do boss mostra AreaData.bossDisplayName em vez de \"????????\"."
+    },
+    {
+      "name": "bossUnlockAnimationPlayedWorldIds",
+      "type": "List<string>",
+      "mods": "private",
+      "default": "new List<string>()",
+      "section": "Mapa-Múndi — Bosses",
+      "attrs": "[Tooltip(\"worldId (WorldData.worldId) dos mundos cuja animação de desbloqueio da área do boss (câmara viaja até à Coroa, novo ramo ilumina-se) já foi reproduzida. Garante que a animação só acontece uma vez.\")] [SerializeField]",
+      "inspector": true,
+      "description": "worldId (WorldData.worldId) dos mundos cuja animação de desbloqueio da área do boss (câmera viaja até à Coroa, novo ramo ilumina-se) já foi reproduzida. Garante que a animação só acontece uma vez."
+    },
+    {
+      "name": "obtainedClueIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores)",
+      "attrs": "[Header(\"Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores)\")] [Tooltip(\"IDs combinados (\\\"<missionId>/<clueId>\\\") de pistas (MissionData.clues) já obtidas — mostradas na sub-secção \\\"Pistas\\\" de cada missão no Diário.\")]",
+      "inspector": true,
+      "description": "IDs combinados (\"<missionId>/<clueId>\\"
+    },
+    {
+      "name": "heardRumorIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores)",
+      "attrs": "[Tooltip(\"IDs (RumorData.rumorId) de rumores já ouvidos — aparecem permanentemente na secção \\\"Rumores\\\" do Diário.\")]",
+      "inspector": true,
+      "description": "IDs (RumorData.rumorId) de rumores já ouvidos — aparecem permanentemente na seção \"Rumores\" do Diário."
+    },
+    {
+      "name": "foundRumorIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores)",
+      "attrs": "[Tooltip(\"IDs (RumorData.rumorId) de rumores já marcados como \\\"encontrados\\\" (Action_MarkRumorFound) — mostram um ícone de \\\"Check\\\" junto ao rumor, sem o remover da lista.\")]",
+      "inspector": true,
+      "description": "IDs (RumorData.rumorId) de rumores já marcados como \"encontrados\" (Action_MarkRumorFound) — mostram um ícone de \"Check\" junto ao rumor, sem o remover da lista."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_initialSnapshotJson",
+      "type": "string",
+      "mods": "private",
+      "default": "",
+      "section": "Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isNewGamePlus",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "[Header(\"NG+ (Tarefa #33)\")] [Tooltip(\"True enquanto esta partida é uma New Game Plus (iniciada via StartNewGamePlus). Usado por sistemas que queiram mostrar conteúdo especial de NG+ ou adaptar a dificuldade.\")] [SerializeField]",
+      "inspector": true,
+      "description": "True enquanto esta partida é uma New Game Plus (iniciada via StartNewGamePlus). Usado por sistemas que queiram mostrar conteúdo especial de NG+ ou adaptar a dificuldade."
+    },
+    {
+      "name": "ngPlusPreservedEmblemVariables",
+      "type": "List<string>",
+      "mods": "private",
+      "default": "new List<string>()",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "[Tooltip(\"Nomes das variáveis globais (GameVariables) que devem ser PRESERVADAS entre NG+: tipicamente as variáveis 'obtainedVariable' dos Emblemas de Gaia, Apolo e Zeus. Preencher no Inspector com os nomes exactos das variáveis.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Nomes das variáveis globais (GameVariables) que devem ser PRESERVADAS entre NG+: tipicamente as variáveis 'obtainedVariable' dos Emblemas de Gaia, Apolo e Zeus. Preencher no Inspector com os nomes exatos das variáveis."
+    },
+    {
+      "name": "IsNewGamePlus",
+      "type": "bool",
+      "mods": "public",
+      "default": "> isNewGamePlus",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PeleSerenaUpgradeId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"pele_serena\"",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "JuramentoDificilUpgradeId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"juramento_dificil\"",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsPeleSerenaActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> IsUpgradeEnabled(PeleSerenaUpgradeId)",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsHardModeActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> IsUpgradeEnabled(JuramentoDificilUpgradeId)",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "RecompensaPosJogoUpgradeId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"recompensa_pos_jogo\"",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsPostGameRewardActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> IsUpgradeEnabled(RecompensaPosJogoUpgradeId)",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ImanDeSementesUpgradeId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"iman_de_sementes\"",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "RitmoInstintivoUpgradeId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"ritmo_instintivo\"",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsImanDeSementesActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> IsUpgradeEnabled(ImanDeSementesUpgradeId)",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsRitmoInstintivoActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> IsUpgradeEnabled(RitmoInstintivoUpgradeId)",
+      "section": "NG+ (Tarefa #33)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "apoloAreaUnlockAnimationPlayed",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "[Header(\"Mapa-Múndi — Área Secreta de Apolo\")] [Tooltip(\"True quando a animação de desbloqueio da área secreta de Apolo (câmara viaja até à nova área) já foi reproduzida. Garante que a sequência só acontece uma vez.\")] [SerializeField]",
+      "inspector": true,
+      "description": "True quando a animação de desbloqueio da área secreta de Apolo (câmera viaja até à nova área) já foi reproduzida. Garante que a sequência só acontece uma vez."
+    },
+    {
+      "name": "CurrentSaveVersion",
+      "type": "int",
+      "mods": "public const",
+      "default": "1",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "itemId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "quantity",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "[Min(0)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "worldId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalsDiscovered",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deaths",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "visited",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "opened",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasFound",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "npcsRescued",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rescuedNpcIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "whispersFound",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "whispersDelivered",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "chestsFound",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fragmentsFound",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ecosPerdidosFound",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "melodiesFound",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeCompleted",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeDiscovered",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sussurrosDaTerraOuvidos",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "[FormerlySerializedAs(\"echoesHeard\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasSementes",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasRunasDeGaia",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasEcosPerdidos",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasBrotosDeVida",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasCurrentHearts",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasMaxHearts",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasInventory",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasEquippedItem",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasFreedAnimals",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hasLockedForms",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "lockedFormIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "",
+      "section": "Mapa-Múndi — Área Secreta de Apolo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "ResetForNewGame",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetForNewGame."
+    },
+    {
+      "name": "StartNewGamePlus",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StartNewGamePlus."
+    },
+    {
+      "name": "HasFewerHeartsThan",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int x",
+      "description": "Executa a operação HasFewerHeartsThan."
+    },
+    {
+      "name": "HasMoreHeartsThan",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int x",
+      "description": "Executa a operação HasMoreHeartsThan."
+    },
+    {
+      "name": "Heal",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação Heal."
+    },
+    {
+      "name": "Damage",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação Damage."
+    },
+    {
+      "name": "HasSementes",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação HasSementes."
+    },
+    {
+      "name": "HasRunasDeGaia",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação HasRunasDeGaia."
+    },
+    {
+      "name": "GetResourceAmount",
+      "ret": "int",
+      "mods": "public",
+      "params": "PlayerResourceType resource",
+      "description": "Executa a operação GetResourceAmount."
+    },
+    {
+      "name": "HasResource",
+      "ret": "bool",
+      "mods": "public",
+      "params": "PlayerResourceType resource, int amount",
+      "description": "Executa a operação HasResource."
+    },
+    {
+      "name": "TrySpendResource",
+      "ret": "bool",
+      "mods": "public",
+      "params": "PlayerResourceType resource, int amount",
+      "description": "Executa a operação TrySpendResource."
+    },
+    {
+      "name": "GiveSementes",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação GiveSementes."
+    },
+    {
+      "name": "FireSeedsAnimationTick",
+      "ret": "void",
+      "mods": "public",
+      "params": "int displayValue",
+      "description": "Executa a operação FireSeedsAnimationTick."
+    },
+    {
+      "name": "RefreshSeedsDisplay",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RefreshSeedsDisplay."
+    },
+    {
+      "name": "GiveSementesSilent",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação GiveSementesSilent."
+    },
+    {
+      "name": "GiveEcosPerdidos",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação GiveEcosPerdidos."
+    },
+    {
+      "name": "TrySpendEcosPerdidos",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação TrySpendEcosPerdidos."
+    },
+    {
+      "name": "HasEcosPerdidos",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação HasEcosPerdidos."
+    },
+    {
+      "name": "GiveRunasDeGaia",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação GiveRunasDeGaia."
+    },
+    {
+      "name": "GiveRunasDeApolo",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação GiveRunasDeApolo."
+    },
+    {
+      "name": "GiveBrotosDeVida",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação GiveBrotosDeVida."
+    },
+    {
+      "name": "GiveFragmentosVitais",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação GiveFragmentosVitais."
+    },
+    {
+      "name": "TryConvertFragments",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação TryConvertFragments."
+    },
+    {
+      "name": "HasItem",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string itemId",
+      "description": "Executa a operação HasItem."
+    },
+    {
+      "name": "HasItem",
+      "ret": "bool",
+      "mods": "public",
+      "params": "ItemData item",
+      "description": "Executa a operação HasItem."
+    },
+    {
+      "name": "GetItemQuantity",
+      "ret": "int",
+      "mods": "public",
+      "params": "string itemId",
+      "description": "Executa a operação GetItemQuantity."
+    },
+    {
+      "name": "GetItemQuantity",
+      "ret": "int",
+      "mods": "public",
+      "params": "ItemData item",
+      "description": "Executa a operação GetItemQuantity."
+    },
+    {
+      "name": "AddItem",
+      "ret": "int",
+      "mods": "public",
+      "params": "string itemId, int amount = 1, int maxQuantity = 0",
+      "description": "Executa a operação AddItem."
+    },
+    {
+      "name": "AddItem",
+      "ret": "int",
+      "mods": "public",
+      "params": "ItemData item, int amount = 1",
+      "description": "Executa a operação AddItem."
+    },
+    {
+      "name": "RemoveItem",
+      "ret": "int",
+      "mods": "public",
+      "params": "string itemId, int amount = 1",
+      "description": "Executa a operação RemoveItem."
+    },
+    {
+      "name": "RemoveItem",
+      "ret": "int",
+      "mods": "public",
+      "params": "ItemData item, int amount = 1",
+      "description": "Executa a operação RemoveItem."
+    },
+    {
+      "name": "GiveItem",
+      "ret": "void",
+      "mods": "public",
+      "params": "string itemId",
+      "description": "Executa a operação GiveItem."
+    },
+    {
+      "name": "GiveItem",
+      "ret": "void",
+      "mods": "public",
+      "params": "ItemData item",
+      "description": "Executa a operação GiveItem."
+    },
+    {
+      "name": "GetOrCreateEntry",
+      "ret": "InventoryEntry",
+      "mods": "private",
+      "params": "string itemId",
+      "description": "Executa a operação GetOrCreateEntry."
+    },
+    {
+      "name": "HasCollectedSpecialItem",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string itemId",
+      "description": "Executa a operação HasCollectedSpecialItem."
+    },
+    {
+      "name": "HasCollectedSpecialItem",
+      "ret": "bool",
+      "mods": "public",
+      "params": "ItemData item",
+      "description": "Executa a operação HasCollectedSpecialItem."
+    },
+    {
+      "name": "MarkSpecialItemCollected",
+      "ret": "void",
+      "mods": "public",
+      "params": "string itemId",
+      "description": "Executa a operação MarkSpecialItemCollected."
+    },
+    {
+      "name": "HasDefeatedEnemy",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string persistenceId",
+      "description": "Executa a operação HasDefeatedEnemy."
+    },
+    {
+      "name": "MarkEnemyDefeated",
+      "ret": "void",
+      "mods": "public",
+      "params": "string persistenceId",
+      "description": "Executa a operação MarkEnemyDefeated."
+    },
+    {
+      "name": "HasCompletedChallenge",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string challengeId",
+      "description": "Executa a operação HasCompletedChallenge."
+    },
+    {
+      "name": "HasCompletedChallenge",
+      "ret": "bool",
+      "mods": "public",
+      "params": "ChallengeDefinition challenge",
+      "description": "Executa a operação HasCompletedChallenge."
+    },
+    {
+      "name": "MarkChallengeIdCompleted",
+      "ret": "void",
+      "mods": "public",
+      "params": "string challengeId",
+      "description": "Executa a operação MarkChallengeIdCompleted."
+    },
+    {
+      "name": "GetChallengeBestTime",
+      "ret": "float",
+      "mods": "public",
+      "params": "string challengeId",
+      "description": "Executa a operação GetChallengeBestTime."
+    },
+    {
+      "name": "TryRecordChallengeTime",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string challengeId, float timeSeconds",
+      "description": "Executa a operação TryRecordChallengeTime."
+    },
+    {
+      "name": "HasCollectedPickup",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string pickupId",
+      "description": "Executa a operação HasCollectedPickup."
+    },
+    {
+      "name": "MarkPickupCollected",
+      "ret": "void",
+      "mods": "public",
+      "params": "string pickupId",
+      "description": "Executa a operação MarkPickupCollected."
+    },
+    {
+      "name": "NotifyPickupCollected",
+      "ret": "void",
+      "mods": "public",
+      "params": "PickupType type, string pickupId",
+      "description": "Executa a operação NotifyPickupCollected."
+    },
+    {
+      "name": "HasItemEquipped",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string itemId",
+      "description": "Executa a operação HasItemEquipped."
+    },
+    {
+      "name": "HasItemEquipped",
+      "ret": "bool",
+      "mods": "public",
+      "params": "ItemData item",
+      "description": "Executa a operação HasItemEquipped."
+    },
+    {
+      "name": "EquipItem",
+      "ret": "void",
+      "mods": "public",
+      "params": "ItemData item",
+      "description": "Executa a operação EquipItem."
+    },
+    {
+      "name": "HasFreedAnimal",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string animalFormId",
+      "description": "Executa a operação HasFreedAnimal."
+    },
+    {
+      "name": "HasFreedAnimal",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação HasFreedAnimal."
+    },
+    {
+      "name": "FreeAnimal",
+      "ret": "void",
+      "mods": "public",
+      "params": "string animalFormId",
+      "description": "Executa a operação FreeAnimal."
+    },
+    {
+      "name": "FreeAnimal",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação FreeAnimal."
+    },
+    {
+      "name": "HasUpgrade",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string upgradeId",
+      "description": "Executa a operação HasUpgrade."
+    },
+    {
+      "name": "HasUpgrade",
+      "ret": "bool",
+      "mods": "public",
+      "params": "UpgradeData upgrade",
+      "description": "Executa a operação HasUpgrade."
+    },
+    {
+      "name": "UnlockUpgrade",
+      "ret": "void",
+      "mods": "public",
+      "params": "string upgradeId",
+      "description": "Executa a operação UnlockUpgrade."
+    },
+    {
+      "name": "UnlockUpgrade",
+      "ret": "void",
+      "mods": "public",
+      "params": "UpgradeData upgrade",
+      "description": "Executa a operação UnlockUpgrade."
+    },
+    {
+      "name": "IsUpgradeEnabled",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string upgradeId",
+      "description": "Executa a operação IsUpgradeEnabled."
+    },
+    {
+      "name": "IsUpgradeEnabled",
+      "ret": "bool",
+      "mods": "public",
+      "params": "UpgradeData upgrade",
+      "description": "Executa a operação IsUpgradeEnabled."
+    },
+    {
+      "name": "SetUpgradeEnabled",
+      "ret": "void",
+      "mods": "public",
+      "params": "string upgradeId, bool enabled",
+      "description": "Executa a operação SetUpgradeEnabled."
+    },
+    {
+      "name": "SetUpgradeEnabled",
+      "ret": "void",
+      "mods": "public",
+      "params": "UpgradeData upgrade, bool enabled",
+      "description": "Executa a operação SetUpgradeEnabled."
+    },
+    {
+      "name": "UnlockUpgradeEnabled",
+      "ret": "void",
+      "mods": "public",
+      "params": "UpgradeData upgrade",
+      "description": "Executa a operação UnlockUpgradeEnabled."
+    },
+    {
+      "name": "SetLastCheckpoint",
+      "ret": "void",
+      "mods": "public",
+      "params": "string safeHavenId",
+      "description": "Executa a operação SetLastCheckpoint."
+    },
+    {
+      "name": "SetTemporaryCheckpoint",
+      "ret": "void",
+      "mods": "public",
+      "params": "string areaId, Vector2 position",
+      "description": "Executa a operação SetTemporaryCheckpoint."
+    },
+    {
+      "name": "ClearTemporaryCheckpoint",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ClearTemporaryCheckpoint."
+    },
+    {
+      "name": "TryGetTemporaryCheckpoint",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string currentAreaId, out Vector2 position",
+      "description": "Executa a operação TryGetTemporaryCheckpoint."
+    },
+    {
+      "name": "GetDeaths",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetDeaths."
+    },
+    {
+      "name": "GetDeaths",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetDeaths."
+    },
+    {
+      "name": "RegisterDeath",
+      "ret": "void",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação RegisterDeath."
+    },
+    {
+      "name": "RegisterDeath",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação RegisterDeath."
+    },
+    {
+      "name": "HasVisited",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação HasVisited."
+    },
+    {
+      "name": "HasVisited",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação HasVisited."
+    },
+    {
+      "name": "MarkVisited",
+      "ret": "void",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação MarkVisited."
+    },
+    {
+      "name": "MarkVisited",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação MarkVisited."
+    },
+    {
+      "name": "IsFirstVisit",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsFirstVisit."
+    },
+    {
+      "name": "IsFirstVisit",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsFirstVisit."
+    },
+    {
+      "name": "IsOpened",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsOpened."
+    },
+    {
+      "name": "IsOpened",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsOpened."
+    },
+    {
+      "name": "MarkOpened",
+      "ret": "void",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação MarkOpened."
+    },
+    {
+      "name": "MarkOpened",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação MarkOpened."
+    },
+    {
+      "name": "GetRunasFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetRunasFound."
+    },
+    {
+      "name": "GetRunasFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetRunasFound."
+    },
+    {
+      "name": "AddRunaFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddRunaFound."
+    },
+    {
+      "name": "GetNpcsRescued",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetNpcsRescued."
+    },
+    {
+      "name": "GetNpcsRescued",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetNpcsRescued."
+    },
+    {
+      "name": "IsNpcRescued",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area, string npcId",
+      "description": "Executa a operação IsNpcRescued."
+    },
+    {
+      "name": "AddNpcRescued",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area, string npcId = null",
+      "description": "Executa a operação AddNpcRescued."
+    },
+    {
+      "name": "SyncVillagePopulationForWorld",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação SyncVillagePopulationForWorld."
+    },
+    {
+      "name": "SyncAllVillagePopulations",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação SyncAllVillagePopulations."
+    },
+    {
+      "name": "GetWhispersFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetWhispersFound."
+    },
+    {
+      "name": "GetWhispersFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetWhispersFound."
+    },
+    {
+      "name": "AddWhisperFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddWhisperFound."
+    },
+    {
+      "name": "GetWhispersDelivered",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetWhispersDelivered."
+    },
+    {
+      "name": "GetWhispersDelivered",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetWhispersDelivered."
+    },
+    {
+      "name": "AddWhisperDelivered",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddWhisperDelivered."
+    },
+    {
+      "name": "GetChestsFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetChestsFound."
+    },
+    {
+      "name": "GetChestsFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetChestsFound."
+    },
+    {
+      "name": "AddChestFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddChestFound."
+    },
+    {
+      "name": "GetFragmentsFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetFragmentsFound."
+    },
+    {
+      "name": "GetFragmentsFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetFragmentsFound."
+    },
+    {
+      "name": "AddFragmentFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddFragmentFound."
+    },
+    {
+      "name": "GetEcosPerdidosFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetEcosPerdidosFound."
+    },
+    {
+      "name": "GetEcosPerdidosFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetEcosPerdidosFound."
+    },
+    {
+      "name": "AddEcoPerdidoFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddEcoPerdidoFound."
+    },
+    {
+      "name": "HasCollectedMelody",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string melodyId",
+      "description": "Executa a operação HasCollectedMelody."
+    },
+    {
+      "name": "MarkMelodyCollected",
+      "ret": "void",
+      "mods": "public",
+      "params": "string melodyId, AreaData area",
+      "description": "Executa a operação MarkMelodyCollected."
+    },
+    {
+      "name": "GetMelodiesFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetMelodiesFound."
+    },
+    {
+      "name": "GetMelodiesFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetMelodiesFound."
+    },
+    {
+      "name": "IsChallengeDiscovered",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsChallengeDiscovered."
+    },
+    {
+      "name": "IsChallengeDiscovered",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsChallengeDiscovered."
+    },
+    {
+      "name": "MarkChallengeDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação MarkChallengeDiscovered."
+    },
+    {
+      "name": "IsChallengeCompleted",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsChallengeCompleted."
+    },
+    {
+      "name": "IsChallengeCompleted",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsChallengeCompleted."
+    },
+    {
+      "name": "MarkChallengeCompleted",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação MarkChallengeCompleted."
+    },
+    {
+      "name": "GetSussurrosDaTerraOuvidos",
+      "ret": "IReadOnlyList<string>",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetSussurrosDaTerraOuvidos."
+    },
+    {
+      "name": "GetSussurrosDaTerraOuvidos",
+      "ret": "IReadOnlyList<string>",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetSussurrosDaTerraOuvidos."
+    },
+    {
+      "name": "AddSussurroDaTerra",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area, string phrase",
+      "description": "Executa a operação AddSussurroDaTerra."
+    },
+    {
+      "name": "GetAreaCompletionPercent",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetAreaCompletionPercent."
+    },
+    {
+      "name": "GetOrCreateAreaProgress",
+      "ret": "AreaProgress",
+      "mods": "private",
+      "params": "string areaId",
+      "description": "Executa a operação GetOrCreateAreaProgress."
+    },
+    {
+      "name": "AreWorldTotalsDiscovered",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação AreWorldTotalsDiscovered."
+    },
+    {
+      "name": "AreWorldTotalsDiscovered",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação AreWorldTotalsDiscovered."
+    },
+    {
+      "name": "MarkWorldTotalsDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação MarkWorldTotalsDiscovered."
+    },
+    {
+      "name": "MarkWorldTotalsDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação MarkWorldTotalsDiscovered."
+    },
+    {
+      "name": "GetOrCreateWorldProgress",
+      "ret": "WorldProgress",
+      "mods": "private",
+      "params": "string worldId",
+      "description": "Executa a operação GetOrCreateWorldProgress."
+    },
+    {
+      "name": "CombineClueId",
+      "ret": "string",
+      "mods": "private static",
+      "params": "string missionId, string clueId",
+      "description": "Executa a operação CombineClueId."
+    },
+    {
+      "name": "HasClue",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string missionId, string clueId",
+      "description": "Executa a operação HasClue."
+    },
+    {
+      "name": "HasClue",
+      "ret": "bool",
+      "mods": "public",
+      "params": "MissionData mission, string clueId",
+      "description": "Executa a operação HasClue."
+    },
+    {
+      "name": "MarkClueObtained",
+      "ret": "void",
+      "mods": "public",
+      "params": "string missionId, string clueId",
+      "description": "Executa a operação MarkClueObtained."
+    },
+    {
+      "name": "MarkClueObtained",
+      "ret": "void",
+      "mods": "public",
+      "params": "MissionData mission, string clueId",
+      "description": "Executa a operação MarkClueObtained."
+    },
+    {
+      "name": "HasHeardRumor",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string rumorId",
+      "description": "Executa a operação HasHeardRumor."
+    },
+    {
+      "name": "MarkRumorHeard",
+      "ret": "void",
+      "mods": "public",
+      "params": "string rumorId",
+      "description": "Executa a operação MarkRumorHeard."
+    },
+    {
+      "name": "IsRumorFound",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string rumorId",
+      "description": "Executa a operação IsRumorFound."
+    },
+    {
+      "name": "MarkRumorFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "string rumorId",
+      "description": "Executa a operação MarkRumorFound."
+    },
+    {
+      "name": "GetTotalCompletionPercent",
+      "ret": "int",
+      "mods": "public",
+      "params": "List<AreaData> allAreas, List<AnimalFormData> allForms, List<MissionData> allMissions, List<EmblemData> allEmblems",
+      "description": "Executa a operação GetTotalCompletionPercent."
+    },
+    {
+      "name": "HasDefeatedBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação HasDefeatedBoss."
+    },
+    {
+      "name": "HasDefeatedBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação HasDefeatedBoss."
+    },
+    {
+      "name": "SetBossDefeated",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação SetBossDefeated."
+    },
+    {
+      "name": "SetBossDefeated",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação SetBossDefeated."
+    },
+    {
+      "name": "IsReturningAfterBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação IsReturningAfterBoss."
+    },
+    {
+      "name": "IsReturningAfterBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação IsReturningAfterBoss."
+    },
+    {
+      "name": "ClearReturningAfterBoss",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação ClearReturningAfterBoss."
+    },
+    {
+      "name": "ClearReturningAfterBoss",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação ClearReturningAfterBoss."
+    },
+    {
+      "name": "IsAreaUnlocked",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsAreaUnlocked."
+    },
+    {
+      "name": "IsAreaUnlocked",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsAreaUnlocked."
+    },
+    {
+      "name": "UnlockArea",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação UnlockArea."
+    },
+    {
+      "name": "UnlockArea",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação UnlockArea."
+    },
+    {
+      "name": "TryUnlockArea",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação TryUnlockArea."
+    },
+    {
+      "name": "HasDiscoveredBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação HasDiscoveredBoss."
+    },
+    {
+      "name": "HasDiscoveredBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação HasDiscoveredBoss."
+    },
+    {
+      "name": "MarkBossDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação MarkBossDiscovered."
+    },
+    {
+      "name": "MarkBossDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação MarkBossDiscovered."
+    },
+    {
+      "name": "HasPlayedBossUnlockAnimation",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação HasPlayedBossUnlockAnimation."
+    },
+    {
+      "name": "HasPlayedBossUnlockAnimation",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação HasPlayedBossUnlockAnimation."
+    },
+    {
+      "name": "MarkBossUnlockAnimationPlayed",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação MarkBossUnlockAnimationPlayed."
+    },
+    {
+      "name": "MarkBossUnlockAnimationPlayed",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação MarkBossUnlockAnimationPlayed."
+    },
+    {
+      "name": "HasPlayedApoloAreaUnlockAnimation",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação HasPlayedApoloAreaUnlockAnimation."
+    },
+    {
+      "name": "MarkApoloAreaUnlockAnimationPlayed",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação MarkApoloAreaUnlockAnimationPlayed."
+    },
+    {
+      "name": "StoreSnapshot",
+      "ret": "void",
+      "mods": "public",
+      "params": "string key, PlayerSnapshot snapshot",
+      "description": "Executa a operação StoreSnapshot."
+    },
+    {
+      "name": "TryGetSnapshot",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string key, out PlayerSnapshot snapshot",
+      "description": "Executa a operação TryGetSnapshot."
+    },
+    {
+      "name": "DiscardSnapshot",
+      "ret": "void",
+      "mods": "public",
+      "params": "string key",
+      "description": "Executa a operação DiscardSnapshot."
+    },
+    {
+      "name": "ClearAllSnapshots",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ClearAllSnapshots."
+    },
+    {
+      "name": "CaptureTo",
+      "ret": "void",
+      "mods": "public",
+      "params": "SaveData data",
+      "description": "Executa a operação CaptureTo."
+    },
+    {
+      "name": "RestoreFrom",
+      "ret": "void",
+      "mods": "public",
+      "params": "SaveData data",
+      "description": "Executa a operação RestoreFrom."
+    }
+  ],
+  "dependencies": [
+    "Action_AddRumor",
+    "Action_BuyUpgrade",
+    "Action_ClearFormLocks",
+    "Action_GiveResource",
+    "Action_GiveSementesAnimated",
+    "Action_LockAllFormsExceptStart",
+    "Action_MarkRumorFound",
+    "Action_RestorePlayerSnapshot",
+    "Action_SavePlayerSnapshot",
+    "Action_SetBoolVariable",
+    "Action_SetPostGameRewardActive",
+    "Action_ShowSementes",
+    "Action_TakeSementesAnimated",
+    "AnimalFormData",
+    "AreaData",
+    "AudioManager",
+    "ChallengeDefinition",
+    "ChallengeManager",
+    "ChallengeRecord",
+    "Checkpoint",
+    "Condition_BoolVariable",
+    "EmblemData",
+    "EmblemManager",
+    "EnemyRespawn",
+    "FormSwitcher",
+    "GameDatabase",
+    "GameSettings",
+    "GameVariables",
+    "ItemData",
+    "ItemWheelUI",
+    "MainMenuController",
+    "MapNodeType",
+    "MissionData",
+    "MissionManager",
+    "PickupBase",
+    "PickupMagnet",
+    "PickupType",
+    "PlayerCombat",
+    "PlayerDeathHandler",
+    "PlayerHealthRegen",
+    "PlayerResourceType",
+    "RumorData",
+    "SafeHaven",
+    "SaveData",
+    "SaveManager",
+    "SnapshotEntry",
+    "UpgradeData",
+    "WildMelodyData",
+    "WorldData",
+    "WorldMapController",
+    "WorldMapNode",
+    "WorldMapUI",
+    "WorldState"
+  ],
+  "used_by": [
+    "Action_Heal",
+    "Action_RemoveItem",
+    "Action_RescueNpc",
+    "Action_SavePlayerSnapshot",
+    "Action_ShowSementes",
+    "AnimalFormData",
+    "AnimalSpiritRescue",
+    "AnimalsDebugPanel",
+    "ApoloRunaCollectUI",
+    "AreaDiscoveryType",
+    "AreaManager",
+    "AreaSectionUI",
+    "AudioManager",
+    "Boss_AMenteQueMata",
+    "BrotoDeVidaPickup",
+    "CameraAreaBounds",
+    "ChallengeDefinition",
+    "ChallengeDefinitionEditor",
+    "ChallengeManager",
+    "ChallengeTrigger",
+    "Checkpoint",
+    "ChestPickup",
+    "Condition_HasItemQuantity",
+    "Condition_TimeOfDay",
+    "DeathScreenUI",
+    "DiarySectionUI",
+    "EcoPerdidoPickup",
+    "EmblemManager",
+    "EmblemsSectionUI",
+    "EnemyAttack",
+    "EnemyAttackController",
+    "EnemyData",
+    "EnemyDropTable",
+    "EnemyRespawn",
+    "EnemyRespawnZone",
+    "FailCondition_PlayerDamaged",
+    "FallResetZone",
+    "FormSwitcher",
+    "FormsSectionUI",
+    "FragmentoVitalPickup",
+    "GameSettings",
+    "GameVariables",
+    "HUDController",
+    "IAbility",
+    "IPauseMenuSection",
+    "InteractionPromptUI",
+    "ItemData",
+    "ItemWheelNodeUI",
+    "ItemWheelUI",
+    "ItemsInstinctsSectionUI",
+    "JournalManager",
+    "JukeboxSectionUI",
+    "LoadingScreenController",
+    "MainMenuController",
+    "MissionCompleteUI",
+    "MissionData",
+    "MissionManager",
+    "MissionRewardPickup",
+    "NewAnimalUnlockedUI",
+    "NpcConditionUtil",
+    "NpcPlayerConditionUtil",
+    "Objective_DefeatSpecificEnemy",
+    "Objective_ItemCollected",
+    "OxygenSystem",
+    "PauseMenuController",
+    "PickupBase",
+    "PickupMagnet",
+    "PickupPopupUI",
+    "PlayerCombat",
+    "PlayerConsumableEffects",
+    "PlayerDeathHandler",
+    "PlayerFeedback",
+    "PlayerHealthRegen",
+    "PlayerItemUser",
+    "PlayerResourceType",
+    "ProgressSectionUI",
+    "ProjectileData",
+    "ProjectilePool",
+    "RumbleManager",
+    "RumorData",
+    "RunaDeGaiaPickup",
+    "SafeHaven",
+    "SaveData",
+    "SaveManager",
+    "SceneLoader",
+    "SementePickup",
+    "ShopUI",
+    "SussurroDaTerraPickup",
+    "UpgradeData",
+    "UpgradesTabUI",
+    "VfxPoolManager",
+    "VillageEvolutionController",
+    "WaterMotor2D",
+    "WildMelodyPickup",
+    "WorldData",
+    "WorldMapConnection",
+    "WorldMapController",
+    "WorldMapNode",
+    "WorldMapUI",
+    "WorldState"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\nusing UnityEngine.Serialization;\n\n/// <summary>\n/// \"Banco de dados\" do progresso do jogador: vida, recursos, inventário, animais\n/// libertados, upgrades, modo de jogo e progressão por área/mundo.\n///\n/// As condições de eventos de NPC (Etapa 1) leem este estado através de\n/// PlayerProgress.Instance, e as ações de recompensa (Etapa 5) escrevem nele.\n/// </summary>\npublic class PlayerProgress : MonoBehaviour\n{\n    public static PlayerProgress Instance { get; private set; }\n\n    [Header(\"Vida\")]\n    public int currentHearts = 6;\n    public int maxHearts = 6;\n\n    /// <summary>Número máximo de corações (recipientes), mesmo com Fragmentos Vitais extra (GDD: limite de 12 corações).</summary>\n    public const int MaxHeartsCap = 12;\n\n    [Header(\"Recursos\")]\n    public int sementes;\n    public int runasDeGaia;\n    public int brotosDeVida;\n    public int fragmentosVitais;\n\n    [Tooltip(\"Runas de Apolo recolhidas (0–6). Ao atingir 6, o EmblemManager desbloqueia o Emblema de Apolo + Aura de Fogo.\")]\n    public int runasDeApolo;\n\n    [Tooltip(\"Saldo de Ecos Perdidos disponíveis para comprar Sussurros da Terra no Contador de Histórias.\")]\n    public int ecosPerdidos;\n\n    [Tooltip(\"Total de Runas de Gaia recolhidas ao longo do jogo (nunca desce, mesmo ao gastar). 'runasDeGaia' acima é o saldo disponível/gasto.\")]\n    public int totalRunasDeGaiaCollected;\n\n    [Header(\"Fragmentos Vitais → Corações\")]\n    [Tooltip(\"Quantos Fragmentos Vitais são necessários para desbloquear +1 coração extra (recipiente), até ao limite de MaxHeartsCap (12). GDD: 3 Fragmentos Vitais = +1 coração. 0 = conversão desactivada.\")]\n    [SerializeField] private int fragmentsPerHeart = 3;\n\n    [Header(\"Inventário (com quantidades — Etapa 4.2)\")]\n    public List<InventoryEntry> inventory = new List<InventoryEntry>();\n    public string equippedItemId;\n\n    [Header(\"Itens Especiais Já Recolhidos (drops únicos — Etapa 4.3)\")]\n    [Tooltip(\"IDs de itens especiais registados permanentemente como colectados (ItemData.savedAsCollected / dropsOnlyOnce). Não saem desta lista mesmo que o item seja removido do inventário.\")]\n    public List<string> collectedSpecialItemIds = new List<string>();\n\n    [Header(\"Coleccionáveis do Mundo Já Recolhidos (Pickups)\")]\n    [Tooltip(\"IDs persistentes (PickupBase.pickupId) de coleccionáveis do mundo (Runas, Sementes, Fragmentos, Brotos, Sussurros, baús, recompensas de missão, ...) já recolhidos — impede recolha duplicada (ex: ao voltar à área ou recarregar um save).\")]\n    public List<string> collectedPickupIds = new List<string>();\n\n    [Header(\"Contadores Globais de Coleccionáveis\")]\n    [Tooltip(\"Total de Sementes recolhidas ao longo do jogo (nunca desce, mesmo ao gastar).\")]\n    public int totalSementesCollected;\n\n    [Tooltip(\"Total de Fragmentos Vitais recolhidos ao longo do jogo (nunca desce — distinto de 'fragmentosVitais', que é consumido na conversão em corações extra).\")]\n    public int totalFragmentosVitaisCollected;\n\n    [Tooltip(\"Total de Brotos de Vida recolhidos ao longo do jogo (nunca desce).\")]\n    public int totalBrotosDeVidaCollected;\n\n    [Tooltip(\"Total de Ecos Perdidos recolhidos ao longo do jogo (nunca desce, mesmo ao gastar).\")]\n    public int totalEcosPerdidosCollected;\n\n    [Tooltip(\"Total de Sussurros da Terra encontrados em todas as áreas (soma de AreaProgress.whispersFound).\")]\n    public int totalSussurrosCollected;\n\n    [Tooltip(\"Total de baús abertos em todas as áreas (soma de AreaProgress.chestsFound).\")]\n    public int totalChestsOpenedGlobal;\n\n    [Header(\"Inimigos Derrotados Permanentemente (Etapa 7.3)\")]\n    [Tooltip(\"IDs de persistência de inimigos especiais/mini-bosses derrotados que nunca respawnam (EnemyRespawn).\")]\n    public List<string> defeatedEnemyIds = new List<string>();\n\n    [Header(\"Melodias Selvagens\")]\n    [Tooltip(\"IDs (WildMelodyData.melodyId) de Melodias Selvagens já colectadas. Cada melodia conta para a % de conclusão da sua área e do save.\")]\n    public List<string> collectedMelodyIds = new List<string>();\n\n    [Header(\"Desafios (Sistema de Missões/Desafios)\")]\n    [Tooltip(\"IDs (ChallengeDefinition.challengeId) de desafios já concluídos pelo menos uma vez — controla recompensa primária única vs. secundária em repetições.\")]\n    public List<string> completedChallengeIds = new List<string>();\n\n    [Tooltip(\"Melhores tempos registados por desafio (apenas desafios com 'hasTimeLimit') — ranking/recordes pessoais.\")]\n    public List<ChallengeRecord> challengeRecords = new List<ChallengeRecord>();\n\n    [Header(\"Animais e Upgrades\")]\n    public List<string> freedAnimalIds = new List<string>();\n    public List<string> unlockedUpgradeIds = new List<string>();\n\n    [Tooltip(\"IDs de upgrades 'Instinto' (UpgradeData.toggleable) actualmente LIGADOS. Upgrades não-toggleable ficam sempre activos depois de desbloqueados, independentemente desta lista.\")]\n    public List<string> enabledUpgradeIds = new List<string>();\n\n    [Header(\"Checkpoint\")]\n    [Tooltip(\"ID do último Refúgio Seguro (SafeHaven) usado — checkpoint para reaparecimento/contexto de save.\")]\n    public string lastCheckpointId;\n\n    // Checkpoint temporário (Checkpoint.cs — ex: início de área, Caminho do\n    // Ferimento): NÃO persistido no save (sessão actual apenas). Tem prioridade\n    // sobre \"lastCheckpointId\" enquanto o jogador permanecer na mesma área.\n    private bool hasTemporaryCheckpoint;\n    private Vector2 temporaryCheckpointPosition;\n    private string temporaryCheckpointAreaId;\n\n    [Header(\"Progressão por Área\")]\n    [SerializeField] private List<AreaProgress> areaProgress = new List<AreaProgress>();\n\n    [Header(\"Progressão por Mundo (Bosses)\")]\n    [SerializeField] private List<string> defeatedBossWorldIds = new List<string>();\n    [SerializeField] private List<string> pendingPostBossReturnWorldIds = new List<string>();\n\n    [Header(\"Progressão por Mundo (Menu de Pausa: Progresso — Tarefa #11)\")]\n    [SerializeField] private List<WorldProgress> worldProgress = new List<WorldProgress>();\n\n    [Header(\"Mapa-Múndi — Áreas Desbloqueadas\")]\n    [Tooltip(\"areaId (AreaData.areaId) de cada área já desbloqueada no Mapa-Múndi (botão \\\"Desbloquear\\\" pago, vila auto-desbloqueada, ou área de boss liberta pela missão principal). Controla o estado bloqueado/desbloqueado de cada WorldMapNode e quais caminhos a bola de luz pode atravessar.\")]\n    [SerializeField] private List<string> unlockedAreaIds = new List<string>();\n\n    [Header(\"Mapa-Múndi — Bosses\")]\n    [Tooltip(\"worldId (WorldData.worldId) dos mundos cujo boss já foi encontrado pelo menos uma vez (vitória OU derrota). A partir daqui o painel da área do boss mostra AreaData.bossDisplayName em vez de \\\"????????\\\".\")]\n    [SerializeField] private List<string> discoveredBossWorldIds = new List<string>();\n\n    [Tooltip(\"worldId (WorldData.worldId) dos mundos cuja animação de desbloqueio da área do boss (câmara viaja até à Coroa, novo ramo ilumina-se) já foi reproduzida. Garante que a animação só acontece uma vez.\")]\n    [SerializeField] private List<string> bossUnlockAnimationPlayedWorldIds = new List<string>();\n\n    [Header(\"Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores)\")]\n    [Tooltip(\"IDs combinados (\\\"<missionId>/<clueId>\\\") de pistas (MissionData.clues) já obtidas — mostradas na sub-secção \\\"Pistas\\\" de cada missão no Diário.\")]\n    public List<string> obtainedClueIds = new List<string>();\n\n    [Tooltip(\"IDs (RumorData.rumorId) de rumores já ouvidos — aparecem permanentemente na secção \\\"Rumores\\\" do Diário.\")]\n    public List<string> heardRumorIds = new List<string>();\n\n    [Tooltip(\"IDs (RumorData.rumorId) de rumores já marcados como \\\"encontrados\\\" (Action_MarkRumorFound) — mostram um ícone de \\\"Check\\\" junto ao rumor, sem o remover da lista.\")]\n    public List<string> foundRumorIds = new List<string>();\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar — nunca configuradas no Inspector.\n    ///\n    /// Sem isto, se a cena também tiver a sua própria instância (configurada),\n    /// o Awake() dessa instância encontraria \"Instance\" já preenchido (pela\n    /// versão vazia auto-criada) e destruir-se-ia a si próprio, perdendo toda a\n    /// configuração feita no Inspector (Tarefa #15 — \"GameBootstrap e\n    /// singletons\"). Em vez disso, quando uma instância \"real\" (não-fallback)\n    /// faz Awake() e encontra um fallback como Instance, é o fallback que é\n    /// destruído — a instância real é que fica.\n    ///\n    /// Recomendação de organização (opcional, sem impacto no código): manter\n    /// as 7 instâncias configuradas (PlayerProgress, GameVariables,\n    /// MissionManager, WorldState, AudioManager, SaveManager, GameSettings)\n    /// num único GameObject \"GameBootstrap\" (com DontDestroyOnLoad) presente\n    /// apenas na primeira cena do jogo — um único sítio para configurar tudo.\n    /// O isAutoFallback acima continua a servir de rede de segurança caso o\n    /// jogo seja iniciado por outra cena (ex: testes a meio do jogo).\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        // Tarefa #22 (Menu Inicial — \"Novo Jogo\"): guarda uma fotografia dos\n        // valores configurados no Inspector para esta instância, ainda antes\n        // de qualquer progresso ser feito. ResetForNewGame() restaura a partir\n        // daqui, sem precisar de destruir o singleton (que outros sistemas já\n        // referenciam via Instance).\n        _initialSnapshotJson = JsonUtility.ToJson(this);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(PlayerProgress) + \" (Fallback)\");\n        var instance = go.AddComponent<PlayerProgress>();\n        instance.isAutoFallback = true;\n    }\n\n    // ---------------- Novo Jogo (Tarefa #22) ----------------\n\n    private string _initialSnapshotJson;\n\n    /// <summary>\n    /// Repõe todo o progresso (vida, recursos, inventário, coleccionáveis,\n    /// animais/upgrades, checkpoints) para os valores configurados no Inspector\n    /// no arranque — usado por <see cref=\"MainMenuController\"/> ao escolher\n    /// \"Novo Jogo\". Dispara os eventos de mudança relevantes para a UI (HUD,\n    /// menus) se actualizar de imediato.\n    /// </summary>\n    public void ResetForNewGame()\n    {\n        if (!string.IsNullOrEmpty(_initialSnapshotJson))\n            JsonUtility.FromJsonOverwrite(_initialSnapshotJson, this);\n\n        hasTemporaryCheckpoint = false;\n        _snapshots.Clear();\n\n        HealthChanged?.Invoke(currentHearts, maxHearts);\n        SeedsChanged?.Invoke(sementes);\n        RunasChanged?.Invoke(runasDeGaia, totalRunasDeGaiaCollected);\n        EquippedItemChanged?.Invoke(equippedItemId);\n    }\n\n    // ---------------- NG+ (Tarefa #33) ----------------\n\n    [Header(\"NG+ (Tarefa #33)\")]\n    [Tooltip(\"True enquanto esta partida é uma New Game Plus (iniciada via StartNewGamePlus). Usado por sistemas que queiram mostrar conteúdo especial de NG+ ou adaptar a dificuldade.\")]\n    [SerializeField] private bool isNewGamePlus;\n\n    [Tooltip(\"Nomes das variáveis globais (GameVariables) que devem ser PRESERVADAS entre NG+: tipicamente as variáveis 'obtainedVariable' dos Emblemas de Gaia, Apolo e Zeus. Preencher no Inspector com os nomes exactos das variáveis.\")]\n    [SerializeField] private List<string> ngPlusPreservedEmblemVariables = new List<string>();\n\n    /// <summary>True enquanto esta partida é um New Game Plus.</summary>\n    public bool IsNewGamePlus => isNewGamePlus;\n\n    /// <summary>\n    /// Inicia um New Game Plus (Tarefa #33): preserva animais libertados,\n    /// upgrades e variáveis de emblemas globais (Gaia/Apolo/Zeus), repõe\n    /// todo o resto para os valores iniciais, e marca <see cref=\"IsNewGamePlus\"/>.\n    ///\n    /// Sequência:\n    /// 1. Guarda listas de progresso e variáveis a preservar.\n    /// 2. Chama <see cref=\"ResetForNewGame\"/> (repõe tudo).\n    /// 3. Restaura as listas preservadas.\n    /// 4. Seta isNewGamePlus = true.\n    ///\n    /// Chamado por <see cref=\"MainMenuController\"/> quando o jogador confirma\n    /// \"New Game+\" (visível apenas quando <see cref=\"IsPostGameRewardActive\"/> é true).\n    /// </summary>\n    public void StartNewGamePlus()\n    {\n        // 1. Preservar progresso.\n        var savedFreedAnimalIds = new System.Collections.Generic.List<string>(freedAnimalIds);\n        var savedUnlockedUpgradeIds = new System.Collections.Generic.List<string>(unlockedUpgradeIds);\n        var savedEnabledUpgradeIds = new System.Collections.Generic.List<string>(enabledUpgradeIds);\n\n        // 2. Preservar variáveis de emblemas.\n        var vars = GameVariables.Instance;\n        var savedEmblemValues = new System.Collections.Generic.Dictionary<string, bool>();\n        if (vars != null && ngPlusPreservedEmblemVariables != null)\n        {\n            foreach (var varName in ngPlusPreservedEmblemVariables)\n            {\n                if (!string.IsNullOrEmpty(varName))\n                    savedEmblemValues[varName] = vars.GetBool(varName);\n            }\n        }\n\n        // 3. Repor tudo (novo jogo).\n        ResetForNewGame();\n        vars?.ResetForNewGame();\n\n        // 4. Restaurar progresso preservado.\n        freedAnimalIds = savedFreedAnimalIds;\n        unlockedUpgradeIds = savedUnlockedUpgradeIds;\n        enabledUpgradeIds = savedEnabledUpgradeIds;\n\n        // GDD v2: NG+ NÃO preserva a Recompensa de Pós-Jogo (cooldown zero +\n        // transformar no ar). O jogador tem de reganhar essa vantagem noutra vez.\n        unlockedUpgradeIds.Remove(RecompensaPosJogoUpgradeId);\n        enabledUpgradeIds.Remove(RecompensaPosJogoUpgradeId);\n\n        // 5. Restaurar variáveis de emblemas.\n        if (vars != null)\n        {\n            foreach (var kv in savedEmblemValues)\n                vars.SetBool(kv.Key, kv.Value);\n        }\n\n        // 6. Marcar como NG+.\n        isNewGamePlus = true;\n    }\n\n    // ---------------- Vida ----------------\n\n    /// <summary>\n    /// Disparado quando \"currentHearts\" chega a 0 pela primeira vez (transição\n    /// de &gt;0 para 0) — Tarefa #16, \"tela de morte\". PlayerDeathHandler\n    /// liga-se aqui para iniciar a sequência de morte/reaparecimento.\n    /// </summary>\n    public event System.Action OnHeartsDepleted;\n\n    /// <summary>Disparado sempre que \"currentHearts\" ou \"maxHearts\" mudam — UI (HUD de corações) pode ligar-se aqui em vez de pollar todos os frames.</summary>\n    public event System.Action<int, int> HealthChanged;\n\n    /// <summary>Disparado sempre que \"sementes\" muda.</summary>\n    public event System.Action<int> SeedsChanged;\n\n    /// <summary>Disparado sempre que \"ecosPerdidos\" muda — (saldo actual).</summary>\n    public event System.Action<int> EcosPerdidosChanged;\n\n    /// <summary>Disparado sempre que o saldo/total de Runas de Gaia muda — (saldo disponível, total histórico recolhido).</summary>\n    public event System.Action<int, int> RunasChanged;\n\n    /// <summary>Disparado quando uma forma animal é libertada por \"formId\" pela primeira vez (não repete para formas já libertadas).</summary>\n    public event System.Action<string> AnimalUnlocked;\n\n    /// <summary>Disparado quando uma área é desbloqueada no Mapa-Múndi (paga, vila auto-desbloqueada, ou boss libertado) — \"areaId\" da área desbloqueada. WorldMapUI/WorldMapController podem ligar-se aqui para actualizar os nós/caminhos visíveis.</summary>\n    public event System.Action<string> AreaUnlockedOnMap;\n\n    /// <summary>\n    /// Disparado sempre que Fragmentos Vitais acumulados são convertidos num\n    /// novo recipiente de coração (TryConvertFragments) — sistemas de UI/VFX/SFX\n    /// podem ligar-se aqui para tocar a animação/som de \"novo coração\", em vez\n    /// de depender só de HealthChanged (que também dispara em dano/cura normais).\n    /// </summary>\n    public event System.Action HeartContainerGained;\n\n    /// <summary>\n    /// Disparado quando um coleccionável do mundo (PickupBase e subclasses —\n    /// Runa, Semente, Fragmento, Broto, Sussurro, baú, recompensa de missão)\n    /// é recolhido. UI/SFX/estatísticas podem ligar-se aqui em vez de cada\n    /// pickup ter de conhecer directamente esses sistemas. Não concede a\n    /// recompensa em si — isso já foi feito pelo Give*/Add* específico antes\n    /// deste evento ser disparado.\n    /// </summary>\n    public event System.Action<PickupType, string> PickupCollected;\n\n    public bool HasFewerHeartsThan(int x) => currentHearts < x;\n    public bool HasMoreHeartsThan(int x) => currentHearts > x;\n\n    public void Heal(int amount)\n    {\n        currentHearts = Mathf.Clamp(currentHearts + amount, 0, maxHearts);\n        HealthChanged?.Invoke(currentHearts, maxHearts);\n    }\n\n    public void Damage(int amount)\n    {\n        bool wasAlive = currentHearts > 0;\n        currentHearts = Mathf.Clamp(currentHearts - amount, 0, maxHearts);\n        HealthChanged?.Invoke(currentHearts, maxHearts);\n\n        if (wasAlive && currentHearts <= 0)\n            OnHeartsDepleted?.Invoke();\n    }\n\n    // ---------------- Recursos ----------------\n\n    public bool HasSementes(int amount) => sementes >= amount;\n    public bool HasRunasDeGaia(int amount) => runasDeGaia >= amount;\n\n    /// <summary>Saldo actual do recurso indicado (Sementes/Runas de Gaia/Brotos de Vida/Fragmentos Vitais).</summary>\n    public int GetResourceAmount(PlayerResourceType resource)\n    {\n        switch (resource)\n        {\n            case PlayerResourceType.Sementes: return sementes;\n            case PlayerResourceType.RunasDeGaia: return runasDeGaia;\n            case PlayerResourceType.BrotosDeVida: return brotosDeVida;\n            case PlayerResourceType.FragmentosVitais: return fragmentosVitais;\n            case PlayerResourceType.EcosPerdidos: return ecosPerdidos;\n            default: return 0;\n        }\n    }\n\n    /// <summary>True se o jogador tem pelo menos \"amount\" do recurso indicado.</summary>\n    public bool HasResource(PlayerResourceType resource, int amount) => GetResourceAmount(resource) >= amount;\n\n    /// <summary>\n    /// Tenta gastar \"amount\" do recurso indicado (ex: compra de upgrade —\n    /// Action_BuyUpgrade). Se o saldo for insuficiente, não altera nada e\n    /// devolve false. \"amount\" &lt;= 0 não gasta nada e devolve true.\n    /// </summary>\n    public bool TrySpendResource(PlayerResourceType resource, int amount)\n    {\n        if (amount <= 0) return true;\n        if (!HasResource(resource, amount)) return false;\n\n        switch (resource)\n        {\n            case PlayerResourceType.Sementes: GiveSementes(-amount); break;\n            case PlayerResourceType.RunasDeGaia: GiveRunasDeGaia(-amount); break;\n            case PlayerResourceType.BrotosDeVida: GiveBrotosDeVida(-amount); break;\n            case PlayerResourceType.FragmentosVitais: GiveFragmentosVitais(-amount); break;\n            case PlayerResourceType.EcosPerdidos: GiveEcosPerdidos(-amount); break;\n        }\n\n        return true;\n    }\n\n    public void GiveSementes(int amount)\n    {\n        sementes = Mathf.Max(0, sementes + amount);\n        if (amount > 0) totalSementesCollected += amount;\n        SeedsChanged?.Invoke(sementes);\n    }\n\n    /// <summary>\n    /// Disparado a cada tick da animação de sementes iniciada por um evento de\n    /// NPC (Action_GiveSementesAnimated / Action_TakeSementesAnimated) —\n    /// contém o valor de exibição temporário (ainda não é o saldo real).\n    ///\n    /// A HUD de Sementes deve subscrever aqui para mostrar o número animado.\n    /// Ao fim da animação, GiveSementes é chamado e SeedsChanged dispara com o\n    /// valor real final — a HUD deve voltar ao saldo real a partir daí.\n    /// </summary>\n    public event System.Action<int> SeedsAnimationTick;\n\n    /// <summary>\n    /// Dispara SeedsAnimationTick com \"displayValue\" — chamado pela acção NPC\n    /// a cada frame durante a animação de contagem. Não altera o saldo real.\n    /// </summary>\n    public void FireSeedsAnimationTick(int displayValue)\n        => SeedsAnimationTick?.Invoke(displayValue);\n\n    /// <summary>\n    /// Força SeedsChanged com o saldo actual (sem alterar o valor) — usado por\n    /// Action_ShowSementes para garantir que a HUD mostra o valor real correcto\n    /// antes de uma sequência animada.\n    /// </summary>\n    public void RefreshSeedsDisplay() => SeedsChanged?.Invoke(sementes);\n\n    /// <summary>\n    /// Ajusta o saldo de Sementes SEM disparar SeedsChanged (sem animação HUD,\n    /// sem feedback visual). Usado pelas acções NPC \"silenciosas\" — ex: retirar\n    /// sementes em background sem o player ver o número mudar.\n    /// O total colectado (totalSementesCollected) continua a ser actualizado.\n    /// </summary>\n    public void GiveSementesSilent(int amount)\n    {\n        sementes = Mathf.Max(0, sementes + amount);\n        if (amount > 0) totalSementesCollected += amount;\n        // SeedsChanged NOT fired — efeito silencioso.\n    }\n\n    /// <summary>\n    /// Ajusta o saldo de Ecos Perdidos. Se \"amount\" for positivo, soma também ao\n    /// total recolhido (nunca desce). Use valores negativos para gastar (ex: compra\n    /// de Sussurros da Terra). PlayerProgress garante que o saldo nunca fica negativo.\n    /// </summary>\n    public void GiveEcosPerdidos(int amount)\n    {\n        ecosPerdidos = Mathf.Max(0, ecosPerdidos + amount);\n        if (amount > 0) totalEcosPerdidosCollected += amount;\n        EcosPerdidosChanged?.Invoke(ecosPerdidos);\n    }\n\n    /// <summary>\n    /// Tenta gastar \"amount\" de Ecos Perdidos. Devolve false se o saldo for insuficiente.\n    /// Use em conjunto com \"ecosPerdidos >= amount\" antes de mostrar opção de compra.\n    /// </summary>\n    public bool TrySpendEcosPerdidos(int amount)\n    {\n        if (amount <= 0) return true;\n        if (ecosPerdidos < amount) return false;\n        GiveEcosPerdidos(-amount);\n        return true;\n    }\n\n    public bool HasEcosPerdidos(int amount) => ecosPerdidos >= amount;\n\n    /// <summary>Ajusta o saldo de Runas de Gaia disponíveis. Se \"amount\" for positivo, soma também ao total recolhido (runasDeGaia recolhidas, para estatísticas/registo — nunca desce).</summary>\n    public void GiveRunasDeGaia(int amount)\n    {\n        runasDeGaia = Mathf.Max(0, runasDeGaia + amount);\n        if (amount > 0) totalRunasDeGaiaCollected += amount;\n        RunasChanged?.Invoke(runasDeGaia, totalRunasDeGaiaCollected);\n    }\n\n    /// <summary>\n    /// Concede Runas de Apolo (recompensa exclusiva da Provação de Apolo).\n    /// Ao atingir 6, o Emblema de Apolo é desbloqueado pelo\n    /// <see cref=\"EmblemManager\"/> (verificação automática após GrantReward).\n    /// </summary>\n    public void GiveRunasDeApolo(int amount)\n    {\n        if (amount <= 0) return;\n        runasDeApolo = Mathf.Max(0, runasDeApolo + amount);\n        RunasDeApoloChanged?.Invoke(runasDeApolo);\n    }\n\n    /// <summary>Disparado quando o total de Runas de Apolo muda (UI / EmblemManager).</summary>\n    public event System.Action<int> RunasDeApoloChanged;\n\n    /// <summary>\n    /// GDD: o Broto de Vida é uma cura pequena automática — ao ser recolhido\n    /// (amount > 0), cura \"amount\" corações de imediato, além de actualizar o\n    /// contador/estatística (brotosDeVida/totalBrotosDeVidaCollected, usados\n    /// também como recurso gastável via Action_GiveResource/TakeResource).\n    /// É a principal fonte de cura em Modo Difícil, onde a regeneração\n    /// automática (PlayerHealthRegen) está desactivada.\n    /// </summary>\n    public void GiveBrotosDeVida(int amount)\n    {\n        brotosDeVida = Mathf.Max(0, brotosDeVida + amount);\n        if (amount > 0)\n        {\n            totalBrotosDeVidaCollected += amount;\n            Heal(amount);\n        }\n    }\n\n    /// <summary>Adiciona Fragmentos Vitais e converte automaticamente em corações extra quando atingir \"fragmentsPerHeart\" (até ao limite MaxHeartsCap — GDD: 12 corações).</summary>\n    public void GiveFragmentosVitais(int amount)\n    {\n        fragmentosVitais = Mathf.Max(0, fragmentosVitais + amount);\n        if (amount > 0)\n        {\n            totalFragmentosVitaisCollected += amount;\n            TryConvertFragments();\n        }\n    }\n\n    /// <summary>Converte Fragmentos Vitais acumulados em +1 coração (recipiente) de cada vez, enquanto houver fragmentos suficientes e \"maxHearts\" não tiver atingido \"MaxHeartsCap\" (12). O novo recipiente já nasce cheio.</summary>\n    private void TryConvertFragments()\n    {\n        if (fragmentsPerHeart <= 0) return;\n\n        while (maxHearts < MaxHeartsCap && fragmentosVitais >= fragmentsPerHeart)\n        {\n            fragmentosVitais -= fragmentsPerHeart;\n            maxHearts++;\n            currentHearts = Mathf.Min(currentHearts + 1, maxHearts);\n            HealthChanged?.Invoke(currentHearts, maxHearts);\n            HeartContainerGained?.Invoke();\n        }\n    }\n\n    // ---------------- Itens (Etapa 4.2 — inventário com quantidades) ----------------\n\n    public bool HasItem(string itemId) => GetItemQuantity(itemId) > 0;\n    public bool HasItem(ItemData item) => item != null && HasItem(item.itemId);\n\n    /// <summary>Quantidade actual de \"itemId\" no inventário (0 se não existir).</summary>\n    public int GetItemQuantity(string itemId)\n    {\n        if (string.IsNullOrEmpty(itemId)) return 0;\n\n        for (int i = 0; i < inventory.Count; i++)\n            if (inventory[i].itemId == itemId) return inventory[i].quantity;\n\n        return 0;\n    }\n\n    public int GetItemQuantity(ItemData item) => item != null ? GetItemQuantity(item.itemId) : 0;\n\n    /// <summary>\n    /// Adiciona \"amount\" de \"itemId\" ao inventário, sem exceder \"maxQuantity\"\n    /// (0 = sem limite). Devolve a quantidade efectivamente adicionada.\n    /// </summary>\n    public int AddItem(string itemId, int amount = 1, int maxQuantity = 0)\n    {\n        if (string.IsNullOrEmpty(itemId) || amount <= 0) return 0;\n\n        var entry = GetOrCreateEntry(itemId);\n        int newQuantity = maxQuantity > 0\n            ? Mathf.Min(maxQuantity, entry.quantity + amount)\n            : entry.quantity + amount;\n\n        int added = newQuantity - entry.quantity;\n        entry.quantity = newQuantity;\n        return added;\n    }\n\n    /// <summary>Adiciona \"amount\" de \"item\", respeitando ItemData.maxQuantity, e regista-o como colectado se \"savedAsCollected\" (Etapa 4.3). Devolve a quantidade efectivamente adicionada.</summary>\n    public int AddItem(ItemData item, int amount = 1)\n    {\n        if (item == null) return 0;\n\n        int added = AddItem(item.itemId, amount, item.maxQuantity);\n\n        if (item.savedAsCollected && added > 0)\n            MarkSpecialItemCollected(item.itemId);\n\n        return added;\n    }\n\n    /// <summary>Remove até \"amount\" de \"itemId\" do inventário. Devolve a quantidade efectivamente removida.</summary>\n    public int RemoveItem(string itemId, int amount = 1)\n    {\n        if (string.IsNullOrEmpty(itemId) || amount <= 0) return 0;\n\n        for (int i = 0; i < inventory.Count; i++)\n        {\n            if (inventory[i].itemId != itemId) continue;\n\n            int removed = Mathf.Min(inventory[i].quantity, amount);\n            inventory[i].quantity -= removed;\n\n            if (inventory[i].quantity <= 0) inventory.RemoveAt(i);\n            return removed;\n        }\n\n        return 0;\n    }\n\n    public int RemoveItem(ItemData item, int amount = 1) => item != null ? RemoveItem(item.itemId, amount) : 0;\n\n    /// <summary>Compatibilidade (pré-Etapa 4.2): adiciona 1 unidade de \"itemId\" (sem limite de quantidade).</summary>\n    public void GiveItem(string itemId) => AddItem(itemId, 1);\n\n    /// <summary>Compatibilidade (pré-Etapa 4.2): adiciona 1 unidade de \"item\" (respeita maxQuantity/savedAsCollected).</summary>\n    public void GiveItem(ItemData item) => AddItem(item, 1);\n\n    private InventoryEntry GetOrCreateEntry(string itemId)\n    {\n        for (int i = 0; i < inventory.Count; i++)\n            if (inventory[i].itemId == itemId) return inventory[i];\n\n        var created = new InventoryEntry { itemId = itemId };\n        inventory.Add(created);\n        return created;\n    }\n\n    // ---------------- Itens Especiais Já Recolhidos (Etapa 4.3) ----------------\n\n    /// <summary>True se \"itemId\" já foi registado como colectado (drops únicos — não volta a dropar).</summary>\n    public bool HasCollectedSpecialItem(string itemId) => !string.IsNullOrEmpty(itemId) && collectedSpecialItemIds.Contains(itemId);\n    public bool HasCollectedSpecialItem(ItemData item) => item != null && HasCollectedSpecialItem(item.itemId);\n\n    public void MarkSpecialItemCollected(string itemId)\n    {\n        if (!string.IsNullOrEmpty(itemId) && !collectedSpecialItemIds.Contains(itemId))\n            collectedSpecialItemIds.Add(itemId);\n    }\n\n    // ---------------- Inimigos Derrotados Permanentemente (Etapa 7.3) ----------------\n\n    /// <summary>True se o inimigo com este ID de persistência foi derrotado permanentemente (especial/mini-boss — nunca respawna).</summary>\n    public bool HasDefeatedEnemy(string persistenceId) => !string.IsNullOrEmpty(persistenceId) && defeatedEnemyIds.Contains(persistenceId);\n\n    public void MarkEnemyDefeated(string persistenceId)\n    {\n        if (!string.IsNullOrEmpty(persistenceId) && !defeatedEnemyIds.Contains(persistenceId))\n            defeatedEnemyIds.Add(persistenceId);\n    }\n\n    // ---------------- Desafios (Sistema de Missões/Desafios) ----------------\n\n    /// <summary>True se o desafio com este \"challengeId\" já foi concluído com sucesso pelo menos uma vez (controla recompensa primária/secundária — ver ChallengeManager).</summary>\n    public bool HasCompletedChallenge(string challengeId) => !string.IsNullOrEmpty(challengeId) && completedChallengeIds.Contains(challengeId);\n    public bool HasCompletedChallenge(ChallengeDefinition challenge) => challenge != null && HasCompletedChallenge(challenge.challengeId);\n\n    /// <summary>Regista \"challengeId\" como concluído (idempotente). Chamado por ChallengeManager na PRIMEIRA conclusão com sucesso.</summary>\n    public void MarkChallengeIdCompleted(string challengeId)\n    {\n        if (!string.IsNullOrEmpty(challengeId) && !completedChallengeIds.Contains(challengeId))\n            completedChallengeIds.Add(challengeId);\n    }\n\n    /// <summary>Melhor (menor) tempo registado para \"challengeId\", ou -1 se nunca foi registado um tempo.</summary>\n    public float GetChallengeBestTime(string challengeId)\n    {\n        if (string.IsNullOrEmpty(challengeId)) return -1f;\n\n        foreach (var record in challengeRecords)\n            if (record != null && record.challengeId == challengeId) return record.bestTimeSeconds;\n\n        return -1f;\n    }\n\n    /// <summary>\n    /// Regista \"timeSeconds\" para \"challengeId\" se for o primeiro registo ou um\n    /// tempo melhor (menor) do que o anterior. Devolve true se um novo recorde\n    /// foi gravado (útil para o HUD mostrar \"Novo Recorde!\").\n    /// </summary>\n    public bool TryRecordChallengeTime(string challengeId, float timeSeconds)\n    {\n        if (string.IsNullOrEmpty(challengeId)) return false;\n\n        foreach (var record in challengeRecords)\n        {\n            if (record != null && record.challengeId == challengeId)\n            {\n                if (timeSeconds >= record.bestTimeSeconds) return false;\n                record.bestTimeSeconds = timeSeconds;\n                return true;\n            }\n        }\n\n        challengeRecords.Add(new ChallengeRecord { challengeId = challengeId, bestTimeSeconds = timeSeconds });\n        return true;\n    }\n\n    // ---------------- Coleccionáveis do Mundo (Pickups — anti-duplicação) ----------------\n\n    /// <summary>True se o coleccionável do mundo com este \"pickupId\" (PickupBase.pickupId) já foi recolhido — não volta a aparecer/dar a recompensa.</summary>\n    public bool HasCollectedPickup(string pickupId) => !string.IsNullOrEmpty(pickupId) && collectedPickupIds.Contains(pickupId);\n\n    public void MarkPickupCollected(string pickupId)\n    {\n        if (!string.IsNullOrEmpty(pickupId) && !collectedPickupIds.Contains(pickupId))\n            collectedPickupIds.Add(pickupId);\n    }\n\n    /// <summary>\n    /// Notifica que um coleccionável do mundo foi recolhido (dispara\n    /// <see cref=\"PickupCollected\"/>) — chamado por PickupBase DEPOIS de a\n    /// recompensa já ter sido concedida (Give*/Add*) e do ID ter sido marcado\n    /// via <see cref=\"MarkPickupCollected\"/>. Usado por popups/SFX/estatísticas.\n    /// </summary>\n    public void NotifyPickupCollected(PickupType type, string pickupId) => PickupCollected?.Invoke(type, pickupId);\n\n    /// <summary>Disparado por EquipItem quando \"equippedItemId\" muda (Roda de Itens — ItemWheelUI; HUD — ícone/quantidade do item equipado).</summary>\n    public event System.Action<string> EquippedItemChanged;\n\n    public bool HasItemEquipped(string itemId) => !string.IsNullOrEmpty(itemId) && equippedItemId == itemId;\n    public bool HasItemEquipped(ItemData item) => item != null && HasItemEquipped(item.itemId);\n\n    public void EquipItem(ItemData item)\n    {\n        string newId = item != null ? item.itemId : null;\n        if (equippedItemId == newId) return;\n\n        equippedItemId = newId;\n        EquippedItemChanged?.Invoke(equippedItemId);\n    }\n\n    // ---------------- Animais ----------------\n\n    public bool HasFreedAnimal(string animalFormId) => !string.IsNullOrEmpty(animalFormId) && freedAnimalIds.Contains(animalFormId);\n    public bool HasFreedAnimal(AnimalFormData form) => form != null && HasFreedAnimal(form.formId);\n\n    public void FreeAnimal(string animalFormId)\n    {\n        if (!string.IsNullOrEmpty(animalFormId) && !freedAnimalIds.Contains(animalFormId))\n        {\n            freedAnimalIds.Add(animalFormId);\n            AnimalUnlocked?.Invoke(animalFormId);\n        }\n    }\n\n    public void FreeAnimal(AnimalFormData form)\n    {\n        if (form != null) FreeAnimal(form.formId);\n    }\n\n    // ---------------- Upgrades ----------------\n\n    public bool HasUpgrade(string upgradeId) => !string.IsNullOrEmpty(upgradeId) && unlockedUpgradeIds.Contains(upgradeId);\n    public bool HasUpgrade(UpgradeData upgrade) => upgrade != null && HasUpgrade(upgrade.upgradeId);\n\n    public void UnlockUpgrade(string upgradeId)\n    {\n        if (!string.IsNullOrEmpty(upgradeId) && !unlockedUpgradeIds.Contains(upgradeId))\n            unlockedUpgradeIds.Add(upgradeId);\n    }\n\n    public void UnlockUpgrade(UpgradeData upgrade)\n    {\n        if (upgrade != null) UnlockUpgrade(upgrade.upgradeId);\n    }\n\n    // ---------------- Instintos (upgrades ligar/desligar) ----------------\n\n    /// <summary>True se o \"Instinto\" (upgrade toggleable) com este ID está ligado. Upgrades não-toggleable contam sempre como ligados desde que desbloqueados.</summary>\n    public bool IsUpgradeEnabled(string upgradeId) => !string.IsNullOrEmpty(upgradeId) && enabledUpgradeIds.Contains(upgradeId);\n\n    // ---------------- Tarefa #28: Pele Serena / Juramento Difícil ----------------\n\n    /// <summary>ID do upgrade togglável \"Pele Serena\" (reduz dano recebido em 50%).</summary>\n    public const string PeleSerenaUpgradeId = \"pele_serena\";\n\n    /// <summary>ID do upgrade togglável \"Juramento Difícil\" (Modo Difícil: dano x2, sem regen automática).</summary>\n    public const string JuramentoDificilUpgradeId = \"juramento_dificil\";\n\n    /// <summary>True se \"Pele Serena\" estiver activado (reduz dano recebido pelo player em 50%, ver <see cref=\"PlayerCombat.TryDamagePlayer\"/>).</summary>\n    public bool IsPeleSerenaActive => IsUpgradeEnabled(PeleSerenaUpgradeId);\n\n    /// <summary>True se \"Juramento Difícil\" (Modo Difícil) estiver activado (dano x2, regen automática desactivada).</summary>\n    public bool IsHardModeActive => IsUpgradeEnabled(JuramentoDificilUpgradeId);\n    public bool IsUpgradeEnabled(UpgradeData upgrade) => upgrade != null && (!upgrade.toggleable || IsUpgradeEnabled(upgrade.upgradeId));\n\n    // ---------------- Recompensa de Pós-Jogo ----------------\n\n    /// <summary>ID interno da Recompensa de Pós-Jogo (GDD: após terminar o jogo, cooldown de transformação zero e transformar em qualquer lugar, incluindo no ar). Activada via Action_SetPostGameRewardActive numa cutscene de fim de jogo; persiste via enabledUpgradeIds (mesmo mecanismo de IsHardModeActive).</summary>\n    public const string RecompensaPosJogoUpgradeId = \"recompensa_pos_jogo\";\n\n    /// <summary>True se a Recompensa de Pós-Jogo estiver activa — ver FormSwitcher.CanSwitchTo/TrySwitchTo (cooldown zero + transformar no ar, mantendo as regras de formas aquáticas/terrestres).</summary>\n    public bool IsPostGameRewardActive => IsUpgradeEnabled(RecompensaPosJogoUpgradeId);\n\n    // ---------------- Tarefa #3: Íman de Sementes / Ritmo Instintivo ----------------\n\n    /// <summary>ID do upgrade togglável \"Íman de Sementes\" (atrai coleccionáveis próximos — ver PickupMagnet).</summary>\n    public const string ImanDeSementesUpgradeId = \"iman_de_sementes\";\n\n    /// <summary>ID do upgrade togglável \"Ritmo Instintivo\" (reduz o cooldown de transformação — ver FormSwitcher.transformCooldown).</summary>\n    public const string RitmoInstintivoUpgradeId = \"ritmo_instintivo\";\n\n    /// <summary>True se \"Íman de Sementes\" estiver activado (PickupMagnet só atrai coleccionáveis enquanto isto for true).</summary>\n    public bool IsImanDeSementesActive => IsUpgradeEnabled(ImanDeSementesUpgradeId);\n\n    /// <summary>True se \"Ritmo Instintivo\" estiver activado (reduz o cooldown entre transformações no FormSwitcher).</summary>\n    public bool IsRitmoInstintivoActive => IsUpgradeEnabled(RitmoInstintivoUpgradeId);\n\n    public void SetUpgradeEnabled(string upgradeId, bool enabled)\n    {\n        if (string.IsNullOrEmpty(upgradeId)) return;\n\n        if (enabled)\n        {\n            if (!enabledUpgradeIds.Contains(upgradeId)) enabledUpgradeIds.Add(upgradeId);\n        }\n        else\n        {\n            enabledUpgradeIds.Remove(upgradeId);\n        }\n    }\n\n    public void SetUpgradeEnabled(UpgradeData upgrade, bool enabled)\n    {\n        if (upgrade != null) SetUpgradeEnabled(upgrade.upgradeId, enabled);\n    }\n\n    /// <summary>Desbloqueia \"upgradeId\" e, se for um Instinto (toggleable), liga-o por defeito.</summary>\n    public void UnlockUpgradeEnabled(UpgradeData upgrade)\n    {\n        if (upgrade == null) return;\n        UnlockUpgrade(upgrade.upgradeId);\n        if (upgrade.toggleable) SetUpgradeEnabled(upgrade.upgradeId, true);\n    }\n\n    // ---------------- Checkpoint ----------------\n\n    /// <summary>Regista o último Refúgio Seguro (SafeHaven) usado pelo jogador.</summary>\n    public void SetLastCheckpoint(string safeHavenId)\n    {\n        if (!string.IsNullOrEmpty(safeHavenId)) lastCheckpointId = safeHavenId;\n    }\n\n    /// <summary>\n    /// Regista um checkpoint temporário (Checkpoint.cs — ex: início de área,\n    /// Caminho do Ferimento) na posição indicada, associado à área \"areaId\".\n    /// Não é persistido no save; tem prioridade sobre \"lastCheckpointId\"\n    /// enquanto o jogador permanecer nessa área (ver\n    /// <see cref=\"TryGetTemporaryCheckpoint\"/>).\n    /// </summary>\n    public void SetTemporaryCheckpoint(string areaId, Vector2 position)\n    {\n        if (string.IsNullOrEmpty(areaId)) return;\n        hasTemporaryCheckpoint = true;\n        temporaryCheckpointAreaId = areaId;\n        temporaryCheckpointPosition = position;\n    }\n\n    /// <summary>Limpa o checkpoint temporário actual (ex: ao mudar de área).</summary>\n    public void ClearTemporaryCheckpoint()\n    {\n        hasTemporaryCheckpoint = false;\n        temporaryCheckpointAreaId = null;\n    }\n\n    /// <summary>\n    /// Devolve true e a posição do checkpoint temporário se este existir e\n    /// pertencer à área \"currentAreaId\" (normalmente WorldState.CurrentArea).\n    /// </summary>\n    public bool TryGetTemporaryCheckpoint(string currentAreaId, out Vector2 position)\n    {\n        if (hasTemporaryCheckpoint && !string.IsNullOrEmpty(currentAreaId) && temporaryCheckpointAreaId == currentAreaId)\n        {\n            position = temporaryCheckpointPosition;\n            return true;\n        }\n\n        position = default;\n        return false;\n    }\n\n    // ---------------- Progressão por Área ----------------\n\n    public int GetDeaths(string areaId) => GetOrCreateAreaProgress(areaId).deaths;\n    public int GetDeaths(AreaData area) => area != null ? GetDeaths(area.areaId) : 0;\n\n    public void RegisterDeath(string areaId) => GetOrCreateAreaProgress(areaId).deaths++;\n    public void RegisterDeath(AreaData area)\n    {\n        if (area != null) RegisterDeath(area.areaId);\n    }\n\n    public bool HasVisited(string areaId) => GetOrCreateAreaProgress(areaId).visited;\n    public bool HasVisited(AreaData area) => area != null && HasVisited(area.areaId);\n\n    public void MarkVisited(string areaId) => GetOrCreateAreaProgress(areaId).visited = true;\n    public void MarkVisited(AreaData area)\n    {\n        if (area != null) MarkVisited(area.areaId);\n    }\n\n    public bool IsFirstVisit(string areaId) => !HasVisited(areaId);\n    public bool IsFirstVisit(AreaData area) => area != null && IsFirstVisit(area.areaId);\n\n    /// <summary>True se a área já foi \"aberta\" (acesso desbloqueado — ex: porta/portão/ponte activados), distinto de \"visitada\" (jogador já lá esteve).</summary>\n    public bool IsOpened(string areaId) => GetOrCreateAreaProgress(areaId).opened;\n    public bool IsOpened(AreaData area) => area != null && IsOpened(area.areaId);\n\n    public void MarkOpened(string areaId) => GetOrCreateAreaProgress(areaId).opened = true;\n    public void MarkOpened(AreaData area)\n    {\n        if (area != null) MarkOpened(area.areaId);\n    }\n\n    // ---------------- Descobertas da Área (Menu de Pausa: Área Atual) ----------------\n\n    public int GetRunasFound(string areaId) => GetOrCreateAreaProgress(areaId).runasFound;\n    public int GetRunasFound(AreaData area) => area != null ? GetRunasFound(area.areaId) : 0;\n\n    /// <summary>Regista mais uma Runa de Gaia encontrada nesta área (limitado a AreaData.totalRunas, se fornecida).</summary>\n    public void AddRunaFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        ap.runasFound = area.totalRunas > 0 ? Mathf.Min(ap.runasFound + 1, area.totalRunas) : ap.runasFound + 1;\n    }\n\n    public int GetNpcsRescued(string areaId) => GetOrCreateAreaProgress(areaId).npcsRescued;\n    public int GetNpcsRescued(AreaData area) => area != null ? GetNpcsRescued(area.areaId) : 0;\n\n    /// <summary>True se o NPC com este \"npcId\" já foi resgatado nesta área.</summary>\n    public bool IsNpcRescued(AreaData area, string npcId)\n    {\n        if (area == null || string.IsNullOrEmpty(npcId)) return false;\n        return GetOrCreateAreaProgress(area.areaId).rescuedNpcIds.Contains(npcId);\n    }\n\n    /// <summary>\n    /// Regista um NPC como resgatado nesta área. Se \"npcId\" for fornecido, a\n    /// operação é idempotente — chamadas repetidas com o mesmo ID não duplicam a\n    /// contagem nem disparam eventos novamente. Se \"npcId\" for vazio/nulo, o\n    /// comportamento antigo é mantido (incrementa sem verificar duplicados).\n    ///\n    /// Quando \"npcId\" é fornecido:\n    ///   • Adiciona o ID a <see cref=\"AreaProgress.rescuedNpcIds\"/>.\n    ///   • Incrementa <see cref=\"AreaProgress.npcsRescued\"/> (limitado ao total da área).\n    ///   • Define automaticamente a variável global \"NpcResgatado_&lt;npcId&gt;\" = true em\n    ///     <see cref=\"GameVariables\"/> — permite usar Condition_BoolVariable para\n    ///     verificar o resgate sem configurar Action_SetBoolVariable manualmente.\n    ///   • Sincroniza a população da vila correspondente em WorldState.\n    /// </summary>\n    public void AddNpcRescued(AreaData area, string npcId = null)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n\n        // Idempotência: se o npcId já está na lista, não fazer nada.\n        if (!string.IsNullOrEmpty(npcId) && ap.rescuedNpcIds.Contains(npcId))\n            return;\n\n        // Registar o ID (se fornecido).\n        if (!string.IsNullOrEmpty(npcId))\n        {\n            ap.rescuedNpcIds.Add(npcId);\n\n            // Variável automática: permite Condition_BoolVariable sem configuração extra.\n            GameVariables.Instance?.SetBool($\"NpcResgatado_{npcId}\", true);\n        }\n\n        ap.npcsRescued = area.totalNpcsToRescue > 0\n            ? Mathf.Min(ap.npcsRescued + 1, area.totalNpcsToRescue)\n            : ap.npcsRescued + 1;\n\n        // Auto-sync: actualiza WorldState.villagePopulations para que o HUD e\n        // outros sistemas (música, lojas, decoração) reflictam o resgate imediatamente.\n        SyncVillagePopulationForWorld(area.world);\n    }\n\n    /// <summary>\n    /// Re-calcula e sincroniza a população de uma vila específica (world.mainVillageId)\n    /// somando todos os npcsRescued e totalNpcsToRescue das áreas desse mundo.\n    /// Chamado automaticamente por AddNpcRescued e pode ser chamado externamente.\n    /// </summary>\n    public void SyncVillagePopulationForWorld(WorldData world)\n    {\n        if (world == null || string.IsNullOrEmpty(world.mainVillageId)) return;\n        var db = GameDatabase.Instance;\n        var ws = WorldState.Instance;\n        if (db == null || ws == null) return;\n\n        int totalRescued = 0, totalMax = 0;\n        foreach (var a in db.areas)\n        {\n            if (a == null || a.world != world) continue;\n            totalRescued += GetNpcsRescued(a);\n            totalMax += a.totalNpcsToRescue;\n        }\n        ws.SyncRescuedPopulation(world.mainVillageId, totalRescued, totalMax);\n    }\n\n    /// <summary>\n    /// Re-calcula e sincroniza a população de TODAS as vilas a partir dos resgates\n    /// registados. Chamado por WorldState.RestoreFrom após carregar um save, para\n    /// garantir consistência mesmo em saves criados antes desta sincronização ser\n    /// implementada.\n    /// </summary>\n    public void SyncAllVillagePopulations()\n    {\n        var db = GameDatabase.Instance;\n        if (db == null) return;\n\n        // Agrupa áreas por mundo e soma os contadores.\n        var totals = new System.Collections.Generic.Dictionary<string, (int rescued, int max)>();\n        foreach (var area in db.areas)\n        {\n            if (area == null || area.world == null) continue;\n            string vid = area.world.mainVillageId;\n            if (string.IsNullOrEmpty(vid)) continue;\n            if (!totals.ContainsKey(vid)) totals[vid] = (0, 0);\n            var t = totals[vid];\n            totals[vid] = (t.rescued + GetNpcsRescued(area), t.max + area.totalNpcsToRescue);\n        }\n\n        var ws = WorldState.Instance;\n        if (ws == null) return;\n        foreach (var kv in totals)\n            ws.SyncRescuedPopulation(kv.Key, kv.Value.rescued, kv.Value.max);\n    }\n\n    public int GetWhispersFound(string areaId) => GetOrCreateAreaProgress(areaId).whispersFound;\n    public int GetWhispersFound(AreaData area) => area != null ? GetWhispersFound(area.areaId) : 0;\n\n    /// <summary>Regista mais um Sussurro da Terra encontrado nesta área (limitado a AreaData.totalWhispers, se fornecida) e actualiza o contador global.</summary>\n    public void AddWhisperFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        int before = ap.whispersFound;\n        ap.whispersFound = area.totalWhispers > 0 ? Mathf.Min(ap.whispersFound + 1, area.totalWhispers) : ap.whispersFound + 1;\n        if (ap.whispersFound > before) totalSussurrosCollected++;\n    }\n\n    public int GetWhispersDelivered(string areaId) => GetOrCreateAreaProgress(areaId).whispersDelivered;\n    public int GetWhispersDelivered(AreaData area) => area != null ? GetWhispersDelivered(area.areaId) : 0;\n\n    /// <summary>Regista a entrega de mais um Sussurro da Terra nesta área (limitado a AreaData.totalWhispers, se fornecida) — distinto de \"encontrado\" (ver AddWhisperFound).</summary>\n    public void AddWhisperDelivered(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        ap.whispersDelivered = area.totalWhispers > 0 ? Mathf.Min(ap.whispersDelivered + 1, area.totalWhispers) : ap.whispersDelivered + 1;\n    }\n\n    public int GetChestsFound(string areaId) => GetOrCreateAreaProgress(areaId).chestsFound;\n    public int GetChestsFound(AreaData area) => area != null ? GetChestsFound(area.areaId) : 0;\n\n    /// <summary>Regista mais um baú aberto nesta área (limitado a AreaData.totalChests, se fornecida) e actualiza o contador global.</summary>\n    public void AddChestFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        int before = ap.chestsFound;\n        ap.chestsFound = area.totalChests > 0 ? Mathf.Min(ap.chestsFound + 1, area.totalChests) : ap.chestsFound + 1;\n        if (ap.chestsFound > before) totalChestsOpenedGlobal++;\n    }\n\n    public int GetFragmentsFound(string areaId) => GetOrCreateAreaProgress(areaId).fragmentsFound;\n    public int GetFragmentsFound(AreaData area) => area != null ? GetFragmentsFound(area.areaId) : 0;\n\n    /// <summary>Regista mais um Fragmento Vital encontrado nesta área (limitado a AreaData.totalFragments, se fornecida).</summary>\n    public void AddFragmentFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        ap.fragmentsFound = area.totalFragments > 0 ? Mathf.Min(ap.fragmentsFound + 1, area.totalFragments) : ap.fragmentsFound + 1;\n    }\n\n    // ---------------- Ecos Perdidos (por área) ----------------\n\n    public int GetEcosPerdidosFound(string areaId) => GetOrCreateAreaProgress(areaId).ecosPerdidosFound;\n    public int GetEcosPerdidosFound(AreaData area) => area != null ? GetEcosPerdidosFound(area.areaId) : 0;\n\n    /// <summary>\n    /// Regista mais um Eco Perdido encontrado nesta área (limitado a\n    /// AreaData.totalEcosPerdidos, se fornecida) e dá +1 ao saldo global de\n    /// Ecos Perdidos do jogador (GiveEcosPerdidos, que actualiza o evento).\n    /// </summary>\n    public void AddEcoPerdidoFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        int before = ap.ecosPerdidosFound;\n        ap.ecosPerdidosFound = area.totalEcosPerdidos > 0\n            ? Mathf.Min(ap.ecosPerdidosFound + 1, area.totalEcosPerdidos)\n            : ap.ecosPerdidosFound + 1;\n\n        if (ap.ecosPerdidosFound > before)\n            GiveEcosPerdidos(1);\n    }\n\n    // ---------------- Melodias Selvagens ----------------\n\n    /// <summary>True se a melodia com este \"melodyId\" já foi colectada.</summary>\n    public bool HasCollectedMelody(string melodyId) =>\n        !string.IsNullOrEmpty(melodyId) && collectedMelodyIds.Contains(melodyId);\n\n    /// <summary>\n    /// Regista a melodia \"melodyId\" como colectada e incrementa o contador da\n    /// área \"area\" (se fornecida). Idempotente — não duplica.\n    /// Dispara <see cref=\"PickupCollected\"/> (PickupType.WildMelody) para que\n    /// sistemas externos (EmblemManager, UI, etc.) possam reagir.\n    /// </summary>\n    public void MarkMelodyCollected(string melodyId, AreaData area)\n    {\n        if (string.IsNullOrEmpty(melodyId)) return;\n        if (collectedMelodyIds.Contains(melodyId)) return;\n\n        collectedMelodyIds.Add(melodyId);\n\n        if (area != null)\n        {\n            var ap = GetOrCreateAreaProgress(area.areaId);\n            ap.melodiesFound = area.totalMelodies > 0\n                ? Mathf.Min(ap.melodiesFound + 1, area.totalMelodies)\n                : ap.melodiesFound + 1;\n        }\n\n        // Notifica o EmblemManager e outros sistemas.\n        PickupCollected?.Invoke(PickupType.WildMelody, melodyId);\n\n        // Verifica se o desbloqueio de uma melodia completa o 100% da área\n        // ou do jogo → dispara CheckAll do EmblemManager.\n        EmblemManager.Instance?.CheckAll();\n    }\n\n    /// <summary>Melodias Selvagens encontradas nesta área.</summary>\n    public int GetMelodiesFound(string areaId) => GetOrCreateAreaProgress(areaId).melodiesFound;\n    public int GetMelodiesFound(AreaData area) => area != null ? GetMelodiesFound(area.areaId) : 0;\n\n    /// <summary>O jogador já encontrou/descobriu o desafio opcional desta área (mostra \"?\" até aqui).</summary>\n    public bool IsChallengeDiscovered(string areaId) => GetOrCreateAreaProgress(areaId).challengeDiscovered;\n    public bool IsChallengeDiscovered(AreaData area) => area != null && IsChallengeDiscovered(area.areaId);\n\n    public void MarkChallengeDiscovered(AreaData area)\n    {\n        if (area != null) GetOrCreateAreaProgress(area.areaId).challengeDiscovered = true;\n    }\n\n    public bool IsChallengeCompleted(string areaId) => GetOrCreateAreaProgress(areaId).challengeCompleted;\n    public bool IsChallengeCompleted(AreaData area) => area != null && IsChallengeCompleted(area.areaId);\n\n    public void MarkChallengeCompleted(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        ap.challengeCompleted = true;\n        ap.challengeDiscovered = true;\n    }\n\n    /// <summary>Sussurros da Terra (frases exactas ditas por NPCs) já ouvidos sobre esta área — usado em \"SUSSURROS DA TERRA\" no Menu de Pausa.</summary>\n    public IReadOnlyList<string> GetSussurrosDaTerraOuvidos(string areaId) => GetOrCreateAreaProgress(areaId).sussurrosDaTerraOuvidos;\n    public IReadOnlyList<string> GetSussurrosDaTerraOuvidos(AreaData area) => area != null ? GetSussurrosDaTerraOuvidos(area.areaId) : null;\n\n    /// <summary>\n    /// Regista um Sussurro da Terra (frase exacta dita por um NPC) sobre esta área, se ainda não\n    /// tiver sido ouvido. É a mesma colecionável da contagem \"Sussurros da Terra\" das Descobertas\n    /// da área — por isso também conta como um Sussurro da Terra encontrado (ver AddWhisperFound).\n    /// </summary>\n    public void AddSussurroDaTerra(AreaData area, string phrase)\n    {\n        if (area == null || string.IsNullOrEmpty(phrase)) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        if (ap.sussurrosDaTerraOuvidos.Contains(phrase)) return;\n\n        ap.sussurrosDaTerraOuvidos.Add(phrase);\n        AddWhisperFound(area);\n    }\n\n    /// <summary>\n    /// Percentagem de conclusão de uma área (0–100), considerando apenas\n    /// conteúdo permanente. Critérios que entram no cálculo:\n    ///   • Runas de Gaia\n    ///   • NPCs resgatados\n    ///   • Sussurros da Terra encontrados (whispersFound — a entrega é contada\n    ///     no total global, não nesta vista por área)\n    ///   • Baús abertos\n    ///   • Fragmentos Vitais recolhidos\n    ///   • Animal libertado (area.freedAnimalForm)\n    ///   • Desafio opcional concluído (area.hasOptionalChallenge)\n    ///   • Melodias Selvagens recolhidas (area.totalMelodies)\n    ///\n    /// Excluídos: Sementes, Ecos Perdidos, inimigos.\n    /// </summary>\n    public int GetAreaCompletionPercent(AreaData area)\n    {\n        if (area == null) return 0;\n\n        var ap = GetOrCreateAreaProgress(area.areaId);\n\n        int total = 0;\n        int found = 0;\n\n        if (area.totalRunas > 0) { total += area.totalRunas; found += Mathf.Min(ap.runasFound, area.totalRunas); }\n        if (area.totalNpcsToRescue > 0) { total += area.totalNpcsToRescue; found += Mathf.Min(ap.npcsRescued, area.totalNpcsToRescue); }\n        if (area.totalWhispers > 0) { total += area.totalWhispers; found += Mathf.Min(ap.whispersFound, area.totalWhispers); }\n        if (area.totalChests > 0) { total += area.totalChests; found += Mathf.Min(ap.chestsFound, area.totalChests); }\n        if (area.totalFragments > 0) { total += area.totalFragments; found += Mathf.Min(ap.fragmentsFound, area.totalFragments); }\n\n        if (area.freedAnimalForm != null)\n        {\n            total += 1;\n            if (freedAnimalIds.Contains(area.freedAnimalForm.formId)) found += 1;\n        }\n\n        if (area.hasOptionalChallenge)\n        {\n            total += 1;\n            if (ap.challengeCompleted) found += 1;\n        }\n\n        if (area.totalMelodies > 0) { total += area.totalMelodies; found += Mathf.Min(ap.melodiesFound, area.totalMelodies); }\n\n        if (total <= 0) return 0;\n        return Mathf.RoundToInt(100f * found / total);\n    }\n\n    private AreaProgress GetOrCreateAreaProgress(string areaId)\n    {\n        for (int i = 0; i < areaProgress.Count; i++)\n            if (areaProgress[i].areaId == areaId) return areaProgress[i];\n\n        var created = new AreaProgress { areaId = areaId };\n        areaProgress.Add(created);\n        return created;\n    }\n\n    // ---------------- Progressão por Mundo (Menu de Pausa: Progresso — Tarefa #11) ----------------\n\n    /// <summary>O jogador já descobriu quantos Runas/Animais/NPCs/Sussurros/Missões existem neste mundo (ver WorldProgress.totalsDiscovered).</summary>\n    public bool AreWorldTotalsDiscovered(string worldId) => GetOrCreateWorldProgress(worldId).totalsDiscovered;\n    public bool AreWorldTotalsDiscovered(WorldData world) => world != null && AreWorldTotalsDiscovered(world.worldId);\n\n    /// <summary>Marca que o jogador já descobriu os totais deste mundo — a secção Progresso passa a mostrar \"X/TOTAL\" em vez de \"X/?\".</summary>\n    public void MarkWorldTotalsDiscovered(string worldId)\n    {\n        if (string.IsNullOrEmpty(worldId)) return;\n        GetOrCreateWorldProgress(worldId).totalsDiscovered = true;\n    }\n\n    public void MarkWorldTotalsDiscovered(WorldData world)\n    {\n        if (world != null) MarkWorldTotalsDiscovered(world.worldId);\n    }\n\n    private WorldProgress GetOrCreateWorldProgress(string worldId)\n    {\n        for (int i = 0; i < worldProgress.Count; i++)\n            if (worldProgress[i].worldId == worldId) return worldProgress[i];\n\n        var created = new WorldProgress { worldId = worldId };\n        worldProgress.Add(created);\n        return created;\n    }\n\n    // ---------------- Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores) ----------------\n\n    /// <summary>Combina \"missionId\" e \"clueId\" no formato usado por \"obtainedClueIds\".</summary>\n    private static string CombineClueId(string missionId, string clueId) => $\"{missionId}/{clueId}\";\n\n    /// <summary>True se a pista \"clueId\" da missão \"missionId\" já foi obtida.</summary>\n    public bool HasClue(string missionId, string clueId)\n    {\n        if (string.IsNullOrEmpty(missionId) || string.IsNullOrEmpty(clueId)) return false;\n        return obtainedClueIds.Contains(CombineClueId(missionId, clueId));\n    }\n\n    public bool HasClue(MissionData mission, string clueId) => mission != null && HasClue(mission.missionId, clueId);\n\n    /// <summary>Regista a pista \"clueId\" da missão \"missionId\" como obtida (idempotente).</summary>\n    public void MarkClueObtained(string missionId, string clueId)\n    {\n        if (string.IsNullOrEmpty(missionId) || string.IsNullOrEmpty(clueId)) return;\n\n        string combined = CombineClueId(missionId, clueId);\n        if (!obtainedClueIds.Contains(combined)) obtainedClueIds.Add(combined);\n    }\n\n    public void MarkClueObtained(MissionData mission, string clueId)\n    {\n        if (mission != null) MarkClueObtained(mission.missionId, clueId);\n    }\n\n    /// <summary>True se o rumor \"rumorId\" já foi ouvido (Action_AddRumor) — aparece na secção \"Rumores\" do Diário.</summary>\n    public bool HasHeardRumor(string rumorId) => !string.IsNullOrEmpty(rumorId) && heardRumorIds.Contains(rumorId);\n\n    public void MarkRumorHeard(string rumorId)\n    {\n        if (!string.IsNullOrEmpty(rumorId) && !heardRumorIds.Contains(rumorId))\n            heardRumorIds.Add(rumorId);\n    }\n\n    /// <summary>True se o rumor \"rumorId\" já foi marcado como \"encontrado\" (Action_MarkRumorFound) — mostra o ícone de \"Check\".</summary>\n    public bool IsRumorFound(string rumorId) => !string.IsNullOrEmpty(rumorId) && foundRumorIds.Contains(rumorId);\n\n    public void MarkRumorFound(string rumorId)\n    {\n        if (!string.IsNullOrEmpty(rumorId) && !foundRumorIds.Contains(rumorId))\n            foundRumorIds.Add(rumorId);\n    }\n\n    // ---------------- Percentagem Total do Save (Menu de Pausa: Progresso — Tarefa #11) ----------------\n\n    /// <summary>\n    /// Percentagem total de conclusão do save (0–100, ou exactamente 101 —\n    /// GDD: \"100% = Emblema de Gaia; Provação = Emblema de Apolo;\n    /// Gaia + Apolo = 101% e Emblema de Zeus\").\n    ///\n    /// <b>Critérios por área (allAreas):</b>\n    ///   • Runas de Gaia (totalRunas)\n    ///   • NPCs resgatados (totalNpcsToRescue)\n    ///   • Sussurros da Terra: encontrados (whispersFound) + entregues\n    ///     (whispersDelivered) — cada Sussurro conta duas vezes (encontrar\n    ///     + entregar são passos distintos)\n    ///   • Baús (totalChests)\n    ///   • Fragmentos Vitais (totalFragments)\n    ///   • Desafio opcional concluído (hasOptionalChallenge)\n    ///   • Melodias Selvagens recolhidas (totalMelodies)\n    ///\n    /// <b>Critérios globais:</b>\n    ///   • Formas de animais NÃO-secretas libertadas (allForms, isSecretForm=false)\n    ///   • Missões concluídas (allMissions)\n    ///   • Emblemas de mundo (allEmblems onde !isBonus &amp;&amp; !isGaiaEmblem\n    ///     &amp;&amp; !isApoloEmblem — normalmente os 6 emblemas de mundo)\n    ///\n    /// <b>Excluídos do cálculo:</b>\n    ///   • Formas secretas (isSecretForm = true)\n    ///   • Emblema de Gaia, Emblema de Apolo, Emblema de Zeus (isGaiaEmblem /\n    ///     isApoloEmblem / isBonus) — contam apenas para a regra dos 101%\n    ///   • Sementes, Ecos Perdidos, inimigos\n    ///\n    /// <b>Regra especial de 101%:</b>\n    ///   Devolve exactamente 101 se e só se Emblema de Gaia E Emblema de Apolo\n    ///   estiverem ambos obtidos. Em todos os outros casos: clamp(0, 100).\n    /// </summary>\n    public int GetTotalCompletionPercent(List<AreaData> allAreas, List<AnimalFormData> allForms, List<MissionData> allMissions, List<EmblemData> allEmblems)\n    {\n        int total = 0;\n        int found = 0;\n\n        if (allAreas != null)\n        {\n            foreach (var area in allAreas)\n            {\n                if (area == null) continue;\n                var ap = GetOrCreateAreaProgress(area.areaId);\n\n                if (area.totalRunas > 0) { total += area.totalRunas; found += Mathf.Min(ap.runasFound, area.totalRunas); }\n                if (area.totalNpcsToRescue > 0) { total += area.totalNpcsToRescue; found += Mathf.Min(ap.npcsRescued, area.totalNpcsToRescue); }\n\n                if (area.totalWhispers > 0)\n                {\n                    total += area.totalWhispers; found += Mathf.Min(ap.whispersFound, area.totalWhispers);\n                    total += area.totalWhispers; found += Mathf.Min(ap.whispersDelivered, area.totalWhispers);\n                }\n\n                if (area.totalChests > 0) { total += area.totalChests; found += Mathf.Min(ap.chestsFound, area.totalChests); }\n                if (area.totalFragments > 0) { total += area.totalFragments; found += Mathf.Min(ap.fragmentsFound, area.totalFragments); }\n\n                if (area.hasOptionalChallenge)\n                {\n                    total += 1;\n                    if (ap.challengeCompleted) found += 1;\n                }\n\n                if (area.totalMelodies > 0) { total += area.totalMelodies; found += Mathf.Min(ap.melodiesFound, area.totalMelodies); }\n            }\n        }\n\n        if (allForms != null)\n        {\n            foreach (var form in allForms)\n            {\n                if (form == null) continue;\n                if (form.isSecretForm) continue; // formas secretas excluídas do cálculo.\n\n                total += 1;\n                if (HasFreedAnimal(form.formId)) found += 1;\n            }\n        }\n\n        if (allMissions != null)\n        {\n            var missionManager = MissionManager.Instance;\n            foreach (var mission in allMissions)\n            {\n                if (mission == null) continue;\n                total += 1;\n                if (missionManager != null && missionManager.IsMissionCompleted(mission)) found += 1;\n            }\n        }\n\n        // Emblemas: só os 6 de mundo (não-bónus, não-Gaia, não-Apolo) contam.\n        // Emblemas de Gaia e Apolo são rastreados separadamente para a regra dos 101%.\n        bool gaiaObtained = false;\n        bool apoloObtained = false;\n\n        if (allEmblems != null)\n        {\n            var vars = GameVariables.Instance;\n            foreach (var emblem in allEmblems)\n            {\n                if (emblem == null) continue;\n                bool obtained = vars != null && !string.IsNullOrEmpty(emblem.obtainedVariable) && vars.GetBool(emblem.obtainedVariable);\n\n                if (emblem.isGaiaEmblem)  { if (obtained) gaiaObtained  = true; continue; }\n                if (emblem.isApoloEmblem) { if (obtained) apoloObtained = true; continue; }\n                if (emblem.isBonus) continue; // outros bónus (ex: Emblema de Zeus) — excluídos.\n\n                total += 1;\n                if (obtained) found += 1;\n            }\n        }\n\n        if (total <= 0) return 0;\n\n        // GDD: 101% é exclusivo de Gaia + Apolo — nunca mais do que isso.\n        int basePercent = Mathf.Clamp(Mathf.RoundToInt(100f * found / total), 0, 100);\n        return (gaiaObtained && apoloObtained) ? 101 : basePercent;\n    }\n\n    // ---------------- Bosses / Mundo ----------------\n\n    public bool HasDefeatedBoss(string worldId) => !string.IsNullOrEmpty(worldId) && defeatedBossWorldIds.Contains(worldId);\n    public bool HasDefeatedBoss(WorldData world) => world != null && HasDefeatedBoss(world.worldId);\n\n    public void SetBossDefeated(string worldId)\n    {\n        if (string.IsNullOrEmpty(worldId)) return;\n        if (!defeatedBossWorldIds.Contains(worldId)) defeatedBossWorldIds.Add(worldId);\n        if (!pendingPostBossReturnWorldIds.Contains(worldId)) pendingPostBossReturnWorldIds.Add(worldId);\n\n        // Verifica emblemas após boss derrotado — pode desbloquear emblema de mundo\n        // e, por sua vez, o boss alternativo (Tarefa #32).\n        EmblemManager.Instance?.CheckAll();\n    }\n\n    public void SetBossDefeated(WorldData world)\n    {\n        if (world != null) SetBossDefeated(world.worldId);\n    }\n\n    /// <summary>O jogador venceu o boss deste mundo e ainda não passou pelo evento de \"regresso\".</summary>\n    public bool IsReturningAfterBoss(string worldId) => pendingPostBossReturnWorldIds.Contains(worldId);\n    public bool IsReturningAfterBoss(WorldData world) => world != null && IsReturningAfterBoss(world.worldId);\n\n    /// <summary>Chamar quando o evento de \"regresso pós-boss\" terminar, para não disparar de novo.</summary>\n    public void ClearReturningAfterBoss(string worldId) => pendingPostBossReturnWorldIds.Remove(worldId);\n    public void ClearReturningAfterBoss(WorldData world)\n    {\n        if (world != null) ClearReturningAfterBoss(world.worldId);\n    }\n\n    // ---------------- Mapa-Múndi — Áreas Desbloqueadas ----------------\n\n    public bool IsAreaUnlocked(string areaId) => !string.IsNullOrEmpty(areaId) && unlockedAreaIds.Contains(areaId);\n    public bool IsAreaUnlocked(AreaData area) => area != null && IsAreaUnlocked(area.areaId);\n\n    /// <summary>\n    /// Desbloqueia \"areaId\" sem cobrar Runas (uso interno — vilas auto-desbloqueadas,\n    /// área de boss libertada pela missão principal, ou desbloqueios via debug/editor).\n    /// Para o fluxo normal \"botão Desbloquear\" usar <see cref=\"TryUnlockArea(AreaData)\"/>.\n    /// Devolve true se a área passou de bloqueada para desbloqueada agora.\n    /// </summary>\n    public bool UnlockArea(string areaId)\n    {\n        if (string.IsNullOrEmpty(areaId) || unlockedAreaIds.Contains(areaId)) return false;\n\n        unlockedAreaIds.Add(areaId);\n        AreaUnlockedOnMap?.Invoke(areaId);\n        return true;\n    }\n\n    public bool UnlockArea(AreaData area) => area != null && UnlockArea(area.areaId);\n\n    /// <summary>\n    /// Tenta desbloquear \"area\" no Mapa-Múndi pelo fluxo normal (botão \"Desbloquear\"\n    /// do painel). Áreas <see cref=\"AreaData.MapNodeType.Vila\"/> e\n    /// <see cref=\"AreaData.MapNodeType.Boss\"/> têm custo 0 (vilas são auto-desbloqueadas\n    /// pelo WorldMapController; bosses são libertados por missão — nenhum dos dois\n    /// deve, normalmente, passar pelo botão \"Desbloquear\", mas o método continua\n    /// seguro/gratuito para esses casos). Para áreas Normal, cobra\n    /// <see cref=\"AreaData.unlockCost\"/> em Runas de Gaia via\n    /// <see cref=\"TrySpendResource(PlayerResourceType, int)\"/> — só desbloqueia se\n    /// houver saldo suficiente. Devolve true se a área ficou desbloqueada\n    /// (já estava desbloqueada também conta como sucesso, sem cobrar de novo).\n    /// </summary>\n    public bool TryUnlockArea(AreaData area)\n    {\n        if (area == null) return false;\n        if (IsAreaUnlocked(area)) return true;\n\n        int cost = area.mapNodeType == AreaData.MapNodeType.Normal ? Mathf.Max(0, area.unlockCost) : 0;\n\n        if (cost > 0 && !TrySpendResource(PlayerResourceType.RunasDeGaia, cost))\n            return false;\n\n        return UnlockArea(area.areaId);\n    }\n\n    // ---------------- Mapa-Múndi — Boss ----------------\n\n    /// <summary>O jogador já encontrou o boss deste mundo pelo menos uma vez (vitória OU derrota) — painel mostra AreaData.bossDisplayName em vez de \"????????\".</summary>\n    public bool HasDiscoveredBoss(string worldId) => !string.IsNullOrEmpty(worldId) && discoveredBossWorldIds.Contains(worldId);\n    public bool HasDiscoveredBoss(WorldData world) => world != null && HasDiscoveredBoss(world.worldId);\n\n    public void MarkBossDiscovered(string worldId)\n    {\n        if (!string.IsNullOrEmpty(worldId) && !discoveredBossWorldIds.Contains(worldId))\n            discoveredBossWorldIds.Add(worldId);\n    }\n\n    public void MarkBossDiscovered(WorldData world)\n    {\n        if (world != null) MarkBossDiscovered(world.worldId);\n    }\n\n    /// <summary>A animação de desbloqueio da área do boss (câmara viaja até à Coroa, novo ramo ilumina-se) já foi reproduzida para este mundo — não repetir.</summary>\n    public bool HasPlayedBossUnlockAnimation(string worldId) => !string.IsNullOrEmpty(worldId) && bossUnlockAnimationPlayedWorldIds.Contains(worldId);\n    public bool HasPlayedBossUnlockAnimation(WorldData world) => world != null && HasPlayedBossUnlockAnimation(world.worldId);\n\n    public void MarkBossUnlockAnimationPlayed(string worldId)\n    {\n        if (!string.IsNullOrEmpty(worldId) && !bossUnlockAnimationPlayedWorldIds.Contains(worldId))\n            bossUnlockAnimationPlayedWorldIds.Add(worldId);\n    }\n\n    public void MarkBossUnlockAnimationPlayed(WorldData world)\n    {\n        if (world != null) MarkBossUnlockAnimationPlayed(world.worldId);\n    }\n\n    // ---- Área Secreta de Apolo ----\n\n    [Header(\"Mapa-Múndi — Área Secreta de Apolo\")]\n    [Tooltip(\"True quando a animação de desbloqueio da área secreta de Apolo (câmara viaja até à nova área) já foi reproduzida. Garante que a sequência só acontece uma vez.\")]\n    [SerializeField] private bool apoloAreaUnlockAnimationPlayed;\n\n    /// <summary>A animação de desbloqueio da área secreta de Apolo já foi reproduzida — não repetir.</summary>\n    public bool HasPlayedApoloAreaUnlockAnimation() => apoloAreaUnlockAnimationPlayed;\n\n    /// <summary>Marca que a animação de desbloqueio da área secreta de Apolo já foi reproduzida.</summary>\n    public void MarkApoloAreaUnlockAnimationPlayed() => apoloAreaUnlockAnimationPlayed = true;\n\n    // ---------------- Snapshots de Status (Eventos NPC) ----------------\n    //\n    // Snapshots são guardados apenas em runtime (não persistidos em save files).\n    // Usados por NPCs que \"roubam\" temporariamente recursos/animais ao player e\n    // os devolvem mais tarde.\n    //\n    // A configuração do que guardar fica nas NPC actions\n    // (Action_SavePlayerSnapshot / Action_RestorePlayerSnapshot) — ver\n    // NPC/Actions/StatusSnapshotActions.cs.\n\n    private readonly Dictionary<string, PlayerSnapshot> _snapshots =\n        new Dictionary<string, PlayerSnapshot>();\n\n    /// <summary>\n    /// Guarda um snapshot com a chave indicada. Substitui qualquer snapshot\n    /// anterior com a mesma chave.\n    /// </summary>\n    public void StoreSnapshot(string key, PlayerSnapshot snapshot)\n    {\n        if (string.IsNullOrEmpty(key) || snapshot == null) return;\n        _snapshots[key] = snapshot;\n    }\n\n    /// <summary>\n    /// Tenta obter o snapshot com a chave indicada. Devolve false se não existir.\n    /// </summary>\n    public bool TryGetSnapshot(string key, out PlayerSnapshot snapshot)\n    {\n        if (string.IsNullOrEmpty(key)) { snapshot = null; return false; }\n        return _snapshots.TryGetValue(key, out snapshot);\n    }\n\n    /// <summary>\n    /// Remove o snapshot com a chave indicada (após restaurar, para não\n    /// ficar em memória desnecessariamente).\n    /// </summary>\n    public void DiscardSnapshot(string key)\n    {\n        if (!string.IsNullOrEmpty(key)) _snapshots.Remove(key);\n    }\n\n    /// <summary>Remove todos os snapshots em runtime (ex: ao iniciar novo jogo).</summary>\n    public void ClearAllSnapshots() => _snapshots.Clear();\n\n    // ---------------- Save / Load ----------------\n\n    /// <summary>Versão actual da estrutura de save (ver SaveData.saveVersion).</summary>\n    public const int CurrentSaveVersion = 1;\n\n    /// <summary>Copia o estado actual para \"data\" (usado por SaveManager ao gravar).</summary>\n    public void CaptureTo(SaveData data)\n    {\n        data.saveVersion = CurrentSaveVersion;\n\n        data.currentHearts = currentHearts;\n        data.maxHearts = maxHearts;\n\n        data.sementes = sementes;\n        data.runasDeGaia = runasDeGaia;\n        data.totalRunasDeGaiaCollected = totalRunasDeGaiaCollected;\n        data.brotosDeVida = brotosDeVida;\n        data.fragmentosVitais = fragmentosVitais;\n        data.runasDeApolo = runasDeApolo;\n\n        data.ecosPerdidos = ecosPerdidos;\n        data.totalEcosPerdidosCollected = totalEcosPerdidosCollected;\n\n        data.inventory = new List<InventoryEntry>();\n        foreach (var entry in inventory)\n            data.inventory.Add(new InventoryEntry { itemId = entry.itemId, quantity = entry.quantity });\n\n        data.equippedItemId = equippedItemId;\n\n        data.collectedSpecialItemIds = new List<string>(collectedSpecialItemIds);\n        data.defeatedEnemyIds = new List<string>(defeatedEnemyIds);\n        data.collectedPickupIds = new List<string>(collectedPickupIds);\n\n        data.collectedMelodyIds = new List<string>(collectedMelodyIds);\n        data.completedChallengeIds = new List<string>(completedChallengeIds);\n\n        data.challengeRecords = new List<ChallengeRecord>();\n        foreach (var record in challengeRecords)\n            if (record != null) data.challengeRecords.Add(new ChallengeRecord { challengeId = record.challengeId, bestTimeSeconds = record.bestTimeSeconds });\n\n        data.totalSementesCollected = totalSementesCollected;\n        data.totalFragmentosVitaisCollected = totalFragmentosVitaisCollected;\n        data.totalBrotosDeVidaCollected = totalBrotosDeVidaCollected;\n        data.totalSussurrosCollected = totalSussurrosCollected;\n        data.totalChestsOpenedGlobal = totalChestsOpenedGlobal;\n\n        data.isNewGamePlus = isNewGamePlus;\n\n        data.freedAnimalIds = new List<string>(freedAnimalIds);\n        data.unlockedUpgradeIds = new List<string>(unlockedUpgradeIds);\n        data.enabledUpgradeIds = new List<string>(enabledUpgradeIds);\n\n        // Nota: o Modo Difícil (\"Juramento Difícil\") já não tem campo próprio —\n        // é derivado de enabledUpgradeIds (ver IsHardModeActive), já guardado acima.\n        data.lastCheckpointId = lastCheckpointId;\n\n        data.areaProgress = new List<AreaProgress>();\n        foreach (var ap in areaProgress)\n            data.areaProgress.Add(new AreaProgress\n            {\n                areaId = ap.areaId,\n                deaths = ap.deaths,\n                visited = ap.visited,\n                opened = ap.opened,\n                runasFound = ap.runasFound,\n                npcsRescued = ap.npcsRescued,\n                rescuedNpcIds = new List<string>(ap.rescuedNpcIds),\n                whispersFound = ap.whispersFound,\n                whispersDelivered = ap.whispersDelivered,\n                chestsFound = ap.chestsFound,\n                fragmentsFound = ap.fragmentsFound,\n                ecosPerdidosFound = ap.ecosPerdidosFound,\n                challengeCompleted = ap.challengeCompleted,\n                challengeDiscovered = ap.challengeDiscovered,\n                melodiesFound = ap.melodiesFound,\n                sussurrosDaTerraOuvidos = new List<string>(ap.sussurrosDaTerraOuvidos)\n            });\n\n        data.defeatedBossWorldIds = new List<string>(defeatedBossWorldIds);\n        data.pendingPostBossReturnWorldIds = new List<string>(pendingPostBossReturnWorldIds);\n\n        data.worldProgress = new List<WorldProgress>();\n        foreach (var wp in worldProgress)\n            data.worldProgress.Add(new WorldProgress { worldId = wp.worldId, totalsDiscovered = wp.totalsDiscovered });\n\n        data.obtainedClueIds = new List<string>(obtainedClueIds);\n        data.heardRumorIds = new List<string>(heardRumorIds);\n        data.foundRumorIds = new List<string>(foundRumorIds);\n\n        data.unlockedAreaIds = new List<string>(unlockedAreaIds);\n        data.discoveredBossWorldIds = new List<string>(discoveredBossWorldIds);\n        data.bossUnlockAnimationPlayedWorldIds = new List<string>(bossUnlockAnimationPlayedWorldIds);\n        data.apoloAreaUnlockAnimationPlayed = apoloAreaUnlockAnimationPlayed;\n\n        // Snapshots activos (ex: sequência de roubo em curso).\n        data.activeSnapshots = new List<SaveData.SnapshotEntry>();\n        foreach (var kv in _snapshots)\n            data.activeSnapshots.Add(new SaveData.SnapshotEntry { key = kv.Key, snapshot = kv.Value });\n    }\n\n    /// <summary>Restaura o estado a partir de \"data\" (usado por SaveManager ao carregar).</summary>\n    public void RestoreFrom(SaveData data)\n    {\n        if (data == null) return;\n\n        maxHearts = Mathf.Min(data.maxHearts, MaxHeartsCap);\n        currentHearts = Mathf.Clamp(data.currentHearts, 0, maxHearts);\n\n        sementes = data.sementes;\n        runasDeGaia = data.runasDeGaia;\n        totalRunasDeGaiaCollected = data.totalRunasDeGaiaCollected;\n        brotosDeVida = data.brotosDeVida;\n        fragmentosVitais = data.fragmentosVitais;\n        runasDeApolo = data.runasDeApolo;\n\n        ecosPerdidos = data.ecosPerdidos;\n        totalEcosPerdidosCollected = data.totalEcosPerdidosCollected;\n\n        inventory.Clear();\n        if (data.inventory != null)\n            foreach (var entry in data.inventory)\n                inventory.Add(new InventoryEntry { itemId = entry.itemId, quantity = entry.quantity });\n\n        equippedItemId = data.equippedItemId;\n\n        collectedSpecialItemIds.Clear();\n        if (data.collectedSpecialItemIds != null) collectedSpecialItemIds.AddRange(data.collectedSpecialItemIds);\n\n        defeatedEnemyIds.Clear();\n        if (data.defeatedEnemyIds != null) defeatedEnemyIds.AddRange(data.defeatedEnemyIds);\n\n        collectedPickupIds.Clear();\n        if (data.collectedPickupIds != null) collectedPickupIds.AddRange(data.collectedPickupIds);\n\n        collectedMelodyIds.Clear();\n        if (data.collectedMelodyIds != null) collectedMelodyIds.AddRange(data.collectedMelodyIds);\n\n        completedChallengeIds.Clear();\n        if (data.completedChallengeIds != null) completedChallengeIds.AddRange(data.completedChallengeIds);\n\n        challengeRecords.Clear();\n        if (data.challengeRecords != null)\n            foreach (var record in data.challengeRecords)\n                if (record != null) challengeRecords.Add(new ChallengeRecord { challengeId = record.challengeId, bestTimeSeconds = record.bestTimeSeconds });\n\n        totalSementesCollected = data.totalSementesCollected;\n        totalFragmentosVitaisCollected = data.totalFragmentosVitaisCollected;\n        totalBrotosDeVidaCollected = data.totalBrotosDeVidaCollected;\n        totalSussurrosCollected = data.totalSussurrosCollected;\n        totalChestsOpenedGlobal = data.totalChestsOpenedGlobal;\n\n        isNewGamePlus = data.isNewGamePlus;\n\n        freedAnimalIds.Clear();\n        if (data.freedAnimalIds != null) freedAnimalIds.AddRange(data.freedAnimalIds);\n\n        unlockedUpgradeIds.Clear();\n        if (data.unlockedUpgradeIds != null) unlockedUpgradeIds.AddRange(data.unlockedUpgradeIds);\n\n        enabledUpgradeIds.Clear();\n        if (data.enabledUpgradeIds != null) enabledUpgradeIds.AddRange(data.enabledUpgradeIds);\n\n        // Nota: o Modo Difícil (\"Juramento Difícil\") já não tem campo próprio —\n        // é derivado de enabledUpgradeIds (ver IsHardModeActive), já restaurado acima.\n        lastCheckpointId = data.lastCheckpointId;\n\n        areaProgress.Clear();\n        if (data.areaProgress != null)\n            foreach (var ap in data.areaProgress)\n                areaProgress.Add(new AreaProgress\n                {\n                    areaId = ap.areaId,\n                    deaths = ap.deaths,\n                    visited = ap.visited,\n                    opened = ap.opened,\n                    runasFound = ap.runasFound,\n                    npcsRescued = ap.npcsRescued,\n                    rescuedNpcIds = ap.rescuedNpcIds != null ? new List<string>(ap.rescuedNpcIds) : new List<string>(),\n                    whispersFound = ap.whispersFound,\n                    whispersDelivered = ap.whispersDelivered,\n                    chestsFound = ap.chestsFound,\n                    fragmentsFound = ap.fragmentsFound,\n                    ecosPerdidosFound = ap.ecosPerdidosFound,\n                    challengeCompleted = ap.challengeCompleted,\n                    challengeDiscovered = ap.challengeDiscovered,\n                    melodiesFound = ap.melodiesFound,\n                    sussurrosDaTerraOuvidos = ap.sussurrosDaTerraOuvidos != null ? new List<string>(ap.sussurrosDaTerraOuvidos) : new List<string>()\n                });\n\n        // Migração: saves versão 0 (sem rescuedNpcIds) — aceitar inconsistência.\n        // Os rescuedNpcIds ficam vazios; novas chamadas a AddNpcRescued passam a\n        // funcionar correctamente com idempotência. Salvar novamente para converter.\n        // (Nenhuma acção extra necessária — os IDs são preenchidos ao resgatar NPCs.)\n\n        defeatedBossWorldIds.Clear();\n        if (data.defeatedBossWorldIds != null) defeatedBossWorldIds.AddRange(data.defeatedBossWorldIds);\n\n        pendingPostBossReturnWorldIds.Clear();\n        if (data.pendingPostBossReturnWorldIds != null) pendingPostBossReturnWorldIds.AddRange(data.pendingPostBossReturnWorldIds);\n\n        worldProgress.Clear();\n        if (data.worldProgress != null)\n            foreach (var wp in data.worldProgress)\n                worldProgress.Add(new WorldProgress { worldId = wp.worldId, totalsDiscovered = wp.totalsDiscovered });\n\n        obtainedClueIds.Clear();\n        if (data.obtainedClueIds != null) obtainedClueIds.AddRange(data.obtainedClueIds);\n\n        heardRumorIds.Clear();\n        if (data.heardRumorIds != null) heardRumorIds.AddRange(data.heardRumorIds);\n\n        foundRumorIds.Clear();\n        if (data.foundRumorIds != null) foundRumorIds.AddRange(data.foundRumorIds);\n\n        unlockedAreaIds.Clear();\n        if (data.unlockedAreaIds != null) unlockedAreaIds.AddRange(data.unlockedAreaIds);\n\n        discoveredBossWorldIds.Clear();\n        if (data.discoveredBossWorldIds != null) discoveredBossWorldIds.AddRange(data.discoveredBossWorldIds);\n\n        bossUnlockAnimationPlayedWorldIds.Clear();\n        if (data.bossUnlockAnimationPlayedWorldIds != null) bossUnlockAnimationPlayedWorldIds.AddRange(data.bossUnlockAnimationPlayedWorldIds);\n\n        apoloAreaUnlockAnimationPlayed = data.apoloAreaUnlockAnimationPlayed;\n\n        // Snapshots activos — restaurar para que missões em curso (ex: ladrão)\n        // continuem a funcionar após carregar um save gravado a meio da sequência.\n        _snapshots.Clear();\n        if (data.activeSnapshots != null)\n            foreach (var entry in data.activeSnapshots)\n                if (!string.IsNullOrEmpty(entry.key) && entry.snapshot != null)\n                    _snapshots[entry.key] = entry.snapshot;\n    }\n}\n\n/// <summary>Entrada do inventário com quantidade (Etapa 4.2).</summary>\n[System.Serializable]\npublic class InventoryEntry\n{\n    public string itemId;\n    [Min(0)] public int quantity = 1;\n}\n\n/// <summary>\n/// Estado de progresso a nível de MUNDO (não de área) — usado pela secção\n/// Progresso do Menu de Pausa (Tarefa #11).\n/// </summary>\n[System.Serializable]\npublic class WorldProgress\n{\n    public string worldId;\n\n    /// <summary>\n    /// O jogador já descobriu quantos Runas/Animais/NPCs/Sussurros/Missões\n    /// existem neste mundo — enquanto false, a secção Progresso mostra \"X/?\"\n    /// em vez do total real (GDD: \"Poderia aparecer simplesmente 4/? até o\n    /// jogador descobrir quantos existem naquele mundo\").\n    /// </summary>\n    public bool totalsDiscovered;\n}\n\n[System.Serializable]\npublic class AreaProgress\n{\n    public string areaId;\n    public int deaths;\n    public bool visited;\n\n    /// <summary>\"Área aberta\" — acesso desbloqueado (ex: porta/portão/ponte activados), distinto de \"visited\".</summary>\n    public bool opened;\n\n    // ---------------- Descobertas da Área (Menu de Pausa: Área Atual) ----------------\n\n    /// <summary>Runas de Gaia encontradas nesta área (de AreaData.totalRunas).</summary>\n    public int runasFound;\n\n    /// <summary>NPCs resgatados nesta área (de AreaData.totalNpcsToRescue).</summary>\n    public int npcsRescued;\n\n    /// <summary>\n    /// IDs dos NPCs já resgatados nesta área — garante idempotência em\n    /// <see cref=\"PlayerProgress.AddNpcRescued\"/>. Um NPC cujo ID já esteja nesta\n    /// lista não incrementa \"npcsRescued\" nem dispara eventos novamente.\n    /// Saves de versão 0 (anteriores à Tarefa NPC-ID) começam com lista vazia —\n    /// novos resgates passam a registar-se correctamente a partir daí.\n    /// </summary>\n    public List<string> rescuedNpcIds = new List<string>();\n\n    /// <summary>Sussurros da Terra encontrados nesta área (de AreaData.totalWhispers).</summary>\n    public int whispersFound;\n\n    /// <summary>\n    /// Sussurros da Terra já ENTREGUES (a um NPC/altar), distinto de \"encontrados\"\n    /// — usado em \"Sussurros entregues\" na secção Progresso do Menu de Pausa\n    /// (Tarefa #11). Partilha o total com \"whispersFound\" (AreaData.totalWhispers).\n    /// </summary>\n    public int whispersDelivered;\n\n    /// <summary>Baús abertos nesta área (de AreaData.totalChests).</summary>\n    public int chestsFound;\n\n    /// <summary>Fragmentos Vitais encontrados nesta área (de AreaData.totalFragments).</summary>\n    public int fragmentsFound;\n\n    /// <summary>Ecos Perdidos recolhidos nesta área (de AreaData.totalEcosPerdidos — normalmente 15 por área normal).</summary>\n    public int ecosPerdidosFound;\n\n    /// <summary>Melodias Selvagens encontradas nesta área (de AreaData.totalMelodies).</summary>\n    public int melodiesFound;\n\n    /// <summary>O desafio opcional desta área (se existir) foi concluído.</summary>\n    public bool challengeCompleted;\n\n    /// <summary>O jogador já descobriu/encontrou o desafio opcional desta área (mostra \"?\" até aqui).</summary>\n    public bool challengeDiscovered;\n\n    /// <summary>\n    /// Frases exactas (ditas por NPCs) sobre esta área que o jogador já ouviu —\n    /// mostradas em \"SUSSURROS DA TERRA\" na secção \"Área Atual\" do Menu de Pausa.\n    /// É a mesma colecionável da contagem \"Sussurros da Terra\" (whispersFound).\n    /// </summary>\n    [FormerlySerializedAs(\"echoesHeard\")]\n    public List<string> sussurrosDaTerraOuvidos = new List<string>();\n}\n\n/// <summary>\n/// Fotografia instantânea do estado do player tirada por um evento de NPC\n/// (Action_SavePlayerSnapshot) e restaurada por outro (Action_RestorePlayerSnapshot).\n///\n/// Apenas os campos com o flag correspondente em \"has*\" foram efectivamente\n/// capturados — restaurar só restaura esses campos, deixando o resto intacto.\n///\n/// Os snapshots são guardados apenas em runtime (não persistidos em save files).\n/// Identificados por chave de texto configurada pelo designer na acção NPC.\n///\n/// Exemplo de uso:\n///   NPC confisca animais ao entrar na área:\n///     1. Action_SavePlayerSnapshot  (key=\"sela_animais\", saveLockedForms=true, saveFreedAnimals=true)\n///     2. Action_LockAllFormsExceptStart  (bloqueia a roda visualmente)\n///   NPC devolve animais ao sair da área:\n///     3. Action_RestorePlayerSnapshot (key=\"sela_animais\")  → restaura locked forms e freed animals\n///     4. Action_ClearFormLocks  (segurança extra)\n/// </summary>\n[System.Serializable]\npublic class PlayerSnapshot\n{\n    // ── Flags (o que foi capturado) ────────────────────────────────────────\n    public bool hasSementes;\n    public bool hasRunasDeGaia;\n    public bool hasEcosPerdidos;\n    public bool hasBrotosDeVida;\n    public bool hasCurrentHearts;\n    public bool hasMaxHearts;\n    public bool hasInventory;\n    public bool hasEquippedItem;\n    public bool hasFreedAnimals;\n    public bool hasLockedForms;\n\n    // ── Valores capturados ─────────────────────────────────────────────────\n    public int sementes;\n    public int runasDeGaia;\n    public int ecosPerdidos;\n    public int brotosDeVida;\n    public int currentHearts;\n    public int maxHearts;\n    public List<InventoryEntry> inventory;\n    public string equippedItemId;\n    public List<string> freedAnimalIds;\n    /// <summary>formIds de formas bloqueadas pelo FormSwitcher no momento do snapshot.</summary>\n    public List<string> lockedFormIds;\n}\n",
+  "id": "script-data-playerprogress-cs",
+  "dependencyIds": [
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-npc-actions-seedsnpcactions-cs",
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-audio-audiomanager-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-challengemanager-cs",
+    "script-interactables-checkpoint-cs",
+    "script-npc-conditions-variableconditions-cs",
+    "script-data-emblemdata-cs",
+    "script-data-emblemmanager-cs",
+    "script-enemy-enemyrespawn-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-gamedatabase-cs",
+    "script-data-gamesettings-cs",
+    "script-data-gamevariables-cs",
+    "script-data-itemdata-cs",
+    "script-ui-itemwheelui-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-collectibles-pickupmagnet-cs",
+    "script-player-playercombat-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-player-playerhealthregen-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-data-rumordata-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savedata-cs",
+    "script-data-savemanager-cs",
+    "script-data-upgradedata-cs",
+    "script-data-wildmelodydata-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapnode-cs",
+    "script-world-worldmapui-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-playeractions-cs",
+    "script-npc-actions-missionactions-cs",
+    "script-npc-actions-villageactions-cs",
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-npc-actions-seedsnpcactions-cs",
+    "script-forms-animalformdata-cs",
+    "script-interactables-animalspiritrescue-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-ui-apolorunacollectui-cs",
+    "script-npc-actions-areaactions-cs",
+    "script-world-areamanager-cs",
+    "script-ui-areasectionui-cs",
+    "script-audio-audiomanager-cs",
+    "script-enemy-bosses-boss-amentequemata-cs",
+    "script-collectibles-brotodevidapickup-cs",
+    "script-camera-cameraareabounds-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-editor-challengedefinitioneditor-cs",
+    "script-data-challengemanager-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-interactables-checkpoint-cs",
+    "script-collectibles-chestpickup-cs",
+    "script-npc-conditions-missionconditions-cs",
+    "script-npc-conditions-worldconditions-cs",
+    "script-ui-deathscreenui-cs",
+    "script-ui-diarysectionui-cs",
+    "script-collectibles-ecoperdidopickup-cs",
+    "script-data-emblemmanager-cs",
+    "script-ui-emblemssectionui-cs",
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyrespawn-cs",
+    "script-enemy-enemyrespawnzone-cs",
+    "script-data-objectives-challengefailconditions-player-cs",
+    "script-interactables-fallresetzone-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-formssectionui-cs",
+    "script-collectibles-fragmentovitalpickup-cs",
+    "script-data-gamesettings-cs",
+    "script-data-gamevariables-cs",
+    "script-ui-hudcontroller-cs",
+    "script-abilities-iability-cs",
+    "script-ui-ipausemenusection-cs",
+    "script-ui-interactionpromptui-cs",
+    "script-data-itemdata-cs",
+    "script-ui-itemwheelnodeui-cs",
+    "script-ui-itemwheelui-cs",
+    "script-ui-itemsinstinctssectionui-cs",
+    "script-data-journalmanager-cs",
+    "script-ui-jukeboxsectionui-cs",
+    "script-ui-loadingscreencontroller-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-ui-missioncompleteui-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-collectibles-missionrewardpickup-cs",
+    "script-ui-newanimalunlockedui-cs",
+    "script-npc-npcconditionutil-cs",
+    "script-npc-conditions-playerconditions-cs",
+    "script-data-objectives-challengeobjectives-enemy-cs",
+    "script-data-objectives-challengeobjectives-player-cs",
+    "script-player-oxygensystem-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-collectibles-pickupmagnet-cs",
+    "script-ui-pickuppopupui-cs",
+    "script-player-playercombat-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-player-playerfeedback-cs",
+    "script-player-playerhealthregen-cs",
+    "script-player-playeritemuser-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-ui-progresssectionui-cs",
+    "script-enemy-projectiledata-cs",
+    "script-enemy-projectilepool-cs",
+    "script-combat-rumblemanager-cs",
+    "script-data-rumordata-cs",
+    "script-collectibles-runadegaiapickup-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savedata-cs",
+    "script-data-savemanager-cs",
+    "script-world-sceneloader-cs",
+    "script-collectibles-sementepickup-cs",
+    "script-ui-shopui-cs",
+    "script-collectibles-sussurrodaterrapickup-cs",
+    "script-data-upgradedata-cs",
+    "script-ui-upgradestabui-cs",
+    "script-combat-vfxpoolmanager-cs",
+    "script-npc-villageevolutioncontroller-cs",
+    "script-player-watermotor2d-cs",
+    "script-collectibles-wildmelodypickup-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapconnection-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapnode-cs",
+    "script-world-worldmapui-cs",
+    "script-data-worldstate-cs"
+  ]
+}

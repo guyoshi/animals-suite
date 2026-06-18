@@ -1,0 +1,526 @@
+{
+  "path": "UI/MainMenuOptionsUI.cs",
+  "filename": "MainMenuOptionsUI.cs",
+  "category": "UI",
+  "primary": "MainMenuOptionsUI",
+  "kind": "Componente",
+  "summary": "Painel \"Opções\" do Menu Principal (Tarefa #22) — versão simplificada de (Menu de Pausa): volumes, \"Voz de Gaia\", velocidade/tamanho do texto, vibração e \"Mudar Controles\". NÃO inclui Salvar/Carregar nem \"Regressar ao Título/Coração de Gaia\" — não fazem sentido fora de uma partida em curso. Montagem no Editor: igual à seção equivalente de OptionsSectionUI (menos as seções removidas), mais \"backButton\" (fecha o painel e devolve a seleção ao MainMenuController via ).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "MainMenuOptionsUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, ICancelHandler",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Header(\"Framework\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mainContentRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Tooltip(\"Conteúdo normal — escondido enquanto 'Mudar Controles' está aberto.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Conteúdo normal — escondido enquanto 'Mudar Controles' está aberto."
+    },
+    {
+      "name": "firstSelectable",
+      "type": "Selectable",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Tooltip(\"Primeiro controlo a seleccionar ao abrir este painel (ou ao voltar de 'Mudar Controles').\")] [SerializeField]",
+      "inspector": true,
+      "description": "Primeiro controlo a selecionar ao abrir este painel (ou ao voltar de 'Mudar Controles')."
+    },
+    {
+      "name": "backButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "masterVolumeSlider",
+      "type": "Slider",
+      "mods": "private",
+      "default": "",
+      "section": "Som e Volumes",
+      "attrs": "[Header(\"Som e Volumes\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "musicVolumeSlider",
+      "type": "Slider",
+      "mods": "private",
+      "default": "",
+      "section": "Som e Volumes",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "bgsVolumeSlider",
+      "type": "Slider",
+      "mods": "private",
+      "default": "",
+      "section": "Som e Volumes",
+      "attrs": "[Tooltip(\"Som de ambiente (BGS) — volume separado (Tarefa #38).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Som de ambiente (BGS) — volume separado (Tarefa #38)."
+    },
+    {
+      "name": "sfxVolumeSlider",
+      "type": "Slider",
+      "mods": "private",
+      "default": "",
+      "section": "Som e Volumes",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "gaiaVoiceToggle",
+      "type": "Toggle",
+      "mods": "private",
+      "default": "",
+      "section": "Voz de Gaia",
+      "attrs": "[Header(\"Voz de Gaia\")] [Tooltip(\"\\\"Voz de Gaia - Dublado - OFF\\\".\")] [SerializeField]",
+      "inspector": true,
+      "description": "\"Voz de Gaia - Dublado - OFF\"."
+    },
+    {
+      "name": "gaiaVoiceValueText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Voz de Gaia",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "gaiaVoiceOnText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Dublado\"",
+      "section": "Voz de Gaia",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "gaiaVoiceOffText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"OFF\"",
+      "section": "Voz de Gaia",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "textSpeedSlider",
+      "type": "Slider",
+      "mods": "private",
+      "default": "",
+      "section": "Texto",
+      "attrs": "[Header(\"Texto\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "textSizeButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Texto",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "textSizeValueText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Texto",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "textSizePequenoText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Pequeno\"",
+      "section": "Texto",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "textSizeMedioText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Médio\"",
+      "section": "Texto",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "textSizeGrandeText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Grande\"",
+      "section": "Texto",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "vibrationToggle",
+      "type": "Toggle",
+      "mods": "private",
+      "default": "",
+      "section": "Vibração",
+      "attrs": "[Header(\"Vibração\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "screenShakeToggle",
+      "type": "Toggle",
+      "mods": "private",
+      "default": "",
+      "section": "Acessibilidade (Tarefa #40)",
+      "attrs": "[Header(\"Acessibilidade (Tarefa #40)\")] [Tooltip(\"Desligar para remover o screen shake.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Desligar para remover o screen shake."
+    },
+    {
+      "name": "reducedFlashesToggle",
+      "type": "Toggle",
+      "mods": "private",
+      "default": "",
+      "section": "Acessibilidade (Tarefa #40)",
+      "attrs": "[Tooltip(\"Ligar para substituir flashes intensos por versões mais suaves.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Ligar para substituir flashes intensos por versões mais suaves."
+    },
+    {
+      "name": "changeControlsButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Mudar Controles",
+      "attrs": "[Header(\"Mudar Controles\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rebindSection",
+      "type": "ControlsRebindSectionUI",
+      "mods": "private",
+      "default": "",
+      "section": "Mudar Controles",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "jukeboxButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Jukebox (Tarefa #23)",
+      "attrs": "[Header(\"Jukebox (Tarefa #23)\")] [Tooltip(\"Abre o sub-painel Jukebox — lista de músicas configurada em JukeboxSectionUI.tracks.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Abre o sub-painel Jukebox — lista de músicas configurada em JukeboxSectionUI.tracks."
+    },
+    {
+      "name": "jukeboxSection",
+      "type": "JukeboxSectionUI",
+      "mods": "private",
+      "default": "",
+      "section": "Jukebox (Tarefa #23)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "languageButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Idioma",
+      "attrs": "[Header(\"Idioma\")] [Tooltip(\"Botão ciclável — muda para o próximo idioma disponível (GameSettings.CycleLanguage). Por agora só Português está disponível; os outros idiomas ficam disponíveis ao serem marcados em GameSettings.IsLanguageAvailable.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Botão ciclável — muda para o próximo idioma disponível (GameSettings.CycleLanguage). Por agora só Português está disponível; os outros idiomas ficam disponíveis ao serem marcados em GameSettings.IsLanguageAvailable."
+    },
+    {
+      "name": "languageValueText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Idioma",
+      "attrs": "[Tooltip(\"Texto que mostra o idioma activo (ex: \\\"Português\\\"). Actualizado por RefreshLanguageText().\")] [SerializeField]",
+      "inspector": true,
+      "description": "Texto que mostra o idioma ativo (ex: \"Português\\"
+    },
+    {
+      "name": "toggleSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Header(\"Sons\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Root",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "> root != null ? root : gameObject",
+      "section": "Sons",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Open",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Open."
+    },
+    {
+      "name": "Close",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Close."
+    },
+    {
+      "name": "OnCancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "BaseEventData eventData",
+      "description": "Executa a operação OnCancel."
+    },
+    {
+      "name": "Refresh",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Refresh."
+    },
+    {
+      "name": "OnMasterVolumeChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "float value",
+      "description": "Executa a operação OnMasterVolumeChanged."
+    },
+    {
+      "name": "OnMusicVolumeChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "float value",
+      "description": "Executa a operação OnMusicVolumeChanged."
+    },
+    {
+      "name": "OnBgsVolumeChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "float value",
+      "description": "Executa a operação OnBgsVolumeChanged."
+    },
+    {
+      "name": "OnSfxVolumeChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "float value",
+      "description": "Executa a operação OnSfxVolumeChanged."
+    },
+    {
+      "name": "OnGaiaVoiceToggled",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool value",
+      "description": "Executa a operação OnGaiaVoiceToggled."
+    },
+    {
+      "name": "RefreshGaiaVoiceText",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshGaiaVoiceText."
+    },
+    {
+      "name": "OnTextSpeedChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "float value",
+      "description": "Executa a operação OnTextSpeedChanged."
+    },
+    {
+      "name": "OnTextSizeCycle",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnTextSizeCycle."
+    },
+    {
+      "name": "RefreshTextSizeText",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshTextSizeText."
+    },
+    {
+      "name": "OnVibrationToggled",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool value",
+      "description": "Executa a operação OnVibrationToggled."
+    },
+    {
+      "name": "OnScreenShakeToggled",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool value",
+      "description": "Executa a operação OnScreenShakeToggled."
+    },
+    {
+      "name": "OnReducedFlashesToggled",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool value",
+      "description": "Executa a operação OnReducedFlashesToggled."
+    },
+    {
+      "name": "OnLanguageCycle",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnLanguageCycle."
+    },
+    {
+      "name": "RefreshLanguageText",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshLanguageText."
+    },
+    {
+      "name": "OpenRebindSection",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OpenRebindSection."
+    },
+    {
+      "name": "OnRebindClosed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnRebindClosed."
+    },
+    {
+      "name": "OpenJukebox",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OpenJukebox."
+    },
+    {
+      "name": "OnJukeboxClosed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnJukeboxClosed."
+    },
+    {
+      "name": "HideMainContent",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HideMainContent."
+    },
+    {
+      "name": "ShowMainContent",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ShowMainContent."
+    },
+    {
+      "name": "SelectFirst",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SelectFirst."
+    },
+    {
+      "name": "PlaySfx",
+      "ret": "void",
+      "mods": "private",
+      "params": "AudioClip clip",
+      "description": "Executa a operação PlaySfx."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "ControlsRebindSectionUI",
+    "GameLanguage",
+    "GameSettings",
+    "JukeboxSectionUI",
+    "MainMenuController",
+    "OptionsSectionUI",
+    "TextSize"
+  ],
+  "used_by": [
+    "MainMenuController"
+  ],
+  "source": "using TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Painel \"Opções\" do Menu Principal (Tarefa #22) — versão simplificada de\n/// <see cref=\"OptionsSectionUI\"/> (Menu de Pausa): volumes, \"Voz de Gaia\",\n/// velocidade/tamanho do texto, vibração e \"Mudar Controles\". NÃO inclui\n/// Salvar/Carregar nem \"Regressar ao Título/Coração de Gaia\" — não fazem\n/// sentido fora de uma partida em curso.\n///\n/// Montagem no Editor: igual à secção equivalente de OptionsSectionUI (menos\n/// as secções removidas), mais \"backButton\" (fecha o painel e devolve a\n/// selecção ao MainMenuController via <see cref=\"Closed\"/>).\n/// </summary>\npublic class MainMenuOptionsUI : MonoBehaviour, ICancelHandler\n{\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject root;\n\n    [Tooltip(\"Conteúdo normal — escondido enquanto 'Mudar Controles' está aberto.\")]\n    [SerializeField] private GameObject mainContentRoot;\n\n    [Tooltip(\"Primeiro controlo a seleccionar ao abrir este painel (ou ao voltar de 'Mudar Controles').\")]\n    [SerializeField] private Selectable firstSelectable;\n\n    [SerializeField] private Button backButton;\n\n    [Header(\"Som e Volumes\")]\n    [SerializeField] private Slider masterVolumeSlider;\n    [SerializeField] private Slider musicVolumeSlider;\n    [Tooltip(\"Som de ambiente (BGS) — volume separado (Tarefa #38).\")]\n    [SerializeField] private Slider bgsVolumeSlider;\n    [SerializeField] private Slider sfxVolumeSlider;\n\n    [Header(\"Voz de Gaia\")]\n    [Tooltip(\"\\\"Voz de Gaia - Dublado - OFF\\\".\")]\n    [SerializeField] private Toggle gaiaVoiceToggle;\n    [SerializeField] private TMP_Text gaiaVoiceValueText;\n    [SerializeField] private string gaiaVoiceOnText = \"Dublado\";\n    [SerializeField] private string gaiaVoiceOffText = \"OFF\";\n\n    [Header(\"Texto\")]\n    [SerializeField] private Slider textSpeedSlider;\n    [SerializeField] private Button textSizeButton;\n    [SerializeField] private TMP_Text textSizeValueText;\n    [SerializeField] private string textSizePequenoText = \"Pequeno\";\n    [SerializeField] private string textSizeMedioText = \"Médio\";\n    [SerializeField] private string textSizeGrandeText = \"Grande\";\n\n    [Header(\"Vibração\")]\n    [SerializeField] private Toggle vibrationToggle;\n\n    [Header(\"Acessibilidade (Tarefa #40)\")]\n    [Tooltip(\"Desligar para remover o screen shake.\")]\n    [SerializeField] private Toggle screenShakeToggle;\n    [Tooltip(\"Ligar para substituir flashes intensos por versões mais suaves.\")]\n    [SerializeField] private Toggle reducedFlashesToggle;\n\n    [Header(\"Mudar Controles\")]\n    [SerializeField] private Button changeControlsButton;\n    [SerializeField] private ControlsRebindSectionUI rebindSection;\n\n    [Header(\"Jukebox (Tarefa #23)\")]\n    [Tooltip(\"Abre o sub-painel Jukebox — lista de músicas configurada em JukeboxSectionUI.tracks.\")]\n    [SerializeField] private Button jukeboxButton;\n    [SerializeField] private JukeboxSectionUI jukeboxSection;\n\n    [Header(\"Idioma\")]\n    [Tooltip(\"Botão ciclável — muda para o próximo idioma disponível (GameSettings.CycleLanguage). Por agora só Português está disponível; os outros idiomas ficam disponíveis ao serem marcados em GameSettings.IsLanguageAvailable.\")]\n    [SerializeField] private Button languageButton;\n    [Tooltip(\"Texto que mostra o idioma activo (ex: \\\"Português\\\"). Actualizado por RefreshLanguageText().\")]\n    [SerializeField] private TMP_Text languageValueText;\n\n    [Header(\"Sons\")]\n    [SerializeField] private AudioClip toggleSfx;\n\n    /// <summary>Disparado quando este painel fecha (botão \"Voltar\" ou \"B\"/Escape) — MainMenuController devolve a selecção aos botões principais.</summary>\n    public event System.Action Closed;\n\n    public GameObject Root => root != null ? root : gameObject;\n\n    private void Awake()\n    {\n        if (masterVolumeSlider != null) masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChanged);\n        if (musicVolumeSlider != null) musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged);\n        if (bgsVolumeSlider != null) bgsVolumeSlider.onValueChanged.AddListener(OnBgsVolumeChanged);\n        if (sfxVolumeSlider != null) sfxVolumeSlider.onValueChanged.AddListener(OnSfxVolumeChanged);\n\n        if (gaiaVoiceToggle != null) gaiaVoiceToggle.onValueChanged.AddListener(OnGaiaVoiceToggled);\n        if (textSpeedSlider != null) textSpeedSlider.onValueChanged.AddListener(OnTextSpeedChanged);\n        if (textSizeButton != null) textSizeButton.onClick.AddListener(OnTextSizeCycle);\n        if (vibrationToggle != null) vibrationToggle.onValueChanged.AddListener(OnVibrationToggled);\n        if (screenShakeToggle != null) screenShakeToggle.onValueChanged.AddListener(OnScreenShakeToggled);\n        if (reducedFlashesToggle != null) reducedFlashesToggle.onValueChanged.AddListener(OnReducedFlashesToggled);\n\n        if (changeControlsButton != null) changeControlsButton.onClick.AddListener(OpenRebindSection);\n        if (rebindSection != null)\n        {\n            rebindSection.Closed += OnRebindClosed;\n            rebindSection.Root.SetActive(false);\n        }\n\n        if (jukeboxButton != null) jukeboxButton.onClick.AddListener(OpenJukebox);\n        if (jukeboxSection != null)\n        {\n            jukeboxSection.Closed += OnJukeboxClosed;\n            jukeboxSection.Root.SetActive(false);\n        }\n\n        if (languageButton != null) languageButton.onClick.AddListener(OnLanguageCycle);\n\n        if (backButton != null) backButton.onClick.AddListener(Close);\n\n        if (root != null) root.SetActive(false);\n    }\n\n    // ---------------- Abrir / Fechar ----------------\n\n    public void Open()\n    {\n        if (root != null) root.SetActive(true);\n        Refresh();\n    }\n\n    public void Close()\n    {\n        if (rebindSection != null) rebindSection.Root.SetActive(false);\n        if (jukeboxSection != null) jukeboxSection.Root.SetActive(false);\n        if (root != null) root.SetActive(false);\n\n        Closed?.Invoke();\n    }\n\n    /// <summary>Chamado automaticamente pelo Input System UI Module quando \"Cancel\" (B/Escape) dispara com este painel seleccionado.</summary>\n    public void OnCancel(BaseEventData eventData) => Close();\n\n    private void Refresh()\n    {\n        var audio = AudioManager.Instance;\n        var settings = GameSettings.Instance;\n\n        if (masterVolumeSlider != null && audio != null) masterVolumeSlider.SetValueWithoutNotify(audio.MasterVolume);\n        if (musicVolumeSlider != null && audio != null) musicVolumeSlider.SetValueWithoutNotify(audio.BgmVolume);\n        if (bgsVolumeSlider != null && audio != null) bgsVolumeSlider.SetValueWithoutNotify(audio.BgsVolume);\n        if (sfxVolumeSlider != null && audio != null) sfxVolumeSlider.SetValueWithoutNotify(audio.SeVolume);\n\n        if (gaiaVoiceToggle != null && settings != null) gaiaVoiceToggle.SetIsOnWithoutNotify(settings.GaiaVoiceDubbed);\n        RefreshGaiaVoiceText();\n\n        if (textSpeedSlider != null && settings != null) textSpeedSlider.SetValueWithoutNotify(settings.TextSpeed);\n        RefreshTextSizeText();\n\n        if (vibrationToggle != null && settings != null) vibrationToggle.SetIsOnWithoutNotify(settings.VibrationEnabled);\n        if (screenShakeToggle != null && settings != null) screenShakeToggle.SetIsOnWithoutNotify(settings.ScreenShakeEnabled);\n        if (reducedFlashesToggle != null && settings != null) reducedFlashesToggle.SetIsOnWithoutNotify(settings.ReducedFlashes);\n\n        RefreshLanguageText();\n\n        ShowMainContent();\n        SelectFirst();\n    }\n\n    // ---------------- Volumes ----------------\n\n    private void OnMasterVolumeChanged(float value) => AudioManager.Instance?.SetMasterVolume(value);\n    private void OnMusicVolumeChanged(float value) => AudioManager.Instance?.SetBgmVolume(value);\n    private void OnBgsVolumeChanged(float value) => AudioManager.Instance?.SetBgsVolume(value);\n    private void OnSfxVolumeChanged(float value) => AudioManager.Instance?.SetSeVolume(value);\n\n    // ---------------- Voz de Gaia ----------------\n\n    private void OnGaiaVoiceToggled(bool value)\n    {\n        GameSettings.Instance?.SetGaiaVoiceDubbed(value);\n        RefreshGaiaVoiceText();\n        PlaySfx(toggleSfx);\n    }\n\n    private void RefreshGaiaVoiceText()\n    {\n        if (gaiaVoiceValueText == null) return;\n        bool dubbed = GameSettings.Instance != null && GameSettings.Instance.GaiaVoiceDubbed;\n        gaiaVoiceValueText.text = dubbed ? gaiaVoiceOnText : gaiaVoiceOffText;\n    }\n\n    // ---------------- Texto ----------------\n\n    private void OnTextSpeedChanged(float value) => GameSettings.Instance?.SetTextSpeed(value);\n\n    private void OnTextSizeCycle()\n    {\n        GameSettings.Instance?.CycleTextSize();\n        RefreshTextSizeText();\n        PlaySfx(toggleSfx);\n    }\n\n    private void RefreshTextSizeText()\n    {\n        if (textSizeValueText == null || GameSettings.Instance == null) return;\n\n        textSizeValueText.text = GameSettings.Instance.CurrentTextSize switch\n        {\n            TextSize.Pequeno => textSizePequenoText,\n            TextSize.Grande => textSizeGrandeText,\n            _ => textSizeMedioText,\n        };\n    }\n\n    // ---------------- Vibração ----------------\n\n    private void OnVibrationToggled(bool value)\n    {\n        GameSettings.Instance?.SetVibrationEnabled(value);\n        PlaySfx(toggleSfx);\n    }\n\n    // ---------------- Acessibilidade ----------------\n\n    private void OnScreenShakeToggled(bool value)\n    {\n        GameSettings.Instance?.SetScreenShakeEnabled(value);\n        PlaySfx(toggleSfx);\n    }\n\n    private void OnReducedFlashesToggled(bool value)\n    {\n        GameSettings.Instance?.SetReducedFlashes(value);\n        PlaySfx(toggleSfx);\n    }\n\n    // ---------------- Idioma ----------------\n\n    private void OnLanguageCycle()\n    {\n        GameSettings.Instance?.CycleLanguage();\n        RefreshLanguageText();\n        PlaySfx(toggleSfx);\n    }\n\n    private void RefreshLanguageText()\n    {\n        if (languageValueText == null) return;\n        var lang = GameSettings.Instance != null ? GameSettings.Instance.Language : GameLanguage.Portugues;\n        languageValueText.text = GameSettings.LanguageDisplayName(lang);\n    }\n\n    // ---------------- Mudar Controles (sub-painel) ----------------\n\n    private void OpenRebindSection()\n    {\n        if (rebindSection == null) return;\n\n        HideMainContent();\n        PlaySfx(toggleSfx);\n        rebindSection.Open();\n    }\n\n    private void OnRebindClosed()\n    {\n        ShowMainContent();\n        SelectFirst();\n        PlaySfx(toggleSfx);\n    }\n\n    // ---------------- Jukebox (sub-painel, Tarefa #23) ----------------\n\n    private void OpenJukebox()\n    {\n        if (jukeboxSection == null) return;\n\n        HideMainContent();\n        PlaySfx(toggleSfx);\n        jukeboxSection.Open();\n    }\n\n    private void OnJukeboxClosed()\n    {\n        ShowMainContent();\n        SelectFirst();\n    }\n\n    private void HideMainContent()\n    {\n        if (mainContentRoot != null) mainContentRoot.SetActive(false);\n    }\n\n    private void ShowMainContent()\n    {\n        if (mainContentRoot != null) mainContentRoot.SetActive(true);\n    }\n\n    private void SelectFirst()\n    {\n        if (EventSystem.current != null && firstSelectable != null)\n            EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);\n    }\n\n    private void PlaySfx(AudioClip clip) => AudioManager.Instance?.PlaySE(clip);\n}\n",
+  "id": "script-ui-mainmenuoptionsui-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-ui-controlsrebindsectionui-cs",
+    "script-data-gamesettings-cs",
+    "script-ui-jukeboxsectionui-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-ui-optionssectionui-cs"
+  ],
+  "usedByIds": [
+    "script-ui-mainmenucontroller-cs"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "path": "NPC/NpcInterfaces.cs",
+  "filename": "NpcInterfaces.cs",
+  "category": "NPC",
+  "primary": "INpcDialogueDisplay",
+  "kind": "Definição",
+  "summary": "Implementado pelo balão de diálogo (Etapa 2). Se o NPC não tiver nenhum componente que implemente esta interface atribuído em \"Dialogue Display\", Action_Dialogue usa Debug.Log como alternativa.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "INpcDialogueDisplay",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "INpcChoiceMenu",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "NpcChoice",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "text",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "targetEventId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"ID do NpcEvent a activar quando esta escolha for seleccionada (esse evento dispara sem precisar de condição própria).\")]",
+      "inspector": true,
+      "description": "ID do NpcEvent a ativar quando esta escolha for selecionada (esse evento dispara sem precisar de condição própria)."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "Action_Dialogue",
+    "Action_ShowChoices",
+    "DialogueLine",
+    "DialogueMarkupParser",
+    "NpcController",
+    "NpcEvent"
+  ],
+  "used_by": [
+    "Action_Dialogue",
+    "FullscreenImageUI",
+    "NpcController",
+    "NpcDialogueBalloon"
+  ],
+  "source": "using System;\nusing System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Implementado pelo balão de diálogo (Etapa 2). Se o NPC não tiver nenhum\n/// componente que implemente esta interface atribuído em \"Dialogue Display\",\n/// Action_Dialogue usa Debug.Log como alternativa.\n/// </summary>\npublic interface INpcDialogueDisplay\n{\n    /// <summary>\n    /// Mostra uma linha de diálogo (com efeito de escrita animado, suportando\n    /// paginação e as tags do DialogueMarkupParser) e espera terminar —\n    /// incluindo a espera pelo botão de interação no fim de cada página.\n    /// </summary>\n    /// <param name=\"speakerName\">Nome a mostrar como falante (pode ser vazio).</param>\n    /// <param name=\"speakerTransform\">\n    /// Transform do falante desta linha (NPC, player, ou outro NPC — ver\n    /// DialogueLine.ResolveSpeakerTransform), usado por implementações que\n    /// desenhem uma calda a apontar para o falante (Etapa 8). Pode ser null.\n    /// </param>\n    IEnumerator ShowLine(NpcController npc, string speakerName, string text, float charsPerSecond, Transform speakerTransform);\n\n    /// <summary>Esconde o balão de diálogo.</summary>\n    void Hide(NpcController npc);\n}\n\n/// <summary>\n/// Implementado pelo menu de escolhas (Etapa 2). Devolve, via callback, o\n/// índice da escolha seleccionada (-1 se nenhuma).\n/// </summary>\npublic interface INpcChoiceMenu\n{\n    IEnumerator Show(NpcController npc, List<NpcChoice> choices, Action<int> onSelected);\n}\n\n/// <summary>Uma opção apresentada ao player numa Action_ShowChoices.</summary>\n[System.Serializable]\npublic class NpcChoice\n{\n    public string text;\n\n    [Tooltip(\"ID do NpcEvent a activar quando esta escolha for seleccionada (esse evento dispara sem precisar de condição própria).\")]\n    public string targetEventId;\n}\n",
+  "id": "script-npc-npcinterfaces-cs",
+  "dependencyIds": [
+    "script-npc-actions-coreactions-cs",
+    "script-npc-dialogue-dialogueline-cs",
+    "script-npc-dialogue-dialoguemarkupparser-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-npcevent-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-coreactions-cs",
+    "script-ui-fullscreenimageui-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-dialogue-npcdialogueballoon-cs"
+  ]
+}

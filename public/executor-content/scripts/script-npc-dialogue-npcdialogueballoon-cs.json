@@ -1,0 +1,285 @@
+{
+  "path": "NPC/Dialogue/NpcDialogueBalloon.cs",
+  "filename": "NpcDialogueBalloon.cs",
+  "category": "NPC",
+  "primary": "NpcDialogueBalloon",
+  "kind": "Componente",
+  "summary": "Implementação concreta de INpcDialogueDisplay: balão de diálogo com TMP, com efeito de escrita, paginação automática (overflow do TMP) e suporte às tags do DialogueMarkupParser ([wait], [shake], [highlight], [page]). Configuração esperada (montar no Editor, normalmente dentro de um Canvas): - \"panelRoot\": GameObject raiz do balão (ativado/desativado em Show/Hide). - \"nameLabel\": TMP_Text para o nome do falante. É desativado automaticamente quando a linha não tem nome (speakerName vazio). - \"bodyText\": TMP_Text para o corpo da fala. O overflowMode é forçado para \"Page\" no Awake — o TMP divide automaticamente o texto em páginas que cabem na caixa, e cada página espera o botão de interação p",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "NpcDialogueBalloon",
+      "kind": "class",
+      "bases": "MonoBehaviour, INpcDialogueDisplay",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "panelRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[Header(\"Referências\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "nameLabel",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "bodyText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "continueIndicator",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "shakeAmount",
+      "type": "float",
+      "mods": "private",
+      "default": "2f",
+      "section": "Referências",
+      "attrs": "[Tooltip(\"Amplitude do tremor, em unidades do mesh do TMP.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Amplitude do tremor, em unidades do mesh do TMP."
+    },
+    {
+      "name": "highlightSpeed",
+      "type": "float",
+      "mods": "private",
+      "default": "4f",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "highlightColorA",
+      "type": "Color",
+      "mods": "private",
+      "default": "Color.white",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "highlightColorB",
+      "type": "Color",
+      "mods": "private",
+      "default": "new Color(1f, 0.85f, 0.2f)",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "tailTransform",
+      "type": "RectTransform",
+      "mods": "private",
+      "default": "",
+      "section": "Calda (Etapa 8)",
+      "attrs": "[Header(\"Calda (Etapa 8)\")] [Tooltip(\"RectTransform da calda do balão (ex: um triângulo), filha de panelRoot. É rodada (eixo Z) para apontar para o falante de cada linha (NPC, player, ou outro NPC — ver DialogueLine.speaker). Deixa vazio para não ter calda.\")] [SerializeField]",
+      "inspector": true,
+      "description": "RectTransform da calda do balão (ex: um triângulo), filha de panelRoot. É rodada (eixo Z) para apontar para o falante de cada linha (NPC, player, ou outro NPC — ver DialogueLine.speaker). Deixa vazio para não ter calda."
+    },
+    {
+      "name": "worldCamera",
+      "type": "Camera",
+      "mods": "private",
+      "default": "",
+      "section": "Calda (Etapa 8)",
+      "attrs": "[Tooltip(\"Câmara usada para converter a posição do falante (mundo) em coordenadas de ecrã. Vazio = Camera.main.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Câmera usada para converter a posição do falante (mundo) em coordenadas de tela. Vazio = Camera.main."
+    },
+    {
+      "name": "tailAngleOffset",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Calda (Etapa 8)",
+      "attrs": "[Tooltip(\"Ajuste de ângulo (graus) para compensar a orientação por defeito do sprite da calda. Ex: se o sprite aponta para a direita a 0°, deixa 0; se aponta para baixo, usa 90 (ou -90, dependendo do sentido positivo do eixo Y do sprite).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Ajuste de ângulo (graus) para compensar a orientação por defeito do sprite da calda. Ex: se o sprite aponta para a direita a 0°, deixa 0; se aponta para baixo, usa 90 (ou -90, dependendo do sentido positivo do eixo Y do sprite)."
+    },
+    {
+      "name": "_input",
+      "type": "PlayerInputRouter",
+      "mods": "private",
+      "default": "",
+      "section": "Calda (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_continuePressed",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Calda (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_tailTarget",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Calda (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_tailRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Calda (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "ShowLine",
+      "ret": "IEnumerator",
+      "mods": "public",
+      "params": "NpcController npc, string speakerName, string text, float charsPerSecond, Transform speakerTransform",
+      "description": "Executa a operação ShowLine."
+    },
+    {
+      "name": "Hide",
+      "ret": "void",
+      "mods": "public",
+      "params": "NpcController npc",
+      "description": "Executa a operação Hide."
+    },
+    {
+      "name": "SetTailTarget",
+      "ret": "void",
+      "mods": "private",
+      "params": "Transform target",
+      "description": "Executa a operação SetTailTarget."
+    },
+    {
+      "name": "UpdateTailRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateTailRoutine."
+    },
+    {
+      "name": "UpdateTail",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateTail."
+    },
+    {
+      "name": "ShowPage",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "DialogueParsedPage page, float charsPerSecond",
+      "description": "Executa a operação ShowPage."
+    },
+    {
+      "name": "AnimateEffects",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "DialogueParsedPage page",
+      "description": "Executa a operação AnimateEffects."
+    },
+    {
+      "name": "Subscribe",
+      "ret": "void",
+      "mods": "private",
+      "params": "NpcController npc",
+      "description": "Executa a operação Subscribe."
+    },
+    {
+      "name": "Unsubscribe",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Unsubscribe."
+    },
+    {
+      "name": "OnInteractPressed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnInteractPressed."
+    }
+  ],
+  "dependencies": [
+    "AbilityRouter",
+    "DialogueEffectType",
+    "DialogueLine",
+    "DialogueMarkupParser",
+    "DialogueParsedPage",
+    "INpcDialogueDisplay",
+    "NpcController",
+    "PlayerInputRouter",
+    "SafeHaven"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "FullscreenImageUI"
+  ],
+  "source": "using System.Collections;\nusing TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Implementação concreta de INpcDialogueDisplay: balão de diálogo com TMP,\n/// com efeito de escrita, paginação automática (overflow do TMP) e suporte\n/// às tags do DialogueMarkupParser ([wait], [shake], [highlight], [page]).\n///\n/// Configuração esperada (montar no Editor, normalmente dentro de um Canvas):\n/// - \"panelRoot\": GameObject raiz do balão (activado/desactivado em Show/Hide).\n/// - \"nameLabel\": TMP_Text para o nome do falante. É desactivado automaticamente\n///   quando a linha não tem nome (speakerName vazio).\n/// - \"bodyText\": TMP_Text para o corpo da fala. O overflowMode é forçado para\n///   \"Page\" no Awake — o TMP divide automaticamente o texto em páginas que\n///   cabem na caixa, e cada página espera o botão de interação para avançar\n///   (isto cobre o \"balão enche\" pedido). Quebras manuais com [page] funcionam\n///   da mesma forma, mas terminam a página de imediato.\n/// - \"continueIndicator\": GameObject opcional (ex: seta a piscar) mostrado\n///   quando uma página está totalmente revelada e à espera do botão de\n///   interação para continuar.\n///\n/// Depois de configurado, atribui este componente ao campo \"Dialogue Display\"\n/// do(s) NpcController(s).\n///\n/// Nota sobre [highlight]: a falta de suporte nativo do TMP a contornos\n/// animados por carácter, \"destacado\" é implementado como uma cor a pulsar\n/// entre \"highlightColorA\" e \"highlightColorB\". Para um brilho/contorno mais\n/// forte, activa Outline/Glow no material da fonte TMP — isso aplica-se ao\n/// texto todo, mas combinado com a animação de cor por carácter já dá um\n/// destaque bem visível.\n/// </summary>\npublic class NpcDialogueBalloon : MonoBehaviour, INpcDialogueDisplay\n{\n    [Header(\"Referências\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private TMP_Text nameLabel;\n    [SerializeField] private TMP_Text bodyText;\n    [SerializeField] private GameObject continueIndicator;\n\n    [Header(\"Efeito [shake]\")]\n    [Tooltip(\"Amplitude do tremor, em unidades do mesh do TMP.\")]\n    [SerializeField] private float shakeAmount = 2f;\n\n    [Header(\"Efeito [highlight]\")]\n    [SerializeField] private float highlightSpeed = 4f;\n    [SerializeField] private Color highlightColorA = Color.white;\n    [SerializeField] private Color highlightColorB = new Color(1f, 0.85f, 0.2f);\n\n    [Header(\"Calda (Etapa 8)\")]\n    [Tooltip(\"RectTransform da calda do balão (ex: um triângulo), filha de panelRoot. É rodada (eixo Z) para apontar para o falante de cada linha (NPC, player, ou outro NPC — ver DialogueLine.speaker). Deixa vazio para não ter calda.\")]\n    [SerializeField] private RectTransform tailTransform;\n\n    [Tooltip(\"Câmara usada para converter a posição do falante (mundo) em coordenadas de ecrã. Vazio = Camera.main.\")]\n    [SerializeField] private Camera worldCamera;\n\n    [Tooltip(\"Ajuste de ângulo (graus) para compensar a orientação por defeito do sprite da calda. Ex: se o sprite aponta para a direita a 0°, deixa 0; se aponta para baixo, usa 90 (ou -90, dependendo do sentido positivo do eixo Y do sprite).\")]\n    [SerializeField] private float tailAngleOffset;\n\n    private PlayerInputRouter _input;\n    private bool _continuePressed;\n\n    private Transform _tailTarget;\n    private Coroutine _tailRoutine;\n\n    private void Awake()\n    {\n        if (bodyText != null)\n            bodyText.overflowMode = TextOverflowModes.Page;\n\n        if (panelRoot != null)\n            panelRoot.SetActive(false);\n\n        if (continueIndicator != null)\n            continueIndicator.SetActive(false);\n\n        if (tailTransform != null)\n            tailTransform.gameObject.SetActive(false);\n\n        if (worldCamera == null)\n            worldCamera = Camera.main;\n    }\n\n    private void OnDisable()\n    {\n        Unsubscribe();\n    }\n\n    public IEnumerator ShowLine(NpcController npc, string speakerName, string text, float charsPerSecond, Transform speakerTransform)\n    {\n        if (bodyText == null)\n        {\n            Debug.LogWarning($\"[{name}] NpcDialogueBalloon: 'bodyText' não está atribuído.\", this);\n            yield break;\n        }\n\n        Subscribe(npc);\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        if (nameLabel != null)\n        {\n            bool hasName = !string.IsNullOrEmpty(speakerName);\n            nameLabel.gameObject.SetActive(hasName);\n            nameLabel.text = speakerName;\n        }\n\n        SetTailTarget(speakerTransform);\n\n        var pages = DialogueMarkupParser.Parse(text);\n\n        for (int p = 0; p < pages.Count; p++)\n            yield return ShowPage(pages[p], charsPerSecond);\n\n        Unsubscribe();\n    }\n\n    public void Hide(NpcController npc)\n    {\n        Unsubscribe();\n        StopAllCoroutines();\n        _tailRoutine = null;\n\n        if (continueIndicator != null) continueIndicator.SetActive(false);\n        if (tailTransform != null) tailTransform.gameObject.SetActive(false);\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    // ---------------- Calda (Etapa 8) ----------------\n\n    /// <summary>Define para onde a calda aponta nesta linha e (re)inicia a actualização contínua, se houver uma calda configurada.</summary>\n    private void SetTailTarget(Transform target)\n    {\n        _tailTarget = target;\n\n        if (tailTransform == null) return;\n\n        if (_tailTarget == null)\n        {\n            tailTransform.gameObject.SetActive(false);\n            return;\n        }\n\n        tailTransform.gameObject.SetActive(true);\n        UpdateTail();\n\n        if (_tailRoutine == null)\n            _tailRoutine = StartCoroutine(UpdateTailRoutine());\n    }\n\n    private IEnumerator UpdateTailRoutine()\n    {\n        while (true)\n        {\n            UpdateTail();\n            yield return null;\n        }\n    }\n\n    /// <summary>Roda \"tailTransform\" (eixo Z) para apontar da sua posição no ecrã para a posição de \"_tailTarget\" no ecrã.</summary>\n    private void UpdateTail()\n    {\n        if (tailTransform == null || _tailTarget == null) return;\n\n        var cam = worldCamera != null ? worldCamera : Camera.main;\n        if (cam == null) return;\n\n        Vector2 targetScreenPos = cam.WorldToScreenPoint(_tailTarget.position);\n        Vector2 tailScreenPos = RectTransformUtility.WorldToScreenPoint(null, tailTransform.position);\n\n        Vector2 direction = targetScreenPos - tailScreenPos;\n        if (direction.sqrMagnitude < 0.0001f) return;\n\n        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;\n        tailTransform.localRotation = Quaternion.Euler(0f, 0f, angle + tailAngleOffset);\n    }\n\n    // ---------------- Páginas ----------------\n\n    private IEnumerator ShowPage(DialogueParsedPage page, float charsPerSecond)\n    {\n        bodyText.text = page.displayText;\n        bodyText.maxVisibleCharacters = 0;\n        bodyText.ForceMeshUpdate();\n\n        if (continueIndicator != null) continueIndicator.SetActive(false);\n\n        Coroutine effectsRoutine = null;\n        if (page.effects.Count > 0)\n            effectsRoutine = StartCoroutine(AnimateEffects(page));\n\n        // ---- Efeito de escrita ----\n        float delay = charsPerSecond > 0f ? 1f / charsPerSecond : 0f;\n\n        _continuePressed = false;\n        int waitCursor = 0;\n\n        for (int charIndex = 0; charIndex <= page.visibleCharCount; charIndex++)\n        {\n            // Pausas [wait=x] que ocorrem antes deste carácter.\n            while (waitCursor < page.waits.Count && page.waits[waitCursor].charIndex == charIndex)\n            {\n                float seconds = page.waits[waitCursor].seconds;\n                waitCursor++;\n\n                float waited = 0f;\n                while (waited < seconds)\n                {\n                    if (_continuePressed) { _continuePressed = false; break; }\n                    waited += Time.deltaTime;\n                    yield return null;\n                }\n            }\n\n            bodyText.maxVisibleCharacters = charIndex;\n\n            if (charIndex >= page.visibleCharCount) break;\n\n            if (_continuePressed)\n            {\n                _continuePressed = false;\n                bodyText.maxVisibleCharacters = page.visibleCharCount;\n                break;\n            }\n\n            if (delay > 0f)\n            {\n                float elapsed = 0f;\n                while (elapsed < delay)\n                {\n                    if (_continuePressed) break;\n                    elapsed += Time.deltaTime;\n                    yield return null;\n                }\n            }\n        }\n\n        bodyText.maxVisibleCharacters = page.visibleCharCount;\n\n        // ---- Espera o player continuar / fechar a página ----\n        if (continueIndicator != null) continueIndicator.SetActive(true);\n\n        _continuePressed = false;\n        while (!_continuePressed)\n            yield return null;\n        _continuePressed = false;\n\n        if (continueIndicator != null) continueIndicator.SetActive(false);\n\n        if (effectsRoutine != null)\n            StopCoroutine(effectsRoutine);\n    }\n\n    // ---------------- Efeitos visuais por carácter ----------------\n\n    private IEnumerator AnimateEffects(DialogueParsedPage page)\n    {\n        while (true)\n        {\n            bodyText.ForceMeshUpdate();\n            var textInfo = bodyText.textInfo;\n\n            bool changed = false;\n\n            foreach (var effect in page.effects)\n            {\n                int from = Mathf.Max(0, effect.startIndex);\n                int to = Mathf.Min(effect.endIndex, textInfo.characterCount);\n                to = Mathf.Min(to, bodyText.maxVisibleCharacters);\n\n                for (int charIndex = from; charIndex < to; charIndex++)\n                {\n                    var charInfo = textInfo.characterInfo[charIndex];\n                    if (!charInfo.isVisible) continue;\n\n                    int matIndex = charInfo.materialReferenceIndex;\n                    int vertIndex = charInfo.vertexIndex;\n\n                    var verts = textInfo.meshInfo[matIndex].vertices;\n                    var colors = textInfo.meshInfo[matIndex].colors32;\n\n                    switch (effect.type)\n                    {\n                        case DialogueEffectType.Shake:\n                            Vector3 offset = new Vector3(\n                                (Mathf.PerlinNoise(Time.time * 28f, charIndex * 0.73f) - 0.5f) * shakeAmount,\n                                (Mathf.PerlinNoise(charIndex * 0.73f, Time.time * 28f) - 0.5f) * shakeAmount,\n                                0f);\n\n                            for (int v = 0; v < 4; v++)\n                                verts[vertIndex + v] += offset;\n                            break;\n\n                        case DialogueEffectType.Highlight:\n                            float t = (Mathf.Sin(Time.time * highlightSpeed + charIndex * 0.35f) + 1f) * 0.5f;\n                            Color32 highlightColor = Color32.Lerp(highlightColorA, highlightColorB, t);\n\n                            for (int v = 0; v < 4; v++)\n                                colors[vertIndex + v] = highlightColor;\n                            break;\n                    }\n\n                    changed = true;\n                }\n            }\n\n            if (changed)\n            {\n                for (int m = 0; m < textInfo.meshInfo.Length; m++)\n                {\n                    var meshInfo = textInfo.meshInfo[m];\n                    meshInfo.mesh.vertices = meshInfo.vertices;\n                    meshInfo.mesh.colors32 = meshInfo.colors32;\n                    bodyText.UpdateGeometry(meshInfo.mesh, m);\n                }\n            }\n\n            yield return null;\n        }\n    }\n\n    // ---------------- Input ----------------\n\n    private void Subscribe(NpcController npc)\n    {\n        Unsubscribe();\n\n        if (npc == null || npc.Player == null) return;\n\n        _input = npc.Player.GetComponent<PlayerInputRouter>();\n        if (_input != null)\n            _input.InteractPressed += OnInteractPressed;\n    }\n\n    private void Unsubscribe()\n    {\n        if (_input != null)\n            _input.InteractPressed -= OnInteractPressed;\n\n        _input = null;\n    }\n\n    private void OnInteractPressed()\n    {\n        _continuePressed = true;\n\n        // Mitigação do conflito de InteractPressed (pedido \"InteractionManager\"):\n        // o balão de diálogo está activo, por isso este toque pertence ao\n        // diálogo — outros sistemas (NpcController, SafeHaven, AbilityRouter)\n        // não devem reagir ao mesmo toque.\n        if (_input != null) _input.InteractConsumed = true;\n    }\n}\n",
+  "id": "script-npc-dialogue-npcdialogueballoon-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-npc-dialogue-dialogueline-cs",
+    "script-npc-dialogue-dialoguemarkupparser-cs",
+    "script-npc-npcinterfaces-cs",
+    "script-npc-npccontroller-cs",
+    "script-input-playerinputrouter-cs",
+    "script-interactables-safehaven-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-ui-fullscreenimageui-cs"
+  ]
+}

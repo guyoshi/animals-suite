@@ -1,0 +1,233 @@
+{
+  "path": "Abilities/PullAbility.cs",
+  "filename": "PullAbility.cs",
+  "category": "Abilities",
+  "primary": "PullAbility",
+  "kind": "Componente",
+  "summary": "Puxar um PushableBlock (correcção ao P6 — \"empurrar\" é só encostar; \"puxar\" é uma capacidade extra de alguns animais: AnimalFormData.canPull). Uso: SEGURAR Interagir junto a um PushableBlock que a forma consiga mover (mesma verificação de força do empurrão — PushStrength) e ANDAR PARA TRÁS (input horizontal oposto ao \"facing\"): o bloco é arrastado a favor do movimento do player, mas mais lento (\"com dificuldade\") — o player também fica mais lento enquanto puxa (ver playerSlowMultiplier). Não interfere com agarrar objetos (GrabThrowAbility) nem com escalar (ClimbAbility) — Interagir não pode estar a ser usado por essas ações ao mesmo tempo.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PullAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "pullRange",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Puxar (canPull)",
+      "attrs": "[Header(\"Puxar (canPull)\")] [Tooltip(\"Alcance à frente do player para detectar um PushableBlock.\")]",
+      "inspector": true,
+      "description": "Alcance à frente do player para detectar um PushableBlock."
+    },
+    {
+      "name": "playerSlowMultiplier",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Puxar (canPull)",
+      "attrs": "[Tooltip(\"Multiplicador de velocidade do PLAYER enquanto puxa (mais lento — 'com dificuldade').\")] [Range(0.05f, 1f)]",
+      "inspector": true,
+      "description": "Multiplicador de velocidade do PLAYER enquanto puxa (mais lento — 'com dificuldade')."
+    },
+    {
+      "name": "backwardInputThreshold",
+      "type": "float",
+      "mods": "public",
+      "default": "0.2f",
+      "section": "Puxar (canPull)",
+      "attrs": "[Tooltip(\"Quanto de input horizontal (oposto ao facing) é preciso para considerar 'andar para trás'.\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Quanto de input horizontal (oposto ao facing) é preciso para considerar 'andar para trás'."
+    },
+    {
+      "name": "input",
+      "type": "PlayerInputRouter",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "[Header(\"Input\")] [Tooltip(\"Auto-preenchido.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Auto-preenchido."
+    },
+    {
+      "name": "grabThrow",
+      "type": "GrabThrowAbility",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "climb",
+      "type": "ClimbAbility",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "swing",
+      "type": "SwingAbility",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "waterDetector",
+      "type": "WaterDetector",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "form",
+      "type": "AnimalFormData",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canPull",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isPulling",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsPulling",
+      "type": "bool",
+      "mods": "public",
+      "default": "> isPulling",
+      "section": "Input",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData newForm",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "StopPull",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação StopPull."
+    },
+    {
+      "name": "FindBlockInFront",
+      "ret": "PushableBlock",
+      "mods": "private",
+      "params": "int facing",
+      "description": "Executa a operação FindBlockInFront."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "ClimbAbility",
+    "GrabThrowAbility",
+    "IFormAbility",
+    "PlayerInputRouter",
+    "PlayerMotor2D",
+    "PushStrength",
+    "PushableBlock",
+    "SwingAbility",
+    "WaterDetector"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "PushableBlock"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Puxar um PushableBlock (correcção ao P6 — \"empurrar\" é só encostar; \"puxar\"\n/// é uma capacidade extra de alguns animais: AnimalFormData.canPull).\n///\n/// Uso: SEGURAR Interagir junto a um PushableBlock que a forma consiga mover\n/// (mesma verificação de força do empurrão — PushStrength) e ANDAR PARA TRÁS\n/// (input horizontal oposto ao \"facing\"): o bloco é arrastado a favor do\n/// movimento do player, mas mais lento (\"com dificuldade\") — o player também\n/// fica mais lento enquanto puxa (ver playerSlowMultiplier).\n///\n/// Não interfere com agarrar objectos (GrabThrowAbility) nem com escalar\n/// (ClimbAbility) — Interagir não pode estar a ser usado por essas acções ao\n/// mesmo tempo.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D))]\npublic class PullAbility : MonoBehaviour, IFormAbility\n{\n    [Header(\"Puxar (canPull)\")]\n    [Tooltip(\"Alcance à frente do player para detectar um PushableBlock.\")]\n    public float pullRange = 1f;\n\n    [Tooltip(\"Multiplicador de velocidade do PLAYER enquanto puxa (mais lento — 'com dificuldade').\")]\n    [Range(0.05f, 1f)] public float playerSlowMultiplier = 0.5f;\n\n    [Tooltip(\"Quanto de input horizontal (oposto ao facing) é preciso para considerar 'andar para trás'.\")]\n    [Range(0f, 1f)] public float backwardInputThreshold = 0.2f;\n\n    [Header(\"Input\")]\n    [Tooltip(\"Auto-preenchido.\")]\n    [SerializeField] private PlayerInputRouter input;\n    [SerializeField] private GrabThrowAbility grabThrow;\n    [SerializeField] private ClimbAbility climb;\n    [SerializeField] private SwingAbility swing;\n\n    private PlayerMotor2D motor;\n    private WaterDetector waterDetector;\n\n    private AnimalFormData form;\n    private bool canPull;\n    private bool isPulling;\n\n    /// <summary>true enquanto o player está activamente a arrastar um bloco.</summary>\n    public bool IsPulling => isPulling;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        waterDetector = GetComponent<WaterDetector>();\n\n        if (input == null) input = GetComponent<PlayerInputRouter>();\n        if (grabThrow == null) grabThrow = GetComponent<GrabThrowAbility>();\n        if (climb == null) climb = GetComponent<ClimbAbility>();\n        if (swing == null) swing = GetComponent<SwingAbility>();\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        canPull = form != null && form.canPull;\n        StopPull();\n    }\n\n    private void Update()\n    {\n        if (!canPull || input == null || !input.InteractHeld)\n        {\n            StopPull();\n            return;\n        }\n\n        // Interagir já está ocupado a agarrar/escalar/balançar — não puxa ao mesmo tempo.\n        if ((grabThrow != null && grabThrow.IsCarrying) || (climb != null && climb.IsClimbing) ||\n            (swing != null && swing.IsSwinging))\n        {\n            StopPull();\n            return;\n        }\n\n        int facing = motor.FacingSign != 0 ? motor.FacingSign : 1;\n        float moveX = input.Move.x;\n\n        bool movingBackward = Mathf.Abs(moveX) >= backwardInputThreshold && Mathf.Sign(moveX) != Mathf.Sign(facing);\n\n        var block = movingBackward ? FindBlockInFront(facing) : null;\n        bool inWater = waterDetector != null && waterDetector.IsInWater;\n\n        if (block == null || !block.CanBeMoved(form, inWater))\n        {\n            StopPull();\n            return;\n        }\n\n        isPulling = true;\n        motor.SetSpeedMultiplier(playerSlowMultiplier);\n        block.Pull(motor.RB.velocity);\n    }\n\n    private void StopPull()\n    {\n        if (!isPulling) return;\n\n        isPulling = false;\n        motor.SetSpeedMultiplier(1f);\n    }\n\n    /// <summary>Procura um PushableBlock à frente do player (lado para onde está virado).</summary>\n    private PushableBlock FindBlockInFront(int facing)\n    {\n        Vector2 center = (Vector2)transform.position + new Vector2(facing * pullRange * 0.5f, 0f);\n        var hits = Physics2D.OverlapBoxAll(center, new Vector2(pullRange, 1f), 0f);\n\n        foreach (var hit in hits)\n        {\n            if (hit == null || hit.gameObject == gameObject) continue;\n\n            var block = hit.GetComponent<PushableBlock>();\n            if (block != null) return block;\n        }\n\n        return null;\n    }\n\n    private void OnDisable() => StopPull();\n\n    private void OnDrawGizmosSelected()\n    {\n        int facing = motor != null && motor.FacingSign != 0 ? motor.FacingSign : 1;\n        Vector2 center = (Vector2)transform.position + new Vector2(facing * pullRange * 0.5f, 0f);\n\n        Gizmos.color = new Color(1f, 0.6f, 0.1f, 0.5f);\n        Gizmos.DrawWireCube(center, new Vector2(pullRange, 1f));\n    }\n}\n",
+  "id": "script-abilities-pullability-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-abilities-climbability-cs",
+    "script-abilities-grabthrowability-cs",
+    "script-abilities-iformability-cs",
+    "script-input-playerinputrouter-cs",
+    "script-player-playermotor2d-cs",
+    "script-interactables-pushableblock-cs",
+    "script-abilities-swingability-cs",
+    "script-player-waterdetector-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-interactables-pushableblock-cs"
+  ]
+}

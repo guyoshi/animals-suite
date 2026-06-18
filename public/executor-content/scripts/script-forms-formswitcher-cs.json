@@ -1,0 +1,622 @@
+{
+  "path": "Forms/FormSwitcher.cs",
+  "filename": "FormSwitcher.cs",
+  "category": "Forms",
+  "primary": "FormSwitcher",
+  "kind": "Componente",
+  "summary": "Formas temporariamente bloqueadas: continuam visíveis (cinzentas) na roda de formas, mas não podem ser equipadas. Gerido pelas ações NPC Action_LockForms / Action_UnlockForms / Action_ClearFormLocks. Não persistido em save — é reposto ao carregar a cena ou via ação NPC.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "FormSwitcher",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "startingForm",
+      "type": "AnimalFormData",
+      "mods": "public",
+      "default": "",
+      "section": "Forms",
+      "attrs": "[Header(\"Forms\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unlockedForms",
+      "type": "List<AnimalFormData>",
+      "mods": "public",
+      "default": "new List<AnimalFormData>()",
+      "section": "Forms",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_lockedForms",
+      "type": "List<AnimalFormData>",
+      "mods": "private readonly",
+      "default": "new List<AnimalFormData>()",
+      "section": "Forms",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "LockedForms",
+      "type": "IReadOnlyList<AnimalFormData>",
+      "mods": "public",
+      "default": "> _lockedForms",
+      "section": "Forms",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "currentForm",
+      "type": "AnimalFormData",
+      "mods": "private",
+      "default": "",
+      "section": "Forms",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CurrentForm",
+      "type": "AnimalFormData",
+      "mods": "public",
+      "default": "> currentForm",
+      "section": "Forms",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "requireGrounded",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Rules",
+      "attrs": "[Header(\"Rules\")] [Tooltip(\"S� transforma se estiver no ch�o\")]",
+      "inspector": true,
+      "description": "S� transforma se estiver no ch�o"
+    },
+    {
+      "name": "transformCooldown",
+      "type": "float",
+      "mods": "public",
+      "default": "10f",
+      "section": "Rules",
+      "attrs": "[Tooltip(\"Cooldown entre transforma��es\")]",
+      "inspector": true,
+      "description": "Cooldown entre transforma��es"
+    },
+    {
+      "name": "ritmoInstintivoCooldownMultiplier",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Rules",
+      "attrs": "[Tooltip(\"Tarefa #3 - Instinto \\\"Ritmo Instintivo\\\": multiplicador aplicado ao cooldown de transformação quando este Instinto está ligado (ex.: 0.5 = cooldown reduzido a metade).\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Tarefa #3 - Instinto \"Ritmo Instintivo\": multiplicador aplicado ao cooldown de transformação quando este Instinto está ligado (ex.: 0.5 = cooldown reduzido a metade)."
+    },
+    {
+      "name": "solidLayer",
+      "type": "LayerMask",
+      "mods": "public",
+      "default": "",
+      "section": "Fit Check (space)",
+      "attrs": "[Header(\"Fit Check (space)\")] [Tooltip(\"Layers s�lidas (paredes/ch�o/teto). N�O incluir Player.\")]",
+      "inspector": true,
+      "description": "Layers s�lidas (paredes/ch�o/teto). N�O incluir Player."
+    },
+    {
+      "name": "waterDetector",
+      "type": "WaterDetector",
+      "mods": "public",
+      "default": "",
+      "section": "References",
+      "attrs": "[Header(\"References\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "capsule",
+      "type": "CapsuleCollider2D",
+      "mods": "private",
+      "default": "",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "anim",
+      "type": "Animator",
+      "mods": "private",
+      "default": "",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "abilities",
+      "type": "IFormAbility[]",
+      "mods": "private",
+      "default": "",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "abilityRouter",
+      "type": "AbilityRouter",
+      "mods": "private",
+      "default": "",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldownTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "activeCooldownDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "selectedIndex",
+      "type": "int",
+      "mods": "private",
+      "default": "0",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "formWheelOpen",
+      "type": "bool",
+      "mods": "private",
+      "default": "false",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SelectedIndex",
+      "type": "int",
+      "mods": "public",
+      "default": "> selectedIndex",
+      "section": "References",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsWheelOpen",
+      "type": "bool",
+      "mods": "public",
+      "default": "> formWheelOpen",
+      "section": "References",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_fitBuffer",
+      "type": "Collider2D[]",
+      "mods": "private readonly",
+      "default": "new Collider2D[1]",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_temporarilyRemovedForms",
+      "type": "List<AnimalFormData>",
+      "mods": "private readonly",
+      "default": "new List<AnimalFormData>()",
+      "section": "References",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnAnimalUnlocked",
+      "ret": "void",
+      "mods": "private",
+      "params": "string formId",
+      "description": "Executa a operação OnAnimalUnlocked."
+    },
+    {
+      "name": "SyncFreedAnimalsFromProgress",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SyncFreedAnimalsFromProgress."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "GetCurrentForm",
+      "ret": "AnimalFormData",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação GetCurrentForm."
+    },
+    {
+      "name": "ApplyFormImmediate",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ApplyFormImmediate."
+    },
+    {
+      "name": "UnlockForm",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação UnlockForm."
+    },
+    {
+      "name": "SetSelectedIndex",
+      "ret": "void",
+      "mods": "public",
+      "params": "int idx",
+      "description": "Executa a operação SetSelectedIndex."
+    },
+    {
+      "name": "TrySwitchToSelected",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação TrySwitchToSelected."
+    },
+    {
+      "name": "TrySwitchToIndex",
+      "ret": "void",
+      "mods": "public",
+      "params": "int idx",
+      "description": "Executa a operação TrySwitchToIndex."
+    },
+    {
+      "name": "CanSwitchTo",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData target, out string reason",
+      "description": "Executa a operação CanSwitchTo."
+    },
+    {
+      "name": "TrySwitchTo",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData target",
+      "description": "Executa a operação TrySwitchTo."
+    },
+    {
+      "name": "ApplyForm",
+      "ret": "void",
+      "mods": "private",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ApplyForm."
+    },
+    {
+      "name": "CanFit",
+      "ret": "bool",
+      "mods": "private",
+      "params": "AnimalFormData target",
+      "description": "Executa a operação CanFit."
+    },
+    {
+      "name": "OnPrevForm",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnPrevForm."
+    },
+    {
+      "name": "OnNextForm",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnNextForm."
+    },
+    {
+      "name": "OnFormWheelOpened",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnFormWheelOpened."
+    },
+    {
+      "name": "OnFormWheelClosed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnFormWheelClosed."
+    },
+    {
+      "name": "OnConfirmTransformHold",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnConfirmTransformHold."
+    },
+    {
+      "name": "Feedback",
+      "ret": "void",
+      "mods": "private",
+      "params": "string msg",
+      "description": "Executa a operação Feedback."
+    },
+    {
+      "name": "IsFormLocked",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação IsFormLocked."
+    },
+    {
+      "name": "LockForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação LockForm."
+    },
+    {
+      "name": "UnlockFormLock",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação UnlockFormLock."
+    },
+    {
+      "name": "ClearAllFormLocks",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ClearAllFormLocks."
+    },
+    {
+      "name": "RemoveFormTemporarily",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação RemoveFormTemporarily."
+    },
+    {
+      "name": "RestoreRemovedForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação RestoreRemovedForm."
+    },
+    {
+      "name": "RestoreAllRemovedForms",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RestoreAllRemovedForms."
+    },
+    {
+      "name": "IsTemporarilyRemoved",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação IsTemporarilyRemoved."
+    },
+    {
+      "name": "CaptureLockedFormIds",
+      "ret": "List<string>",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação CaptureLockedFormIds."
+    },
+    {
+      "name": "RestoreLockedFormIds",
+      "ret": "void",
+      "mods": "public",
+      "params": "List<string> ids",
+      "description": "Executa a operação RestoreLockedFormIds."
+    },
+    {
+      "name": "CaptureTo",
+      "ret": "void",
+      "mods": "public",
+      "params": "SaveData data",
+      "description": "Executa a operação CaptureTo."
+    },
+    {
+      "name": "RestoreFrom",
+      "ret": "void",
+      "mods": "public",
+      "params": "SaveData data",
+      "description": "Executa a operação RestoreFrom."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "Action_ClearFormLocks",
+    "Action_FreeAnimal",
+    "Action_LockForms",
+    "Action_UnlockForms",
+    "AnimalFormData",
+    "ChallengeDefinition",
+    "ChallengeManager",
+    "ChallengeTrigger",
+    "ClimbAbility",
+    "DashAbility",
+    "FormWheelUI",
+    "GameDatabase",
+    "GamePauseUtil",
+    "IFormAbility",
+    "MovementMode",
+    "NewAnimalUnlockedUI",
+    "PauseMenuController",
+    "PlayerInputRouter",
+    "PlayerMotor2D",
+    "PlayerProgress",
+    "SaveData",
+    "SaveManager",
+    "SwimType",
+    "WaterDetector"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "Action_LockForms",
+    "Action_SavePlayerSnapshot",
+    "Action_StartChallenge",
+    "AnimalSpiritRescue",
+    "AnimalsDebugPanel",
+    "AreaManager",
+    "BreakableObject",
+    "ChallengeManager",
+    "ChallengeTrigger",
+    "CrawlAbility",
+    "EnemyAttackController",
+    "EnemyDetection",
+    "FormWheelNodeUI",
+    "FormWheelUI",
+    "GameWeightUtil",
+    "HUDController",
+    "IAbility",
+    "IFormAbility",
+    "NpcPlayerConditionUtil",
+    "OxygenSystem",
+    "PauseMenuController",
+    "PlayerCombat",
+    "PlayerProgress",
+    "PlayerResourceType",
+    "PushableBlock",
+    "SaveData",
+    "SaveManager",
+    "ThermalCurrent",
+    "WeightPlate"
+  ],
+  "source": "using System;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n[RequireComponent(typeof(PlayerMotor2D), typeof(CapsuleCollider2D), typeof(Animator))]\npublic class FormSwitcher : MonoBehaviour\n{\n    [Header(\"Input\")]\n    [SerializeField] private PlayerInputRouter input; // liga no Inspector\n\n    [Header(\"Forms\")]\n    public AnimalFormData startingForm;\n    public List<AnimalFormData> unlockedForms = new List<AnimalFormData>();\n\n    /// <summary>\n    /// Formas temporariamente bloqueadas: continuam visíveis (cinzentas) na roda\n    /// de formas, mas não podem ser equipadas. Gerido pelas acções NPC\n    /// Action_LockForms / Action_UnlockForms / Action_ClearFormLocks.\n    /// Não persistido em save — é reposto ao carregar a cena ou via acção NPC.\n    /// </summary>\n    private readonly List<AnimalFormData> _lockedForms = new List<AnimalFormData>();\n\n    /// <summary>Formas desbloqueadas que estão actualmente bloqueadas por evento de NPC (para leitura pela UI).</summary>\n    public IReadOnlyList<AnimalFormData> LockedForms => _lockedForms;\n\n    [SerializeField] private AnimalFormData currentForm;\n    public AnimalFormData CurrentForm => currentForm;\n\n    [Header(\"Rules\")]\n    [Tooltip(\"S� transforma se estiver no ch�o\")]\n    public bool requireGrounded = true;\n\n    [Tooltip(\"Cooldown entre transforma��es\")]\n    public float transformCooldown = 10f;\n\n    [Tooltip(\"Tarefa #3 - Instinto \\\"Ritmo Instintivo\\\": multiplicador aplicado ao cooldown de transformação quando este Instinto está ligado (ex.: 0.5 = cooldown reduzido a metade).\")]\n    [Range(0f, 1f)]\n    public float ritmoInstintivoCooldownMultiplier = 0.5f;\n\n    [Header(\"Fit Check (space)\")]\n    [Tooltip(\"Layers s�lidas (paredes/ch�o/teto). N�O incluir Player.\")]\n    public LayerMask solidLayer;\n\n    [Header(\"References\")]\n    public WaterDetector waterDetector;\n\n    public event Action<AnimalFormData> OnFormApplied;\n\n    /// <summary>Disparado quando \"selectedIndex\" muda (navegação L/R, abertura da roda) — Roda de Animais (FormWheelUI) liga-se aqui para actualizar o destaque/ficha.</summary>\n    public event Action<int> OnSelectionChanged;\n\n    private PlayerMotor2D motor;\n    private CapsuleCollider2D capsule;\n    private Animator anim;\n    private IFormAbility[] abilities;\n    private AbilityRouter abilityRouter;\n\n    private float cooldownTimer;\n\n    /// <summary>Duração efectivamente usada para o cooldown em curso (transformCooldown, possivelmente reduzido pelo \"Ritmo Instintivo\") — denominador de TransformCooldownRemaining01.</summary>\n    private float activeCooldownDuration;\n\n    // Selec��o para a roda/atalhos\n    private int selectedIndex = 0;\n    private bool formWheelOpen = false;\n\n    /// <summary>Índice actualmente seleccionado em \"unlockedForms\" (roda de formas — FormWheelUI lê isto para destacar o nó seleccionado).</summary>\n    public int SelectedIndex => selectedIndex;\n\n    /// <summary>True enquanto a Roda de Formas estiver aberta (entre FormWheelOpened e FormWheelClosed).</summary>\n    public bool IsWheelOpen => formWheelOpen;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        capsule = GetComponent<CapsuleCollider2D>();\n        anim = GetComponent<Animator>();\n        abilities = GetComponents<IFormAbility>();\n        abilityRouter = GetComponent<AbilityRouter>();\n\n        if (input == null)\n            input = GetComponent<PlayerInputRouter>(); // tenta auto-pegar se estiver no mesmo GO\n    }\n\n    private void Start()\n    {\n        if (startingForm == null)\n        {\n            Debug.LogError(\"[FormSwitcher] startingForm est� NULL. Define um AnimalFormData no Inspector.\");\n            enabled = false;\n            return;\n        }\n\n        if (!unlockedForms.Contains(startingForm))\n            unlockedForms.Insert(0, startingForm);\n\n        // PlayerProgress.freedAnimalIds é a fonte oficial de \"animais\n        // libertados\" (auditoria: listas duplicadas) — garante que nada fica\n        // de fora caso esta lista local não tenha sido restaurada/preenchida.\n        SyncFreedAnimalsFromProgress();\n\n        // come�a no startingForm\n        selectedIndex = Mathf.Clamp(0, 0, unlockedForms.Count - 1);\n        ApplyForm(startingForm);\n    }\n\n    private void OnEnable()\n    {\n        if (input == null)\n        {\n            Debug.LogError(\"[FormSwitcher] PlayerInputRouter n�o encontrado. Liga no Inspector ou p�e no mesmo GameObject.\");\n            enabled = false;\n            return;\n        }\n\n        input.PrevFormTapped += OnPrevForm;\n        input.NextFormTapped += OnNextForm;\n\n        input.FormWheelOpened += OnFormWheelOpened;\n        input.FormWheelClosed += OnFormWheelClosed;\n\n        input.ConfirmTransformHold += OnConfirmTransformHold;\n\n        if (PlayerProgress.Instance != null)\n            PlayerProgress.Instance.AnimalUnlocked += OnAnimalUnlocked;\n    }\n\n    private void OnDisable()\n    {\n        if (PlayerProgress.Instance != null)\n            PlayerProgress.Instance.AnimalUnlocked -= OnAnimalUnlocked;\n\n        if (input == null) return;\n\n        input.PrevFormTapped -= OnPrevForm;\n        input.NextFormTapped -= OnNextForm;\n\n        input.FormWheelOpened -= OnFormWheelOpened;\n        input.FormWheelClosed -= OnFormWheelClosed;\n\n        input.ConfirmTransformHold -= OnConfirmTransformHold;\n    }\n\n    /// <summary>\n    /// Reage a PlayerProgress.AnimalUnlocked (disparado por FreeAnimal):\n    /// mantém unlockedForms sincronizado em tempo real com\n    /// PlayerProgress.freedAnimalIds (fonte oficial), sem depender de cada\n    /// chamador também lembrar de chamar UnlockForm.\n    /// </summary>\n    private void OnAnimalUnlocked(string formId)\n    {\n        var form = GameDatabase.Instance != null ? GameDatabase.Instance.FindAnimalForm(formId) : null;\n        if (form == null) return;\n\n        UnlockForm(form);\n\n        // Tarefa #8 — sequência \"Novo Animal Desbloqueado\" (banner + fanfarra + animação de celebração).\n        NewAnimalUnlockedUI.Instance?.Show(form);\n    }\n\n    /// <summary>\n    /// Garante que toda forma já registada em PlayerProgress.freedAnimalIds\n    /// (fonte oficial de \"animais libertados\") está presente em\n    /// unlockedForms. Chamado no arranque e ao restaurar um save — evita que\n    /// um animal apareça numa lista e não na outra depois de carregar uma\n    /// cena.\n    /// </summary>\n    private void SyncFreedAnimalsFromProgress()\n    {\n        var progress = PlayerProgress.Instance;\n        var db = GameDatabase.Instance;\n        if (progress == null || db == null) return;\n\n        foreach (var id in progress.freedAnimalIds)\n        {\n            var form = db.FindAnimalForm(id);\n            if (form != null) UnlockForm(form);\n        }\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f)\n            cooldownTimer -= Time.deltaTime;\n    }\n\n    public AnimalFormData GetCurrentForm() => currentForm;\n\n    /// <summary>\n    /// Cooldown de transformação normalizado (0 = pronto a transformar, 1 =\n    /// acabou de transformar) — usado pelo HUD (Tarefa #32) para desenhar o\n    /// preenchimento radial/barra sobre o ícone da forma actual.\n    /// </summary>\n    public float TransformCooldownRemaining01 =>\n        activeCooldownDuration > 0f ? Mathf.Clamp01(cooldownTimer / activeCooldownDuration) : 0f;\n\n    /// <summary>\n    /// Aplica \"form\" imediatamente, sem verificar regras de transformação\n    /// (chão, repouso, cooldown, fit check). Usado pelo SaveManager ao\n    /// restaurar um save — assume que \"form\" já está em unlockedForms.\n    /// </summary>\n    public void ApplyFormImmediate(AnimalFormData form)\n    {\n        if (form == null) return;\n        ApplyForm(form);\n    }\n\n    /// <summary>\n    /// Adiciona \"form\" à lista de formas desbloqueadas (unlockedForms), se ainda\n    /// não estiver lá, tornando-a seleccionável na roda de formas. Usado por\n    /// Action_FreeAnimal (Etapa 5) — libertar um animal em PlayerProgress não é,\n    /// por si só, suficiente para o player conseguir transformar-se nele.\n    /// </summary>\n    public bool UnlockForm(AnimalFormData form)\n    {\n        if (form == null) return false;\n        if (unlockedForms.Contains(form)) return false;\n\n        unlockedForms.Add(form);\n        return true;\n    }\n\n    // UI/radial pode chamar isto directamente\n    public void SetSelectedIndex(int idx)\n    {\n        if (unlockedForms.Count == 0) return;\n        selectedIndex = Mathf.Clamp(idx, 0, unlockedForms.Count - 1);\n        OnSelectionChanged?.Invoke(selectedIndex);\n    }\n\n    public void TrySwitchToSelected()\n    {\n        if (unlockedForms.Count == 0) return;\n        TrySwitchTo(unlockedForms[selectedIndex]);\n    }\n\n    public void TrySwitchToIndex(int idx)\n    {\n        if (idx < 0 || idx >= unlockedForms.Count) return;\n        selectedIndex = idx;\n        TrySwitchToSelected();\n    }\n\n    /// <summary>\n    /// Verifica se \"target\" pode ser activada AGORA, sem aplicar nada —\n    /// aplica as mesmas regras de ambiente do GDD 4.1 que <see cref=\"TrySwitchTo\"/>\n    /// (chão/água/submerso, cooldown, bloqueios gerais, fit check). Usado pela\n    /// Roda de Formas (FormWheelUI) para acinzentar formas indisponíveis e\n    /// mostrar o motivo (<paramref name=\"reason\"/>) sem precisar de tentar\n    /// transformar. \"target\" sendo a forma actual devolve true (não há motivo\n    /// para acinzentar a forma já equipada — a UI trata \"forma actual\" como\n    /// caso especial de destaque, não de bloqueio).\n    /// </summary>\n    public bool CanSwitchTo(AnimalFormData target, out string reason)\n    {\n        reason = null;\n\n        if (target == null)\n        {\n            reason = \"Forma inválida.\";\n            return false;\n        }\n\n        if (target == currentForm)\n            return true;\n\n        if (cooldownTimer > 0f)\n        {\n            reason = \"Ainda a recuperar da transformação.\";\n            return false;\n        }\n\n        // Bloqueios gerais (GDD 4.1): em knockback, a tomar dano, preso por\n        // armadilha ou agarrado à parede — todos representados por\n        // motor.MovementLocked (já usado por ClimbAbility/DashAbility/etc.;\n        // futuros sistemas de dano/knockback/armadilha do player devem chamar\n        // motor.SetMovementLocked(true, this) enquanto durar o efeito, e\n        // SetMovementLocked(false, this) no fim — ver PlayerMotor2D para o\n        // porquê do \"this\").\n        if (motor.MovementLocked)\n        {\n            reason = \"Não podes transformar agora.\";\n            return false;\n        }\n\n        // Desafio com forma bloqueada (requiredForm no ChallengeTrigger ou\n        // lockFormDuringChallenge na ChallengeDefinition): o player só pode\n        // usar o animal com que entrou no desafio.\n        if (ChallengeManager.Instance != null && ChallengeManager.Instance.IsFormSwitchingLocked)\n        {\n            reason = \"Não podes trocar de forma durante este desafio.\";\n            return false;\n        }\n\n        // Forma temporariamente bloqueada por evento de NPC (aparece cinzenta na roda).\n        if (IsFormLocked(target))\n        {\n            reason = \"Esta forma está temporariamente bloqueada.\";\n            return false;\n        }\n\n        bool inWater = (waterDetector != null && waterDetector.IsInWater);\n        bool submerged = (waterDetector != null && waterDetector.IsSubmerged);\n\n        bool targetIsAquatic = (target.movementMode == MovementMode.SwimOnly) || (target.swimType != SwimType.None);\n        bool targetCanDive = target.swimType == SwimType.Underwater;\n\n        if (requireGrounded)\n        {\n            bool onLand = motor.IsGrounded && !inWater;\n            bool inAir = !motor.IsGrounded && !inWater;\n\n            // Recompensa de Pós-Jogo (GDD): permite transformar no ar, mas\n            // mantém as regras de formas aquáticas/terrestres abaixo.\n            bool postGameFreeTransform = PlayerProgress.Instance != null && PlayerProgress.Instance.IsPostGameRewardActive;\n\n            // No ar (sem chão e sem água): nenhuma transformação, a menos que\n            // a Recompensa de Pós-Jogo esteja activa.\n            if (inAir && !postGameFreeTransform)\n            {\n                reason = \"Não podes transformar no ar.\";\n                return false;\n            }\n\n            if (submerged)\n            {\n                // Submerso: só formas aquáticas capazes de mergulhar (swimType == Underwater).\n                if (!targetCanDive)\n                {\n                    reason = \"Estás debaixo de água. Só podes transformar em formas capazes de mergulhar.\";\n                    return false;\n                }\n            }\n            else if ((onLand || inAir) && targetIsAquatic && !target.canActOnLand)\n            {\n                // Em terra (ou no ar, com a Recompensa de Pós-Jogo): terrestres,\n                // ou aquáticos marcados \"Pode actuar em terra?\" (anfíbios).\n                reason = \"Essa forma só pode ser usada na água.\";\n                return false;\n            }\n            // Superfície da água (inWater && !submerged): ponto de transição —\n            // terrestres ou aquáticos, sem restrição extra.\n\n            // Nota (auditoria): havia aqui um bloqueio extra por velocidade\n            // (motor.RB.velocity.magnitude > 0.15) para exigir \"repouso\". O\n            // GDD trata \"repouso\" como um ESTADO permitido (correr numa\n            // plataforma, deslizar ligeiramente no gelo, etc.), não como\n            // velocidade ~zero — esse threshold bloqueava transformações\n            // válidas. Os estados que devem mesmo bloquear (knockback, stun,\n            // dash, escalar, balanço, língua, armadilha, morte, diálogo...)\n            // já são cobertos por motor.MovementLocked, verificado acima.\n        }\n\n        // Fit check\n        if (!CanFit(target))\n        {\n            reason = \"Não há espaço para essa transformação.\";\n            return false;\n        }\n\n        return true;\n    }\n\n    /// <summary>\n    /// Tenta transformar para \"target\": valida via <see cref=\"CanSwitchTo\"/> e,\n    /// se possível, aplica a forma e inicia o cooldown. Se não for possível,\n    /// mostra o motivo (Feedback) — ver CanSwitchTo para as regras completas\n    /// (GDD 4.1: chão/água/submerso, cooldown, bloqueios gerais, fit check).\n    /// </summary>\n    public void TrySwitchTo(AnimalFormData target)\n    {\n        if (target == null) return;\n        if (target == currentForm) return;\n\n        if (!CanSwitchTo(target, out string reason))\n        {\n            Feedback(reason);\n            return;\n        }\n\n        ApplyForm(target);\n\n        // Tarefa #3: o Instinto \"Ritmo Instintivo\" reduz o cooldown de\n        // transformação (multiplicador configurável no Inspector).\n        float cooldown = transformCooldown;\n        if (PlayerProgress.Instance != null && PlayerProgress.Instance.IsRitmoInstintivoActive)\n            cooldown *= ritmoInstintivoCooldownMultiplier;\n\n        // Recompensa de Pós-Jogo (GDD): cooldown de transformação zero.\n        if (PlayerProgress.Instance != null && PlayerProgress.Instance.IsPostGameRewardActive)\n            cooldown = 0f;\n\n        cooldownTimer = cooldown;\n        activeCooldownDuration = cooldown;\n    }\n\n    private void ApplyForm(AnimalFormData form)\n    {\n        currentForm = form;\n\n        // 0) cancela qualquer habilidade \"com estado\" activa (escalar, dash,\n        // balanço, língua, escudo, carregar objecto, ...) ANTES de mudar de\n        // forma — a forma nova pode não ter as mesmas habilidades/colliders,\n        // por isso estas precisam de se desfazer (gravidade, locks de\n        // movimento, etc.) com a forma ainda antiga (item 8 da auditoria).\n        if (abilityRouter != null)\n            abilityRouter.CancelAll(AbilityCancelReason.Transform);\n\n        // 1) aplica stats no motor (inclui collider e ground check)\n        motor.ApplyForm(form);\n\n        // 2) anima��o (override por animal)\n        if (form.overrideController != null)\n            anim.runtimeAnimatorController = form.overrideController;\n\n        // 3) reconfigura todas as habilidades modulares (Dash, Charge, Roll, etc.)\n        foreach (var ability in abilities)\n            ability.ConfigureFromForm(form);\n\n        OnFormApplied?.Invoke(form);\n\n        Feedback($\"Transformado: {form.displayName}\");\n    }\n\n    // Buffer reutilizável para CanFit (evita alocar array a cada transformação).\n    private readonly Collider2D[] _fitBuffer = new Collider2D[1];\n\n    private bool CanFit(AnimalFormData target)\n    {\n        bool wasEnabled = capsule.enabled;\n        capsule.enabled = false;\n\n        try\n        {\n            Vector2 worldPos = (Vector2)transform.position + target.colliderOffset;\n\n            // ContactFilter2D com useTriggers=false: ignora colliders marcados\n            // como Trigger em \"solidLayer\" (ex: zonas de água/detectores que por\n            // engano partilhem a layer sólida), evitando falsos bloqueios/CanFit\n            // incorrecto. Só colliders sólidos (não-trigger) contam para o fit check.\n            var filter = new ContactFilter2D();\n            filter.SetLayerMask(solidLayer);\n            filter.useTriggers = false;\n\n            int hitCount = Physics2D.OverlapCapsule(\n                worldPos,\n                target.colliderSize,\n                CapsuleDirection2D.Vertical,\n                0f,\n                filter,\n                _fitBuffer\n            );\n\n            return hitCount == 0;\n        }\n        finally\n        {\n            capsule.enabled = wasEnabled;\n        }\n    }\n\n    // -------- Input callbacks --------\n\n    private void OnPrevForm()\n    {\n        // Com o jogo em pausa, L/R pertencem à navegação de secções do Menu de\n        // Pausa (PauseMenuController) — não trocar de forma.\n        if (GamePauseUtil.IsPaused) return;\n\n        if (unlockedForms.Count == 0) return;\n\n        // Se estiver na roda, s� muda sele��o (UI). Se n�o, pode trocar directo (tu escolhes o feeling).\n        selectedIndex = (selectedIndex - 1 + unlockedForms.Count) % unlockedForms.Count;\n        OnSelectionChanged?.Invoke(selectedIndex);\n\n        if (!formWheelOpen)\n            TrySwitchToSelected();\n        // se wheelOpen, s� highlight no UI\n    }\n\n    private void OnNextForm()\n    {\n        // Com o jogo em pausa, L/R pertencem à navegação de secções do Menu de\n        // Pausa (PauseMenuController) — não trocar de forma.\n        if (GamePauseUtil.IsPaused) return;\n\n        if (unlockedForms.Count == 0) return;\n\n        selectedIndex = (selectedIndex + 1) % unlockedForms.Count;\n        OnSelectionChanged?.Invoke(selectedIndex);\n\n        if (!formWheelOpen)\n            TrySwitchToSelected();\n    }\n\n    private void OnFormWheelOpened()\n    {\n        formWheelOpen = true;\n\n        // opcional: quando abre a roda, selecciona o form actual\n        int idx = unlockedForms.IndexOf(currentForm);\n        if (idx >= 0) selectedIndex = idx;\n\n        OnSelectionChanged?.Invoke(selectedIndex);\n    }\n\n    private void OnFormWheelClosed()\n    {\n        formWheelOpen = false;\n    }\n\n    private void OnConfirmTransformHold()\n    {\n        // S� faz sentido quando a roda est� aberta (se quiseres)\n        if (!formWheelOpen) return;\n\n        TrySwitchToSelected();\n    }\n\n    private void Feedback(string msg)\n    {\n        Debug.Log($\"[FormSwitcher] {msg}\");\n    }\n\n    // ---------------- Bloqueio Temporário de Formas (Eventos NPC) ----------------\n\n    /// <summary>\n    /// Disparado quando a lista de formas bloqueadas muda — a roda de formas\n    /// (FormWheelUI) subscreve aqui para actualizar os nós cinzentos em tempo real.\n    /// </summary>\n    public event System.Action LockedFormsChanged;\n\n    /// <summary>\n    /// True se \"form\" está na lista de bloqueadas (visível na roda mas não seleccionável).\n    /// </summary>\n    public bool IsFormLocked(AnimalFormData form) =>\n        form != null && _lockedForms.Contains(form);\n\n    /// <summary>\n    /// Bloqueia \"form\" temporariamente: continua visível (cinzenta) na roda mas\n    /// não pode ser equipada. Sem efeito se a forma já estiver bloqueada.\n    /// Se o player estiver actualmente nessa forma, NÃO força saída — o designer\n    /// deve tirar a forma (ou usar Action_SaveAndRemoveForms) antes de bloquear\n    /// se quiser que o player saia dela.\n    /// </summary>\n    public void LockForm(AnimalFormData form)\n    {\n        if (form == null || _lockedForms.Contains(form)) return;\n        // A forma base (Íris) nunca pode ser bloqueada.\n        if (form == startingForm)\n        {\n            Debug.LogWarning(\"[FormSwitcher] Tentativa de bloquear a startingForm (Íris) — operação bloqueada.\");\n            return;\n        }\n        _lockedForms.Add(form);\n        LockedFormsChanged?.Invoke();\n    }\n\n    /// <summary>\n    /// Remove \"form\" da lista de bloqueadas, tornando-a novamente seleccionável.\n    /// Sem efeito se não estava bloqueada.\n    /// </summary>\n    public void UnlockFormLock(AnimalFormData form)\n    {\n        if (form == null) return;\n        if (_lockedForms.Remove(form))\n            LockedFormsChanged?.Invoke();\n    }\n\n    /// <summary>\n    /// Remove todos os bloqueios temporários, restaurando todas as formas\n    /// desbloqueadas como seleccionáveis. Útil no final de uma área de evento.\n    /// </summary>\n    public void ClearAllFormLocks()\n    {\n        if (_lockedForms.Count == 0) return;\n        _lockedForms.Clear();\n        LockedFormsChanged?.Invoke();\n    }\n\n    // ---------------- Remoção Temporária (Íris Fallback) ----------------\n\n    /// <summary>\n    /// Formas removidas temporariamente de <see cref=\"unlockedForms\"/>\n    /// (ex: sequências narrativas onde o player perde os animais).\n    /// Guardadas aqui para serem restauradas depois via\n    /// <see cref=\"RestoreRemovedForm\"/> / <see cref=\"RestoreAllRemovedForms\"/>.\n    /// </summary>\n    private readonly List<AnimalFormData> _temporarilyRemovedForms = new List<AnimalFormData>();\n\n    /// <summary>\n    /// Remove \"form\" de <see cref=\"unlockedForms\"/> temporariamente — a forma\n    /// desaparece da roda e não pode ser equipada. Se era a forma actual,\n    /// o player reverte para <see cref=\"startingForm\"/> (Íris). Se não for\n    /// encontrada em unlockedForms, não faz nada.\n    ///\n    /// Chamar <see cref=\"RestoreRemovedForm\"/> ou\n    /// <see cref=\"RestoreAllRemovedForms\"/> para reverter.\n    /// </summary>\n    public void RemoveFormTemporarily(AnimalFormData form)\n    {\n        if (form == null) return;\n        // A forma base (Íris / startingForm) nunca pode ser removida — é o\n        // fallback do jogo e removê-la quebraria a progressão.\n        if (form == startingForm)\n        {\n            Debug.LogWarning(\"[FormSwitcher] Tentativa de remover a startingForm (Íris) temporariamente — operação bloqueada.\");\n            return;\n        }\n        if (!unlockedForms.Contains(form)) return;\n        if (_temporarilyRemovedForms.Contains(form)) return;\n\n        _temporarilyRemovedForms.Add(form);\n        unlockedForms.Remove(form);\n\n        // Se o jogador estava nessa forma, volta para startingForm.\n        if (currentForm == form)\n        {\n            var fallback = startingForm;\n            if (fallback == null && unlockedForms.Count > 0) fallback = unlockedForms[0];\n            if (fallback != null)\n                ApplyForm(fallback);\n            else\n            {\n                // Nenhuma forma disponível: forçar currentForm a null explicitamente\n                // para evitar referência solta à forma removida.\n                currentForm = null;\n                selectedIndex = -1;\n            }\n        }\n\n        // Corrige selectedIndex após a remoção.\n        if (unlockedForms.Count > 0)\n            selectedIndex = Mathf.Clamp(selectedIndex, 0, unlockedForms.Count - 1);\n        else if (selectedIndex != -1)\n            selectedIndex = -1;\n    }\n\n    /// <summary>\n    /// Restaura \"form\" que foi removida via\n    /// <see cref=\"RemoveFormTemporarily\"/>, devolvendo-a a\n    /// <see cref=\"unlockedForms\"/>. Sem efeito se não estava na lista de removidas.\n    /// </summary>\n    public void RestoreRemovedForm(AnimalFormData form)\n    {\n        if (form == null) return;\n        if (!_temporarilyRemovedForms.Remove(form)) return;\n\n        if (!unlockedForms.Contains(form))\n            unlockedForms.Add(form);\n    }\n\n    /// <summary>\n    /// Restaura todas as formas removidas temporariamente, devolvendo-as a\n    /// <see cref=\"unlockedForms\"/>. Útil no fim de uma sequência narrativa.\n    /// </summary>\n    public void RestoreAllRemovedForms()\n    {\n        foreach (var form in _temporarilyRemovedForms)\n            if (form != null && !unlockedForms.Contains(form))\n                unlockedForms.Add(form);\n\n        _temporarilyRemovedForms.Clear();\n    }\n\n    /// <summary>\n    /// Devolve true se \"form\" foi removida temporariamente via\n    /// <see cref=\"RemoveFormTemporarily\"/> (útil para verificar estado em\n    /// condições de missão/eventos).\n    /// </summary>\n    public bool IsTemporarilyRemoved(AnimalFormData form) =>\n        form != null && _temporarilyRemovedForms.Contains(form);\n\n    /// <summary>\n    /// Devolve uma cópia dos IDs das formas actualmente bloqueadas — para guardar\n    /// num snapshot (Task #5) e restaurar mais tarde.\n    /// </summary>\n    public List<string> CaptureLockedFormIds()\n    {\n        var ids = new List<string>(_lockedForms.Count);\n        foreach (var f in _lockedForms)\n            if (f != null && !string.IsNullOrEmpty(f.formId))\n                ids.Add(f.formId);\n        return ids;\n    }\n\n    /// <summary>\n    /// Restaura bloqueios a partir de uma lista de IDs (guardada num snapshot).\n    /// Substitui os bloqueios actuais.\n    /// </summary>\n    public void RestoreLockedFormIds(List<string> ids)\n    {\n        _lockedForms.Clear();\n        if (ids != null)\n        {\n            var db = GameDatabase.Instance;\n            foreach (var id in ids)\n            {\n                var form = db != null ? db.FindAnimalForm(id) : null;\n                if (form != null && !_lockedForms.Contains(form))\n                    _lockedForms.Add(form);\n            }\n        }\n        LockedFormsChanged?.Invoke();\n    }\n\n    // ---------------- Save / Load ----------------\n\n    /// <summary>Copia formas desbloqueadas e forma actual para \"data\" (usado por SaveManager ao gravar).</summary>\n    public void CaptureTo(SaveData data)\n    {\n        data.unlockedFormIds = new List<string>();\n        foreach (var form in unlockedForms)\n            if (form != null && !string.IsNullOrEmpty(form.formId))\n                data.unlockedFormIds.Add(form.formId);\n\n        data.currentFormId = currentForm != null ? currentForm.formId : null;\n    }\n\n    /// <summary>\n    /// Restaura formas desbloqueadas e forma actual a partir de \"data\" (usado\n    /// por SaveManager ao carregar). Os formIds são resolvidos via\n    /// GameDatabase; formas não encontradas são ignoradas.\n    /// </summary>\n    public void RestoreFrom(SaveData data)\n    {\n        if (data == null) return;\n\n        var db = GameDatabase.Instance;\n\n        unlockedForms.Clear();\n        if (data.unlockedFormIds != null && db != null)\n        {\n            foreach (var id in data.unlockedFormIds)\n            {\n                var form = db.FindAnimalForm(id);\n                if (form != null) unlockedForms.Add(form);\n            }\n        }\n\n        if (unlockedForms.Count == 0 && startingForm != null)\n            unlockedForms.Add(startingForm);\n\n        // Garante consistência com PlayerProgress.freedAnimalIds (fonte\n        // oficial) — ver SyncFreedAnimalsFromProgress.\n        SyncFreedAnimalsFromProgress();\n\n        AnimalFormData target = db != null ? db.FindAnimalForm(data.currentFormId) : null;\n        if (target == null) target = startingForm;\n        if (target == null && unlockedForms.Count > 0) target = unlockedForms[0];\n\n        if (target != null)\n        {\n            selectedIndex = Mathf.Max(0, unlockedForms.IndexOf(target));\n            ApplyFormImmediate(target);\n        }\n    }\n}\n",
+  "id": "script-forms-formswitcher-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-npc-actions-formlockactions-cs",
+    "script-forms-animalformdata-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-challengemanager-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-abilities-climbability-cs",
+    "script-abilities-dashability-cs",
+    "script-ui-formwheelui-cs",
+    "script-data-gamedatabase-cs",
+    "script-npc-pauseutil-cs",
+    "script-abilities-iformability-cs",
+    "script-ui-newanimalunlockedui-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-input-playerinputrouter-cs",
+    "script-player-playermotor2d-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savedata-cs",
+    "script-data-savemanager-cs",
+    "script-player-waterdetector-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-npc-actions-formlockactions-cs",
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-npc-actions-challengeactions-cs",
+    "script-interactables-animalspiritrescue-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-world-areamanager-cs",
+    "script-interactables-breakableobject-cs",
+    "script-data-challengemanager-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-abilities-crawlability-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemydetection-cs",
+    "script-ui-formwheelnodeui-cs",
+    "script-ui-formwheelui-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-ui-hudcontroller-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iformability-cs",
+    "script-npc-conditions-playerconditions-cs",
+    "script-player-oxygensystem-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-player-playercombat-cs",
+    "script-data-playerprogress-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-interactables-pushableblock-cs",
+    "script-data-savedata-cs",
+    "script-data-savemanager-cs",
+    "script-interactables-thermalcurrent-cs",
+    "script-interactables-weightplate-cs"
+  ]
+}

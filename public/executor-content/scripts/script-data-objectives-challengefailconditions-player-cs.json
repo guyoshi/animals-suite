@@ -1,0 +1,69 @@
+{
+  "path": "Data/Objectives/ChallengeFailConditions_Player.cs",
+  "filename": "ChallengeFailConditions_Player.cs",
+  "category": "Data",
+  "primary": "FailCondition_PlayerDamaged",
+  "kind": "Definição",
+  "summary": "Falha imediata se o jogador receber QUALQUER dano (PlayerProgress.currentHearts descer abaixo do valor registado ao iniciar o desafio) — base de desafios \"sem dano\" (ex: Provação de Apolo, Tarefa #15).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "FailCondition_PlayerDamaged",
+      "kind": "class",
+      "bases": "ChallengeFailCondition",
+      "attrs": ""
+    },
+    {
+      "name": "FailCondition_PlayerDefeated",
+      "kind": "class",
+      "bases": "ChallengeFailCondition",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "baselineHearts",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[System.NonSerialized]",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "ResetState",
+      "ret": "void",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação ResetState."
+    },
+    {
+      "name": "IsFailed",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação IsFailed."
+    }
+  ],
+  "dependencies": [
+    "ChallengeFailCondition",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "ChallengeFailCondition",
+    "Objective_ItemCollected"
+  ],
+  "source": "/// <summary>\n/// Falha imediata se o jogador receber QUALQUER dano (PlayerProgress.currentHearts\n/// descer abaixo do valor registado ao iniciar o desafio) — base de desafios\n/// \"sem dano\" (ex: Provação de Apolo, Tarefa #15).\n/// </summary>\n[System.Serializable]\npublic class FailCondition_PlayerDamaged : ChallengeFailCondition\n{\n    [System.NonSerialized] private int baselineHearts;\n\n    public override void ResetState()\n    {\n        baselineHearts = PlayerProgress.Instance != null ? PlayerProgress.Instance.currentHearts : 0;\n    }\n\n    public override bool IsFailed() =>\n        PlayerProgress.Instance != null && PlayerProgress.Instance.currentHearts < baselineHearts;\n}\n\n/// <summary>\n/// Falha imediata se o jogador for derrotado (PlayerProgress.currentHearts &lt;= 0)\n/// durante o desafio — usar em desafios de Sobrevivência/Defesa de NPC para\n/// terminar o desafio com o ecrã \"FALHOU\" em vez de seguir o fluxo normal de\n/// morte/checkpoint.\n/// </summary>\n[System.Serializable]\npublic class FailCondition_PlayerDefeated : ChallengeFailCondition\n{\n    public override bool IsFailed() =>\n        PlayerProgress.Instance != null && PlayerProgress.Instance.currentHearts <= 0;\n}\n",
+  "id": "script-data-objectives-challengefailconditions-player-cs",
+  "dependencyIds": [
+    "script-data-challengefailcondition-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-data-challengefailcondition-cs",
+    "script-data-objectives-challengeobjectives-player-cs"
+  ]
+}

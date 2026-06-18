@@ -1,0 +1,196 @@
+{
+  "path": "UI/JukeboxTrackButtonUI.cs",
+  "filename": "JukeboxTrackButtonUI.cs",
+  "category": "UI",
+  "primary": "JukeboxTrackButtonUI",
+  "kind": "Componente",
+  "summary": "Botão de uma faixa do Jukebox. Layout esperado no prefab: [Root] ─ JukeboxTrackButtonUI + LayoutGroup (Horizontal) ├── DiscRoot (GameObject) ← ativado só na faixa a tocar │ └── DiscTransform (Transform) ← roda enquanto a faixa toca ├── NameText (TMP_Text) ← nome da faixa ├── PlayStopButton (Button) ← ▶ / ⏹ (muda sprite) │ └── PlayStopIcon (Image) ← sprite ▶ ou ⏹ └── FavoriteButton (Button) ← ♥ / vazio └── FavoriteIcon (Image) ← sprite cheio/vazio Navegação: configurar no Inspector (Explicit) para que D-pad Direito passe de NameButton para FavoriteButton. O botão PlayStop e o botão raiz do Row podem apontar para o mesmo evento — ambos chamam Clicked.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "JukeboxTrackButtonUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "discRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Disco Giratório (à esquerda — só na faixa activa)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "discTransform",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Disco Giratório (à esquerda — só na faixa activa)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "discRotationSpeed",
+      "type": "float",
+      "mods": "private",
+      "default": "90f",
+      "section": "Disco Giratório (à esquerda — só na faixa activa)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "nameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Nome",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playStopButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Play / Stop (à direita)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playStopIcon",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Play / Stop (à direita)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Play / Stop (à direita)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "stopSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Play / Stop (à direita)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "favoriteButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Favorito (à direita do play)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "favoriteIcon",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Favorito (à direita do play)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "favoriteActiveSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Favorito (à direita do play)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "favoriteInactiveSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Favorito (à direita do play)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_isPlaying",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Botão Favorito (à direita do play)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "Setup",
+      "ret": "void",
+      "mods": "public",
+      "params": "int index, string displayName, bool isPlaying, bool isFavorite",
+      "description": "Executa a operação Setup."
+    },
+    {
+      "name": "SetPlaying",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool isPlaying",
+      "description": "Executa a operação SetPlaying."
+    },
+    {
+      "name": "SetFavorite",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool isFavorite",
+      "description": "Executa a operação SetFavorite."
+    }
+  ],
+  "dependencies": [],
+  "used_by": [
+    "JukeboxSectionUI"
+  ],
+  "source": "using System;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Botão de uma faixa do Jukebox.\n///\n/// <b>Layout esperado no prefab:</b>\n/// <code>\n/// [Root] ─ JukeboxTrackButtonUI + LayoutGroup (Horizontal)\n///   ├── DiscRoot (GameObject)            ← activado só na faixa a tocar\n///   │     └── DiscTransform (Transform)  ← roda enquanto a faixa toca\n///   ├── NameText (TMP_Text)              ← nome da faixa\n///   ├── PlayStopButton (Button)          ← ▶ / ⏹ (muda sprite)\n///   │     └── PlayStopIcon (Image)       ← sprite ▶ ou ⏹\n///   └── FavoriteButton (Button)          ← ♥ / vazio\n///         └── FavoriteIcon (Image)       ← sprite cheio/vazio\n/// </code>\n///\n/// <b>Navegação:</b> configurar no Inspector (Explicit) para que\n/// D-pad Direito passe de NameButton para FavoriteButton.\n/// O botão PlayStop e o botão raiz do Row podem apontar para o mesmo evento —\n/// ambos chamam <see cref=\"Clicked\"/>.\n/// </summary>\npublic class JukeboxTrackButtonUI : MonoBehaviour\n{\n    // ── Inspector ────────────────────────────────────────────────────────────\n\n    [Header(\"Disco Giratório (à esquerda — só na faixa activa)\")]\n    [Tooltip(\"Raiz do disco — activada/desactivada conforme IsPlaying.\")]\n    [SerializeField] private GameObject discRoot;\n\n    [Tooltip(\"Transform que roda enquanto a faixa está a tocar (ex: a imagem do disco/pata).\")]\n    [SerializeField] private Transform discTransform;\n\n    [Tooltip(\"Velocidade de rotação do disco em graus/segundo (sentido anti-horário).\")]\n    [SerializeField] private float discRotationSpeed = 90f;\n\n    [Header(\"Nome\")]\n    [SerializeField] private TMP_Text nameText;\n\n    [Header(\"Botão Play / Stop (à direita)\")]\n    [SerializeField] private Button playStopButton;\n    [SerializeField] private Image playStopIcon;\n    [Tooltip(\"Sprite mostrado quando a faixa NÃO está a tocar (▶).\")]\n    [SerializeField] private Sprite playSprite;\n    [Tooltip(\"Sprite mostrado quando a faixa ESTÁ a tocar (⏹).\")]\n    [SerializeField] private Sprite stopSprite;\n\n    [Header(\"Botão Favorito (à direita do play)\")]\n    [SerializeField] private Button favoriteButton;\n    [SerializeField] private Image favoriteIcon;\n    [Tooltip(\"Sprite do favorito activo (♥ cheio).\")]\n    [SerializeField] private Sprite favoriteActiveSprite;\n    [Tooltip(\"Sprite do favorito inactivo (♥ vazio / contorno).\")]\n    [SerializeField] private Sprite favoriteInactiveSprite;\n\n    // ── Eventos ──────────────────────────────────────────────────────────────\n\n    /// <summary>Disparado quando o botão de play/stop (ou o próprio row) é clicado.</summary>\n    public event Action<JukeboxTrackButtonUI> Clicked;\n\n    /// <summary>Disparado quando o botão de favorito é clicado.</summary>\n    public event Action<JukeboxTrackButtonUI> FavoriteClicked;\n\n    // ── Estado ───────────────────────────────────────────────────────────────\n\n    /// <summary>Índice desta faixa na lista de exibição do <see cref=\"JukeboxSectionUI\"/>.</summary>\n    public int Index { get; private set; }\n\n    private bool _isPlaying;\n\n    // ── Unity ────────────────────────────────────────────────────────────────\n\n    private void Awake()\n    {\n        if (playStopButton != null)\n            playStopButton.onClick.AddListener(() => Clicked?.Invoke(this));\n\n        if (favoriteButton != null)\n            favoriteButton.onClick.AddListener(() => FavoriteClicked?.Invoke(this));\n    }\n\n    private void Update()\n    {\n        if (discTransform != null && _isPlaying)\n            discTransform.Rotate(0f, 0f, -discRotationSpeed * Time.deltaTime);\n    }\n\n    // ── API Pública ──────────────────────────────────────────────────────────\n\n    /// <summary>Configura o botão com os dados da faixa.</summary>\n    public void Setup(int index, string displayName, bool isPlaying, bool isFavorite)\n    {\n        Index = index;\n\n        if (nameText != null)\n            nameText.text = displayName;\n\n        SetPlaying(isPlaying);\n        SetFavorite(isFavorite);\n    }\n\n    /// <summary>Actualiza o visual de \"a tocar\" (disco, ícone play/stop).</summary>\n    public void SetPlaying(bool isPlaying)\n    {\n        _isPlaying = isPlaying;\n\n        if (discRoot != null)\n            discRoot.SetActive(isPlaying);\n\n        if (playStopIcon != null)\n        {\n            var sprite = isPlaying ? stopSprite : playSprite;\n            if (sprite != null) playStopIcon.sprite = sprite;\n        }\n    }\n\n    /// <summary>Actualiza o visual do botão de favorito.</summary>\n    public void SetFavorite(bool isFavorite)\n    {\n        if (favoriteIcon != null)\n        {\n            var sprite = isFavorite ? favoriteActiveSprite : favoriteInactiveSprite;\n            if (sprite != null) favoriteIcon.sprite = sprite;\n        }\n    }\n}\n",
+  "id": "script-ui-jukeboxtrackbuttonui-cs",
+  "dependencyIds": [],
+  "usedByIds": [
+    "script-ui-jukeboxsectionui-cs"
+  ]
+}

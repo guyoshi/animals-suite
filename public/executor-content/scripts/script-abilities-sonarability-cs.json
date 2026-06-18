@@ -1,0 +1,193 @@
+{
+  "path": "Abilities/SonarAbility.cs",
+  "filename": "SonarAbility.cs",
+  "category": "Abilities",
+  "primary": "SonarAbility",
+  "kind": "Componente",
+  "summary": "Sonar (P5): emite um pulso em área que revela temporariamente objetos marcados com SonarRevealable (paredes falsas, segredos, itens escondidos) dentro de \"sonarRadius\" da forma, durante \"sonarRevealDuration\" (P1). Ativado via PrimaryAbility.Sonar (AbilityRouter.OnAbilityPressed → TryPing).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SonarAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "pingVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Feedback (opcional)",
+      "attrs": "[Header(\"Feedback (opcional)\")] [Tooltip(\"Prefab de VFX do pulso (anel a expandir, etc), instanciado no player.\")]",
+      "inspector": true,
+      "description": "Prefab de VFX do pulso (anel a expandir, etc), instanciado no player."
+    },
+    {
+      "name": "pingSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "radius",
+      "type": "float",
+      "mods": "private",
+      "default": "6f",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "revealDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "4f",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldown",
+      "type": "float",
+      "mods": "private",
+      "default": "5f",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldownTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> Mathf.Max(0f, cooldownTimer)",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> cooldown",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm && cooldownTimer <= 0f",
+      "section": "Feedback (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "TryPing",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação TryPing."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "PrimaryAbility",
+    "SonarRevealable"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "SonarRevealable"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Sonar (P5): emite um pulso em área que revela temporariamente objectos\n/// marcados com SonarRevealable (paredes falsas, segredos, itens escondidos)\n/// dentro de \"sonarRadius\" da forma, durante \"sonarRevealDuration\" (P1).\n///\n/// Activado via PrimaryAbility.Sonar (AbilityRouter.OnAbilityPressed → TryPing).\n/// </summary>\npublic class SonarAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Feedback (opcional)\")]\n    [Tooltip(\"Prefab de VFX do pulso (anel a expandir, etc), instanciado no player.\")]\n    public GameObject pingVfxPrefab;\n\n    public AudioClip pingSound;\n\n    private bool enabledForForm;\n    private float radius = 6f;\n    private float revealDuration = 4f;\n    private float cooldown = 5f;\n    private float cooldownTimer;\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && (form.hasSonar || form.primaryAbility == PrimaryAbility.Sonar);\n        radius = form != null ? Mathf.Max(1f, form.sonarRadius) : 6f;\n        revealDuration = form != null ? Mathf.Max(0.5f, form.sonarRevealDuration) : 4f;\n        cooldown = form != null ? Mathf.Max(0f, form.sonarCooldown) : 5f;\n    }\n\n    /// <summary>Emite o pulso (AbilityRouter — PrimaryAbility.Sonar).</summary>\n    public void TryPing()\n    {\n        if (!enabledForForm || cooldownTimer > 0f) return;\n\n        cooldownTimer = cooldown;\n\n        if (pingVfxPrefab != null)\n            Instantiate(pingVfxPrefab, transform.position, Quaternion.identity);\n\n        if (pingSound != null)\n            AudioSource.PlayClipAtPoint(pingSound, transform.position);\n\n        var hits = Physics2D.OverlapCircleAll(transform.position, radius);\n\n        foreach (var hit in hits)\n        {\n            var revealable = hit.GetComponent<SonarRevealable>();\n            if (revealable != null) revealable.Reveal(revealDuration);\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(0.4f, 0.7f, 1f, 0.5f);\n        Gizmos.DrawWireSphere(transform.position, radius > 0f ? radius : 6f);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Instantânea, sem estado persistente — só o cooldown importa para a HUD.\n    void IAbility.Activate() => TryPing();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => cooldown;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do sonar.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "id": "script-abilities-sonarability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-interactables-sonarrevealable-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-interactables-sonarrevealable-cs"
+  ]
+}

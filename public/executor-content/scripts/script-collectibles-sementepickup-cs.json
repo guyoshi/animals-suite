@@ -1,0 +1,54 @@
+{
+  "path": "Collectibles/SementePickup.cs",
+  "filename": "SementePickup.cs",
+  "category": "Collectibles",
+  "primary": "SementePickup",
+  "kind": "Definição",
+  "summary": "Semente — concede Sementes ( PlayerProgress.GiveSementes ). Sem contador por área (Sementes não fazem parte de AreaData/AreaProgress — são um recurso global \"espalhado\" pelo nível).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "SementePickup",
+      "kind": "class",
+      "bases": "PickupBase",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Semente",
+      "attrs": "[Header(\"Semente\")] [Tooltip(\"Quantidade de Sementes concedidas.\")] [Min(1)]",
+      "inspector": true,
+      "description": "Quantidade de Sementes concedidas."
+    }
+  ],
+  "methods": [
+    {
+      "name": "GrantReward",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação GrantReward."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AreaProgress",
+    "PickupBase",
+    "PickupType",
+    "PlayerProgress"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Semente — concede <see cref=\"amount\"/> Sementes (<c>PlayerProgress.GiveSementes</c>).\n/// Sem contador por área (Sementes não fazem parte de AreaData/AreaProgress —\n/// são um recurso global \"espalhado\" pelo nível).\n/// </summary>\npublic class SementePickup : PickupBase\n{\n    [Header(\"Semente\")]\n    [Tooltip(\"Quantidade de Sementes concedidas.\")]\n    [Min(1)] public int amount = 1;\n\n    public override PickupType Type => PickupType.Semente;\n\n    protected override void GrantReward()\n    {\n        PlayerProgress.Instance?.GiveSementes(amount);\n    }\n}\n",
+  "id": "script-collectibles-sementepickup-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": []
+}

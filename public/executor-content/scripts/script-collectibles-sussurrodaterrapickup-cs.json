@@ -1,0 +1,47 @@
+{
+  "path": "Collectibles/SussurroDaTerraPickup.cs",
+  "filename": "SussurroDaTerraPickup.cs",
+  "category": "Collectibles",
+  "primary": "SussurroDaTerraPickup",
+  "kind": "Definição",
+  "summary": "Sussurro da Terra — ao coletar, regista \"encontrado\" na área ( AreaProgress.whispersFound / AreaData.totalWhispers ) e atualiza o contador global ( PlayerProgress.totalSussurrosCollected , via AddWhisperFound ). A \"entrega\" ( AreaProgress.whispersDelivered — ex: a um NPC/altar específico) é um passo distinto e NÃO é feita por este pickup; é registada por uma Ação de diálogo/NPC chamando PlayerProgress.AddWhisperDelivered(area) separadamente.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "SussurroDaTerraPickup",
+      "kind": "class",
+      "bases": "PickupBase",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "GrantReward",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação GrantReward."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AreaProgress",
+    "PickupBase",
+    "PickupType",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "PlayerResourceType"
+  ],
+  "source": "/// <summary>\n/// Sussurro da Terra — ao recolher, regista \"encontrado\" na área\n/// (<c>AreaProgress.whispersFound</c> / <c>AreaData.totalWhispers</c>) e\n/// actualiza o contador global (<c>PlayerProgress.totalSussurrosCollected</c>,\n/// via <c>AddWhisperFound</c>).\n///\n/// A \"entrega\" (<c>AreaProgress.whispersDelivered</c> — ex: a um NPC/altar\n/// específico) é um passo distinto e NÃO é feita por este pickup; é registada\n/// por uma Acção de diálogo/NPC chamando\n/// <c>PlayerProgress.AddWhisperDelivered(area)</c> separadamente.\n/// </summary>\npublic class SussurroDaTerraPickup : PickupBase\n{\n    public override PickupType Type => PickupType.SussurroDaTerra;\n\n    protected override void GrantReward()\n    {\n        if (area != null) PlayerProgress.Instance?.AddWhisperFound(area);\n    }\n}\n",
+  "id": "script-collectibles-sussurrodaterrapickup-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-rewardactions-cs"
+  ]
+}

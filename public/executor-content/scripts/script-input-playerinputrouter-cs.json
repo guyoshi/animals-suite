@@ -1,0 +1,487 @@
+{
+  "path": "Input/PlayerInputRouter.cs",
+  "filename": "PlayerInputRouter.cs",
+  "category": "Input",
+  "primary": "PlayerInputRouter",
+  "kind": "Componente",
+  "summary": "Mitigação do conflito \"um só toque ativa mais de uma coisa\" (pedido \"InteractionManager\"): vários sistemas independentes (diálogo, cordas/escadas/cipós, agarrar, SafeHaven, etc.) escutam . É reposto a false ANTES de InteractPressed disparar; o primeiro handler que decidir agir marca-o a true para impedir que os handlers seguintes (chamados na mesma invocação, por ordem de subscrição) também actuem nesse toque. Não substitui um InteractionManager completo, mas resolve o caso comum sem reescrever os sistemas existentes.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PlayerInputRouter",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "InputMode",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "itemNavDeadzone",
+      "type": "float",
+      "mods": "private",
+      "default": "0.6f",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "[Header(\"Item navigation (Gameplay only)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "itemNavCooldown",
+      "type": "float",
+      "mods": "private",
+      "default": "0.25f",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "AbilityHeld",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _ability != null && _ability.IsPressed()",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "InteractHeld",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _interact != null && _interact.IsPressed()",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_playerInput",
+      "type": "PlayerInput",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_move",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_look",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_jump",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_attack",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_interact",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_ability",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_prevForm",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_nextForm",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_formWheel",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_confirmTransform",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_useItem",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_itemWheel",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_pause",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_secondaryMenu",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_map",
+      "type": "InputAction",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_allActions",
+      "type": "InputAction[]",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_nextItemNavTime",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Item navigation (Gameplay only)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "SetMode",
+      "ret": "void",
+      "mods": "public",
+      "params": "InputMode mode",
+      "description": "Executa a operação SetMode."
+    },
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnJumpPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnJumpPerformed."
+    },
+    {
+      "name": "OnJumpCanceled",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnJumpCanceled."
+    },
+    {
+      "name": "OnAttackPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnAttackPerformed."
+    },
+    {
+      "name": "OnInteractPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnInteractPerformed."
+    },
+    {
+      "name": "OnInteractCanceled",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnInteractCanceled."
+    },
+    {
+      "name": "OnAbilityStarted",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnAbilityStarted."
+    },
+    {
+      "name": "OnAbilityCanceled",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnAbilityCanceled."
+    },
+    {
+      "name": "OnPrevFormPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnPrevFormPerformed."
+    },
+    {
+      "name": "OnNextFormPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnNextFormPerformed."
+    },
+    {
+      "name": "OnFormWheelPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnFormWheelPerformed."
+    },
+    {
+      "name": "OnFormWheelCanceled",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnFormWheelCanceled."
+    },
+    {
+      "name": "OnConfirmTransformPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnConfirmTransformPerformed."
+    },
+    {
+      "name": "OnUseItemPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnUseItemPerformed."
+    },
+    {
+      "name": "OnItemWheelPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnItemWheelPerformed."
+    },
+    {
+      "name": "OnPausePerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnPausePerformed."
+    },
+    {
+      "name": "OnSecondaryMenuPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnSecondaryMenuPerformed."
+    },
+    {
+      "name": "OnMapPerformed",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnMapPerformed."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "OnMove",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnMove."
+    },
+    {
+      "name": "OnLook",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction.CallbackContext ctx",
+      "description": "Executa a operação OnLook."
+    },
+    {
+      "name": "EnableAll",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação EnableAll."
+    },
+    {
+      "name": "DisableAll",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação DisableAll."
+    }
+  ],
+  "dependencies": [
+    "ItemWheelUI",
+    "SafeHaven"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "CameraManager",
+    "ChallengeTrigger",
+    "ClimbAbility",
+    "ControlsRebindSectionUI",
+    "FormSwitcher",
+    "FormWheelUI",
+    "FullscreenImageUI",
+    "GrabThrowAbility",
+    "ItemWheelUI",
+    "NpcController",
+    "NpcDialogueBalloon",
+    "PauseMenuController",
+    "PlayerController",
+    "PlayerItemUser",
+    "PullAbility",
+    "SafeHaven",
+    "SecondaryMenuController",
+    "SwingAbility",
+    "WaterMotor2D",
+    "WorldMapController",
+    "WorldMapEntryPoint"
+  ],
+  "source": "using System;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\n\n[RequireComponent(typeof(PlayerInput))]\npublic class PlayerInputRouter : MonoBehaviour\n{\n    public enum InputMode\n    {\n        Gameplay,\n        ItemWheel,\n        FormWheel\n    }\n\n    [Header(\"Item navigation (Gameplay only)\")]\n    [SerializeField] private float itemNavDeadzone = 0.6f;\n    [SerializeField] private float itemNavCooldown = 0.25f;\n\n    public InputMode Mode { get; private set; } = InputMode.Gameplay;\n\n    public Vector2 Move { get; private set; }\n    public Vector2 Look { get; private set; }\n\n    public bool AbilityHeld => _ability != null && _ability.IsPressed();\n\n    // Basic actions\n    public event Action JumpPressed;\n    public event Action JumpReleased;\n    public event Action AttackPressed;\n\n    // Interagir: usado para diálogo com NPCs E (P4/P6 — REFORMULADO) para\n    // agarrar objectos/cordas/escadas/empurráveis. InteractPressed dispara no\n    // toque (diálogo, cipós/escadas — \"apertar enquanto estiver nele\");\n    // InteractHeld fica true enquanto o botão está premido (agarrar objectos\n    // ao toque, escalar paredes com 'cima', puxar blocos); InteractReleased\n    // dispara ao soltar.\n    public event Action InteractPressed;\n    public event Action InteractReleased;\n\n    public bool InteractHeld => _interact != null && _interact.IsPressed();\n\n    /// <summary>\n    /// Mitigação do conflito \"um só toque activa mais de uma coisa\" (pedido\n    /// \"InteractionManager\"): vários sistemas independentes (diálogo,\n    /// cordas/escadas/cipós, agarrar, SafeHaven, etc.) escutam\n    /// <see cref=\"InteractPressed\"/>. É reposto a false ANTES de\n    /// InteractPressed disparar; o primeiro handler que decidir agir marca-o\n    /// a true para impedir que os handlers seguintes (chamados na mesma\n    /// invocação, por ordem de subscrição) também actuem nesse toque.\n    /// Não substitui um InteractionManager completo, mas resolve o caso\n    /// comum sem reescrever os sistemas existentes.\n    /// </summary>\n    public bool InteractConsumed { get; set; }\n\n    // Ability (ZR)\n    public event Action AbilityPressed;\n    public event Action AbilityReleased;\n\n    // Forms\n    public event Action PrevFormTapped;\n    public event Action NextFormTapped;\n    public event Action FormWheelOpened;\n    public event Action FormWheelClosed;\n    public event Action ConfirmTransformHold; // dispara quando o hold completa\n\n    // Items\n    public event Action UseItemHold;          // dispara quando o hold completa\n    public event Action ItemWheelPressed;     // abre/fecha a roda (tu decides no controller)\n    public event Action ItemNext;\n    public event Action ItemPrev;\n\n    // UI\n    public event Action PausePressed;\n\n    /// <summary>Abre o Menu Secundário (\"-\" no gamepad) — Upgrades e futuras abas.</summary>\n    public event Action SecondaryMenuPressed;\n\n    /// <summary>Reservado para o Mapa-Múndi (hub de mundos/áreas) — não existe \"mapa local\" no jogo.</summary>\n    public event Action MapPressed;\n\n    private PlayerInput _playerInput;\n\n    private InputAction _move;\n    private InputAction _look;\n\n    private InputAction _jump;\n    private InputAction _attack;\n    private InputAction _interact;\n\n    private InputAction _ability;\n\n    private InputAction _prevForm;\n    private InputAction _nextForm;\n    private InputAction _formWheel;\n    private InputAction _confirmTransform;\n\n    private InputAction _useItem;\n    private InputAction _itemWheel;\n    private InputAction _pause;\n    private InputAction _secondaryMenu;\n    private InputAction _map;\n\n    private InputAction[] _allActions;\n\n    private float _nextItemNavTime;\n\n    /// <summary>\n    /// Define como o Router deve interpretar inputs (Gameplay vs rodas).\n    /// Quando est� em ItemWheel ou FormWheel, a navega��o ItemNext/Prev fica bloqueada.\n    /// </summary>\n    public void SetMode(InputMode mode)\n    {\n        Mode = mode;\n\n        // Opcional: reseta cooldown para evitar disparo \"fantasma\" ao fechar a roda.\n        _nextItemNavTime = Time.time + 0.05f;\n    }\n\n    private void Awake()\n    {\n        _playerInput = GetComponent<PlayerInput>();\n        var a = _playerInput.actions;\n\n        // IMPORTANT: os nomes aqui precisam bater com o teu InputActions\n        _move = a[\"Move\"];\n        _look = a[\"Look\"];\n\n        _jump = a[\"Jump\"];\n        _attack = a[\"Attack\"];\n        _interact = a[\"Interact\"];\n\n        _ability = a[\"Ability\"];\n\n        _prevForm = a[\"PrevForm\"];\n        _nextForm = a[\"NextForm\"];\n        _formWheel = a[\"FormWheel\"];\n        _confirmTransform = a[\"ConfirmTransform\"];\n\n        _useItem = a[\"UseItem\"];\n        _itemWheel = a[\"ItemWheel\"];\n        _pause = a[\"Pause\"];\n        _secondaryMenu = a[\"SecondaryMenu\"];\n        _map = a[\"Map\"];\n\n        _allActions = new[]\n        {\n            _move, _look, _jump, _attack, _interact, _ability,\n            _prevForm, _nextForm, _formWheel, _confirmTransform,\n            _useItem, _itemWheel, _pause, _secondaryMenu, _map\n        };\n    }\n\n    private void OnEnable()\n    {\n        _move.performed += OnMove;\n        _move.canceled += OnMove;\n\n        _look.performed += OnLook;\n        _look.canceled += OnLook;\n\n        _jump.performed += OnJumpPerformed;\n        _jump.canceled += OnJumpCanceled;\n        _attack.performed += OnAttackPerformed;\n        _interact.performed += OnInteractPerformed;\n        _interact.canceled += OnInteractCanceled;\n\n        _ability.started += OnAbilityStarted;\n        _ability.canceled += OnAbilityCanceled;\n\n        _prevForm.performed += OnPrevFormPerformed;\n        _nextForm.performed += OnNextFormPerformed;\n\n        // Hold actions: performed s� dispara quando completou o tempo\n        _formWheel.performed += OnFormWheelPerformed;\n\n        // canceled dispara quando solta o bot�o (mesmo que n�o tenha completado hold)\n        _formWheel.canceled += OnFormWheelCanceled;\n\n        _confirmTransform.performed += OnConfirmTransformPerformed;\n\n        _useItem.performed += OnUseItemPerformed;\n\n        _itemWheel.performed += OnItemWheelPerformed;\n\n        _pause.performed += OnPausePerformed;\n        _secondaryMenu.performed += OnSecondaryMenuPerformed;\n        _map.performed += OnMapPerformed;\n\n        EnableAll();\n    }\n\n    private void OnDisable()\n    {\n        _move.performed -= OnMove;\n        _move.canceled -= OnMove;\n\n        _look.performed -= OnLook;\n        _look.canceled -= OnLook;\n\n        _jump.performed -= OnJumpPerformed;\n        _jump.canceled -= OnJumpCanceled;\n        _attack.performed -= OnAttackPerformed;\n        _interact.performed -= OnInteractPerformed;\n        _interact.canceled -= OnInteractCanceled;\n\n        _ability.started -= OnAbilityStarted;\n        _ability.canceled -= OnAbilityCanceled;\n\n        _prevForm.performed -= OnPrevFormPerformed;\n        _nextForm.performed -= OnNextFormPerformed;\n\n        _formWheel.performed -= OnFormWheelPerformed;\n        _formWheel.canceled -= OnFormWheelCanceled;\n\n        _confirmTransform.performed -= OnConfirmTransformPerformed;\n\n        _useItem.performed -= OnUseItemPerformed;\n\n        _itemWheel.performed -= OnItemWheelPerformed;\n\n        _pause.performed -= OnPausePerformed;\n        _secondaryMenu.performed -= OnSecondaryMenuPerformed;\n        _map.performed -= OnMapPerformed;\n\n        DisableAll();\n    }\n\n    // --- Handlers nomeados (necess�rio para poder desinscrever em OnDisable e\n    // evitar callbacks duplicados a cada ciclo de enable/disable) ---\n\n    private void OnJumpPerformed(InputAction.CallbackContext ctx) => JumpPressed?.Invoke();\n    private void OnJumpCanceled(InputAction.CallbackContext ctx) => JumpReleased?.Invoke();\n    private void OnAttackPerformed(InputAction.CallbackContext ctx) => AttackPressed?.Invoke();\n\n    private void OnInteractPerformed(InputAction.CallbackContext ctx)\n    {\n        InteractConsumed = false;\n        InteractPressed?.Invoke();\n    }\n\n    private void OnInteractCanceled(InputAction.CallbackContext ctx) => InteractReleased?.Invoke();\n\n    private void OnAbilityStarted(InputAction.CallbackContext ctx) => AbilityPressed?.Invoke();\n    private void OnAbilityCanceled(InputAction.CallbackContext ctx) => AbilityReleased?.Invoke();\n\n    private void OnPrevFormPerformed(InputAction.CallbackContext ctx) => PrevFormTapped?.Invoke();\n    private void OnNextFormPerformed(InputAction.CallbackContext ctx) => NextFormTapped?.Invoke();\n\n    private void OnFormWheelPerformed(InputAction.CallbackContext ctx)\n    {\n        SetMode(InputMode.FormWheel);\n        FormWheelOpened?.Invoke();\n    }\n\n    private void OnFormWheelCanceled(InputAction.CallbackContext ctx)\n    {\n        // Só restaura Gameplay se o modo actual for FormWheel — evita sobrescrever\n        // ItemWheel caso este esteja aberto ao mesmo tempo (edge case com dois dedos).\n        if (Mode == InputMode.FormWheel)\n            SetMode(InputMode.Gameplay);\n\n        FormWheelClosed?.Invoke();\n    }\n\n    private void OnConfirmTransformPerformed(InputAction.CallbackContext ctx) => ConfirmTransformHold?.Invoke();\n    private void OnUseItemPerformed(InputAction.CallbackContext ctx) => UseItemHold?.Invoke();\n\n    private void OnItemWheelPerformed(InputAction.CallbackContext ctx)\n    {\n        // Router n�o decide abrir/fechar UI, s� avisa.\n        // O teu ItemWheelController deve alternar e chamar SetMode(ItemWheel ou Gameplay).\n        ItemWheelPressed?.Invoke();\n    }\n\n    private void OnPausePerformed(InputAction.CallbackContext ctx) => PausePressed?.Invoke();\n    private void OnSecondaryMenuPerformed(InputAction.CallbackContext ctx) => SecondaryMenuPressed?.Invoke();\n    private void OnMapPerformed(InputAction.CallbackContext ctx) => MapPressed?.Invoke();\n\n    private void Update()\n    {\n        // Navega itens com stick direito no modo Gameplay (troca rápida do\n        // item equipado) E no modo ItemWheel (navegação dentro da Roda de\n        // Itens — ver ItemWheelUI). Bloqueado apenas com a Roda de Formas\n        // aberta, para não trocar de item por engano enquanto se escolhe forma.\n        if (Mode == InputMode.FormWheel) return;\n\n        if (Time.time < _nextItemNavTime) return;\n\n        float x = Look.x;\n\n        if (x > itemNavDeadzone)\n        {\n            _nextItemNavTime = Time.time + itemNavCooldown;\n            ItemNext?.Invoke();\n        }\n        else if (x < -itemNavDeadzone)\n        {\n            _nextItemNavTime = Time.time + itemNavCooldown;\n            ItemPrev?.Invoke();\n        }\n    }\n\n    private void OnMove(InputAction.CallbackContext ctx)\n    {\n        Move = ctx.ReadValue<Vector2>();\n    }\n\n    private void OnLook(InputAction.CallbackContext ctx)\n    {\n        Look = ctx.ReadValue<Vector2>();\n    }\n\n    private void EnableAll()\n    {\n        foreach (var action in _allActions)\n            action.Enable();\n    }\n\n    private void DisableAll()\n    {\n        foreach (var action in _allActions)\n            action.Disable();\n    }\n}\n",
+  "id": "script-input-playerinputrouter-cs",
+  "dependencyIds": [
+    "script-ui-itemwheelui-cs",
+    "script-interactables-safehaven-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-camera-cameramanager-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-abilities-climbability-cs",
+    "script-ui-controlsrebindsectionui-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-formwheelui-cs",
+    "script-ui-fullscreenimageui-cs",
+    "script-abilities-grabthrowability-cs",
+    "script-ui-itemwheelui-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-dialogue-npcdialogueballoon-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-player-playercontroller-cs",
+    "script-player-playeritemuser-cs",
+    "script-abilities-pullability-cs",
+    "script-interactables-safehaven-cs",
+    "script-ui-secondarymenucontroller-cs",
+    "script-abilities-swingability-cs",
+    "script-player-watermotor2d-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapentrypoint-cs"
+  ]
+}

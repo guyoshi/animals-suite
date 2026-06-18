@@ -1,0 +1,86 @@
+{
+  "path": "UI/ItemWheelNodeUI.cs",
+  "filename": "ItemWheelNodeUI.cs",
+  "category": "UI",
+  "primary": "ItemWheelNodeUI",
+  "kind": "Componente",
+  "summary": "Um \"nó\" (ícone) da Roda de Itens ( ): representa um item utilizável ( ) presente no inventário do jogador, com a respectiva quantidade. Estados visuais: - Equipado: ativo (este é o \"equippedItemId\" atual). - Selecionado na roda: ativo (destaque do nó sob a navegação).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ItemWheelNodeUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "icon",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Header(\"Visual\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "quantityText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"Quantidade do item no inventário (ex: \\\"x18\\\").\")]",
+      "inspector": true,
+      "description": "Quantidade do item no inventário (ex: \"x18\\"
+    },
+    {
+      "name": "selectionHighlight",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"Destaque (anel/glow) activo quando este nó é o seleccionado na roda.\")]",
+      "inspector": true,
+      "description": "Destaque (anel/glow) ativo quando este nó é o selecionado na roda."
+    },
+    {
+      "name": "equippedMarker",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"Marcador pequeno activo quando este item é o equipado actualmente (PlayerProgress.equippedItemId).\")]",
+      "inspector": true,
+      "description": "Marcador pequeno ativo quando este item é o equipado atualmente (PlayerProgress.equippedItemId)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Setup",
+      "ret": "void",
+      "mods": "public",
+      "params": "ItemData item, int quantity, bool isEquipped, bool isSelected",
+      "description": "Executa a operação Setup."
+    }
+  ],
+  "dependencies": [
+    "ItemData",
+    "ItemWheelUI",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "ItemWheelUI"
+  ],
+  "source": "using TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Um \"nó\" (ícone) da Roda de Itens (<see cref=\"ItemWheelUI\"/>): representa um\n/// item utilizável (<see cref=\"ItemData.usableByPlayer\"/>) presente no\n/// inventário do jogador, com a respectiva quantidade.\n///\n/// Estados visuais:\n/// - Equipado: <see cref=\"equippedMarker\"/> activo (este é o\n///   \"equippedItemId\" actual).\n/// - Seleccionado na roda: <see cref=\"selectionHighlight\"/> activo (destaque\n///   do nó sob a navegação).\n/// </summary>\npublic class ItemWheelNodeUI : MonoBehaviour\n{\n    [Header(\"Visual\")]\n    public Image icon;\n\n    [Tooltip(\"Quantidade do item no inventário (ex: \\\"x18\\\").\")]\n    public TMP_Text quantityText;\n\n    [Tooltip(\"Destaque (anel/glow) activo quando este nó é o seleccionado na roda.\")]\n    public Image selectionHighlight;\n\n    [Tooltip(\"Marcador pequeno activo quando este item é o equipado actualmente (PlayerProgress.equippedItemId).\")]\n    public Image equippedMarker;\n\n    public ItemData Item { get; private set; }\n\n    public void Setup(ItemData item, int quantity, bool isEquipped, bool isSelected)\n    {\n        Item = item;\n\n        if (icon != null) icon.sprite = item != null ? item.icon : null;\n        if (quantityText != null) quantityText.text = $\"x{quantity}\";\n        if (selectionHighlight != null) selectionHighlight.enabled = isSelected;\n        if (equippedMarker != null) equippedMarker.enabled = isEquipped;\n    }\n}\n",
+  "id": "script-ui-itemwheelnodeui-cs",
+  "dependencyIds": [
+    "script-data-itemdata-cs",
+    "script-ui-itemwheelui-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-ui-itemwheelui-cs"
+  ]
+}

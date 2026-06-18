@@ -1,0 +1,65 @@
+ANIMALS SUITE 0.12.0 — RELATÓRIO DE VALIDAÇÃO
+Data: 18/06/2026
+Etapa: 3 — Integração Planejador ↔ Executor
+Plataforma: desktop
+
+RESULTADO GERAL
+APROVADO no frontend, conteúdo e validação estrutural.
+Build nativo Tauri/NSIS não executado por ausência de Rust/Cargo no ambiente.
+
+VALIDAÇÕES AUTOMÁTICAS APROVADAS
+[OK] Versão da suite: 0.12.0
+[OK] Schema do Executor: 3
+[OK] Schema declarado do banco: 3
+[OK] Estado: planner-executor-integrated
+[OK] Aplicação continua desktop-only
+[OK] 96 Missões de Produção
+[OK] 277 Tarefas
+[OK] 1.099 Steps
+[OK] 26 guias, tutoriais e referências
+[OK] 278 scripts
+[OK] 12 receitas de teste
+[OK] Rota de integração
+[OK] Rota de ficha técnica por entidade
+[OK] Rota de problemas
+[OK] Rota de testes
+[OK] Rota de validação
+[OK] Navegação da Etapa 3
+[OK] Ponte do Executor nas fichas do Planejador
+[OK] Ponte adicionada também às fichas de Mundo
+[OK] Tipos de relações, estados e testes
+[OK] Tabelas executor_entity_links, executor_entity_states e executor_test_runs
+[OK] Manifesto e versões sincronizados
+[OK] ESLint
+[OK] TypeScript
+[OK] Build Vite de produção
+[OK] Aplicação compilada servida por HTTP local
+[OK] Manifesto executor-content servido por HTTP local
+[OK] Idioma do documento HTML: pt-BR
+[OK] Título do documento HTML: Animals Suite
+
+BUILD VITE
+- CSS: aproximadamente 140,56 kB; gzip 22,30 kB
+- JavaScript principal: aproximadamente 1.195,38 kB; gzip 345,46 kB
+- Resultado: compilado com sucesso
+
+AVISO NÃO BLOQUEANTE
+O bundle JavaScript principal ultrapassa o limite informativo de 500 kB do Vite. A aplicação funciona, mas uma etapa futura deve aplicar code splitting às páginas pesadas.
+
+RUST/TAURI
+- cargo: não disponível no ambiente
+- rustc: não disponível no ambiente
+- Consequência: não foi possível executar cargo check ou gerar o instalador NSIS aqui.
+- Ação no Windows: executar ATUALIZAR_E_COMPILAR.bat.
+
+PRESERVAÇÃO
+- Identificador Tauri mantido: com.gui.animals.planejador
+- Banco mantido: animals-planner.db
+- Conteúdo da Etapa 2 preservado
+- Dados do Planejador não foram movidos para a pasta de instalação
+- Relações técnicas usam IDs estáveis
+
+LIMITAÇÕES FUNCIONAIS CONHECIDAS
+- Relações automáticas são sugestões por nome/ID e podem exigir correção manual.
+- Comparação automática de backups ainda não foi implementada.
+- Modo Foco avançado e mapa gamificado permanecem para etapas posteriores.

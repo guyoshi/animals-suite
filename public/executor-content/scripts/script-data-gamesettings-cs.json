@@ -1,0 +1,520 @@
+{
+  "path": "Data/GameSettings.cs",
+  "filename": "GameSettings.cs",
+  "category": "Data",
+  "primary": "GameSettings",
+  "kind": "Componente",
+  "summary": "Tamanho do texto de diálogo/legendas (Menu de Pausa — Opções, Tarefa #12). public enum TextSize { Pequeno, Medio, Grande } Idiomas suportados pela interface/diálogos. Estado atual: apenas está habilitado (conteúdo localizado). Os restantes estão definidos no enum para preparar a infraestrutura, mas devolve false para eles — o seletor de idioma ignora-os e volta ao Português. Para adicionar um novo idioma: 1. Adicionar a entrada aqui. 2. Marcar como available em . 3. Preencher os dicionários em com as chaves traduzidas. 4. Criar/configurar fontes TMP com suporte ao charset do idioma (ex: japonês exige fonte CJK — ver Guia_HUD_Localizacao.md).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "TextSize",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "GameLanguage",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "GameSettings",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "gaiaVoiceDubbed",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Voz de Gaia",
+      "attrs": "[Header(\"Voz de Gaia\")] [Tooltip(\"\\\"Voz de Gaia - Dublado - OFF\\\": true = falas de Gaia dubladas; false = OFF (sem dublagem, só texto).\")] [SerializeField]",
+      "inspector": true,
+      "description": "\"Voz de Gaia - Dublado - OFF\": true = falas de Gaia dubladas; false = OFF (sem dublagem, só texto)."
+    },
+    {
+      "name": "textSpeed",
+      "type": "float",
+      "mods": "private",
+      "default": "0.5f",
+      "section": "Texto",
+      "attrs": "[Header(\"Texto\")] [Tooltip(\"Velocidade do texto de diálogo (0 = mais lento, 1 = instantâneo).\")] [Range(0f, 1f)] [SerializeField]",
+      "inspector": true,
+      "description": "Velocidade do texto de diálogo (0 = mais lento, 1 = instantâneo)."
+    },
+    {
+      "name": "textSize",
+      "type": "TextSize",
+      "mods": "private",
+      "default": "TextSize.Medio",
+      "section": "Texto",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "vibrationEnabled",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Vibração",
+      "attrs": "[Header(\"Vibração\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "screenShakeEnabled",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Acessibilidade (Tarefa #40)",
+      "attrs": "[Header(\"Acessibilidade (Tarefa #40)\")] [Tooltip(\"Screen shake activo. Desligar para jogadores sensíveis a movimentos bruscos de câmara.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Screen shake ativo. Desligar para jogadores sensíveis a movimentos bruscos de câmera."
+    },
+    {
+      "name": "reducedFlashes",
+      "type": "bool",
+      "mods": "private",
+      "default": "false",
+      "section": "Acessibilidade (Tarefa #40)",
+      "attrs": "[Tooltip(\"Reduzir flashes intensos (ex: impactos, raios). Substitui efeitos de flash por versões mais suaves.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Reduzir flashes intensos (ex: impactos, raios). Substitui efeitos de flash por versões mais suaves."
+    },
+    {
+      "name": "language",
+      "type": "GameLanguage",
+      "mods": "private",
+      "default": "GameLanguage.Portugues",
+      "section": "Idioma",
+      "attrs": "[Header(\"Idioma\")] [Tooltip(\"Idioma activo. Por agora apenas Português está disponível (IsLanguageAvailable). Os restantes estão definidos para preparar a infraestrutura — ao serem marcados como disponíveis o seletor passará a aceitá-los. Na primeira execução o idioma é detectado automaticamente pelo sistema via Application.systemLanguage.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Idioma ativo. Por agora apenas Português está disponível (IsLanguageAvailable). Os restantes estão definidos para preparar a infraestrutura — ao serem marcados como disponíveis o seletor passará a aceitá-los. Na primeira execução o idioma é detectado automaticamente pelo sistema via Application.systemLanguage."
+    },
+    {
+      "name": "apoloAuraEnabled",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "[Header(\"Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)\")] [Tooltip(\"Mostrar a Aura de Apolo no player (apenas disponível após obter o Emblema de Apolo). Padrão: ligado.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Mostrar a Aura de Apolo no player (apenas disponível após obter o Emblema de Apolo). Padrão: ligado."
+    },
+    {
+      "name": "gaiaAuraEnabled",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "[Tooltip(\"Mostrar a Aura de Gaia no player (apenas disponível após obter o Emblema de Gaia). Padrão: ligado.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Mostrar a Aura de Gaia no player (apenas disponível após obter o Emblema de Gaia). Padrão: ligado."
+    },
+    {
+      "name": "zeusAuraEnabled",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "[Tooltip(\"Mostrar a Aura de Zeus no player (apenas disponível após obter ambos Apolo + Gaia). Padrão: ligado.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Mostrar a Aura de Zeus no player (apenas disponível após obter ambos Apolo + Gaia). Padrão: ligado."
+    },
+    {
+      "name": "PrefApoloAura",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_apolo_aura_enabled\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefGaiaAura",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_gaia_aura_enabled\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefZeusAura",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_zeus_aura_enabled\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefGaiaVoiceDubbed",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_gaia_voice_dubbed\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefTextSpeed",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_text_speed\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefTextSize",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_text_size\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefVibration",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_vibration_enabled\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefLanguage",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_language\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefScreenShake",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_screen_shake_enabled\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PrefReducedFlashes",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"settings_reduced_flashes\"",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ApoloAuraEnabled",
+      "type": "bool",
+      "mods": "public",
+      "default": "> apoloAuraEnabled",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "GaiaAuraEnabled",
+      "type": "bool",
+      "mods": "public",
+      "default": "> gaiaAuraEnabled",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ZeusAuraEnabled",
+      "type": "bool",
+      "mods": "public",
+      "default": "> zeusAuraEnabled",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "GaiaVoiceDubbed",
+      "type": "bool",
+      "mods": "public",
+      "default": "> gaiaVoiceDubbed",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "TextSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "> textSpeed",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CurrentTextSize",
+      "type": "TextSize",
+      "mods": "public",
+      "default": "> textSize",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "VibrationEnabled",
+      "type": "bool",
+      "mods": "public",
+      "default": "> vibrationEnabled",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Language",
+      "type": "GameLanguage",
+      "mods": "public",
+      "default": "> language",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ScreenShakeEnabled",
+      "type": "bool",
+      "mods": "public",
+      "default": "> screenShakeEnabled",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ReducedFlashes",
+      "type": "bool",
+      "mods": "public",
+      "default": "> reducedFlashes",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "SetGaiaVoiceDubbed",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool value",
+      "description": "Executa a operação SetGaiaVoiceDubbed."
+    },
+    {
+      "name": "SetTextSpeed",
+      "ret": "void",
+      "mods": "public",
+      "params": "float value",
+      "description": "Executa a operação SetTextSpeed."
+    },
+    {
+      "name": "SetTextSize",
+      "ret": "void",
+      "mods": "public",
+      "params": "TextSize value",
+      "description": "Executa a operação SetTextSize."
+    },
+    {
+      "name": "CycleTextSize",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação CycleTextSize."
+    },
+    {
+      "name": "SetVibrationEnabled",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool value",
+      "description": "Executa a operação SetVibrationEnabled."
+    },
+    {
+      "name": "SetLanguage",
+      "ret": "void",
+      "mods": "public",
+      "params": "GameLanguage value",
+      "description": "Executa a operação SetLanguage."
+    },
+    {
+      "name": "CycleLanguage",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação CycleLanguage."
+    },
+    {
+      "name": "IsLanguageAvailable",
+      "ret": "bool",
+      "mods": "public static",
+      "params": "GameLanguage lang",
+      "description": "Executa a operação IsLanguageAvailable."
+    },
+    {
+      "name": "LanguageDisplayName",
+      "ret": "string",
+      "mods": "public static",
+      "params": "GameLanguage lang",
+      "description": "Executa a operação LanguageDisplayName."
+    },
+    {
+      "name": "SetScreenShakeEnabled",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool value",
+      "description": "Executa a operação SetScreenShakeEnabled."
+    },
+    {
+      "name": "SetReducedFlashes",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool value",
+      "description": "Executa a operação SetReducedFlashes."
+    },
+    {
+      "name": "SetApoloAuraEnabled",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool value",
+      "description": "Executa a operação SetApoloAuraEnabled."
+    },
+    {
+      "name": "SetGaiaAuraEnabled",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool value",
+      "description": "Executa a operação SetGaiaAuraEnabled."
+    },
+    {
+      "name": "SetZeusAuraEnabled",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool value",
+      "description": "Executa a operação SetZeusAuraEnabled."
+    },
+    {
+      "name": "NotifyChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação NotifyChanged."
+    },
+    {
+      "name": "LoadSettings",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação LoadSettings."
+    },
+    {
+      "name": "DetectSystemLanguage",
+      "ret": "GameLanguage",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação DetectSystemLanguage."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "GameVariables",
+    "LocalizationManager",
+    "PlayerProgress",
+    "SaveData",
+    "Switch"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "CameraManager",
+    "ControlsRebindSectionUI",
+    "LocalizationManager",
+    "MainMenuOptionsUI",
+    "OptionsSectionUI",
+    "PlayerFeedback",
+    "PlayerProgress",
+    "PostGameAuraController",
+    "RumbleManager",
+    "VfxPoolManager"
+  ],
+  "source": "using System;\nusing UnityEngine;\n\n/// <summary>Tamanho do texto de diálogo/legendas (Menu de Pausa — Opções, Tarefa #12).</summary>\npublic enum TextSize\n{\n    Pequeno,\n    Medio,\n    Grande\n}\n\n/// <summary>\n/// Idiomas suportados pela interface/diálogos.\n///\n/// <b>Estado actual:</b> apenas <see cref=\"Portugues\"/> está habilitado (conteúdo\n/// localizado). Os restantes estão definidos no enum para preparar a infraestrutura,\n/// mas <see cref=\"GameSettings.IsLanguageAvailable\"/> devolve false para eles — o\n/// seletor de idioma ignora-os e volta ao Português.\n///\n/// <b>Para adicionar um novo idioma:</b>\n/// 1. Adicionar a entrada aqui.\n/// 2. Marcar como available em <see cref=\"GameSettings.IsLanguageAvailable\"/>.\n/// 3. Preencher os dicionários em <see cref=\"LocalizationManager\"/> com as chaves\n///    traduzidas.\n/// 4. Criar/configurar fontes TMP com suporte ao charset do idioma (ex: japonês\n///    exige fonte CJK — ver Guia_HUD_Localizacao.md).\n/// </summary>\npublic enum GameLanguage\n{\n    Portugues = 0,\n    English   = 1,\n    Espanhol  = 2,\n    Frances   = 3,\n    Japones   = 4,\n}\n\n/// <summary>\n/// Configurações do jogador (Menu de Pausa — Opções, Tarefa #12), distintas do\n/// progresso de jogo (PlayerProgress) e das variáveis de eventos (GameVariables):\n/// \"voz de Gaia - Dublado - OFF\", velocidade do texto, tamanho do texto,\n/// vibração e idioma.\n///\n/// Persistido em PlayerPrefs (mesmo padrão de AudioManager — não faz parte de\n/// SaveData, porque são preferências do dispositivo/perfil, não do progresso de\n/// uma partida).\n///\n/// Sistemas de diálogo/legendas/UI futuros devem ler\n/// <see cref=\"GaiaVoiceDubbed\"/>/<see cref=\"TextSpeed\"/>/<see cref=\"CurrentTextSize\"/>\n/// e reagir a <see cref=\"SettingsChanged\"/> para se actualizarem em tempo real\n/// quando o jogador muda algo em Opções.\n/// </summary>\npublic class GameSettings : MonoBehaviour\n{\n    public static GameSettings Instance { get; private set; }\n\n    [Header(\"Voz de Gaia\")]\n    [Tooltip(\"\\\"Voz de Gaia - Dublado - OFF\\\": true = falas de Gaia dubladas; false = OFF (sem dublagem, só texto).\")]\n    [SerializeField] private bool gaiaVoiceDubbed = true;\n\n    [Header(\"Texto\")]\n    [Tooltip(\"Velocidade do texto de diálogo (0 = mais lento, 1 = instantâneo).\")]\n    [Range(0f, 1f)] [SerializeField] private float textSpeed = 0.5f;\n\n    [SerializeField] private TextSize textSize = TextSize.Medio;\n\n    [Header(\"Vibração\")]\n    [SerializeField] private bool vibrationEnabled = true;\n\n    [Header(\"Acessibilidade (Tarefa #40)\")]\n    [Tooltip(\"Screen shake activo. Desligar para jogadores sensíveis a movimentos bruscos de câmara.\")]\n    [SerializeField] private bool screenShakeEnabled = true;\n\n    [Tooltip(\"Reduzir flashes intensos (ex: impactos, raios). Substitui efeitos de flash por versões mais suaves.\")]\n    [SerializeField] private bool reducedFlashes = false;\n\n    [Header(\"Idioma\")]\n    [Tooltip(\"Idioma activo. Por agora apenas Português está disponível (IsLanguageAvailable). Os restantes estão definidos para preparar a infraestrutura — ao serem marcados como disponíveis o seletor passará a aceitá-los. Na primeira execução o idioma é detectado automaticamente pelo sistema via Application.systemLanguage.\")]\n    [SerializeField] private GameLanguage language = GameLanguage.Portugues;\n\n    [Header(\"Auras Pós-game (só visível no menu após desbloquear o emblema correspondente)\")]\n    [Tooltip(\"Mostrar a Aura de Apolo no player (apenas disponível após obter o Emblema de Apolo). Padrão: ligado.\")]\n    [SerializeField] private bool apoloAuraEnabled = true;\n\n    [Tooltip(\"Mostrar a Aura de Gaia no player (apenas disponível após obter o Emblema de Gaia). Padrão: ligado.\")]\n    [SerializeField] private bool gaiaAuraEnabled = true;\n\n    [Tooltip(\"Mostrar a Aura de Zeus no player (apenas disponível após obter ambos Apolo + Gaia). Padrão: ligado.\")]\n    [SerializeField] private bool zeusAuraEnabled = true;\n\n    private const string PrefApoloAura = \"settings_apolo_aura_enabled\";\n    private const string PrefGaiaAura = \"settings_gaia_aura_enabled\";\n    private const string PrefZeusAura = \"settings_zeus_aura_enabled\";\n\n    private const string PrefGaiaVoiceDubbed = \"settings_gaia_voice_dubbed\";\n    private const string PrefTextSpeed = \"settings_text_speed\";\n    private const string PrefTextSize = \"settings_text_size\";\n    private const string PrefVibration = \"settings_vibration_enabled\";\n    private const string PrefLanguage = \"settings_language\";\n    private const string PrefScreenShake = \"settings_screen_shake_enabled\";\n    private const string PrefReducedFlashes = \"settings_reduced_flashes\";\n\n    /// <summary>Disparado sempre que uma configuração muda — sistemas de diálogo/UI/legendas/vibração devem subscrever para se actualizarem em tempo real.</summary>\n    public event Action SettingsChanged;\n\n    public bool ApoloAuraEnabled => apoloAuraEnabled;\n    public bool GaiaAuraEnabled => gaiaAuraEnabled;\n    public bool ZeusAuraEnabled => zeusAuraEnabled;\n\n    public bool GaiaVoiceDubbed => gaiaVoiceDubbed;\n    public float TextSpeed => textSpeed;\n    public TextSize CurrentTextSize => textSize;\n    public bool VibrationEnabled => vibrationEnabled;\n    public GameLanguage Language => language;\n    public bool ScreenShakeEnabled => screenShakeEnabled;\n    public bool ReducedFlashes => reducedFlashes;\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\").\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        LoadSettings();\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(GameSettings) + \" (Fallback)\");\n        var instance = go.AddComponent<GameSettings>();\n        instance.isAutoFallback = true;\n    }\n\n    // ---------------- Setters ----------------\n\n    public void SetGaiaVoiceDubbed(bool value)\n    {\n        gaiaVoiceDubbed = value;\n        PlayerPrefs.SetInt(PrefGaiaVoiceDubbed, value ? 1 : 0);\n        NotifyChanged();\n    }\n\n    public void SetTextSpeed(float value)\n    {\n        textSpeed = Mathf.Clamp01(value);\n        PlayerPrefs.SetFloat(PrefTextSpeed, textSpeed);\n        NotifyChanged();\n    }\n\n    public void SetTextSize(TextSize value)\n    {\n        textSize = value;\n        PlayerPrefs.SetInt(PrefTextSize, (int)value);\n        NotifyChanged();\n    }\n\n    /// <summary>Avança para o próximo tamanho de texto, voltando a \"Pequeno\" depois de \"Grande\" — usado pelo botão cíclico de Opções.</summary>\n    public void CycleTextSize()\n    {\n        int next = ((int)textSize + 1) % Enum.GetValues(typeof(TextSize)).Length;\n        SetTextSize((TextSize)next);\n    }\n\n    public void SetVibrationEnabled(bool value)\n    {\n        vibrationEnabled = value;\n        PlayerPrefs.SetInt(PrefVibration, value ? 1 : 0);\n        NotifyChanged();\n    }\n\n    public void SetLanguage(GameLanguage value)\n    {\n        if (!IsLanguageAvailable(value)) return; // ignora idiomas não disponíveis\n        language = value;\n        PlayerPrefs.SetInt(PrefLanguage, (int)value);\n        NotifyChanged();\n    }\n\n    /// <summary>\n    /// Ordem de exibição dos idiomas no seletor cíclico. Inglês aparece primeiro\n    /// (é o idioma de fallback global quando o sistema do jogador não estiver\n    /// disponível). A lista completa: EN, PT, ES, FR, JP.\n    /// </summary>\n    private static readonly GameLanguage[] LanguageCycleOrder =\n    {\n        GameLanguage.English,\n        GameLanguage.Portugues,\n        GameLanguage.Espanhol,\n        GameLanguage.Frances,\n        GameLanguage.Japones,\n    };\n\n    /// <summary>\n    /// Avança para o próximo idioma disponível na lista (<see cref=\"LanguageCycleOrder\"/>),\n    /// voltando ao início depois do último — usado pelo botão cíclico de Opções e\n    /// do Menu Principal. Idiomas não disponíveis são ignorados; se nenhum outro\n    /// estiver disponível, mantém o actual.\n    /// </summary>\n    public void CycleLanguage()\n    {\n        int startIndex = System.Array.IndexOf(LanguageCycleOrder, language);\n        if (startIndex < 0) startIndex = 0;\n        int count = LanguageCycleOrder.Length;\n\n        for (int i = 1; i < count; i++)\n        {\n            var candidate = LanguageCycleOrder[(startIndex + i) % count];\n            if (IsLanguageAvailable(candidate))\n            {\n                SetLanguage(candidate);\n                return;\n            }\n        }\n        // Nenhum outro disponível — fica no actual.\n    }\n\n    /// <summary>\n    /// Devolve true se o idioma já tem conteúdo localizado e pode ser seleccionado\n    /// pelo jogador. Alterar aqui quando um novo idioma estiver pronto.\n    ///\n    /// <b>Para activar um idioma:</b> adicionar a condição abaixo, preencher os\n    /// dicionários em <see cref=\"LocalizationManager\"/> e garantir que as fontes\n    /// TMP suportam o charset (ver Guia_HUD_Localizacao.md).\n    /// </summary>\n    public static bool IsLanguageAvailable(GameLanguage lang)\n    {\n        return lang switch\n        {\n            GameLanguage.Portugues => true,\n            // English   => true,  // ← descomentar quando tradução estiver completa\n            // Espanhol  => true,\n            // Frances   => true,\n            // Japones   => true,\n            _ => false,\n        };\n    }\n\n    /// <summary>Nome de exibição nativo do idioma (usado pelo seletor de idioma na UI).</summary>\n    public static string LanguageDisplayName(GameLanguage lang) => lang switch\n    {\n        GameLanguage.Portugues => \"Português\",\n        GameLanguage.English   => \"English\",\n        GameLanguage.Espanhol  => \"Español\",\n        GameLanguage.Frances   => \"Français\",\n        GameLanguage.Japones   => \"日本語\",\n        _ => lang.ToString(),\n    };\n\n    public void SetScreenShakeEnabled(bool value)\n    {\n        screenShakeEnabled = value;\n        PlayerPrefs.SetInt(PrefScreenShake, value ? 1 : 0);\n        NotifyChanged();\n    }\n\n    public void SetReducedFlashes(bool value)\n    {\n        reducedFlashes = value;\n        PlayerPrefs.SetInt(PrefReducedFlashes, value ? 1 : 0);\n        NotifyChanged();\n    }\n\n    // ---- Auras Pós-game ----\n\n    public void SetApoloAuraEnabled(bool value)\n    {\n        apoloAuraEnabled = value;\n        PlayerPrefs.SetInt(PrefApoloAura, value ? 1 : 0);\n        NotifyChanged();\n    }\n\n    public void SetGaiaAuraEnabled(bool value)\n    {\n        gaiaAuraEnabled = value;\n        PlayerPrefs.SetInt(PrefGaiaAura, value ? 1 : 0);\n        NotifyChanged();\n    }\n\n    public void SetZeusAuraEnabled(bool value)\n    {\n        zeusAuraEnabled = value;\n        PlayerPrefs.SetInt(PrefZeusAura, value ? 1 : 0);\n        NotifyChanged();\n    }\n\n    private void NotifyChanged() => SettingsChanged?.Invoke();\n\n    // ---------------- Persistência ----------------\n\n    private void LoadSettings()\n    {\n        gaiaVoiceDubbed = PlayerPrefs.GetInt(PrefGaiaVoiceDubbed, gaiaVoiceDubbed ? 1 : 0) != 0;\n        textSpeed = PlayerPrefs.GetFloat(PrefTextSpeed, textSpeed);\n        textSize = (TextSize)PlayerPrefs.GetInt(PrefTextSize, (int)textSize);\n        vibrationEnabled = PlayerPrefs.GetInt(PrefVibration, vibrationEnabled ? 1 : 0) != 0;\n        screenShakeEnabled = PlayerPrefs.GetInt(PrefScreenShake, screenShakeEnabled ? 1 : 0) != 0;\n        reducedFlashes = PlayerPrefs.GetInt(PrefReducedFlashes, reducedFlashes ? 1 : 0) != 0;\n\n        apoloAuraEnabled = PlayerPrefs.GetInt(PrefApoloAura, apoloAuraEnabled ? 1 : 0) != 0;\n        gaiaAuraEnabled  = PlayerPrefs.GetInt(PrefGaiaAura,  gaiaAuraEnabled  ? 1 : 0) != 0;\n        zeusAuraEnabled  = PlayerPrefs.GetInt(PrefZeusAura,  zeusAuraEnabled  ? 1 : 0) != 0;\n\n        // Idioma: usa o pref guardado; se for a primeira execução (pref ausente),\n        // tenta detectar automaticamente pelo idioma do sistema (cross-platform:\n        // Windows, Switch, iOS, Android — Unity expõe Application.systemLanguage\n        // em todas as plataformas suportadas).\n        if (PlayerPrefs.HasKey(PrefLanguage))\n        {\n            language = (GameLanguage)PlayerPrefs.GetInt(PrefLanguage, (int)language);\n        }\n        else\n        {\n            language = DetectSystemLanguage();\n            // Guarda imediatamente para que chamadas futuras não re-detectem.\n            PlayerPrefs.SetInt(PrefLanguage, (int)language);\n        }\n\n        // Garante que o idioma carregado ainda está disponível (ex: remoção de\n        // idioma experimental entre versões cai de volta para Português).\n        if (!IsLanguageAvailable(language))\n            language = GameLanguage.Portugues;\n    }\n\n    /// <summary>\n    /// Mapeia <see cref=\"Application.systemLanguage\"/> para o <see cref=\"GameLanguage\"/>\n    /// disponível mais próximo.\n    ///\n    /// <b>Cadeia de fallback:</b>\n    /// 1. Tenta o idioma exacto do sistema.\n    /// 2. Se não estiver disponível, tenta Inglês (idioma de fallback global).\n    /// 3. Se Inglês não estiver disponível (fase actual), usa Português.\n    ///\n    /// <b>Nota Switch:</b> Unity mapeia o idioma do sistema Switch para\n    /// <c>Application.systemLanguage</c> sem necessidade de código específico\n    /// de plataforma.\n    /// </summary>\n    private static GameLanguage DetectSystemLanguage()\n    {\n        GameLanguage exact = Application.systemLanguage switch\n        {\n            SystemLanguage.Portuguese => GameLanguage.Portugues,\n            SystemLanguage.English    => GameLanguage.English,\n            SystemLanguage.Spanish    => GameLanguage.Espanhol,\n            SystemLanguage.French     => GameLanguage.Frances,\n            SystemLanguage.Japanese   => GameLanguage.Japones,\n            _                         => GameLanguage.English, // fallback global → EN\n        };\n\n        if (IsLanguageAvailable(exact)) return exact;\n\n        // Fallback: Inglês → Português\n        if (IsLanguageAvailable(GameLanguage.English)) return GameLanguage.English;\n        return GameLanguage.Portugues;\n    }\n}\n",
+  "id": "script-data-gamesettings-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-data-gamevariables-cs",
+    "script-data-localizationmanager-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savedata-cs",
+    "script-interactables-switch-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-camera-cameramanager-cs",
+    "script-ui-controlsrebindsectionui-cs",
+    "script-data-localizationmanager-cs",
+    "script-ui-mainmenuoptionsui-cs",
+    "script-ui-optionssectionui-cs",
+    "script-player-playerfeedback-cs",
+    "script-data-playerprogress-cs",
+    "script-player-postgameauracontroller-cs",
+    "script-combat-rumblemanager-cs",
+    "script-combat-vfxpoolmanager-cs"
+  ]
+}

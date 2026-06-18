@@ -1,0 +1,54 @@
+{
+  "path": "Player/PlayerIdentity.cs",
+  "filename": "PlayerIdentity.cs",
+  "category": "Player",
+  "primary": "PlayerIdentity",
+  "kind": "Componente",
+  "summary": "Identidade do player para o sistema de diálogo de NPCs (Etapa 2): define o nome mostrado no balão quando uma DialogueLine tem Speaker = Player. Opcional: se o player não tiver este componente, o balão usa \"Jogador\" como nome por defeito.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PlayerIdentity",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Jogador\"",
+      "section": "",
+      "attrs": "[Tooltip(\"Nome mostrado no balão de diálogo quando o player fala. Se vazio, usa \\\"Jogador\\\".\")]",
+      "inspector": true,
+      "description": "Nome mostrado no balão de diálogo quando o player fala. Se vazio, usa \"Jogador\"."
+    },
+    {
+      "name": "DisplayName",
+      "type": "string",
+      "mods": "public",
+      "default": "> string.IsNullOrEmpty(displayName) ? \"Jogador\" : displayName",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "DialogueLine"
+  ],
+  "used_by": [
+    "DialogueLine"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Identidade do player para o sistema de diálogo de NPCs (Etapa 2): define o\n/// nome mostrado no balão quando uma DialogueLine tem Speaker = Player.\n///\n/// Opcional: se o player não tiver este componente, o balão usa \"Jogador\"\n/// como nome por defeito.\n/// </summary>\npublic class PlayerIdentity : MonoBehaviour\n{\n    [Tooltip(\"Nome mostrado no balão de diálogo quando o player fala. Se vazio, usa \\\"Jogador\\\".\")]\n    public string displayName = \"Jogador\";\n\n    /// <summary>Nome a mostrar no balão. Se \"displayName\" estiver vazio, usa \"Jogador\".</summary>\n    public string DisplayName => string.IsNullOrEmpty(displayName) ? \"Jogador\" : displayName;\n}\n",
+  "id": "script-player-playeridentity-cs",
+  "dependencyIds": [
+    "script-npc-dialogue-dialogueline-cs"
+  ],
+  "usedByIds": [
+    "script-npc-dialogue-dialogueline-cs"
+  ]
+}

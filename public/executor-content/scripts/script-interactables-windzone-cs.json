@@ -1,0 +1,113 @@
+{
+  "path": "Interactables/WindZone.cs",
+  "filename": "WindZone.cs",
+  "category": "Interactables",
+  "primary": "WindZone",
+  "kind": "Componente",
+  "summary": "Zona de vento (Tarefa #6 — Vento): Collider2D (Trigger) que aplica uma força contínua de vento (direção + intensidade, configuráveis por zona) a tudo o que estiver dentro: - Player: PlayerMotor2D.ApplyWind — parado desloca-se (mais quanto mais leve for a forma); a andar a favor do vento ganha velocidade extra (inclui saltos); a andar contra sofre resistência. Vento vertical para cima reduz a gravidade efectiva (sobe/cai mais devagar, salta mais alto/longe); vento para baixo aumenta-a (cai/salta mais rápido e baixo). - Objetos soltos ( , não carregados) e qualquer GameObject marcado com (inimigos, NPCs, decorações com Rigidbody2D dinâmico): força = vento / peso (GameWeightUtil.GetWindWeight",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "WindZone",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "windDirection",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "Vector2.right",
+      "section": "Vento",
+      "attrs": "[Header(\"Vento\")] [Tooltip(\"Direcção do vento (normalizada internamente). Ex.: (1,0) = vento para a direita; (0,1) = vento para cima; (0,-1) = vento para baixo.\")]",
+      "inspector": true,
+      "description": "Direção do vento (normalizada internamente). Ex.: (1,0) = vento para a direita; (0,1) = vento para cima; (0,-1) = vento para baixo."
+    },
+    {
+      "name": "windStrength",
+      "type": "float",
+      "mods": "public",
+      "default": "6f",
+      "section": "Vento",
+      "attrs": "[Tooltip(\"Intensidade do vento (força aplicada por segundo, antes de dividir pelo peso do alvo).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Intensidade do vento (força aplicada por segundo, antes de dividir pelo peso do alvo)."
+    },
+    {
+      "name": "affectsPlayer",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Quem é Afectado",
+      "attrs": "[Header(\"Quem é Afectado\")] [Tooltip(\"Afecta o player (PlayerMotor2D.ApplyWind).\")]",
+      "inspector": true,
+      "description": "Afecta o player (PlayerMotor2D.ApplyWind)."
+    },
+    {
+      "name": "affectsOthers",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Quem é Afectado",
+      "attrs": "[Tooltip(\"Afecta objectos soltos (Carryable não carregados) e GameObjects marcados com WindAffectable (inimigos/NPCs/decorações).\")]",
+      "inspector": true,
+      "description": "Afecta objetos soltos (Carryable não carregados) e GameObjects marcados com WindAffectable (inimigos/NPCs/decorações)."
+    },
+    {
+      "name": "isSmallCurrent",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Quem é Afectado",
+      "attrs": "[Tooltip(\"Tarefa #7 — Guepardo: marca esta zona como uma 'corrente pequena/fraca'. Formas com AnimalFormData.canBreakSmallWindCurrents (Guepardo) ignoram-na enquanto SprintAbility.IsSprinting.\")]",
+      "inspector": true,
+      "description": "Tarefa #7 — Guepardo: marca esta zona como uma 'corrente pequena/fraca'. Formas com AnimalFormData.canBreakSmallWindCurrents (Guepardo) ignoram-na enquanto SprintAbility.IsSprinting."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnTriggerStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerStay2D."
+    },
+    {
+      "name": "OnDrawGizmos",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmos."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "Carryable",
+    "GameWeightUtil",
+    "PlayerMotor2D",
+    "SprintAbility",
+    "WindAffectable"
+  ],
+  "used_by": [
+    "GameWeightUtil",
+    "PlayerMotor2D",
+    "WindAffectable"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Zona de vento (Tarefa #6 — Vento): Collider2D (Trigger) que aplica uma\n/// força contínua de vento (direcção + intensidade, configuráveis por zona) a\n/// tudo o que estiver dentro:\n///\n/// - Player: PlayerMotor2D.ApplyWind — parado desloca-se (mais quanto mais\n///   leve for a forma); a andar a favor do vento ganha velocidade extra\n///   (inclui saltos); a andar contra sofre resistência. Vento vertical para\n///   cima reduz a gravidade efectiva (sobe/cai mais devagar, salta mais\n///   alto/longe); vento para baixo aumenta-a (cai/salta mais rápido e baixo).\n///\n/// - Objectos soltos (<see cref=\"Carryable\"/>, não carregados) e qualquer\n///   GameObject marcado com <see cref=\"WindAffectable\"/> (inimigos, NPCs,\n///   decorações com Rigidbody2D dinâmico): força = vento / peso\n///   (GameWeightUtil.GetWindWeightOf) — objectos muito leves com vento forte\n///   para cima podem \"flutuar\" (aceleração ascendente supera a gravidade).\n///\n/// Colocar num GameObject com Collider2D marcado como \"Is Trigger\" sobre a\n/// área afectada (ex.: corredor com correntes de ar, topo de penhasco\n/// ventoso, ventoinhas industriais).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class WindZone : MonoBehaviour\n{\n    [Header(\"Vento\")]\n    [Tooltip(\"Direcção do vento (normalizada internamente). Ex.: (1,0) = vento para a direita; (0,1) = vento para cima; (0,-1) = vento para baixo.\")]\n    public Vector2 windDirection = Vector2.right;\n\n    [Tooltip(\"Intensidade do vento (força aplicada por segundo, antes de dividir pelo peso do alvo).\")]\n    [Min(0f)] public float windStrength = 6f;\n\n    [Header(\"Quem é Afectado\")]\n    [Tooltip(\"Afecta o player (PlayerMotor2D.ApplyWind).\")]\n    public bool affectsPlayer = true;\n\n    [Tooltip(\"Afecta objectos soltos (Carryable não carregados) e GameObjects marcados com WindAffectable (inimigos/NPCs/decorações).\")]\n    public bool affectsOthers = true;\n\n    [Tooltip(\"Tarefa #7 — Guepardo: marca esta zona como uma 'corrente pequena/fraca'. Formas com AnimalFormData.canBreakSmallWindCurrents (Guepardo) ignoram-na enquanto SprintAbility.IsSprinting.\")]\n    public bool isSmallCurrent = false;\n\n    /// <summary>Vento efectivo (direcção normalizada * intensidade) — cacheado por frame de física.</summary>\n    private Vector2 EffectiveWind => windDirection.sqrMagnitude > 0.0001f\n        ? windDirection.normalized * windStrength\n        : Vector2.zero;\n\n    private void OnTriggerStay2D(Collider2D other)\n    {\n        Vector2 wind = EffectiveWind;\n        if (wind == Vector2.zero) return;\n\n        if (other.CompareTag(\"Player\"))\n        {\n            if (!affectsPlayer) return;\n\n            var motor = other.GetComponent<PlayerMotor2D>();\n            if (motor != null) motor.ApplyWind(wind, isSmallCurrent);\n            return;\n        }\n\n        if (!affectsOthers) return;\n\n        var carryable = other.GetComponent<Carryable>();\n        var windAffectable = other.GetComponent<WindAffectable>();\n\n        bool eligible = (carryable != null && !carryable.IsCarried)\n                        || (windAffectable != null && windAffectable.affectedByWind);\n\n        if (!eligible) return;\n\n        var rb = other.attachedRigidbody;\n        if (rb == null || rb.bodyType != RigidbodyType2D.Dynamic) return;\n\n        float weight = GameWeightUtil.GetWindWeightOf(other);\n        rb.AddForce(wind / weight, ForceMode2D.Force);\n    }\n\n    private void OnDrawGizmos()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col == null) return;\n\n        Gizmos.color = new Color(0.6f, 0.9f, 1f, 0.3f);\n        Gizmos.DrawCube(col.bounds.center, col.bounds.size);\n\n        // Seta indicativa da direcção do vento.\n        Gizmos.color = Color.white;\n        Vector3 center = col.bounds.center;\n        Vector3 dir = ((Vector2)windDirection).normalized;\n        if (dir != Vector3.zero)\n            Gizmos.DrawLine(center, center + dir * (1f + windStrength * 0.1f));\n    }\n}\n",
+  "id": "script-interactables-windzone-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-interactables-carryable-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-player-playermotor2d-cs",
+    "script-abilities-sprintability-cs",
+    "script-interactables-windaffectable-cs"
+  ],
+  "usedByIds": [
+    "script-interactables-gameweightutil-cs",
+    "script-player-playermotor2d-cs",
+    "script-interactables-windaffectable-cs"
+  ]
+}

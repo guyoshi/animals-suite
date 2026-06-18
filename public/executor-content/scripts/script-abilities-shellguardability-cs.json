@@ -1,0 +1,174 @@
+{
+  "path": "Abilities/ShellGuardAbility.cs",
+  "filename": "ShellGuardAbility.cs",
+  "category": "Abilities",
+  "primary": "ShellGuardAbility",
+  "kind": "Componente",
+  "summary": "Postura de escudo (Tartaruga Marinha — P5): enquanto o botão de habilidade está seguro, o player fica em guarda: dano recebido reduzido (em cima da Defesa da forma — ver PlayerCombat.TryDamagePlayer) e movimento travado. Ativado via PrimaryAbility.ShellGuard (AbilityRouter: StartGuard ao pressionar, StopGuard ao soltar).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ShellGuardAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "guardDamageReduction",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Escudo",
+      "attrs": "[Header(\"Escudo\")] [Tooltip(\"Dano adicional reduzido enquanto em guarda (depois da Defesa da forma). O dano nunca desce abaixo de 'minDamage'.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Dano adicional reduzido enquanto em guarda (depois da Defesa da forma). O dano nunca desce abaixo de 'minDamage'."
+    },
+    {
+      "name": "minDamage",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "Escudo",
+      "attrs": "[Tooltip(\"Dano mínimo que ainda passa com a guarda levantada (0 = pode anular por completo).\")] [Min(0)]",
+      "inspector": true,
+      "description": "Dano mínimo que ainda passa com a guarda levantada (0 = pode anular por completo)."
+    },
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "Escudo",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Escudo",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> 0f",
+      "section": "Escudo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> 0f",
+      "section": "Escudo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm && !IsGuarding",
+      "section": "Escudo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "StartGuard",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StartGuard."
+    },
+    {
+      "name": "StopGuard",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StopGuard."
+    },
+    {
+      "name": "ApplyGuard",
+      "ret": "int",
+      "mods": "public",
+      "params": "int damage",
+      "description": "Executa a operação ApplyGuard."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "PlayerCombat",
+    "PlayerMotor2D",
+    "PrimaryAbility"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "PlayerCombat",
+    "WaterMotor2D"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Postura de escudo (Tartaruga Marinha — P5): enquanto o botão de habilidade\n/// está seguro, o player fica em guarda: dano recebido reduzido (em cima da\n/// Defesa da forma — ver PlayerCombat.TryDamagePlayer) e movimento travado.\n///\n/// Activado via PrimaryAbility.ShellGuard (AbilityRouter: StartGuard ao\n/// pressionar, StopGuard ao soltar).\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D))]\npublic class ShellGuardAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Escudo\")]\n    [Tooltip(\"Dano adicional reduzido enquanto em guarda (depois da Defesa da forma). O dano nunca desce abaixo de 'minDamage'.\")]\n    [Min(0)] public int guardDamageReduction = 1;\n\n    [Tooltip(\"Dano mínimo que ainda passa com a guarda levantada (0 = pode anular por completo).\")]\n    [Min(0)] public int minDamage = 0;\n\n    private PlayerMotor2D motor;\n    private bool enabledForForm;\n\n    /// <summary>true enquanto a guarda está levantada (lido por PlayerCombat.TryDamagePlayer).</summary>\n    public bool IsGuarding { get; private set; }\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.ShellGuard;\n        StopGuard();\n    }\n\n    public void StartGuard()\n    {\n        if (!enabledForForm || IsGuarding) return;\n\n        IsGuarding = true;\n        motor.SetMovementLocked(true, this);\n    }\n\n    public void StopGuard()\n    {\n        if (!IsGuarding) return;\n\n        IsGuarding = false;\n        motor.SetMovementLocked(false, this);\n    }\n\n    /// <summary>Aplica a redução da guarda ao dano (chamado por PlayerCombat.TryDamagePlayer).</summary>\n    public int ApplyGuard(int damage)\n    {\n        if (!IsGuarding || damage <= 0) return damage;\n        return Mathf.Max(minDamage, damage - guardDamageReduction);\n    }\n\n    // ---- IAbility (item 8) ----\n    void IAbility.Activate() => StartGuard();\n    void IAbility.Release() => StopGuard();\n    public void Cancel(AbilityCancelReason reason) => StopGuard();\n    public float CooldownRemaining => 0f;\n    bool IAbility.IsActive => IsGuarding;\n\n    // ---- IActiveAbility (Tarefa #34 — HUD) ----\n    // Sem cooldown: a HUD não mostra indicador para esta habilidade.\n    public float CooldownDuration => 0f;\n    public bool CanActivate => enabledForForm && !IsGuarding;\n\n    /// <summary>AnimalsDebugPanel — sem cooldown próprio (no-op).</summary>\n    public void ResetCooldown() { }\n}\n",
+  "id": "script-abilities-shellguardability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-player-playercombat-cs",
+    "script-player-playermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-player-playercombat-cs",
+    "script-player-watermotor2d-cs"
+  ]
+}

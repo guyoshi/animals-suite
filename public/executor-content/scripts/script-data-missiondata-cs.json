@@ -1,0 +1,407 @@
+{
+  "path": "Data/MissionData.cs",
+  "filename": "MissionData.cs",
+  "category": "Data",
+  "primary": "MissionData",
+  "kind": "Asset de dados",
+  "summary": "Tipo de missão (Etapa 5.1) — escolha obrigatória ao criar uma missão. Só existem estes três tipos: - : missão de progressão principal de um mundo. Ao ser concluída, liberta a área do Boss desse mundo no Mapa-Múndi — para isso, esta MissionData deve estar referenciada em (ver WorldMapController.CheckBossUnlocks). - : missão extra, opcional, espalhada pelo mundo, com recompensa específica (itens/recursos/upgrades) ao ser concluída. - : missão menor, pedida por um NPC (recados/favores), normalmente mais curta e local.",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "MissionType",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "MissionTask",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "MissionClue",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "MissionData",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "taskId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Identificador único desta tarefa DENTRO da missão (ex: \\\"falar_pescador\\\", \\\"recolher_sementes\\\") — usado em \\\"Depends On Task Ids\\\" de outras tarefas desta missão, por Action_CompleteMissionTask/Action_SetMissionTaskState/Condition_MissionTaskState e para guardar o estado \\\"concluída\\\" desta tarefa. Vazio = é gerado automaticamente como \\\"tarefa_<índice>\\\" (0 = primeira) — mas dá um nome próprio a qualquer tarefa que vá ser referenciada por outra (em \\\"Depends On Task Ids\\\") ou por uma Acção/Condição de NPC, para não quebrar se a ordem da lista mudar.\")]",
+      "inspector": true,
+      "description": "Identificador único desta tarefa DENTRO da missão (ex: \"falar_pescador\", \"recolher_sementes\\"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Texto mostrado no Diário (lista de tarefas) enquanto esta tarefa estiver activa ou já tiver sido concluída (ex: \\\"Encontrar os 3 troncos perdidos\\\", \\\"Recolher 5 Sementes\\\").\")] [TextArea]",
+      "inspector": true,
+      "description": "Texto mostrado no Diário (lista de tarefas) enquanto esta tarefa estiver ativa ou já tiver sido concluída (ex: \"Encontrar os 3 troncos perdidos\", \"Coletar 5 Sementes\\"
+    },
+    {
+      "name": "dependsOnTaskIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Pré-requisitos (tarefas não-lineares)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "autoCompleteConditions",
+      "type": "List<NpcCondition>",
+      "mods": "public",
+      "default": "new List<NpcCondition>()",
+      "section": "Conclusão Automática (opcional)",
+      "attrs": "[Header(\"Conclusão Automática (opcional)\")] [Tooltip(\"Condições (reutiliza o catálogo de Condições de NPC) que, quando cumpridas E esta tarefa estiver activa, concluem-na automaticamente — sem precisar de Action_CompleteMissionTask. Útil para tarefas tipo \\\"Recolhe X Sementes\\\"/\\\"Tens o item Y\\\": a tarefa fica com \\\"Check\\\" no Diário assim que a condição passar a verdadeira, mesmo sem falar com nenhum NPC. Vazio = a tarefa só é concluída por uma Acção explícita num evento de NPC/objecto.\")] [SerializeReference]",
+      "inspector": true,
+      "description": "Condições (reutiliza o catálogo de Condições de NPC) que, quando cumpridas E esta tarefa estiver ativa, concluem-na automaticamente — sem precisar de Action_CompleteMissionTask. Útil para tarefas tipo \"Coleta X Sementes\"/\"Você tem o item Y\": a tarefa fica com \"Check\" no Diário assim que a condição passar a verdadeira, mesmo sem falar com nenhum NPC. Vazio = a tarefa só é concluída por uma Ação explícita num evento de NPC/objeto."
+    },
+    {
+      "name": "autoCompleteRequireAll",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Conclusão Automática (opcional)",
+      "attrs": "[Tooltip(\"Se activo (padrão), TODAS as \\\"Auto Complete Conditions\\\" têm de se cumprir; se inactivo, basta UMA.\")]",
+      "inspector": true,
+      "description": "Se ativo (padrão), TODAS as \"Auto Complete Conditions\" têm de se cumprir; se inactivo, basta UMA."
+    },
+    {
+      "name": "clueId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Conclusão Automática (opcional)",
+      "attrs": "[Tooltip(\"Identificador único desta pista dentro da missão (usado por Action_ShowFullscreenImage/Condition_HasClue e para persistência no save).\")]",
+      "inspector": true,
+      "description": "Identificador único desta pista dentro da missão (usado por Action_ShowFullscreenImage/Condition_HasClue e para persistência no save)."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Conclusão Automática (opcional)",
+      "attrs": "[Tooltip(\"Título mostrado no Diário (opcional).\")]",
+      "inspector": true,
+      "description": "Título mostrado no Diário (opcional)."
+    },
+    {
+      "name": "image",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Conclusão Automática (opcional)",
+      "attrs": "[Tooltip(\"Imagem mostrada em ecrã inteiro (FullscreenImageUI) e na lista de Pistas do Diário.\")]",
+      "inspector": true,
+      "description": "Imagem mostrada em tela inteiro (FullscreenImageUI) e na lista de Pistas do Diário."
+    },
+    {
+      "name": "missionId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Identificador único da missão (também usado para derivar os nomes das variáveis, se vazios).\")]",
+      "inspector": true,
+      "description": "Identificador único da missão (também usado para derivar os nomes das variáveis, se vazios)."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "missionType",
+      "type": "MissionType",
+      "mods": "public",
+      "default": "MissionType.Quest",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Tipo da missão — escolha obrigatória. 'Principal': progressão principal do mundo, liberta a área do Boss ao ser concluída (precisa estar referenciada em WorldData.mainMission). 'Secundaria': missão extra/opcional com recompensa específica. 'Quest': missão menor pedida por um NPC (recado/favor).\")]",
+      "inspector": true,
+      "description": "Tipo da missão — escolha obrigatória. 'Principal': progressão principal do mundo, liberta a área do Boss ao ser concluída (precisa estar referenciada em WorldData.mainMission). 'Secundaria': missão extra/opcional com recompensa específica. 'Quest': missão menor pedida por um NPC (recado/favor)."
+    },
+    {
+      "name": "startedVariableName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Variável Global de Activação",
+      "attrs": "[Header(\"Variável Global de Activação\")] [Tooltip(\"Nome da variável global bool que marca a missão como iniciada. Vazio = usa \\\"Missao_<missionId>_Iniciada\\\".\")]",
+      "inspector": true,
+      "description": "Nome da variável global bool que marca a missão como iniciada. Vazio = usa \"Missao_<missionId>_Iniciada\"."
+    },
+    {
+      "name": "startedValue",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Variável Global de Activação",
+      "attrs": "[Tooltip(\"Valor que a variável de activação assume quando a missão é iniciada (e valor esperado por IsMissionStarted).\")]",
+      "inspector": true,
+      "description": "Valor que a variável de ativação assume quando a missão é iniciada (e valor esperado por IsMissionStarted)."
+    },
+    {
+      "name": "completedVariableName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Variável Global de Conclusão",
+      "attrs": "[Header(\"Variável Global de Conclusão\")] [Tooltip(\"Nome da variável global bool que marca a missão como concluída. Vazio = usa \\\"Missao_<missionId>_Concluida\\\".\")]",
+      "inspector": true,
+      "description": "Nome da variável global bool que marca a missão como concluída. Vazio = usa \"Missao_<missionId>_Concluida\"."
+    },
+    {
+      "name": "completedValue",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Variável Global de Conclusão",
+      "attrs": "[Tooltip(\"Valor que a variável de conclusão assume quando a missão é concluída (e valor esperado por IsMissionCompleted).\")]",
+      "inspector": true,
+      "description": "Valor que a variável de conclusão assume quando a missão é concluída (e valor esperado por IsMissionCompleted)."
+    },
+    {
+      "name": "tasks",
+      "type": "List<MissionTask>",
+      "mods": "public",
+      "default": "new List<MissionTask>()",
+      "section": "Tarefas",
+      "attrs": "[Header(\"Tarefas\")] [Tooltip(\"Tarefas desta missão (apenas Missão > Tarefa, sem \\\"passos\\\"). NÃO precisam de ser uma sequência linear: cada tarefa só fica activa quando as suas \\\"Depends On Task Ids\\\" estiverem todas concluídas (vazio = activa desde o início). Pode haver várias tarefas activas em simultâneo. Quando TODAS as tarefas ficam concluídas, a missão é automaticamente marcada como concluída. Pode ficar vazia para missões \\\"interruptor\\\" (sem tarefas, apenas iniciada/concluída).\")]",
+      "inspector": true,
+      "description": "Tarefas desta missão (apenas Missão > Tarefa, sem \"passos\\"
+    },
+    {
+      "name": "completionMessage",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Conclusão",
+      "attrs": "[Header(\"Conclusão\")] [Tooltip(\"Texto mostrado no banner ao concluir a missão. Vazio = usa o texto genérico \\\"MISSÃO CONCLUÍDA\\\".\")]",
+      "inspector": true,
+      "description": "Texto mostrado no banner ao concluir a missão. Vazio = usa o texto genérico \"MISSÃO CONCLUÍDA\"."
+    },
+    {
+      "name": "completionMusic",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Conclusão",
+      "attrs": "[Tooltip(\"Música/sting tocado ao concluir a missão (opcional — se vazio, toca apenas o som de UI padrão do banner, se configurado).\")]",
+      "inspector": true,
+      "description": "Música/sting tocado ao concluir a missão (opcional — se vazio, toca apenas o som de UI padrão do banner, se configurado)."
+    },
+    {
+      "name": "requestedBy",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Diário — Menu de Pausa (Tarefa #8)",
+      "attrs": "[Header(\"Diário — Menu de Pausa (Tarefa #8)\")] [Tooltip(\"Quem pediu esta missão e onde (ex: \\\"Nilo, Riacho dos Castores\\\"). Mostrado como \\\"Quem pediu: ...\\\".\")]",
+      "inspector": true,
+      "description": "Quem pediu esta missão e onde (ex: \"Nilo, Riacho dos Castores\\"
+    },
+    {
+      "name": "whatIsNeeded",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Diário — Menu de Pausa (Tarefa #8)",
+      "attrs": "[Tooltip(\"O que é preciso fazer, em linguagem narrativa (ex: \\\"Encontrar a madeira levada pela corrente.\\\"). Mostrado como \\\"O que ele precisa: ...\\\".\")] [TextArea]",
+      "inspector": true,
+      "description": "O que é preciso fazer, em linguagem narrativa (ex: \"Encontrar a madeira levada pela corrente.\\"
+    },
+    {
+      "name": "lastHint",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Diário — Menu de Pausa (Tarefa #8)",
+      "attrs": "[Tooltip(\"Última pista ouvida — citação exacta de um NPC, tal como foi dita (ex: \\\"Vi o tronco seguir na direcção das ruínas antigas.\\\"). Mostrado como \\\"Última pista: \\\\\\\"...\\\\\\\"\\\".\")] [TextArea]",
+      "inspector": true,
+      "description": "Última pista ouvida — citação exata de um NPC, tal como foi dita (ex: \"Vi o tronco seguir na direção das ruínas antigas.\\"
+    },
+    {
+      "name": "suggestedWorld",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "",
+      "section": "Diário — Menu de Pausa (Tarefa #8)",
+      "attrs": "[Tooltip(\"Mundo onde a Íris sugere procurar (\\\"Região sugerida\\\") — memória narrativa, NÃO uma localização precisa nem um marcador no mapa. Usado também para agrupar as missões no Diário.\")]",
+      "inspector": true,
+      "description": "Mundo onde a Íris sugere procurar (\"Região sugerida\\"
+    },
+    {
+      "name": "showInJournalBeforeStart",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Diário — Menu de Pausa (Tarefa #8)",
+      "attrs": "[Tooltip(\"Se activo, a missão aparece no Diário com o marcador \\\"○\\\" mesmo antes de ser iniciada (rumor/conversa ouvida). Se inactivo, só aparece depois de IsMissionStarted.\")]",
+      "inspector": true,
+      "description": "Se ativo, a missão aparece no Diário com o marcador \"○\" mesmo antes de ser iniciada (rumor/conversa ouvida). Se inactivo, só aparece depois de IsMissionStarted."
+    },
+    {
+      "name": "clues",
+      "type": "List<MissionClue>",
+      "mods": "public",
+      "default": "new List<MissionClue>()",
+      "section": "Pistas (Diário — Sistema de Pistas/Rumores)",
+      "attrs": "[Header(\"Pistas (Diário — Sistema de Pistas/Rumores)\")] [Tooltip(\"Pistas (fotografias/descrições) desta missão, mostradas na sub-secção \\\"Pistas\\\" do Diário depois de obtidas (Action_ShowFullscreenImage com 'saveAsClue'). Cada uma precisa de um \\\"clueId\\\" único dentro desta missão.\")]",
+      "inspector": true,
+      "description": "Pistas (fotografias/descrições) desta missão, mostradas na sub-seção \"Pistas\" do Diário depois de obtidas (Action_ShowFullscreenImage com 'saveAsClue'). Cada uma precisa de um \"clueId\" único dentro desta missão."
+    },
+    {
+      "name": "StartedVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "> !string.IsNullOrEmpty(startedVariableName) ? startedVariableName : $\"Missao_{missionId}_Iniciada\"",
+      "section": "Pistas (Diário — Sistema de Pistas/Rumores)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CompletedVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "> !string.IsNullOrEmpty(completedVariableName) ? completedVariableName : $\"Missao_{missionId}_Concluida\"",
+      "section": "Pistas (Diário — Sistema de Pistas/Rumores)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "GetClue",
+      "ret": "MissionClue",
+      "mods": "public",
+      "params": "string clueId",
+      "description": "Executa a operação GetClue."
+    },
+    {
+      "name": "EffectiveTaskId",
+      "ret": "string",
+      "mods": "public",
+      "params": "MissionTask task",
+      "description": "Executa a operação EffectiveTaskId."
+    },
+    {
+      "name": "FindTask",
+      "ret": "MissionTask",
+      "mods": "public",
+      "params": "string taskId",
+      "description": "Executa a operação FindTask."
+    },
+    {
+      "name": "TaskCompletedVariable",
+      "ret": "string",
+      "mods": "public",
+      "params": "MissionTask task",
+      "description": "Executa a operação TaskCompletedVariable."
+    }
+  ],
+  "dependencies": [
+    "Action_CompleteMissionTask",
+    "Action_SetBoolVariable",
+    "Action_SetMissionTaskState",
+    "Action_ShowFullscreenImage",
+    "Condition_BoolVariable",
+    "Condition_HasClue",
+    "Condition_MissionTaskState",
+    "DiarySectionUI",
+    "FullscreenImageUI",
+    "GameVariables",
+    "MissionManager",
+    "NpcCondition",
+    "PlayerProgress",
+    "WorldData",
+    "WorldMapController"
+  ],
+  "used_by": [
+    "Action_RemoveItem",
+    "Action_ShowFullscreenImage",
+    "AnimalsDebugPanel",
+    "ChallengeDefinition",
+    "Condition_GlobalBoolVariable",
+    "Condition_HasClue",
+    "Condition_HasItemQuantity",
+    "DiarySectionUI",
+    "EmblemData",
+    "EmblemManager",
+    "EmblemsSectionUI",
+    "GameDataValidatorWindow",
+    "GameDatabase",
+    "JournalManager",
+    "MissionCompleteUI",
+    "MissionDataEditor",
+    "MissionManager",
+    "MissionRewardPickup",
+    "PlayerProgress",
+    "ProgressSectionUI",
+    "RumorData",
+    "WorldData"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Tipo de missão (Etapa 5.1) — escolha obrigatória ao criar uma missão. Só\n/// existem estes três tipos:\n///\n/// - <see cref=\"Principal\"/>: missão de progressão principal de um mundo. Ao\n///   ser concluída, liberta a área do Boss desse mundo no Mapa-Múndi — para\n///   isso, esta MissionData deve estar referenciada em\n///   <see cref=\"WorldData.mainMission\"/> (ver WorldMapController.CheckBossUnlocks).\n/// - <see cref=\"Secundaria\"/>: missão extra, opcional, espalhada pelo mundo,\n///   com recompensa específica (itens/recursos/upgrades) ao ser concluída.\n/// - <see cref=\"Quest\"/>: missão menor, pedida por um NPC (recados/favores),\n///   normalmente mais curta e local.\n/// </summary>\npublic enum MissionType\n{\n    Principal,\n    Secundaria,\n    Quest\n}\n\n/// <summary>\n/// Uma tarefa de uma <see cref=\"MissionData\"/> (Sistema de Missões — apenas dois\n/// níveis: Missão e Tarefa, sem \"passos\"). As tarefas de uma missão NÃO são\n/// necessariamente uma lista linear: cada tarefa fica \"activa\" (disponível para\n/// ser concluída e visível no Diário) quando TODAS as tarefas listadas em\n/// <see cref=\"dependsOnTaskIds\"/> já estiverem concluídas — em qualquer ordem\n/// entre si. Tarefas sem dependências ficam activas desde o início da missão,\n/// pelo que podem existir VÁRIAS tarefas activas em simultâneo (ex: \"interagir\n/// com X\" e \"interagir com Y\", em qualquer ordem, ambas necessárias para\n/// desbloquear uma terceira tarefa \"falar com Z\").\n///\n/// O estado \"concluída\" de cada tarefa é guardado por <c>MissionManager</c> numa\n/// variável global BOOL própria (<see cref=\"MissionData.TaskCompletedVariable\"/>),\n/// marcada por Action_CompleteMissionTask/Action_SetMissionTaskState em qualquer\n/// evento de NPC ou de objecto (recolher item, etc.) — ou automaticamente, se\n/// <see cref=\"autoCompleteConditions\"/> estiver preenchido (ver abaixo). Quando\n/// TODAS as tarefas da missão ficam concluídas, a missão é concluída\n/// automaticamente.\n///\n/// No Diário, cada tarefa \"visível\" (concluída OU activa) aparece numa lista com\n/// um ícone de \"Check\" para as já concluídas — ver DiarySectionUI.RefreshTasks.\n/// Tarefas ainda bloqueadas (dependências não cumpridas) não aparecem.\n/// </summary>\n[System.Serializable]\npublic class MissionTask\n{\n    [Tooltip(\"Identificador único desta tarefa DENTRO da missão (ex: \\\"falar_pescador\\\", \\\"recolher_sementes\\\") — usado em \\\"Depends On Task Ids\\\" de outras tarefas desta missão, por Action_CompleteMissionTask/Action_SetMissionTaskState/Condition_MissionTaskState e para guardar o estado \\\"concluída\\\" desta tarefa. Vazio = é gerado automaticamente como \\\"tarefa_<índice>\\\" (0 = primeira) — mas dá um nome próprio a qualquer tarefa que vá ser referenciada por outra (em \\\"Depends On Task Ids\\\") ou por uma Acção/Condição de NPC, para não quebrar se a ordem da lista mudar.\")]\n    public string taskId;\n\n    [Tooltip(\"Texto mostrado no Diário (lista de tarefas) enquanto esta tarefa estiver activa ou já tiver sido concluída (ex: \\\"Encontrar os 3 troncos perdidos\\\", \\\"Recolher 5 Sementes\\\").\")]\n    [TextArea]\n    public string description;\n\n    [Header(\"Pré-requisitos (tarefas não-lineares)\")]\n    [Tooltip(\"\\\"Task Id\\\" de outras tarefas DESTA missão que têm de estar TODAS concluídas (em qualquer ordem entre si) para esta tarefa ficar activa/disponível no Diário e poder ser concluída. Vazio = esta tarefa fica activa desde o início da missão (sem pré-requisitos). Ex: uma tarefa \\\"falar com o chefe\\\" pode ter \\\"Depends On Task Ids\\\" = [\\\"interagir_x\\\", \\\"interagir_y\\\"] — só fica activa depois das duas estarem concluídas, em qualquer ordem.\")]\n    public List<string> dependsOnTaskIds = new List<string>();\n\n    [Header(\"Conclusão Automática (opcional)\")]\n    [Tooltip(\"Condições (reutiliza o catálogo de Condições de NPC) que, quando cumpridas E esta tarefa estiver activa, concluem-na automaticamente — sem precisar de Action_CompleteMissionTask. Útil para tarefas tipo \\\"Recolhe X Sementes\\\"/\\\"Tens o item Y\\\": a tarefa fica com \\\"Check\\\" no Diário assim que a condição passar a verdadeira, mesmo sem falar com nenhum NPC. Vazio = a tarefa só é concluída por uma Acção explícita num evento de NPC/objecto.\")]\n    [SerializeReference] public List<NpcCondition> autoCompleteConditions = new List<NpcCondition>();\n\n    [Tooltip(\"Se activo (padrão), TODAS as \\\"Auto Complete Conditions\\\" têm de se cumprir; se inactivo, basta UMA.\")]\n    public bool autoCompleteRequireAll = true;\n}\n\n/// <summary>\n/// Uma \"Pista\" guardada no Diário, dentro da secção da missão a que pertence\n/// (Sistema de Pistas/Rumores). Criada por Action_ShowFullscreenImage quando\n/// \"saveAsClue\" está activo — a imagem/título/descrição ficam disponíveis para\n/// reabrir em ecrã inteiro a partir do Diário (DiarySectionUI), mesmo depois de\n/// a cena onde foi mostrada ter terminado. O estado \"obtido\" é persistido por\n/// PlayerProgress.obtainedClueIds (apenas o ID; estes dados — imagem/texto —\n/// vivem sempre neste ScriptableObject).\n/// </summary>\n[System.Serializable]\npublic class MissionClue\n{\n    [Tooltip(\"Identificador único desta pista dentro da missão (usado por Action_ShowFullscreenImage/Condition_HasClue e para persistência no save).\")]\n    public string clueId;\n\n    [Tooltip(\"Título mostrado no Diário (opcional).\")]\n    public string title;\n\n    [TextArea]\n    [Tooltip(\"Descrição/texto mostrado junto à imagem (opcional).\")]\n    public string description;\n\n    [Tooltip(\"Imagem mostrada em ecrã inteiro (FullscreenImageUI) e na lista de Pistas do Diário.\")]\n    public Sprite image;\n}\n\n/// <summary>\n/// Define uma missão (Etapa 5.1). Não guarda estado próprio: o estado vive em\n/// duas variáveis globais bool do GameVariables (gerenciador único e flexível,\n/// reutilizado tal como está) — uma de activação (\"missão iniciada\") e uma de\n/// conclusão. Lidas/escritas por MissionManager\n/// (StartMission/CompleteMission/IsMissionStarted/IsMissionCompleted) e\n/// reutilizáveis directamente em qualquer Condition_BoolVariable /\n/// Action_SetBoolVariable, condições de drops (Etapa 4.3) e desactivação de\n/// inimigos (Etapa 5.4).\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Mission Data\", fileName = \"NewMission\")]\npublic class MissionData : ScriptableObject\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Identificador único da missão (também usado para derivar os nomes das variáveis, se vazios).\")]\n    public string missionId;\n\n    public string displayName;\n\n    [TextArea] public string description;\n\n    [Tooltip(\"Tipo da missão — escolha obrigatória. 'Principal': progressão principal do mundo, liberta a área do Boss ao ser concluída (precisa estar referenciada em WorldData.mainMission). 'Secundaria': missão extra/opcional com recompensa específica. 'Quest': missão menor pedida por um NPC (recado/favor).\")]\n    public MissionType missionType = MissionType.Quest;\n\n    [Header(\"Variável Global de Activação\")]\n    [Tooltip(\"Nome da variável global bool que marca a missão como iniciada. Vazio = usa \\\"Missao_<missionId>_Iniciada\\\".\")]\n    public string startedVariableName = \"\";\n\n    [Tooltip(\"Valor que a variável de activação assume quando a missão é iniciada (e valor esperado por IsMissionStarted).\")]\n    public bool startedValue = true;\n\n    [Header(\"Variável Global de Conclusão\")]\n    [Tooltip(\"Nome da variável global bool que marca a missão como concluída. Vazio = usa \\\"Missao_<missionId>_Concluida\\\".\")]\n    public string completedVariableName = \"\";\n\n    [Tooltip(\"Valor que a variável de conclusão assume quando a missão é concluída (e valor esperado por IsMissionCompleted).\")]\n    public bool completedValue = true;\n\n    [Header(\"Tarefas\")]\n    [Tooltip(\"Tarefas desta missão (apenas Missão > Tarefa, sem \\\"passos\\\"). NÃO precisam de ser uma sequência linear: cada tarefa só fica activa quando as suas \\\"Depends On Task Ids\\\" estiverem todas concluídas (vazio = activa desde o início). Pode haver várias tarefas activas em simultâneo. Quando TODAS as tarefas ficam concluídas, a missão é automaticamente marcada como concluída. Pode ficar vazia para missões \\\"interruptor\\\" (sem tarefas, apenas iniciada/concluída).\")]\n    public List<MissionTask> tasks = new List<MissionTask>();\n\n    [Header(\"Conclusão\")]\n    [Tooltip(\"Texto mostrado no banner ao concluir a missão. Vazio = usa o texto genérico \\\"MISSÃO CONCLUÍDA\\\".\")]\n    public string completionMessage = \"\";\n\n    [Tooltip(\"Música/sting tocado ao concluir a missão (opcional — se vazio, toca apenas o som de UI padrão do banner, se configurado).\")]\n    public AudioClip completionMusic;\n\n    [Header(\"Diário — Menu de Pausa (Tarefa #8)\")]\n    [Tooltip(\"Quem pediu esta missão e onde (ex: \\\"Nilo, Riacho dos Castores\\\"). Mostrado como \\\"Quem pediu: ...\\\".\")]\n    public string requestedBy;\n\n    [Tooltip(\"O que é preciso fazer, em linguagem narrativa (ex: \\\"Encontrar a madeira levada pela corrente.\\\"). Mostrado como \\\"O que ele precisa: ...\\\".\")]\n    [TextArea]\n    public string whatIsNeeded;\n\n    [Tooltip(\"Última pista ouvida — citação exacta de um NPC, tal como foi dita (ex: \\\"Vi o tronco seguir na direcção das ruínas antigas.\\\"). Mostrado como \\\"Última pista: \\\\\\\"...\\\\\\\"\\\".\")]\n    [TextArea]\n    public string lastHint;\n\n    [Tooltip(\"Mundo onde a Íris sugere procurar (\\\"Região sugerida\\\") — memória narrativa, NÃO uma localização precisa nem um marcador no mapa. Usado também para agrupar as missões no Diário.\")]\n    public WorldData suggestedWorld;\n\n    [Tooltip(\"Se activo, a missão aparece no Diário com o marcador \\\"○\\\" mesmo antes de ser iniciada (rumor/conversa ouvida). Se inactivo, só aparece depois de IsMissionStarted.\")]\n    public bool showInJournalBeforeStart = false;\n\n    [Header(\"Pistas (Diário — Sistema de Pistas/Rumores)\")]\n    [Tooltip(\"Pistas (fotografias/descrições) desta missão, mostradas na sub-secção \\\"Pistas\\\" do Diário depois de obtidas (Action_ShowFullscreenImage com 'saveAsClue'). Cada uma precisa de um \\\"clueId\\\" único dentro desta missão.\")]\n    public List<MissionClue> clues = new List<MissionClue>();\n\n    /// <summary>Devolve a pista com este \"clueId\" (ou null se não existir).</summary>\n    public MissionClue GetClue(string clueId)\n    {\n        if (string.IsNullOrEmpty(clueId) || clues == null) return null;\n\n        foreach (var clue in clues)\n            if (clue != null && clue.clueId == clueId) return clue;\n\n        return null;\n    }\n\n    /// <summary>Nome efectivo da variável de activação (derivado de missionId se \"startedVariableName\" estiver vazio).</summary>\n    public string StartedVariable => !string.IsNullOrEmpty(startedVariableName) ? startedVariableName : $\"Missao_{missionId}_Iniciada\";\n\n    /// <summary>Nome efectivo da variável de conclusão (derivado de missionId se \"completedVariableName\" estiver vazio).</summary>\n    public string CompletedVariable => !string.IsNullOrEmpty(completedVariableName) ? completedVariableName : $\"Missao_{missionId}_Concluida\";\n\n    /// <summary>\"Task Id\" efectivo de \"task\" — o valor de <see cref=\"MissionTask.taskId\"/>, ou \"tarefa_&lt;índice&gt;\" (posição em <see cref=\"tasks\"/>) se estiver vazio. Devolve null se \"task\" for null ou não pertencer a \"tasks\".</summary>\n    public string EffectiveTaskId(MissionTask task)\n    {\n        if (task == null || tasks == null) return null;\n\n        if (!string.IsNullOrEmpty(task.taskId)) return task.taskId;\n\n        int index = tasks.IndexOf(task);\n        return index >= 0 ? $\"tarefa_{index}\" : null;\n    }\n\n    /// <summary>Devolve a tarefa cujo \"Task Id\" efectivo (ver <see cref=\"EffectiveTaskId\"/>) é \"taskId\" (ou null se não existir).</summary>\n    public MissionTask FindTask(string taskId)\n    {\n        if (string.IsNullOrEmpty(taskId) || tasks == null) return null;\n\n        for (int i = 0; i < tasks.Count; i++)\n        {\n            var task = tasks[i];\n            if (task == null) continue;\n\n            string id = !string.IsNullOrEmpty(task.taskId) ? task.taskId : $\"tarefa_{i}\";\n            if (id == taskId) return task;\n        }\n\n        return null;\n    }\n\n    /// <summary>Nome da variável global BOOL que guarda se \"task\" está concluída (\"Missao_&lt;missionId&gt;_Tarefa_&lt;taskId&gt;_Concluida\"). Devolve null se \"task\" for inválida.</summary>\n    public string TaskCompletedVariable(MissionTask task)\n    {\n        string taskId = EffectiveTaskId(task);\n        return taskId != null ? $\"Missao_{missionId}_Tarefa_{taskId}_Concluida\" : null;\n    }\n}\n",
+  "id": "script-data-missiondata-cs",
+  "dependencyIds": [
+    "script-npc-actions-journalactions-cs",
+    "script-npc-conditions-variableconditions-cs",
+    "script-npc-conditions-journalconditions-cs",
+    "script-ui-diarysectionui-cs",
+    "script-ui-fullscreenimageui-cs",
+    "script-data-gamevariables-cs",
+    "script-data-missionmanager-cs",
+    "script-npc-npccondition-cs",
+    "script-data-playerprogress-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapcontroller-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-missionactions-cs",
+    "script-npc-actions-journalactions-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-data-challengedefinition-cs",
+    "script-enemy-enemyconditions-variables-cs",
+    "script-npc-conditions-journalconditions-cs",
+    "script-npc-conditions-missionconditions-cs",
+    "script-ui-diarysectionui-cs",
+    "script-data-emblemdata-cs",
+    "script-data-emblemmanager-cs",
+    "script-ui-emblemssectionui-cs",
+    "script-data-editor-gamedatavalidatorwindow-cs",
+    "script-data-gamedatabase-cs",
+    "script-data-journalmanager-cs",
+    "script-ui-missioncompleteui-cs",
+    "script-data-editor-missiondataeditor-cs",
+    "script-data-missionmanager-cs",
+    "script-collectibles-missionrewardpickup-cs",
+    "script-data-playerprogress-cs",
+    "script-ui-progresssectionui-cs",
+    "script-data-rumordata-cs",
+    "script-data-worlddata-cs"
+  ]
+}

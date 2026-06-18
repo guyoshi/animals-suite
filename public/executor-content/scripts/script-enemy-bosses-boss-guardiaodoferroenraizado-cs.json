@@ -1,0 +1,73 @@
+{
+  "path": "Enemy/Bosses/Boss_GuardiaoDoFerroEnraizado.cs",
+  "filename": "Boss_GuardiaoDoFerroEnraizado.cs",
+  "category": "Enemy",
+  "primary": "Boss_GuardiaoDoFerroEnraizado",
+  "kind": "Definição",
+  "summary": "Boss 1/8 (GDD 12.3.1, a confirmar) — \"Guardião do Ferro Enraizado\". Preparação/scaffolding apenas (sem moveset implementado): liga-se a BossController (vida, BossHealthBarUI, EnemyMultiPartBoss). A mecânica própria (fases, ataques especiais, janela de vulnerabilidade, VFX/Animator) fica para uma tarefa futura — ver TODOs nos hooks abaixo. Ideias a confirmar com o GDD (pelo nome): guardião feito de ferro/raízes, possivelmente com partes blindadas (raízes) que precisam de ser destruídas antes do núcleo de ferro ficar vulnerável (EnemyMultiPartBoss + Condition_BossPartsDestroyed já suportam este padrão).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Boss_GuardiaoDoFerroEnraizado",
+      "kind": "class",
+      "bases": "BossController",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnIntroStart",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnIntroStart."
+    },
+    {
+      "name": "OnPhaseChanged",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "int defeatedParts, int aliveParts",
+      "description": "Executa a operação OnPhaseChanged."
+    },
+    {
+      "name": "OnAllPartsDefeated",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnAllPartsDefeated."
+    },
+    {
+      "name": "OnDefeated",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnDefeated."
+    }
+  ],
+  "dependencies": [
+    "Action_SetBossDefeated",
+    "BossController",
+    "BossHealthBarUI",
+    "Condition_BossPartsDestroyed",
+    "EnemyMultiPartBoss",
+    "NpcAction"
+  ],
+  "used_by": [],
+  "source": "/// <summary>\n/// Boss 1/8 (GDD 12.3.1, a confirmar) — \"Guardião do Ferro Enraizado\".\n///\n/// Preparação/scaffolding apenas (sem moveset implementado): liga-se a\n/// BossController (vida, BossHealthBarUI, EnemyMultiPartBoss). A mecânica\n/// própria (fases, ataques especiais, janela de vulnerabilidade, VFX/Animator)\n/// fica para uma tarefa futura — ver TODOs nos hooks abaixo.\n///\n/// Ideias a confirmar com o GDD (pelo nome): guardião feito de ferro/raízes,\n/// possivelmente com partes blindadas (raízes) que precisam de ser destruídas\n/// antes do núcleo de ferro ficar vulnerável (EnemyMultiPartBoss +\n/// Condition_BossPartsDestroyed já suportam este padrão).\n/// </summary>\npublic class Boss_GuardiaoDoFerroEnraizado : BossController\n{\n    protected override void Awake()\n    {\n        base.Awake();\n        if (string.IsNullOrEmpty(bossId)) bossId = \"guardiao_ferro_enraizado\";\n        if (string.IsNullOrEmpty(displayName)) displayName = \"Guardião do Ferro Enraizado\";\n    }\n\n    protected override void OnIntroStart()\n    {\n        // TODO (moveset): activar ataques iniciais / animação de despertar.\n    }\n\n    protected override void OnPhaseChanged(int defeatedParts, int aliveParts)\n    {\n        // TODO (moveset): trocar de fase quando uma \"raiz\"/parte blindada cai\n        // (ex: destravar novos ataques, acelerar, etc).\n    }\n\n    protected override void OnAllPartsDefeated()\n    {\n        // TODO (moveset): núcleo de ferro fica totalmente vulnerável.\n    }\n\n    protected override void OnDefeated()\n    {\n        // TODO (moveset): sequência de derrota (drops, Action_SetBossDefeated\n        // via NpcAction/UnityEvent, animação final).\n    }\n}\n",
+  "id": "script-enemy-bosses-boss-guardiaodoferroenraizado-cs",
+  "dependencyIds": [
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-ui-bosshealthbarui-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-npc-npcaction-cs"
+  ],
+  "usedByIds": []
+}

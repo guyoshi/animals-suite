@@ -1,0 +1,274 @@
+{
+  "path": "Collectibles/PickupBase.cs",
+  "filename": "PickupBase.cs",
+  "category": "Collectibles",
+  "primary": "PickupBase",
+  "kind": "Componente",
+  "summary": "Tipos de colecionável do mundo — usado por para identificar a UI/SFX/ estatística correcta sem cada Pickup ter de conhecer esses sistemas diretamente.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PickupType",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "PickupBase",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "PickupLootEntry",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "pickupId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"ID persistente e único deste coleccionável (ex: 'runa_floresta_03'). Usado por PlayerProgress.collectedPickupIds para impedir recolha duplicada entre sessões/saves. Deixar vazio desactiva a anti-duplicação — não recomendado para coleccionáveis únicos do mundo (Runas, Fragmentos, baús, Sussurros, recompensas de missão). Para Sementes/Brotos 'genéricos' espalhados pelo nível, pode deixar-se vazio.\")]",
+      "inspector": true,
+      "description": "ID persistente e único deste colecionável (ex: 'runa_floresta_03'). Usado por PlayerProgress.collectedPickupIds para impedir coleta duplicada entre sessões/saves. Deixar vazio desactiva a anti-duplicação — não recomendado para colecionáveis únicos do mundo (Runas, Fragmentos, baús, Sussurros, recompensas de missão). Para Sementes/Brotos 'genéricos' espalhados pelo nível, pode deixar-se vazio."
+    },
+    {
+      "name": "area",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "Área (contadores por área)",
+      "attrs": "[Header(\"Área (contadores por área)\")] [Tooltip(\"Área a que este coleccionável pertence, para os contadores 'encontrados nesta área' (AreaProgress / AreaData.totalRunas, totalFragments, totalWhispers, totalChests). Se vazio, é preenchido automaticamente a partir de WorldState.CurrentArea no Start().\")]",
+      "inspector": true,
+      "description": "Área a que este colecionável pertence, para os contadores 'encontrados nesta área' (AreaProgress / AreaData.totalRunas, totalFragments, totalWhispers, totalChests). Se vazio, é preenchido automaticamente a partir de WorldState.CurrentArea no Start()."
+    },
+    {
+      "name": "collectSfx",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "[Header(\"Feedback\")] [Tooltip(\"Som tocado (posicionalmente) ao recolher.\")]",
+      "inspector": true,
+      "description": "Som tocado (posicionalmente) ao coletar."
+    },
+    {
+      "name": "collectVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "[Tooltip(\"Prefab de efeito visual instanciado na posição do coleccionável ao recolher (opcional — partículas, brilho, etc.).\")]",
+      "inspector": true,
+      "description": "Prefab de efeito visual instanciado na posição do colecionável ao coletar (opcional — partículas, brilho, etc.)."
+    },
+    {
+      "name": "popupText",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "[Tooltip(\"Texto mostrado num popup temporário ao recolher (ex: '+1 Runa de Gaia'). Vazio = sem popup.\")]",
+      "inspector": true,
+      "description": "Texto mostrado num popup temporário ao coletar (ex: '+1 Runa de Gaia'). Vazio = sem popup."
+    },
+    {
+      "name": "canBeMagnetized",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Íman",
+      "attrs": "[Header(\"Íman\")] [Tooltip(\"Se activo, PickupMagnet (no player) pode atrair este coleccionável para perto antes de o recolher.\")]",
+      "inspector": true,
+      "description": "Se ativo, PickupMagnet (no player) pode atrair este colecionável para perto antes de o coletar."
+    },
+    {
+      "name": "autosaveOnCollect",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Autosave",
+      "attrs": "[Header(\"Autosave\")] [Tooltip(\"Se activo, chama SaveManager.Instance.SaveAutosave() imediatamente depois de conceder a recompensa. Usar apenas para coleccionáveis 'importantes' (Runas de Gaia, Fragmentos Vitais, baús, recompensas de missão) — Sementes/Brotos não devem gravar a cada recolha, pelo custo de I/O.\")]",
+      "inspector": true,
+      "description": "Se ativo, chama SaveManager.Instance.SaveAutosave() imediatamente depois de conceder a recompensa. Usar apenas para colecionáveis 'importantes' (Runas de Gaia, Fragmentos Vitais, baús, recompensas de missão) — Sementes/Brotos não devem gravar a cada coleta, pelo custo de I/O."
+    },
+    {
+      "name": "highlightVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Destaque (Luz de Gaia — Tarefa Itens Consumíveis)",
+      "attrs": "[Header(\"Destaque (Luz de Gaia — Tarefa Itens Consumíveis)\")] [Tooltip(\"Prefab de destaque (brilho/seta) instanciado como filho enquanto este coleccionável estiver destacado pela Luz de Gaia. Opcional — sem prefab, usa apenas um pulso de cor no SpriteRenderer.\")]",
+      "inspector": true,
+      "description": "Prefab de destaque (brilho/seta) instanciado como filho enquanto este colecionável estiver destacado pela Luz de Gaia. Opcional — sem prefab, usa apenas um pulso de cor no SpriteRenderer."
+    },
+    {
+      "name": "_collected",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Destaque (Luz de Gaia — Tarefa Itens Consumíveis)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_highlightRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Destaque (Luz de Gaia — Tarefa Itens Consumíveis)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Collected",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _collected",
+      "section": "Destaque (Luz de Gaia — Tarefa Itens Consumíveis)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "item",
+      "type": "ItemData",
+      "mods": "public",
+      "default": "",
+      "section": "Destaque (Luz de Gaia — Tarefa Itens Consumíveis)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Destaque (Luz de Gaia — Tarefa Itens Consumíveis)",
+      "attrs": "[Min(1)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "SetHighlighted",
+      "ret": "void",
+      "mods": "public",
+      "params": "Color color, float duration",
+      "description": "Executa a operação SetHighlighted."
+    },
+    {
+      "name": "HighlightRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "Color color, float duration",
+      "description": "Executa a operação HighlightRoutine."
+    },
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "Collect",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Collect."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AreaProgress",
+    "AudioManager",
+    "ChestPickup",
+    "ItemData",
+    "MissionRewardPickup",
+    "PickupMagnet",
+    "PickupPopupUI",
+    "PlayerConsumableEffects",
+    "PlayerProgress",
+    "SafeHaven",
+    "SaveManager",
+    "WorldState"
+  ],
+  "used_by": [
+    "AnimalSpiritRescue",
+    "BolhaDeArOxygenPickup",
+    "BrotoDeVidaPickup",
+    "ChestPickup",
+    "EcoPerdidoPickup",
+    "FragmentoVitalPickup",
+    "MissionRewardPickup",
+    "Objective_ItemCollected",
+    "PickupMagnet",
+    "PickupPopupUI",
+    "PlayerConsumableEffects",
+    "PlayerProgress",
+    "RunaDeGaiaPickup",
+    "SaveData",
+    "SementePickup",
+    "SussurroDaTerraPickup",
+    "WildMelodyPickup"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Tipos de coleccionável do mundo — usado por\n/// <see cref=\"PlayerProgress.PickupCollected\"/> para identificar a UI/SFX/\n/// estatística correcta sem cada Pickup ter de conhecer esses sistemas\n/// directamente.\n/// </summary>\npublic enum PickupType\n{\n    RunaDeGaia,\n    Semente,\n    FragmentoVital,\n    BrotoDeVida,\n    SussurroDaTerra,\n\n    /// <summary>\n    /// Eco Perdido — coleccionável escondido nas fases (exploração / puzzles).\n    /// Serve de moeda para comprar Sussurros da Terra no Contador de Histórias.\n    /// Cada área tem normalmente 15 Ecos Perdidos (preços dos Sussurros: 1-2-3-4-5).\n    /// Áreas de Vila e de Boss não têm Ecos Perdidos.\n    /// </summary>\n    EcoPerdido,\n\n    Chest,\n    MissionReward,\n\n    /// <summary>\n    /// Melodia Selvagem — faixa musical especial encontrada pelo mundo que\n    /// desbloqueia no Jukebox e conta para os 100% do save.\n    /// </summary>\n    WildMelody,\n}\n\n/// <summary>\n/// Classe base para todos os coleccionáveis do mundo (Runa de Gaia, Semente,\n/// Fragmento Vital, Broto de Vida, Sussurro da Terra, baús, recompensas de\n/// missão, ...).\n///\n/// Responsabilidades comuns (todas tratadas aqui, sem repetição nas\n/// subclasses):\n/// - Detecção do player via <c>OnTriggerEnter2D</c> + tag \"Player\" (mesmo\n///   padrão de <see cref=\"SafeHaven\"/>).\n/// - Anti-duplicação: se <see cref=\"pickupId\"/> já estiver em\n///   <c>PlayerProgress.collectedPickupIds</c> (recolhido numa sessão/save\n///   anterior), o objecto desactiva-se em <c>Start()</c> e nunca concede a\n///   recompensa outra vez.\n/// - Efeitos: som (<see cref=\"collectSfx\"/>), VFX (<see cref=\"collectVfxPrefab\"/>)\n///   e popup temporário (<see cref=\"popupText\"/> via <see cref=\"PickupPopupUI\"/>).\n/// - Autosave opcional após recolher (<see cref=\"autosaveOnCollect\"/>).\n/// - Suporte a íman (<see cref=\"canBeMagnetized\"/>) — ver <see cref=\"PickupMagnet\"/>.\n///\n/// Subclasses só precisam de implementar <see cref=\"Type\"/> (para o evento\n/// <c>PlayerProgress.PickupCollected</c>) e <see cref=\"GrantReward\"/> (conceder\n/// a recompensa específica — chamar GiveSementes/GiveRunasDeGaia/AddRunaFound/\n/// etc.).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic abstract class PickupBase : MonoBehaviour\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"ID persistente e único deste coleccionável (ex: 'runa_floresta_03'). Usado por PlayerProgress.collectedPickupIds para impedir recolha duplicada entre sessões/saves. Deixar vazio desactiva a anti-duplicação — não recomendado para coleccionáveis únicos do mundo (Runas, Fragmentos, baús, Sussurros, recompensas de missão). Para Sementes/Brotos 'genéricos' espalhados pelo nível, pode deixar-se vazio.\")]\n    public string pickupId;\n\n    [Header(\"Área (contadores por área)\")]\n    [Tooltip(\"Área a que este coleccionável pertence, para os contadores 'encontrados nesta área' (AreaProgress / AreaData.totalRunas, totalFragments, totalWhispers, totalChests). Se vazio, é preenchido automaticamente a partir de WorldState.CurrentArea no Start().\")]\n    public AreaData area;\n\n    [Header(\"Feedback\")]\n    [Tooltip(\"Som tocado (posicionalmente) ao recolher.\")]\n    public AudioClip collectSfx;\n\n    [Tooltip(\"Prefab de efeito visual instanciado na posição do coleccionável ao recolher (opcional — partículas, brilho, etc.).\")]\n    public GameObject collectVfxPrefab;\n\n    [Tooltip(\"Texto mostrado num popup temporário ao recolher (ex: '+1 Runa de Gaia'). Vazio = sem popup.\")]\n    public string popupText;\n\n    [Header(\"Íman\")]\n    [Tooltip(\"Se activo, PickupMagnet (no player) pode atrair este coleccionável para perto antes de o recolher.\")]\n    public bool canBeMagnetized = true;\n\n    [Header(\"Autosave\")]\n    [Tooltip(\"Se activo, chama SaveManager.Instance.SaveAutosave() imediatamente depois de conceder a recompensa. Usar apenas para coleccionáveis 'importantes' (Runas de Gaia, Fragmentos Vitais, baús, recompensas de missão) — Sementes/Brotos não devem gravar a cada recolha, pelo custo de I/O.\")]\n    public bool autosaveOnCollect = false;\n\n    [Header(\"Destaque (Luz de Gaia — Tarefa Itens Consumíveis)\")]\n    [Tooltip(\"Prefab de destaque (brilho/seta) instanciado como filho enquanto este coleccionável estiver destacado pela Luz de Gaia. Opcional — sem prefab, usa apenas um pulso de cor no SpriteRenderer.\")]\n    public GameObject highlightVfxPrefab;\n\n    /// <summary>Tipo deste coleccionável — usado em PlayerProgress.PickupCollected (UI/SFX/estatísticas).</summary>\n    public abstract PickupType Type { get; }\n\n    private bool _collected;\n    private Coroutine _highlightRoutine;\n\n    /// <summary>True depois de <see cref=\"Collect\"/> ter sido chamado com sucesso (recompensa já concedida).</summary>\n    public bool Collected => _collected;\n\n    /// <summary>\n    /// Destaca este coleccionável durante \"duration\" segundos (Luz de Gaia —\n    /// PlayerConsumableEffects): instancia <see cref=\"highlightVfxPrefab\"/> (se\n    /// configurado) como filho e/ou aplica um pulso de \"color\" ao\n    /// SpriteRenderer. Chamar de novo enquanto já destacado renova a duração.\n    /// </summary>\n    public void SetHighlighted(Color color, float duration)\n    {\n        if (_collected) return;\n\n        if (_highlightRoutine != null) StopCoroutine(_highlightRoutine);\n        _highlightRoutine = StartCoroutine(HighlightRoutine(color, duration));\n    }\n\n    private IEnumerator HighlightRoutine(Color color, float duration)\n    {\n        GameObject vfx = highlightVfxPrefab != null\n            ? Instantiate(highlightVfxPrefab, transform.position, Quaternion.identity, transform)\n            : null;\n\n        var sprite = GetComponentInChildren<SpriteRenderer>();\n        Color original = sprite != null ? sprite.color : Color.white;\n\n        float t = 0f;\n        while (t < duration)\n        {\n            if (sprite != null)\n            {\n                float pulse = (Mathf.Sin(t * 6f) + 1f) * 0.5f;\n                sprite.color = Color.Lerp(original, color, pulse * 0.6f);\n            }\n\n            t += Time.deltaTime;\n            yield return null;\n        }\n\n        if (sprite != null) sprite.color = original;\n        if (vfx != null) Destroy(vfx);\n        _highlightRoutine = null;\n    }\n\n    protected virtual void Awake()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col != null) col.isTrigger = true;\n    }\n\n    protected virtual void Start()\n    {\n        if (area == null && WorldState.Instance != null)\n            area = WorldState.Instance.CurrentArea;\n\n        // Já recolhido numa sessão/save anterior (collectedPickupIds) — não\n        // voltar a aparecer nem a conceder a recompensa outra vez.\n        if (!string.IsNullOrEmpty(pickupId) && PlayerProgress.Instance != null\n            && PlayerProgress.Instance.HasCollectedPickup(pickupId))\n        {\n            _collected = true;\n            gameObject.SetActive(false);\n        }\n    }\n\n    protected virtual void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        Collect();\n    }\n\n    /// <summary>\n    /// Recolhe este coleccionável: concede a recompensa (uma única vez via\n    /// <see cref=\"GrantReward\"/>), marca-o como recolhido (anti-duplicação),\n    /// toca efeitos/som, mostra o popup, notifica\n    /// <c>PlayerProgress.PickupCollected</c>, faz autosave (se configurado) e\n    /// desactiva/destrói o objecto. Pode ser chamado directamente (ex: por\n    /// <see cref=\"PickupMagnet\"/> ou por interacção manual de um baú).\n    /// </summary>\n    public void Collect()\n    {\n        if (_collected) return;\n        if (!string.IsNullOrEmpty(pickupId) && PlayerProgress.Instance != null\n            && PlayerProgress.Instance.HasCollectedPickup(pickupId))\n            return;\n\n        _collected = true;\n\n        GrantReward();\n\n        if (!string.IsNullOrEmpty(pickupId))\n            PlayerProgress.Instance?.MarkPickupCollected(pickupId);\n\n        if (collectVfxPrefab != null)\n            Instantiate(collectVfxPrefab, transform.position, Quaternion.identity);\n\n        AudioManager.Instance?.PlaySEAtPoint(collectSfx, transform.position);\n\n        if (!string.IsNullOrEmpty(popupText))\n            PickupPopupUI.Instance?.Show(popupText);\n\n        PlayerProgress.Instance?.NotifyPickupCollected(Type, pickupId);\n\n        if (autosaveOnCollect)\n            SaveManager.Instance?.SaveAutosave();\n\n        gameObject.SetActive(false);\n        Destroy(gameObject);\n    }\n\n    /// <summary>Concede a recompensa específica deste tipo de coleccionável (chamado uma única vez, dentro de Collect()).</summary>\n    protected abstract void GrantReward();\n}\n\n/// <summary>\n/// Uma entrada de \"item + quantidade\" — usada por <see cref=\"ChestPickup\"/> e\n/// <see cref=\"MissionRewardPickup\"/> para configurar o conteúdo entregue\n/// (PlayerProgress.AddItem).\n/// </summary>\n[System.Serializable]\npublic class PickupLootEntry\n{\n    public ItemData item;\n\n    [Min(1)]\n    public int amount = 1;\n}\n",
+  "id": "script-collectibles-pickupbase-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-audio-audiomanager-cs",
+    "script-collectibles-chestpickup-cs",
+    "script-data-itemdata-cs",
+    "script-collectibles-missionrewardpickup-cs",
+    "script-collectibles-pickupmagnet-cs",
+    "script-ui-pickuppopupui-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-data-playerprogress-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savemanager-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-interactables-animalspiritrescue-cs",
+    "script-collectibles-bolhadearoxygenpickup-cs",
+    "script-collectibles-brotodevidapickup-cs",
+    "script-collectibles-chestpickup-cs",
+    "script-collectibles-ecoperdidopickup-cs",
+    "script-collectibles-fragmentovitalpickup-cs",
+    "script-collectibles-missionrewardpickup-cs",
+    "script-data-objectives-challengeobjectives-player-cs",
+    "script-collectibles-pickupmagnet-cs",
+    "script-ui-pickuppopupui-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-data-playerprogress-cs",
+    "script-collectibles-runadegaiapickup-cs",
+    "script-data-savedata-cs",
+    "script-collectibles-sementepickup-cs",
+    "script-collectibles-sussurrodaterrapickup-cs",
+    "script-collectibles-wildmelodypickup-cs"
+  ]
+}

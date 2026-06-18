@@ -1,0 +1,62 @@
+{
+  "path": "NPC/Actions/ShopActions.cs",
+  "filename": "ShopActions.cs",
+  "category": "NPC",
+  "primary": "Action_OpenShop",
+  "kind": "Acção de NPC",
+  "summary": "Tarefa #35 — abre a loja \"shop\" (ShopUI) e espera até o jogador a fechar, pausando o jogo entretanto (mesma lógica de pausa do diálogo — GamePauseUtil, via ShopUI.OpenAndWait). Sem efeito se \"shop\" ou ShopUI.Instance forem nulos.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Action_OpenShop",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "shop",
+      "type": "ShopData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "GamePauseUtil",
+    "NpcAction",
+    "NpcController",
+    "ShopData",
+    "ShopUI"
+  ],
+  "used_by": [
+    "ShopData",
+    "ShopUI"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #35 — abre a loja \"shop\" (ShopUI) e espera até o jogador a fechar,\n/// pausando o jogo entretanto (mesma lógica de pausa do diálogo —\n/// GamePauseUtil, via ShopUI.OpenAndWait). Sem efeito se \"shop\" ou\n/// ShopUI.Instance forem nulos.\n/// </summary>\n[System.Serializable]\npublic class Action_OpenShop : NpcAction\n{\n    public ShopData shop;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (shop == null || ShopUI.Instance == null)\n        {\n            if (shop == null) Debug.LogWarning(\"Action_OpenShop: 'shop' não atribuído.\");\n            else Debug.LogWarning(\"Action_OpenShop: nenhuma ShopUI encontrada na cena.\");\n            yield break;\n        }\n\n        yield return ShopUI.Instance.OpenAndWait(shop);\n    }\n}\n",
+  "id": "script-npc-actions-shopactions-cs",
+  "dependencyIds": [
+    "script-npc-pauseutil-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs",
+    "script-data-shopdata-cs",
+    "script-ui-shopui-cs"
+  ],
+  "usedByIds": [
+    "script-data-shopdata-cs",
+    "script-ui-shopui-cs"
+  ]
+}

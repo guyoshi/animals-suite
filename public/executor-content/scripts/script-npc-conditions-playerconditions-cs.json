@@ -1,0 +1,268 @@
+{
+  "path": "NPC/Conditions/PlayerConditions.cs",
+  "filename": "PlayerConditions.cs",
+  "category": "NPC",
+  "primary": "NpcPlayerConditionUtil",
+  "kind": "Condição de NPC",
+  "summary": "Helpers partilhados pelas condições relacionadas com o player. internal static class NpcPlayerConditionUtil { Vai buscar o FormSwitcher do player associado ao NPC (ou null se não existir). public static FormSwitcher GetFormSwitcher(NpcController npc) { if (npc == null || npc.Player == null) return null; return npc.Player.GetComponent (); } } O player tem menos corações do que \"hearts\". [System.Serializable] public class Condition_HeartsLessThan : NpcCondition { public int hearts = 1; public override bool Evaluate(NpcController npc) { return PlayerProgress.Instance != null && PlayerProgress.Instance.HasFewerHeartsThan(hearts); } } O player tem mais corações do que \"hearts\". [System.Serializab",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "NpcPlayerConditionUtil",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_HeartsLessThan",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_HeartsGreaterThan",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_ItemEquipped",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_HasSementes",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_HasRunasDeGaia",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_AnimalFreed",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_PlayerForm",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_PlayerCategory",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_HasUpgrade",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_CanAffordUpgrade",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_HardMode",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_DeathsInArea",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_ReturningAfterBoss",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "hearts",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "item",
+      "type": "ItemData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "animal",
+      "type": "AnimalFormData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "form",
+      "type": "AnimalFormData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "categories",
+      "type": "AnimalCategory",
+      "mods": "public",
+      "default": "AnimalCategory.None",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "requireAll",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, a forma actual tem de ter TODAS as categorias seleccionadas. Se desactivo, basta ter UMA delas.\")]",
+      "inspector": true,
+      "description": "Se ativo, a forma atual tem de ter TODAS as categorias seleccionadas. Se desactivo, basta ter UMA delas."
+    },
+    {
+      "name": "upgrade",
+      "type": "UpgradeData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isHardMode",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"true = condição cumpre-se em modo difícil; false = cumpre-se em modo normal.\")]",
+      "inspector": true,
+      "description": "true = condição cumpre-se em modo difícil; false = cumpre-se em modo normal."
+    },
+    {
+      "name": "area",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "comparison",
+      "type": "Comparison",
+      "mods": "public",
+      "default": "Comparison.GreaterOrEqual",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "world",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "GetFormSwitcher",
+      "ret": "FormSwitcher",
+      "mods": "public static",
+      "params": "NpcController npc",
+      "description": "Executa a operação GetFormSwitcher."
+    },
+    {
+      "name": "Evaluate",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Evaluate."
+    }
+  ],
+  "dependencies": [
+    "Action_BuyUpgrade",
+    "AnimalCategory",
+    "AnimalFormData",
+    "AreaData",
+    "Comparison",
+    "FormSwitcher",
+    "ItemData",
+    "NpcCondition",
+    "NpcConditionUtil",
+    "NpcController",
+    "PlayerCombat",
+    "PlayerHealthRegen",
+    "PlayerProgress",
+    "UpgradeData",
+    "WorldData"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>Helpers partilhados pelas condições relacionadas com o player.</summary>\ninternal static class NpcPlayerConditionUtil\n{\n    /// <summary>Vai buscar o FormSwitcher do player associado ao NPC (ou null se não existir).</summary>\n    public static FormSwitcher GetFormSwitcher(NpcController npc)\n    {\n        if (npc == null || npc.Player == null) return null;\n        return npc.Player.GetComponent<FormSwitcher>();\n    }\n}\n\n/// <summary>O player tem menos corações do que \"hearts\".</summary>\n[System.Serializable]\npublic class Condition_HeartsLessThan : NpcCondition\n{\n    public int hearts = 1;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.HasFewerHeartsThan(hearts);\n    }\n}\n\n/// <summary>O player tem mais corações do que \"hearts\".</summary>\n[System.Serializable]\npublic class Condition_HeartsGreaterThan : NpcCondition\n{\n    public int hearts = 0;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.HasMoreHeartsThan(hearts);\n    }\n}\n\n/// <summary>O player tem este item equipado.</summary>\n[System.Serializable]\npublic class Condition_ItemEquipped : NpcCondition\n{\n    public ItemData item;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.HasItemEquipped(item);\n    }\n}\n\n/// <summary>O player tem pelo menos \"amount\" Sementes.</summary>\n[System.Serializable]\npublic class Condition_HasSementes : NpcCondition\n{\n    public int amount = 1;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.HasSementes(amount);\n    }\n}\n\n/// <summary>O player tem pelo menos \"amount\" Runas de Gaia.</summary>\n[System.Serializable]\npublic class Condition_HasRunasDeGaia : NpcCondition\n{\n    public int amount = 1;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.HasRunasDeGaia(amount);\n    }\n}\n\n/// <summary>Este animal já foi libertado pelo player.</summary>\n[System.Serializable]\npublic class Condition_AnimalFreed : NpcCondition\n{\n    public AnimalFormData animal;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.HasFreedAnimal(animal);\n    }\n}\n\n/// <summary>O player está actualmente transformado nesta forma.</summary>\n[System.Serializable]\npublic class Condition_PlayerForm : NpcCondition\n{\n    public AnimalFormData form;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        var switcher = NpcPlayerConditionUtil.GetFormSwitcher(npc);\n        return switcher != null && form != null && switcher.CurrentForm == form;\n    }\n}\n\n/// <summary>A forma actual do player pertence a uma destas categorias (GDD).</summary>\n[System.Serializable]\npublic class Condition_PlayerCategory : NpcCondition\n{\n    public AnimalCategory categories = AnimalCategory.None;\n\n    [Tooltip(\"Se activo, a forma actual tem de ter TODAS as categorias seleccionadas. Se desactivo, basta ter UMA delas.\")]\n    public bool requireAll = false;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        var switcher = NpcPlayerConditionUtil.GetFormSwitcher(npc);\n        if (switcher == null || switcher.CurrentForm == null) return false;\n\n        var current = switcher.CurrentForm.categories;\n\n        if (requireAll) return (current & categories) == categories;\n        return (current & categories) != 0;\n    }\n}\n\n/// <summary>O player já desbloqueou este upgrade.</summary>\n[System.Serializable]\npublic class Condition_HasUpgrade : NpcCondition\n{\n    public UpgradeData upgrade;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.HasUpgrade(upgrade);\n    }\n}\n\n/// <summary>\n/// O player ainda não tem este upgrade e tem saldo suficiente\n/// (UpgradeData.unlockCost/unlockCurrency) para o comprar com\n/// Action_BuyUpgrade (Tarefa #20 — Economia). Usar num \"+ Adicionar Condição\"\n/// de branch para mostrar \"Comprar Upgrade\" só quando aplicável (ex: ocultar\n/// se já tens / mostrar \"sem sementes suficientes\" se não tens saldo).\n/// </summary>\n[System.Serializable]\npublic class Condition_CanAffordUpgrade : NpcCondition\n{\n    public UpgradeData upgrade;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || upgrade == null) return false;\n\n        return !progress.HasUpgrade(upgrade) && progress.HasResource(upgrade.unlockCurrency, upgrade.unlockCost);\n    }\n}\n\n/// <summary>Verifica se o modo difícil está (ou não) activo.</summary>\n[System.Serializable]\npublic class Condition_HardMode : NpcCondition\n{\n    [Tooltip(\"true = condição cumpre-se em modo difícil; false = cumpre-se em modo normal.\")]\n    public bool isHardMode = true;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        // Fonte única de verdade: IsHardModeActive (Instinto \"Juramento\n        // Difícil\" ligado em enabledUpgradeIds) — a mesma usada por\n        // PlayerCombat/PlayerHealthRegen. O antigo campo \"progress.hardMode\"\n        // não era actualizado pelo fluxo normal (loja de Instintos), por isso\n        // esta condição nunca correspondia ao dano/regen reais.\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.IsHardModeActive == isHardMode;\n    }\n}\n\n/// <summary>Compara o número de mortes do player numa área.</summary>\n[System.Serializable]\npublic class Condition_DeathsInArea : NpcCondition\n{\n    public AreaData area;\n    public Comparison comparison = Comparison.GreaterOrEqual;\n    public int amount = 1;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        if (PlayerProgress.Instance == null) return false;\n        int deaths = PlayerProgress.Instance.GetDeaths(area);\n        return NpcConditionUtil.Compare(deaths, comparison, amount);\n    }\n}\n\n/// <summary>O player venceu o boss deste mundo e ainda não passou pelo evento de \"regresso pós-boss\".</summary>\n[System.Serializable]\npublic class Condition_ReturningAfterBoss : NpcCondition\n{\n    public WorldData world;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.IsReturningAfterBoss(world);\n    }\n}\n",
+  "id": "script-npc-conditions-playerconditions-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-itemdata-cs",
+    "script-npc-npccondition-cs",
+    "script-npc-npcconditionutil-cs",
+    "script-npc-npccontroller-cs",
+    "script-player-playercombat-cs",
+    "script-player-playerhealthregen-cs",
+    "script-data-playerprogress-cs",
+    "script-data-upgradedata-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": []
+}

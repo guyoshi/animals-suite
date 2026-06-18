@@ -1,0 +1,89 @@
+{
+  "path": "Enemy/EnemyVoidTrigger.cs",
+  "filename": "EnemyVoidTrigger.cs",
+  "category": "Enemy",
+  "primary": "EnemyVoidTrigger",
+  "kind": "Componente",
+  "summary": "Zona de \"fora da área\" / hazard fatal para inimigos (Enemy Creator — Etapa 8.2; GDD 12.1: neutralizar = destruir/desligar/prender OU empurrar para fora da área). Collider2D (trigger) colocado em abismos, lava, água profunda, bordas da arena, etc. Quando um inimigo entra (ex: empurrado por knockback — EnemyHealth.ApplyKnockback com weaknesses.canBePushed), é neutralizado: Morre (via EnemyHealth.Kill — dispara drops/feedback/persistência) ou Desactiva, conforme \"reaction\". \"onlyPushable\" restringe a inimigos com canBePushed (zonas pensadas só para a mecânica de empurrar); desligado, neutraliza qualquer inimigo que caia lá dentro.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyVoidTrigger",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "reaction",
+      "type": "EnemyWaterReaction",
+      "mods": "public",
+      "default": "EnemyWaterReaction.Morre",
+      "section": "",
+      "attrs": "[Tooltip(\"O que acontece ao inimigo que entra na zona.\")]",
+      "inspector": true,
+      "description": "O que acontece ao inimigo que entra na zona."
+    },
+    {
+      "name": "onlyPushable",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "",
+      "attrs": "[Tooltip(\"Só afecta inimigos com 'canBePushed' (zonas da mecânica de empurrar). Desligado = afecta qualquer inimigo.\")]",
+      "inspector": true,
+      "description": "Só afecta inimigos com 'canBePushed' (zonas da mecânica de empurrar). Desligado = afecta qualquer inimigo."
+    },
+    {
+      "name": "respectHazardImmunity",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "",
+      "attrs": "[Tooltip(\"Inimigos que recebem dano de hazards ('canTakeDamageFromHazards' desligado) ficam imunes a esta zona? Liga para tratar a zona como hazard normal.\")]",
+      "inspector": true,
+      "description": "Inimigos que recebem dano de hazards ('canTakeDamageFromHazards' desligado) ficam imunes a esta zona? Liga para tratar a zona como hazard normal."
+    },
+    {
+      "name": "onEnemyNeutralized",
+      "type": "UnityEvent<EnemyController>",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Disparado quando um inimigo é neutralizado por esta zona.\")]",
+      "inspector": true,
+      "description": "Disparado quando um inimigo é neutralizado por esta zona."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    }
+  ],
+  "dependencies": [
+    "EnemyController",
+    "EnemyHealth",
+    "EnemyState",
+    "EnemyWaterReaction"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Zona de \"fora da área\" / hazard fatal para inimigos (Enemy Creator — Etapa\n/// 8.2; GDD 12.1: neutralizar = destruir/desligar/prender OU empurrar para\n/// fora da área).\n///\n/// Collider2D (trigger) colocado em abismos, lava, água profunda, bordas da\n/// arena, etc. Quando um inimigo entra (ex: empurrado por knockback —\n/// EnemyHealth.ApplyKnockback com weaknesses.canBePushed), é neutralizado:\n/// Morre (via EnemyHealth.Kill — dispara drops/feedback/persistência) ou\n/// Desactiva, conforme \"reaction\".\n///\n/// \"onlyPushable\" restringe a inimigos com canBePushed (zonas pensadas só\n/// para a mecânica de empurrar); desligado, neutraliza qualquer inimigo que\n/// caia lá dentro.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class EnemyVoidTrigger : MonoBehaviour\n{\n    [Tooltip(\"O que acontece ao inimigo que entra na zona.\")]\n    public EnemyWaterReaction reaction = EnemyWaterReaction.Morre;\n\n    [Tooltip(\"Só afecta inimigos com 'canBePushed' (zonas da mecânica de empurrar). Desligado = afecta qualquer inimigo.\")]\n    public bool onlyPushable = false;\n\n    [Tooltip(\"Inimigos que recebem dano de hazards ('canTakeDamageFromHazards' desligado) ficam imunes a esta zona? Liga para tratar a zona como hazard normal.\")]\n    public bool respectHazardImmunity = false;\n\n    [Tooltip(\"Disparado quando um inimigo é neutralizado por esta zona.\")]\n    public UnityEvent<EnemyController> onEnemyNeutralized;\n\n    private void Awake()\n    {\n        var col = GetComponent<Collider2D>();\n        if (!col.isTrigger)\n            Debug.LogWarning($\"[{name}] O Collider2D do EnemyVoidTrigger deve ser 'Is Trigger'.\", this);\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        var enemy = other.GetComponent<EnemyController>();\n        if (enemy == null || enemy.IsTerminal) return;\n\n        var weaknesses = enemy.Data != null ? enemy.Data.weaknesses : null;\n\n        if (onlyPushable && (weaknesses == null || !weaknesses.canBePushed)) return;\n        if (respectHazardImmunity && weaknesses != null && !weaknesses.canTakeDamageFromHazards) return;\n\n        switch (reaction)\n        {\n            case EnemyWaterReaction.Morre:\n                var health = enemy.GetEnemyComponent<EnemyHealth>();\n                if (health != null) health.Kill();\n                else enemy.SetState(EnemyState.Morto);\n                break;\n\n            case EnemyWaterReaction.Desactiva:\n                enemy.SetState(EnemyState.Desactivado);\n                break;\n\n            default:\n                return; // Nenhuma: zona configurada como inerte\n        }\n\n        onEnemyNeutralized?.Invoke(enemy);\n    }\n}\n",
+  "id": "script-enemy-enemyvoidtrigger-cs",
+  "dependencyIds": [
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemyhealth-cs"
+  ],
+  "usedByIds": []
+}

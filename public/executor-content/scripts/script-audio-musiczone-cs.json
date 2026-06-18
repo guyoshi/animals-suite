@@ -1,0 +1,180 @@
+{
+  "path": "Audio/MusicZone.cs",
+  "filename": "MusicZone.cs",
+  "category": "Audio",
+  "primary": "MusicZone",
+  "kind": "Componente",
+  "summary": "Zona do mundo que define a música de fundo (BGM) e/ou som ambiente (BGS) para a área coberta pelo seu Collider2D (deve ter \"Is Trigger\" ativo). Quando o player entra na zona, ela regista-se em AudioManager; quando sai, é removida. O AudioManager escolhe, para cada canal (BGM/BGS) separadamente, a zona ativa de maior \"priority\" que define um clip nesse canal. Isto permite, por exemplo: - Uma zona grande cobrindo uma área inteira, com bgmClip = música da área e priority = 0. - Uma zona pequena dentro dela (ex: dentro de uma caverna), com bgsClip = eco/gotas de água, bgmClip vazio e priority = 1 — ao entrar, só o som ambiente muda; a música da área continua a tocar. Ao sair, o som ambiente vo",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "MusicZone",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "zoneId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Apenas para identificação no Inspector/depuração.\")]",
+      "inspector": true,
+      "description": "Apenas para identificação no Inspector/depuração."
+    },
+    {
+      "name": "bgmClip",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "[Header(\"Áudio\")] [Tooltip(\"Música de fundo desta zona. Deixa vazio para não alterar o BGM ao entrar nesta zona.\")]",
+      "inspector": true,
+      "description": "Música de fundo desta zona. Deixa vazio para não alterar o BGM ao entrar nesta zona."
+    },
+    {
+      "name": "bgsClip",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "[Tooltip(\"Som ambiente desta zona. Deixa vazio para não alterar o BGS ao entrar nesta zona.\")]",
+      "inspector": true,
+      "description": "Som ambiente desta zona. Deixa vazio para não alterar o BGS ao entrar nesta zona."
+    },
+    {
+      "name": "loop",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Áudio",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fadeTime",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "Transição",
+      "attrs": "[Header(\"Transição\")] [Tooltip(\"Duração do crossfade ao entrar nesta zona (ou ao sair, se for a zona activa para esse canal).\")]",
+      "inspector": true,
+      "description": "Duração do crossfade ao entrar nesta zona (ou ao sair, se for a zona ativa para esse canal)."
+    },
+    {
+      "name": "priority",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "Transição",
+      "attrs": "[Tooltip(\"Zonas com prioridade maior ganham a outras zonas sobrepostas (ex: uma sala dentro de uma área maior).\")]",
+      "inspector": true,
+      "description": "Zonas com prioridade maior ganham a outras zonas sobrepostas (ex: uma sala dentro de uma área maior)."
+    },
+    {
+      "name": "conditions",
+      "type": "List<NpcCondition>",
+      "mods": "private",
+      "default": "new List<NpcCondition>()",
+      "section": "Condições (Etapa 8)",
+      "attrs": "[Header(\"Condições (Etapa 8)\")] [Tooltip(\"Esta zona só conta para ApplyActiveZones (BGM/BGS) enquanto TODAS estas condições forem verdadeiras. Lista vazia = sempre activa (comportamento anterior). Útil para, por ex., só tocar esta música quando uma variável global/local tiver um certo valor, ou quando um NPC (por ID, ver \\\"Npc Id\\\") estiver num certo estado ou visível — ver VariableConditions e NpcStateConditions. Estas condições são avaliadas sem um NPC associado (Evaluate(null)), por isso usa os campos de ID para referenciar NPCs.\")] [SerializeReference]",
+      "inspector": false,
+      "description": "Esta zona só conta para ApplyActiveZones (BGM/BGS) enquanto TODAS estas condições forem verdadeiras. Lista vazia = sempre ativa (comportamento anterior). Útil para, por ex., só tocar esta música quando uma variável global/local tiver um certo valor, ou quando um NPC (por ID, ver \"Npc Id\\"
+    },
+    {
+      "name": "conditionCheckInterval",
+      "type": "float",
+      "mods": "private",
+      "default": "0.5f",
+      "section": "Condições (Etapa 8)",
+      "attrs": "[Tooltip(\"Intervalo (segundos) entre verificações das condições acima enquanto o player estiver dentro da zona. Só é relevante se a lista de condições não estiver vazia.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Intervalo (segundos) entre verificações das condições acima enquanto o player estiver dentro da zona. Só é relevante se a lista de condições não estiver vazia."
+    },
+    {
+      "name": "_conditionRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Condições (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Reset",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Reset."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnTriggerExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerExit2D."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "ConditionsMet",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ConditionsMet."
+    },
+    {
+      "name": "StopMonitoringConditions",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação StopMonitoringConditions."
+    },
+    {
+      "name": "MonitorConditions",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação MonitorConditions."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "NpcCondition"
+  ],
+  "used_by": [
+    "AudioManager",
+    "Condition_NpcReactionState",
+    "MusicZoneEditor"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Zona do mundo que define a música de fundo (BGM) e/ou som ambiente (BGS)\n/// para a área coberta pelo seu Collider2D (deve ter \"Is Trigger\" activo).\n///\n/// Quando o player entra na zona, ela regista-se em AudioManager; quando sai,\n/// é removida. O AudioManager escolhe, para cada canal (BGM/BGS)\n/// separadamente, a zona activa de maior \"priority\" que define um clip\n/// nesse canal.\n///\n/// Isto permite, por exemplo:\n/// - Uma zona grande cobrindo uma área inteira, com bgmClip = música da área\n///   e priority = 0.\n/// - Uma zona pequena dentro dela (ex: dentro de uma caverna), com\n///   bgsClip = eco/gotas de água, bgmClip vazio e priority = 1 — ao entrar,\n///   só o som ambiente muda; a música da área continua a tocar. Ao sair,\n///   o som ambiente volta ao da zona maior (ou silencia, se a zona maior\n///   também não definir BGS).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class MusicZone : MonoBehaviour\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Apenas para identificação no Inspector/depuração.\")]\n    public string zoneId;\n\n    [Header(\"Áudio\")]\n    [Tooltip(\"Música de fundo desta zona. Deixa vazio para não alterar o BGM ao entrar nesta zona.\")]\n    public AudioClip bgmClip;\n\n    [Tooltip(\"Som ambiente desta zona. Deixa vazio para não alterar o BGS ao entrar nesta zona.\")]\n    public AudioClip bgsClip;\n\n    public bool loop = true;\n\n    [Header(\"Transição\")]\n    [Tooltip(\"Duração do crossfade ao entrar nesta zona (ou ao sair, se for a zona activa para esse canal).\")]\n    public float fadeTime = 1.5f;\n\n    [Tooltip(\"Zonas com prioridade maior ganham a outras zonas sobrepostas (ex: uma sala dentro de uma área maior).\")]\n    public int priority;\n\n    [Header(\"Condições (Etapa 8)\")]\n    [Tooltip(\"Esta zona só conta para ApplyActiveZones (BGM/BGS) enquanto TODAS estas condições forem verdadeiras. Lista vazia = sempre activa (comportamento anterior). Útil para, por ex., só tocar esta música quando uma variável global/local tiver um certo valor, ou quando um NPC (por ID, ver \\\"Npc Id\\\") estiver num certo estado ou visível — ver VariableConditions e NpcStateConditions. Estas condições são avaliadas sem um NPC associado (Evaluate(null)), por isso usa os campos de ID para referenciar NPCs.\")]\n    [SerializeReference] private List<NpcCondition> conditions = new List<NpcCondition>();\n\n    [Tooltip(\"Intervalo (segundos) entre verificações das condições acima enquanto o player estiver dentro da zona. Só é relevante se a lista de condições não estiver vazia.\")]\n    [SerializeField] private float conditionCheckInterval = 0.5f;\n\n    private Coroutine _conditionRoutine;\n\n    private void Reset()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col != null) col.isTrigger = true;\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        AudioManager.Instance?.RegisterZone(this);\n\n        if (conditions != null && conditions.Count > 0 && _conditionRoutine == null)\n            _conditionRoutine = StartCoroutine(MonitorConditions());\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        AudioManager.Instance?.UnregisterZone(this);\n        StopMonitoringConditions();\n    }\n\n    private void OnDisable()\n    {\n        // Garante que a zona não fica \"presa\" como activa se for desactivada\n        // enquanto o player está dentro dela.\n        AudioManager.Instance?.UnregisterZone(this);\n        StopMonitoringConditions();\n    }\n\n    /// <summary>\n    /// true se todas as \"conditions\" estiverem cumpridas (ou se a lista\n    /// estiver vazia). Chamado por AudioManager.ApplyActiveZones para decidir\n    /// se esta zona conta para a escolha de BGM/BGS.\n    /// </summary>\n    public bool ConditionsMet()\n    {\n        if (conditions == null) return true;\n\n        for (int i = 0; i < conditions.Count; i++)\n        {\n            var condition = conditions[i];\n            if (condition == null) continue;\n            if (!condition.Evaluate(null)) return false;\n        }\n\n        return true;\n    }\n\n    private void StopMonitoringConditions()\n    {\n        if (_conditionRoutine == null) return;\n        StopCoroutine(_conditionRoutine);\n        _conditionRoutine = null;\n    }\n\n    /// <summary>\n    /// Enquanto o player estiver na zona, reavalia \"conditions\"\n    /// periodicamente; se o resultado mudar (ex: uma variável global mudou),\n    /// pede ao AudioManager para reescolher as zonas activas de BGM/BGS.\n    /// </summary>\n    private IEnumerator MonitorConditions()\n    {\n        bool lastResult = ConditionsMet();\n\n        while (true)\n        {\n            yield return new WaitForSeconds(conditionCheckInterval);\n\n            bool result = ConditionsMet();\n            if (result != lastResult)\n            {\n                lastResult = result;\n                AudioManager.Instance?.RefreshActiveZones();\n            }\n        }\n    }\n}\n",
+  "id": "script-audio-musiczone-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-npc-npccondition-cs"
+  ],
+  "usedByIds": [
+    "script-audio-audiomanager-cs",
+    "script-npc-conditions-npcstateconditions-cs",
+    "script-audio-editor-musiczoneeditor-cs"
+  ]
+}

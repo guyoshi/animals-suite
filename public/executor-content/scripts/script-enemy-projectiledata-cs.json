@@ -1,0 +1,343 @@
+{
+  "path": "Enemy/ProjectileData.cs",
+  "filename": "ProjectileData.cs",
+  "category": "Enemy",
+  "primary": "ProjectileData",
+  "kind": "Asset de dados",
+  "summary": "Configuração de um projéctil (Enemy Creator — Etapa 2.2). Um EnemyAttack de projéctil (Attack_ProjectileStraight/Arc/Homing, Attack_SpawnEnemyOrProjectile — Etapa 2.1) referencia um asset ProjectileData e chama , que instancia configurado a partir destes dados. O mesmo asset pode ser partilhado por vários inimigos/ataques (ex: \"Bala de Drone Padrão\" usada por várias Torretas).",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "ProjectileData",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "projectileId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "prefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Header(\"Visual\")] [Tooltip(\"Prefab customizado (opcional). Se vazio, ProjectileController cria um GameObject simples com Sprite + Rigidbody2D + CircleCollider2D (trigger).\")]",
+      "inspector": true,
+      "description": "Prefab customizado (opcional). Se vazio, ProjectileController cria um GameObject simples com Sprite + Rigidbody2D + CircleCollider2D (trigger)."
+    },
+    {
+      "name": "sprite",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"Usado apenas se 'prefab' estiver vazio.\")]",
+      "inspector": true,
+      "description": "Usado apenas se 'prefab' estiver vazio."
+    },
+    {
+      "name": "isLaser",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Movimento — Laser ou Físico?",
+      "attrs": "[Header(\"Movimento — Laser ou Físico?\")] [Tooltip(\"Se activo, o projéctil é um raio instantâneo (Raycast, alcance 'laserRange') em vez de um objecto físico que se desloca. Os campos de Movimento abaixo são ignorados.\")]",
+      "inspector": true,
+      "description": "Se ativo, o projéctil é um raio instantâneo (Raycast, alcance 'laserRange') em vez de um objeto físico que se desloca. Os campos de Movimento abaixo são ignorados."
+    },
+    {
+      "name": "laserRange",
+      "type": "float",
+      "mods": "public",
+      "default": "10f",
+      "section": "Movimento — Laser ou Físico?",
+      "attrs": "[Tooltip(\"Alcance do raio, se 'isLaser'.\")]",
+      "inspector": true,
+      "description": "Alcance do raio, se 'isLaser'."
+    },
+    {
+      "name": "speed",
+      "type": "float",
+      "mods": "public",
+      "default": "6f",
+      "section": "Movimento — Laser ou Físico?",
+      "attrs": "[Tooltip(\"Velocidade do projéctil físico (m/s). Ignorado se 'isLaser'.\")]",
+      "inspector": true,
+      "description": "Velocidade do projéctil físico (m/s). Ignorado se 'isLaser'."
+    },
+    {
+      "name": "gravityScale",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Movimento — Laser ou Físico?",
+      "attrs": "[Tooltip(\"GravityScale do Rigidbody2D. 0 = trajectória recta (\\\"físico\\\" sem queda). >0 = arco (cai com a gravidade) — usado por Attack_ProjectileArc.\")]",
+      "inspector": true,
+      "description": "GravityScale do Rigidbody2D. 0 = trajectória recta (\"físico\" sem queda). >0 = arco (cai com a gravidade) — usado por Attack_ProjectileArc."
+    },
+    {
+      "name": "lifetime",
+      "type": "float",
+      "mods": "public",
+      "default": "5f",
+      "section": "Movimento — Laser ou Físico?",
+      "attrs": "[Tooltip(\"Tempo de vida (segundos) antes de se autodestruir, caso não acerte em nada.\")]",
+      "inspector": true,
+      "description": "Tempo de vida (segundos) antes de se autodestruir, caso não acerte em nada."
+    },
+    {
+      "name": "shotCount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Quantidade / Frequência de Tiros",
+      "attrs": "[Header(\"Quantidade / Frequência de Tiros\")] [Tooltip(\"Quantidade de tiros (volleys) disparados por uso do ataque.\")] [Min(1)]",
+      "inspector": true,
+      "description": "Quantidade de tiros (volleys) disparados por uso do ataque."
+    },
+    {
+      "name": "fireInterval",
+      "type": "float",
+      "mods": "public",
+      "default": "0.1f",
+      "section": "Quantidade / Frequência de Tiros",
+      "attrs": "[Tooltip(\"Intervalo entre tiros consecutivos, em segundos. Só relevante se 'shotCount' > 1.\")]",
+      "inspector": true,
+      "description": "Intervalo entre tiros consecutivos, em segundos. Só relevante se 'shotCount' > 1."
+    },
+    {
+      "name": "extraAngles",
+      "type": "float[]",
+      "mods": "public",
+      "default": "new float[0]",
+      "section": "Direcções (Disparo em Leque)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "tracksPlayer",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Segue o Player?",
+      "attrs": "[Header(\"Segue o Player?\")] [Tooltip(\"Se activo, o projéctil curva ligeiramente em direcção ao player durante o voo (ignorado se 'isLaser').\")]",
+      "inspector": true,
+      "description": "Se ativo, o projéctil curva ligeiramente em direção ao player durante o voo (ignorado se 'isLaser')."
+    },
+    {
+      "name": "trackingIntensity",
+      "type": "float",
+      "mods": "public",
+      "default": "0.2f",
+      "section": "Segue o Player?",
+      "attrs": "[Tooltip(\"Intensidade da perseguição: 0 = sem curva (recto), 1 = vira-se quase instantaneamente para o alvo. Valores baixos dão curvas 'leves' (projéctil teleguiado leve).\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Intensidade da perseguição: 0 = sem curva (recto), 1 = vira-se quase instantaneamente para o alvo. Valores baixos dão curvas 'leves' (projéctil teleguiado leve)."
+    },
+    {
+      "name": "damage",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Dano",
+      "attrs": "[Header(\"Dano\")] [Tooltip(\"Dano causado ao player ao acertar (PlayerProgress.Damage).\")]",
+      "inspector": true,
+      "description": "Dano causado ao player ao acertar (PlayerProgress.Damage)."
+    },
+    {
+      "name": "knockbackForce",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Dano",
+      "attrs": "[Tooltip(\"Força de empurrão aplicada ao player ao ser atingido.\")]",
+      "inspector": true,
+      "description": "Força de empurrão aplicada ao player ao ser atingido."
+    },
+    {
+      "name": "explodesOnImpact",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Explode ao Colidir?",
+      "attrs": "[Header(\"Explode ao Colidir?\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "explosionRadius",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "Explode ao Colidir?",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "explosionDamage",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Explode ao Colidir?",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canHurtOtherEnemies",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Interacção com o Mundo",
+      "attrs": "[Header(\"Interacção com o Mundo\")] [Tooltip(\"Fere outros inimigos (EnemyHealth) que não sejam quem disparou.\")]",
+      "inspector": true,
+      "description": "Fere outros inimigos (EnemyHealth) que não sejam quem disparou."
+    },
+    {
+      "name": "canDestroyObjects",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Interacção com o Mundo",
+      "attrs": "[Tooltip(\"Pode destruir objectos com IProjectileDestructible (ex: pedras/blocos — Etapa 6+).\")]",
+      "inspector": true,
+      "description": "Pode destruir objetos com IProjectileDestructible (ex: pedras/blocos — Etapa 6+)."
+    },
+    {
+      "name": "canActivateSwitches",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Interacção com o Mundo",
+      "attrs": "[Tooltip(\"Pode activar switches/botões com IProjectileActivatable (ex: alvos de tiro — Etapa 6.1+).\")]",
+      "inspector": true,
+      "description": "Pode ativar switches/botões com IProjectileActivatable (ex: alvos de tiro — Etapa 6.1+)."
+    },
+    {
+      "name": "canBeReflected",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Interacção com o Mundo",
+      "attrs": "[Tooltip(\"Pode ser reflectido por objectos com IProjectileReflector (ex: escudos/espelhos).\")]",
+      "inspector": true,
+      "description": "Pode ser reflectido por objetos com IProjectileReflector (ex: escudos/espelhos)."
+    },
+    {
+      "name": "chargeTime",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Carregamento (Telegraph)",
+      "attrs": "[Header(\"Carregamento (Telegraph)\")] [Tooltip(\"Tempo de carregamento antes do disparo efectivo. Durante este tempo é instanciado 'chargeVfxPrefab' (destruído ao disparar) e tocado 'chargeSound'.\")]",
+      "inspector": true,
+      "description": "Tempo de carregamento antes do disparo efectivo. Durante este tempo é instanciado 'chargeVfxPrefab' (destruído ao disparar) e tocado 'chargeSound'."
+    },
+    {
+      "name": "chargeVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Carregamento (Telegraph)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "chargeSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Carregamento (Telegraph)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fireSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Header(\"Sons\")] [Tooltip(\"Tocado no instante do disparo (ou de cada volley, se 'shotCount' > 1).\")]",
+      "inspector": true,
+      "description": "Tocado no instante do disparo (ou de cada volley, se 'shotCount' > 1)."
+    },
+    {
+      "name": "impactSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Tooltip(\"Tocado ao acertar/colidir.\")]",
+      "inspector": true,
+      "description": "Tocado ao acertar/colidir."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "Attack_ProjectileArc",
+    "Attack_ProjectileStraight",
+    "Attack_SpawnEnemyOrProjectile",
+    "EnemyAttack",
+    "EnemyAttackController",
+    "EnemyHealth",
+    "IProjectileActivatable",
+    "IProjectileDestructible",
+    "IProjectileReflector",
+    "PlayerProgress",
+    "ProjectileController"
+  ],
+  "used_by": [
+    "Attack_ProjectileStraight",
+    "Boss_GargantaDoFogo",
+    "EnemyAttackController",
+    "EnemyData",
+    "EnemyFeedback",
+    "ProjectileController",
+    "ProjectilePool",
+    "Switch"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Configuração de um projéctil (Enemy Creator — Etapa 2.2). Um EnemyAttack de\n/// projéctil (Attack_ProjectileStraight/Arc/Homing, Attack_SpawnEnemyOrProjectile\n/// — Etapa 2.1) referencia um asset ProjectileData e chama\n/// <see cref=\"EnemyAttackController.SpawnProjectile\"/>, que instancia\n/// <see cref=\"ProjectileController\"/> configurado a partir destes dados.\n///\n/// O mesmo asset pode ser partilhado por vários inimigos/ataques (ex: \"Bala de\n/// Drone Padrão\" usada por várias Torretas).\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Enemy/Projectile Data\", fileName = \"NewProjectileData\")]\npublic class ProjectileData : ScriptableObject\n{\n    [Header(\"Identidade\")]\n    public string projectileId;\n    public string displayName;\n\n    [Header(\"Visual\")]\n    [Tooltip(\"Prefab customizado (opcional). Se vazio, ProjectileController cria um GameObject simples com Sprite + Rigidbody2D + CircleCollider2D (trigger).\")]\n    public GameObject prefab;\n\n    [Tooltip(\"Usado apenas se 'prefab' estiver vazio.\")]\n    public Sprite sprite;\n\n    [Header(\"Movimento — Laser ou Físico?\")]\n    [Tooltip(\"Se activo, o projéctil é um raio instantâneo (Raycast, alcance 'laserRange') em vez de um objecto físico que se desloca. Os campos de Movimento abaixo são ignorados.\")]\n    public bool isLaser = false;\n\n    [Tooltip(\"Alcance do raio, se 'isLaser'.\")]\n    public float laserRange = 10f;\n\n    [Tooltip(\"Velocidade do projéctil físico (m/s). Ignorado se 'isLaser'.\")]\n    public float speed = 6f;\n\n    [Tooltip(\"GravityScale do Rigidbody2D. 0 = trajectória recta (\\\"físico\\\" sem queda). >0 = arco (cai com a gravidade) — usado por Attack_ProjectileArc.\")]\n    public float gravityScale = 0f;\n\n    [Tooltip(\"Tempo de vida (segundos) antes de se autodestruir, caso não acerte em nada.\")]\n    public float lifetime = 5f;\n\n    [Header(\"Quantidade / Frequência de Tiros\")]\n    [Tooltip(\"Quantidade de tiros (volleys) disparados por uso do ataque.\")]\n    [Min(1)] public int shotCount = 1;\n\n    [Tooltip(\"Intervalo entre tiros consecutivos, em segundos. Só relevante se 'shotCount' > 1.\")]\n    public float fireInterval = 0.1f;\n\n    [Header(\"Direcções (Disparo em Leque)\")]\n    [Tooltip(\"Ângulos adicionais (graus, relativos à direcção de disparo) — cada um dispara um projéctil extra por tiro. A direcção base (0°) é sempre incluída. Ex: [-15, 15] = 3 projécteis por tiro.\")]\n    public float[] extraAngles = new float[0];\n\n    [Header(\"Segue o Player?\")]\n    [Tooltip(\"Se activo, o projéctil curva ligeiramente em direcção ao player durante o voo (ignorado se 'isLaser').\")]\n    public bool tracksPlayer = false;\n\n    [Tooltip(\"Intensidade da perseguição: 0 = sem curva (recto), 1 = vira-se quase instantaneamente para o alvo. Valores baixos dão curvas 'leves' (projéctil teleguiado leve).\")]\n    [Range(0f, 1f)] public float trackingIntensity = 0.2f;\n\n    [Header(\"Dano\")]\n    [Tooltip(\"Dano causado ao player ao acertar (PlayerProgress.Damage).\")]\n    public int damage = 1;\n\n    [Tooltip(\"Força de empurrão aplicada ao player ao ser atingido.\")]\n    public float knockbackForce = 0f;\n\n    [Header(\"Explode ao Colidir?\")]\n    public bool explodesOnImpact = false;\n    public float explosionRadius = 1.5f;\n    public int explosionDamage = 1;\n\n    [Header(\"Interacção com o Mundo\")]\n    [Tooltip(\"Fere outros inimigos (EnemyHealth) que não sejam quem disparou.\")]\n    public bool canHurtOtherEnemies = false;\n\n    [Tooltip(\"Pode destruir objectos com IProjectileDestructible (ex: pedras/blocos — Etapa 6+).\")]\n    public bool canDestroyObjects = false;\n\n    [Tooltip(\"Pode activar switches/botões com IProjectileActivatable (ex: alvos de tiro — Etapa 6.1+).\")]\n    public bool canActivateSwitches = false;\n\n    [Tooltip(\"Pode ser reflectido por objectos com IProjectileReflector (ex: escudos/espelhos).\")]\n    public bool canBeReflected = false;\n\n    [Header(\"Carregamento (Telegraph)\")]\n    [Tooltip(\"Tempo de carregamento antes do disparo efectivo. Durante este tempo é instanciado 'chargeVfxPrefab' (destruído ao disparar) e tocado 'chargeSound'.\")]\n    public float chargeTime = 0f;\n\n    public GameObject chargeVfxPrefab;\n    public AudioClip chargeSound;\n\n    [Header(\"Sons\")]\n    [Tooltip(\"Tocado no instante do disparo (ou de cada volley, se 'shotCount' > 1).\")]\n    public AudioClip fireSound;\n\n    [Tooltip(\"Tocado ao acertar/colidir.\")]\n    public AudioClip impactSound;\n}\n",
+  "id": "script-enemy-projectiledata-cs",
+  "dependencyIds": [
+    "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-data-playerprogress-cs",
+    "script-enemy-projectilecontroller-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-enemy-bosses-boss-gargantadofogo-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemyfeedback-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-enemy-projectilepool-cs",
+    "script-interactables-switch-cs"
+  ]
+}

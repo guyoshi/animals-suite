@@ -1,0 +1,355 @@
+{
+  "path": "UI/SaveMenuController.cs",
+  "filename": "SaveMenuController.cs",
+  "category": "UI",
+  "primary": "SaveMenuController",
+  "kind": "Componente",
+  "summary": "Menu de Save (Etapa de Menu de Save): mostra 1 slot de salvamento automático (topo) + até 30 slots manuais (baixo), em dois modos: - : usado pelo SafeHaven (Refúgio Seguro). Mostra o salvamento automático (apenas pré-visualização, não clicável), todos os slots manuais já usados (clicar = sobrescrever, com confirmação) e, enquanto houver espaço, um botão \"Criar Novo Save\" (clicar = grava diretamente no próximo slot livre, sem confirmação). - : usado pelo Menu de Pausa/Menu Principal. Mostra o salvamento automático e os slots manuais usados, todos clicáveis (com confirmação) para carregar; \"Criar Novo Save\" nunca aparece. Em ambos os modos, slots manuais usados podem ser apagados via o botão \"Apagar\" de (com confirmação) ",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SaveMenuController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "MenuMode",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "panelRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[Header(\"Referências\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "slotContainer",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "slotButtonPrefab",
+      "type": "SaveSlotButtonUI",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "titleText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "confirmPanel",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Confirmação",
+      "attrs": "[Header(\"Confirmação\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "confirmText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Confirmação",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "confirmYesButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Confirmação",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "confirmNoButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Confirmação",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "saveTitle",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Guardar Jogo\"",
+      "section": "Textos",
+      "attrs": "[Header(\"Textos\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "loadTitle",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Carregar Jogo\"",
+      "section": "Textos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "overwriteConfirmFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Substituir o Save {0:00}?\"",
+      "section": "Textos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "loadConfirmText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Carregar este save? O progresso não guardado será perdido.\"",
+      "section": "Textos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deleteConfirmFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Apagar o Save {0:00}? Esta acção não pode ser desfeita.\"",
+      "section": "Textos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_spawned",
+      "type": "List<SaveSlotButtonUI>",
+      "mods": "private readonly",
+      "default": "new List<SaveSlotButtonUI>()",
+      "section": "Textos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_mode",
+      "type": "MenuMode",
+      "mods": "private",
+      "default": "",
+      "section": "Textos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_pendingConfirmAction",
+      "type": "Action",
+      "mods": "private",
+      "default": "",
+      "section": "Textos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OpenForSave",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação OpenForSave."
+    },
+    {
+      "name": "OpenForLoad",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação OpenForLoad."
+    },
+    {
+      "name": "Open",
+      "ret": "void",
+      "mods": "public",
+      "params": "MenuMode mode",
+      "description": "Executa a operação Open."
+    },
+    {
+      "name": "Close",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Close."
+    },
+    {
+      "name": "Rebuild",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Rebuild."
+    },
+    {
+      "name": "SpawnSlotButton",
+      "ret": "SaveSlotButtonUI",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SpawnSlotButton."
+    },
+    {
+      "name": "ClearSlots",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ClearSlots."
+    },
+    {
+      "name": "SelectFirstInteractable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SelectFirstInteractable."
+    },
+    {
+      "name": "OnSlotClicked",
+      "ret": "void",
+      "mods": "private",
+      "params": "SaveSlotButtonUI slot",
+      "description": "Executa a operação OnSlotClicked."
+    },
+    {
+      "name": "OnDeleteClicked",
+      "ret": "void",
+      "mods": "private",
+      "params": "SaveSlotButtonUI slot",
+      "description": "Executa a operação OnDeleteClicked."
+    },
+    {
+      "name": "SaveToSlot",
+      "ret": "void",
+      "mods": "private",
+      "params": "int slotIndex",
+      "description": "Executa a operação SaveToSlot."
+    },
+    {
+      "name": "LoadSlot",
+      "ret": "void",
+      "mods": "private",
+      "params": "int slotIndex, bool isAuto",
+      "description": "Executa a operação LoadSlot."
+    },
+    {
+      "name": "LoadRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "int slotIndex, bool isAuto, SaveData data",
+      "description": "Executa a operação LoadRoutine."
+    },
+    {
+      "name": "ApplyLoadedSave",
+      "ret": "void",
+      "mods": "private",
+      "params": "int slotIndex, bool isAuto",
+      "description": "Executa a operação ApplyLoadedSave."
+    },
+    {
+      "name": "RequestConfirm",
+      "ret": "void",
+      "mods": "private",
+      "params": "string message, Action onYes",
+      "description": "Executa a operação RequestConfirm."
+    },
+    {
+      "name": "OnConfirmYes",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnConfirmYes."
+    },
+    {
+      "name": "OnConfirmNo",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnConfirmNo."
+    },
+    {
+      "name": "HideConfirm",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HideConfirm."
+    }
+  ],
+  "dependencies": [
+    "LoadingScreenController",
+    "PauseMenuController",
+    "SafeHaven",
+    "SaveData",
+    "SaveManager",
+    "SaveSlotButtonUI",
+    "SlotKind"
+  ],
+  "used_by": [
+    "LoadingScreenController",
+    "MainMenuController",
+    "OptionsSectionUI",
+    "SafeHaven",
+    "SaveManager",
+    "SaveSlotButtonUI"
+  ],
+  "source": "using System;\nusing System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.SceneManagement;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Menu de Save (Etapa de Menu de Save): mostra 1 slot de autoguardar (topo) +\n/// até 30 slots manuais (baixo), em dois modos:\n///\n/// - <see cref=\"MenuMode.Save\"/>: usado pelo SafeHaven (Refúgio Seguro). Mostra\n///   o autoguardar (apenas pré-visualização, não clicável), todos os slots\n///   manuais já usados (clicar = sobrescrever, com confirmação) e, enquanto\n///   houver espaço, um botão \"Criar Novo Save\" (clicar = grava directamente\n///   no próximo slot livre, sem confirmação).\n/// - <see cref=\"MenuMode.Load\"/>: usado pelo Menu de Pausa/Menu Principal.\n///   Mostra o autoguardar e os slots manuais usados, todos clicáveis (com\n///   confirmação) para carregar; \"Criar Novo Save\" nunca aparece.\n///\n/// Em ambos os modos, slots manuais usados podem ser apagados via o botão\n/// \"Apagar\" de <see cref=\"SaveSlotButtonUI\"/> (com confirmação) — ao apagar o\n/// último dos 30, o botão \"Criar Novo Save\" reaparece (Rebuild é chamado de\n/// novo).\n///\n/// Prefab esperado (montar no Editor, dentro de um Canvas):\n/// - \"panelRoot\": GameObject raiz do menu (activado/desactivado em Open/Close).\n/// - \"slotContainer\": Transform onde os SaveSlotButtonUI são instanciados\n///   (normalmente com um Vertical Layout Group).\n/// - \"slotButtonPrefab\": prefab de SaveSlotButtonUI.\n/// - \"confirmPanel\"/\"confirmText\"/\"confirmYesButton\"/\"confirmNoButton\":\n///   diálogo de confirmação genérico, reaproveitado para overwrite/load/apagar.\n/// </summary>\npublic class SaveMenuController : MonoBehaviour\n{\n    /// <summary>Modo do menu: Guardar (a partir de um Refúgio Seguro) ou Carregar (Menu de Pausa/Principal).</summary>\n    public enum MenuMode\n    {\n        Save,\n        Load\n    }\n\n    [Header(\"Referências\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private Transform slotContainer;\n    [SerializeField] private SaveSlotButtonUI slotButtonPrefab;\n    [SerializeField] private TMP_Text titleText;\n\n    [Header(\"Confirmação\")]\n    [SerializeField] private GameObject confirmPanel;\n    [SerializeField] private TMP_Text confirmText;\n    [SerializeField] private Button confirmYesButton;\n    [SerializeField] private Button confirmNoButton;\n\n    [Header(\"Textos\")]\n    [SerializeField] private string saveTitle = \"Guardar Jogo\";\n    [SerializeField] private string loadTitle = \"Carregar Jogo\";\n    [SerializeField] private string overwriteConfirmFormat = \"Substituir o Save {0:00}?\";\n    [SerializeField] private string loadConfirmText = \"Carregar este save? O progresso não guardado será perdido.\";\n    [SerializeField] private string deleteConfirmFormat = \"Apagar o Save {0:00}? Esta acção não pode ser desfeita.\";\n\n    /// <summary>Disparado quando o menu fecha (por Close() ou depois de um load bem sucedido) — ex: para o PauseMenuController retomar o jogo.</summary>\n    public event Action Closed;\n\n    private readonly List<SaveSlotButtonUI> _spawned = new List<SaveSlotButtonUI>();\n    private MenuMode _mode;\n    private Action _pendingConfirmAction;\n\n    private void Awake()\n    {\n        if (panelRoot != null) panelRoot.SetActive(false);\n        if (confirmPanel != null) confirmPanel.SetActive(false);\n\n        if (confirmYesButton != null) confirmYesButton.onClick.AddListener(OnConfirmYes);\n        if (confirmNoButton != null) confirmNoButton.onClick.AddListener(OnConfirmNo);\n    }\n\n    // ---------------- Abrir / Fechar ----------------\n\n    public void OpenForSave() => Open(MenuMode.Save);\n    public void OpenForLoad() => Open(MenuMode.Load);\n\n    public void Open(MenuMode mode)\n    {\n        _mode = mode;\n\n        if (titleText != null) titleText.text = mode == MenuMode.Save ? saveTitle : loadTitle;\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        Rebuild();\n    }\n\n    public void Close()\n    {\n        HideConfirm();\n        ClearSlots();\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        Closed?.Invoke();\n    }\n\n    // ---------------- Construção dos Slots ----------------\n\n    private void Rebuild()\n    {\n        ClearSlots();\n\n        var manager = SaveManager.Instance;\n        if (manager == null || slotButtonPrefab == null || slotContainer == null) return;\n\n        // Autoguardar (topo) — só clicável em modo Carregar e se existir.\n        var autoData = manager.PeekSlot(-1, true);\n        var autoBtn = SpawnSlotButton();\n        bool autoInteractable = _mode == MenuMode.Load && autoData != null;\n        autoBtn.SetupAuto(autoData, autoInteractable);\n\n        // Slots manuais já usados.\n        var used = manager.GetUsedManualSlots();\n        foreach (int slotIndex in used)\n        {\n            var data = manager.PeekSlot(slotIndex, false);\n            var btn = SpawnSlotButton();\n            btn.SetupManual(slotIndex, data);\n        }\n\n        // \"Criar Novo Save\" — só em modo Guardar, enquanto houver slots livres.\n        if (_mode == MenuMode.Save)\n        {\n            int free = manager.GetFirstFreeManualSlot();\n            if (free >= 0)\n            {\n                var btn = SpawnSlotButton();\n                btn.SetupCreateNew(free);\n            }\n        }\n\n        SelectFirstInteractable();\n    }\n\n    private SaveSlotButtonUI SpawnSlotButton()\n    {\n        var btn = Instantiate(slotButtonPrefab, slotContainer);\n        btn.gameObject.SetActive(true);\n        btn.Clicked += OnSlotClicked;\n        btn.DeleteClicked += OnDeleteClicked;\n        _spawned.Add(btn);\n        return btn;\n    }\n\n    private void ClearSlots()\n    {\n        foreach (var btn in _spawned)\n        {\n            if (btn == null) continue;\n            btn.Clicked -= OnSlotClicked;\n            btn.DeleteClicked -= OnDeleteClicked;\n            Destroy(btn.gameObject);\n        }\n\n        _spawned.Clear();\n    }\n\n    private void SelectFirstInteractable()\n    {\n        if (EventSystem.current == null) return;\n\n        EventSystem.current.SetSelectedGameObject(null);\n\n        foreach (var btn in _spawned)\n        {\n            var button = btn.GetComponent<Button>();\n            if (button != null && button.interactable)\n            {\n                EventSystem.current.SetSelectedGameObject(btn.gameObject);\n                return;\n            }\n        }\n    }\n\n    // ---------------- Cliques nos Slots ----------------\n\n    private void OnSlotClicked(SaveSlotButtonUI slot)\n    {\n        switch (slot.Kind)\n        {\n            case SaveSlotButtonUI.SlotKind.Auto:\n                if (_mode == MenuMode.Load)\n                    RequestConfirm(loadConfirmText, () => LoadSlot(-1, true));\n                break;\n\n            case SaveSlotButtonUI.SlotKind.Manual:\n                if (_mode == MenuMode.Save)\n                    RequestConfirm(string.Format(overwriteConfirmFormat, slot.SlotIndex + 1), () => SaveToSlot(slot.SlotIndex));\n                else\n                    RequestConfirm(loadConfirmText, () => LoadSlot(slot.SlotIndex, false));\n                break;\n\n            case SaveSlotButtonUI.SlotKind.CreateNew:\n                // Slot vazio: grava directamente, sem confirmação.\n                SaveToSlot(slot.SlotIndex);\n                break;\n        }\n    }\n\n    private void OnDeleteClicked(SaveSlotButtonUI slot)\n    {\n        if (slot.Kind != SaveSlotButtonUI.SlotKind.Manual) return;\n\n        int slotIndex = slot.SlotIndex;\n        RequestConfirm(string.Format(deleteConfirmFormat, slotIndex + 1), () =>\n        {\n            SaveManager.Instance?.DeleteManualSlot(slotIndex);\n            Rebuild();\n        });\n    }\n\n    // ---------------- Acções ----------------\n\n    private void SaveToSlot(int slotIndex)\n    {\n        SaveManager.Instance?.SaveToManualSlot(slotIndex);\n        Rebuild();\n    }\n\n    private void LoadSlot(int slotIndex, bool isAuto)\n    {\n        var data = SaveManager.Instance?.PeekSlot(slotIndex, isAuto);\n        if (data == null) return;\n\n        StartCoroutine(LoadRoutine(slotIndex, isAuto, data));\n    }\n\n    private IEnumerator LoadRoutine(int slotIndex, bool isAuto, SaveData data)\n    {\n        Close();\n\n        // Tarefa #16 (tela de loading): se o save pertence a outra cena, a\n        // troca passa pelo overlay de loading (LoadingScreenController) — o\n        // save só é aplicado depois da nova cena activar, ainda com o overlay\n        // visível.\n        if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)\n        {\n            bool done = false;\n            LoadingScreenController.Instance.LoadScene(data.sceneName, () =>\n            {\n                ApplyLoadedSave(slotIndex, isAuto);\n                done = true;\n            });\n\n            while (!done) yield return null;\n        }\n        else\n        {\n            ApplyLoadedSave(slotIndex, isAuto);\n        }\n    }\n\n    private void ApplyLoadedSave(int slotIndex, bool isAuto)\n    {\n        if (isAuto) SaveManager.Instance?.LoadAutosave();\n        else SaveManager.Instance?.LoadManualSlot(slotIndex);\n    }\n\n    // ---------------- Confirmação ----------------\n\n    private void RequestConfirm(string message, Action onYes)\n    {\n        if (confirmPanel == null)\n        {\n            // Sem painel de confirmação configurado: executa directamente.\n            onYes?.Invoke();\n            return;\n        }\n\n        _pendingConfirmAction = onYes;\n        if (confirmText != null) confirmText.text = message;\n        confirmPanel.SetActive(true);\n\n        if (EventSystem.current != null && confirmYesButton != null)\n            EventSystem.current.SetSelectedGameObject(confirmYesButton.gameObject);\n    }\n\n    private void OnConfirmYes()\n    {\n        var action = _pendingConfirmAction;\n        HideConfirm();\n        action?.Invoke();\n    }\n\n    private void OnConfirmNo() => HideConfirm();\n\n    private void HideConfirm()\n    {\n        _pendingConfirmAction = null;\n        if (confirmPanel != null) confirmPanel.SetActive(false);\n    }\n}\n",
+  "id": "script-ui-savemenucontroller-cs",
+  "dependencyIds": [
+    "script-ui-loadingscreencontroller-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savedata-cs",
+    "script-data-savemanager-cs",
+    "script-ui-saveslotbuttonui-cs"
+  ],
+  "usedByIds": [
+    "script-ui-loadingscreencontroller-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-ui-optionssectionui-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savemanager-cs",
+    "script-ui-saveslotbuttonui-cs"
+  ]
+}

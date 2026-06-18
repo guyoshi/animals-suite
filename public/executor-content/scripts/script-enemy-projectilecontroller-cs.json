@@ -1,0 +1,276 @@
+{
+  "path": "Enemy/ProjectileController.cs",
+  "filename": "ProjectileController.cs",
+  "category": "Enemy",
+  "primary": "ProjectileController",
+  "kind": "Componente",
+  "summary": "Implementado por objetos destrutíveis (ex: pedras/blocos — Etapa 6+) que reagem a projécteis com .",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "IProjectileDestructible",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "IProjectileActivatable",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "IProjectileReflector",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ProjectileController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "data",
+      "type": "ProjectileData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Configuração deste projéctil. Definida automaticamente por EnemyAttackController.SpawnProjectile (via ProjectilePool.Get + Activate).\")]",
+      "inspector": true,
+      "description": "Configuração deste projéctil. Definida automaticamente por EnemyAttackController.SpawnProjectile (via ProjectilePool.Get + Activate)."
+    },
+    {
+      "name": "initialVelocity",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[HideInInspector]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "target",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[HideInInspector]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "owner",
+      "type": "EnemyController",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[HideInInspector]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PoolKey",
+      "type": "Object",
+      "mods": "internal",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_life",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_resolved",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Activate",
+      "ret": "void",
+      "mods": "public",
+      "params": "ProjectileData data, Vector2 initialVelocity, Transform target, EnemyController owner",
+      "description": "Executa a operação Activate."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ApplyTracking",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ApplyTracking."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnCollisionEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionEnter2D."
+    },
+    {
+      "name": "HandleHit",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação HandleHit."
+    },
+    {
+      "name": "ApplyHitToPlayer",
+      "ret": "void",
+      "mods": "private",
+      "params": "Transform player",
+      "description": "Executa a operação ApplyHitToPlayer."
+    },
+    {
+      "name": "CanHurtEnemy",
+      "ret": "bool",
+      "mods": "private",
+      "params": "EnemyHealth eh",
+      "description": "Executa a operação CanHurtEnemy."
+    },
+    {
+      "name": "EnemyBlocksProjectiles",
+      "ret": "bool",
+      "mods": "private static",
+      "params": "EnemyHealth eh",
+      "description": "Executa a operação EnemyBlocksProjectiles."
+    },
+    {
+      "name": "Explode",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool skipPlayer",
+      "description": "Executa a operação Explode."
+    },
+    {
+      "name": "Resolve",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool playerDirectlyHit = false",
+      "description": "Executa a operação Resolve."
+    },
+    {
+      "name": "ReleaseSelf",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ReleaseSelf."
+    },
+    {
+      "name": "FireLaserAndDestroy",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FireLaserAndDestroy."
+    },
+    {
+      "name": "PlaySound",
+      "ret": "void",
+      "mods": "private",
+      "params": "AudioClip clip",
+      "description": "Executa a operação PlaySound."
+    },
+    {
+      "name": "CreateDefaultProjectileObject",
+      "ret": "GameObject",
+      "mods": "public static",
+      "params": "ProjectileData data, Vector3 pos",
+      "description": "Executa a operação CreateDefaultProjectileObject."
+    }
+  ],
+  "dependencies": [
+    "Attack_ProjectileStraight",
+    "Attack_SpawnEnemyOrProjectile",
+    "DamageInfo",
+    "DamageType",
+    "EnemyAttack",
+    "EnemyAttackController",
+    "EnemyController",
+    "EnemyHealth",
+    "EnemyWeaknessConfig",
+    "PlayerCombat",
+    "ProjectileData",
+    "ProjectilePool"
+  ],
+  "used_by": [
+    "Attack_ProjectileStraight",
+    "BreakableObject",
+    "EnemyPuzzleInteraction",
+    "PlayerCombat",
+    "ProjectileData",
+    "ProjectilePool",
+    "Switch"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Implementado por objectos destrutíveis (ex: pedras/blocos — Etapa 6+) que\n/// reagem a projécteis com <see cref=\"ProjectileData.canDestroyObjects\"/>.\n/// </summary>\npublic interface IProjectileDestructible\n{\n    void DestroyByProjectile(ProjectileController projectile);\n}\n\n/// <summary>\n/// Implementado por switches/botões/alvos (ex: Etapa 6.1+) activáveis por\n/// projécteis com <see cref=\"ProjectileData.canActivateSwitches\"/>.\n/// </summary>\npublic interface IProjectileActivatable\n{\n    void ActivateByProjectile(ProjectileController projectile);\n}\n\n/// <summary>\n/// Implementado por objectos (escudos/espelhos) que reflectem projécteis com\n/// <see cref=\"ProjectileData.canBeReflected\"/>.\n/// </summary>\npublic interface IProjectileReflector\n{\n    Vector2 GetReflectedVelocity(Vector2 incomingVelocity, Vector2 hitPoint);\n}\n\n/// <summary>\n/// Projéctil runtime (Enemy Creator — Etapa 2.2). Generaliza/substitui o antigo\n/// EnemyProjectile (Etapa 2.1, placeholder): toda a configuração vem de\n/// <see cref=\"ProjectileData\"/>. Obtido de <see cref=\"ProjectilePool\"/> (Tarefa\n/// #22 — pooling) por <see cref=\"EnemyAttackController.SpawnProjectile\"/>,\n/// chamado pelos ataques de projéctil da Etapa 2.1\n/// (Attack_ProjectileStraight/Arc/Homing, Attack_SpawnEnemyOrProjectile).\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D))]\npublic class ProjectileController : MonoBehaviour\n{\n    [Tooltip(\"Configuração deste projéctil. Definida automaticamente por EnemyAttackController.SpawnProjectile (via ProjectilePool.Get + Activate).\")]\n    public ProjectileData data;\n\n    /// <summary>Velocidade inicial (direcção × magnitude). Para \"Arco\", já inclui a componente vertical calculada pelo EnemyAttack.</summary>\n    [HideInInspector] public Vector2 initialVelocity;\n\n    /// <summary>Alvo a perseguir, se <see cref=\"ProjectileData.tracksPlayer\"/>.</summary>\n    [HideInInspector] public Transform target;\n\n    /// <summary>Inimigo que disparou — usado para não se atingir a si próprio e para \"fere outros inimigos?\".</summary>\n    [HideInInspector] public EnemyController owner;\n\n    /// <summary>\n    /// Chave de pooling (Tarefa #22) — atribuída por <see cref=\"ProjectilePool\"/>\n    /// ao criar este projéctil pela primeira vez (o \"prefab\" de origem, ou o\n    /// próprio <see cref=\"ProjectileData\"/> quando não há prefab customizado).\n    /// Usada por <see cref=\"ProjectilePool.Release\"/> para devolver este\n    /// objecto à fila correcta.\n    /// </summary>\n    internal Object PoolKey;\n\n    private Rigidbody2D _rb;\n    private float _life;\n    private bool _resolved;\n\n    private void Awake()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n    }\n\n    /// <summary>\n    /// (Re)inicializa este projéctil — chamado por\n    /// <see cref=\"EnemyAttackController.SpawnSingleProjectile\"/> depois de\n    /// obtê-lo de <see cref=\"ProjectilePool\"/> e posicioná-lo. Substitui o\n    /// antigo Start() para suportar reutilização (pooling): repõe o tempo de\n    /// vida, o estado \"resolvido\" e a velocidade/gravidade.\n    /// </summary>\n    public void Activate(ProjectileData data, Vector2 initialVelocity, Transform target, EnemyController owner)\n    {\n        this.data = data;\n        this.initialVelocity = initialVelocity;\n        this.target = target;\n        this.owner = owner;\n\n        _life = 0f;\n        _resolved = false;\n\n        if (data == null) { ReleaseSelf(); return; }\n\n        if (data.isLaser)\n        {\n            FireLaserAndDestroy();\n            return;\n        }\n\n        _rb.angularVelocity = 0f;\n        _rb.gravityScale = data.gravityScale;\n        _rb.velocity = initialVelocity;\n\n        PlaySound(data.fireSound);\n    }\n\n    private void Update()\n    {\n        if (data == null || data.isLaser) return;\n\n        _life += Time.deltaTime;\n        if (_life >= data.lifetime)\n        {\n            ReleaseSelf();\n            return;\n        }\n\n        if (data.tracksPlayer && target != null)\n            ApplyTracking();\n    }\n\n    /// <summary>Curva suavemente a velocidade actual em direcção a \"target\", proporcional a \"trackingIntensity\".</summary>\n    private void ApplyTracking()\n    {\n        Vector2 toTarget = (Vector2)target.position - (Vector2)transform.position;\n        if (toTarget.sqrMagnitude < 0.0001f) return;\n\n        Vector2 current = _rb.velocity.sqrMagnitude > 0.0001f ? _rb.velocity.normalized : toTarget.normalized;\n        Vector2 desired = toTarget.normalized;\n        float speed = _rb.velocity.magnitude;\n\n        float maxTurnRad = Mathf.Lerp(0f, 360f, data.trackingIntensity) * Mathf.Deg2Rad * Time.deltaTime;\n        Vector2 newDir = Vector3.RotateTowards(current, desired, maxTurnRad, 0f);\n\n        _rb.velocity = newDir.normalized * speed;\n    }\n\n    private void OnTriggerEnter2D(Collider2D other) => HandleHit(other);\n    private void OnCollisionEnter2D(Collision2D collision) => HandleHit(collision.collider);\n\n    private void HandleHit(Collider2D other)\n    {\n        if (_resolved || data == null) return;\n\n        // Nunca acerta em quem o disparou (evita auto-dano no instante do spawn).\n        if (owner != null && other.gameObject == owner.gameObject) return;\n\n        // Reflexão (escudos/espelhos — pode ser reflectido?)\n        if (data.canBeReflected)\n        {\n            var reflector = other.GetComponent<IProjectileReflector>();\n            if (reflector != null)\n            {\n                _rb.velocity = reflector.GetReflectedVelocity(_rb.velocity, transform.position);\n                owner = null; // já não pertence a ninguém — pode agora ferir quem o disparou\n                return;\n            }\n        }\n\n        // Player\n        if (other.CompareTag(\"Player\"))\n        {\n            ApplyHitToPlayer(other.transform);\n            Resolve(playerDirectlyHit: true);\n            return;\n        }\n\n        // Outros inimigos (fere outros inimigos? + o receptor aceita dano de projécteis de inimigos?)\n        var enemyHealth = other.GetComponent<EnemyHealth>();\n        if (enemyHealth != null)\n        {\n            if (CanHurtEnemy(enemyHealth))\n            {\n                enemyHealth.TakeDamage(data.damage, transform.position, data.knockbackForce);\n                Resolve();\n            }\n            else if (EnemyBlocksProjectiles(enemyHealth))\n            {\n                // Inimigo-escudo (Etapa 6.2 — canBlockLaser): o projéctil é\n                // bloqueado/consumido mesmo sem causar dano.\n                Resolve();\n            }\n\n            return;\n        }\n\n        // Objectos destrutíveis (destrói objectos/pedras?)\n        var destructible = other.GetComponent<IProjectileDestructible>();\n        if (destructible != null)\n        {\n            if (data.canDestroyObjects) destructible.DestroyByProjectile(this);\n            Resolve();\n            return;\n        }\n\n        // Switches/botões (activa switches/botões?)\n        var activatable = other.GetComponent<IProjectileActivatable>();\n        if (activatable != null)\n        {\n            if (data.canActivateSwitches) activatable.ActivateByProjectile(this);\n            Resolve();\n            return;\n        }\n\n        // Cenário sólido (paredes/chão) — qualquer outro collider não-trigger.\n        if (!other.isTrigger)\n            Resolve();\n    }\n\n    private void ApplyHitToPlayer(Transform player)\n    {\n        // P2: passa pelo ponto de entrada único (i-frames + Defesa + TakeHit).\n        PlayerCombat.TryDamagePlayer(player, new DamageInfo(data.damage, DamageType.Projectile, transform.position, data.knockbackForce));\n    }\n\n    /// <summary>\n    /// True se este projéctil pode ferir o inimigo \"eh\": o lado do atirador tem\n    /// de permitir (ProjectileData.canHurtOtherEnemies OU\n    /// EnemyWeaknessConfig.canHurtOtherEnemies de quem disparou) e o lado do\n    /// receptor tem de aceitar (canTakeDamageFromOtherEnemyProjectiles).\n    /// </summary>\n    private bool CanHurtEnemy(EnemyHealth eh)\n    {\n        if (eh == null) return false;\n        if (owner != null && eh.gameObject == owner.gameObject) return false;\n\n        bool shooterAllows = data.canHurtOtherEnemies ||\n            (owner != null && owner.Data != null && owner.Data.weaknesses.canHurtOtherEnemies);\n        if (!shooterAllows) return false;\n\n        var receiver = eh.GetComponent<EnemyController>();\n        return receiver == null || receiver.Data == null ||\n               receiver.Data.weaknesses.canTakeDamageFromOtherEnemyProjectiles;\n    }\n\n    /// <summary>True se o inimigo \"eh\" bloqueia projécteis/lasers (EnemyWeaknessConfig.canBlockLaser — Etapa 6.2, inimigo-escudo).</summary>\n    private static bool EnemyBlocksProjectiles(EnemyHealth eh)\n    {\n        var ctrl = eh != null ? eh.GetComponent<EnemyController>() : null;\n        return ctrl != null && ctrl.Data != null && ctrl.Data.weaknesses.canBlockLaser;\n    }\n\n    /// <summary>\n    /// Dano em área ao colidir (explode ao colidir? + raio/dano). Atinge o\n    /// player (excepto se já tiver levado o dano directo deste impacto) e os\n    /// EnemyHealth na área permitidos por <see cref=\"CanHurtEnemy\"/>.\n    /// </summary>\n    private void Explode(bool skipPlayer)\n    {\n        var hits = Physics2D.OverlapCircleAll(transform.position, data.explosionRadius);\n\n        foreach (var hit in hits)\n        {\n            if (hit.CompareTag(\"Player\"))\n            {\n                if (!skipPlayer)\n                    PlayerCombat.TryDamagePlayer(hit.transform, new DamageInfo(data.explosionDamage, DamageType.Explosion, transform.position, data.knockbackForce));\n                continue;\n            }\n\n            var eh = hit.GetComponent<EnemyHealth>();\n            if (eh != null && CanHurtEnemy(eh))\n                eh.TakeDamage(data.explosionDamage, transform.position, data.knockbackForce);\n        }\n    }\n\n    /// <summary>\n    /// Fim de vida do projéctil ao tocar algo: explode (se \"explodesOnImpact\" —\n    /// agora em QUALQUER impacto: player, parede, chão, objecto — para bombas\n    /// que caem de cima), toca o som de impacto e devolve-se ao pool (ou\n    /// destrói-se, se não tiver sido criado por um pool).\n    /// </summary>\n    private void Resolve(bool playerDirectlyHit = false)\n    {\n        if (_resolved) return;\n        _resolved = true;\n\n        if (data.explodesOnImpact)\n            Explode(skipPlayer: playerDirectlyHit); // evita dano a dobrar no hit directo\n\n        PlaySound(data.impactSound);\n        ReleaseSelf();\n    }\n\n    /// <summary>\n    /// Devolve este projéctil a <see cref=\"ProjectilePool\"/> (Tarefa #22) para\n    /// reutilização, ou destrói-o se não tiver sido criado por um pool (ex:\n    /// colocado manualmente numa cena de testes).\n    /// </summary>\n    private void ReleaseSelf()\n    {\n        if (ProjectilePool.Instance != null && PoolKey != null)\n            ProjectilePool.Instance.Release(this);\n        else\n            Destroy(gameObject);\n    }\n\n    /// <summary>Variante \"laser\": raio instantâneo (Raycast) ao longo de \"initialVelocity\", sem deslocamento físico.</summary>\n    private void FireLaserAndDestroy()\n    {\n        Vector2 origin = transform.position;\n        Vector2 dir = initialVelocity.sqrMagnitude > 0.0001f ? initialVelocity.normalized : Vector2.right;\n\n        var hits = Physics2D.RaycastAll(origin, dir, data.laserRange);\n        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));\n\n        foreach (var hit in hits)\n        {\n            if (owner != null && hit.collider.gameObject == owner.gameObject) continue;\n\n            if (hit.collider.CompareTag(\"Player\"))\n            {\n                ApplyHitToPlayer(hit.collider.transform);\n                break;\n            }\n\n            var enemyHealth = hit.collider.GetComponent<EnemyHealth>();\n            if (enemyHealth != null)\n            {\n                if (CanHurtEnemy(enemyHealth))\n                    enemyHealth.TakeDamage(data.damage, transform.position, data.knockbackForce);\n\n                // Inimigo-escudo (Etapa 6.2): bloqueia a continuação do raio.\n                if (EnemyBlocksProjectiles(enemyHealth)) break;\n\n                continue;\n            }\n\n            if (data.canDestroyObjects)\n            {\n                var destructible = hit.collider.GetComponent<IProjectileDestructible>();\n                if (destructible != null) destructible.DestroyByProjectile(this);\n            }\n\n            if (data.canActivateSwitches)\n            {\n                var activatable = hit.collider.GetComponent<IProjectileActivatable>();\n                if (activatable != null) activatable.ActivateByProjectile(this);\n            }\n\n            if (!hit.collider.isTrigger) break; // bloqueado por cenário sólido\n        }\n\n        PlaySound(data.fireSound);\n        _resolved = true;\n        ReleaseSelf();\n    }\n\n    private void PlaySound(AudioClip clip)\n    {\n        if (clip != null) AudioSource.PlayClipAtPoint(clip, transform.position);\n    }\n\n    /// <summary>\n    /// Cria um GameObject simples (Sprite + Rigidbody2D + CircleCollider2D\n    /// trigger + ProjectileController) para \"data\", usado por\n    /// <see cref=\"ProjectilePool\"/> quando \"data\" não define um \"prefab\"\n    /// customizado. Movido de EnemyAttackController (Tarefa #22) para junto do\n    /// resto da lógica de projécteis.\n    /// </summary>\n    public static GameObject CreateDefaultProjectileObject(ProjectileData data, Vector3 pos)\n    {\n        var go = new GameObject(string.IsNullOrEmpty(data.displayName) ? \"Projectile\" : data.displayName);\n        go.transform.position = pos;\n\n        if (data.sprite != null)\n            go.AddComponent<SpriteRenderer>().sprite = data.sprite;\n\n        var rb = go.AddComponent<Rigidbody2D>();\n        rb.gravityScale = 0f;\n\n        var col = go.AddComponent<CircleCollider2D>();\n        col.isTrigger = true;\n        col.radius = 0.2f;\n\n        go.AddComponent<ProjectileController>();\n\n        return go;\n    }\n}\n",
+  "id": "script-enemy-projectilecontroller-cs",
+  "dependencyIds": [
+    "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-player-damageinfo-cs",
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-player-playercombat-cs",
+    "script-enemy-projectiledata-cs",
+    "script-enemy-projectilepool-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-interactables-breakableobject-cs",
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-player-playercombat-cs",
+    "script-enemy-projectiledata-cs",
+    "script-enemy-projectilepool-cs",
+    "script-interactables-switch-cs"
+  ]
+}

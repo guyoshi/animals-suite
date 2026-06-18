@@ -1,0 +1,180 @@
+{
+  "path": "UI/DeathScreenUI.cs",
+  "filename": "DeathScreenUI.cs",
+  "category": "UI",
+  "primary": "DeathScreenUI",
+  "kind": "Componente",
+  "summary": "Tela de morte (Tarefa #16 — \"verificação final: tela de morte, loading e save 100%/101%\"): overlay full-screen (CanvasGroup, Screen Space - Overlay) mostrado quando PlayerProgress.OnHeartsDepleted dispara (PlayerDeathHandler liga-se a este evento). Singleton com auto-fallback (mesmo padrão de PlayerProgress/GameVariables — ver Tarefa #15). Montagem no Editor: - Canvas (Screen Space - Overlay, sortingOrder alto — acima do HUD e do Menu de Pausa) com um \"panelRoot\" (Image full-screen, ex: preto/vermelho escuro) + \"canvasGroup\" no mesmo GameObject. - \"messageText\" (TMP_Text): ex. \"Perdeste os sentidos...\". - \"deathSfx\" (opcional): som ao mostrar a tela.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "DeathScreenUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "panelRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[Header(\"Painel\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "messageText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathMessage",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Perdeste os sentidos...\"",
+      "section": "Texto",
+      "attrs": "[Header(\"Texto\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fadeDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.5f",
+      "section": "Transição",
+      "attrs": "[Header(\"Transição\")] [Tooltip(\"Duração do fade in/out do overlay, em segundos.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração do fade in/out do overlay, em segundos."
+    },
+    {
+      "name": "holdDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "1f",
+      "section": "Transição",
+      "attrs": "[Tooltip(\"Tempo (s) com o overlay totalmente visível antes do callback de reaparecimento ser chamado.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Tempo (s) com o overlay totalmente visível antes do callback de reaparecimento ser chamado."
+    },
+    {
+      "name": "deathSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Som",
+      "attrs": "[Header(\"Som\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Som",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isShowing",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Som",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsShowing",
+      "type": "bool",
+      "mods": "public",
+      "default": "> isShowing",
+      "section": "Som",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "PlayDeathSequence",
+      "ret": "void",
+      "mods": "public",
+      "params": "Action onRespawn",
+      "description": "Executa a operação PlayDeathSequence."
+    },
+    {
+      "name": "DeathSequenceRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "Action onRespawn",
+      "description": "Executa a operação DeathSequenceRoutine."
+    },
+    {
+      "name": "FadeRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float from, float to",
+      "description": "Executa a operação FadeRoutine."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "GameVariables",
+    "PlayerDeathHandler",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "ChallengeResultUI",
+    "PickupPopupUI",
+    "PlayerDeathHandler"
+  ],
+  "source": "using System;\nusing System.Collections;\nusing TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Tela de morte (Tarefa #16 — \"verificação final: tela de morte, loading e\n/// save 100%/101%\"): overlay full-screen (CanvasGroup, Screen Space -\n/// Overlay) mostrado quando PlayerProgress.OnHeartsDepleted dispara\n/// (PlayerDeathHandler liga-se a este evento).\n///\n/// Singleton com auto-fallback (mesmo padrão de PlayerProgress/GameVariables —\n/// ver Tarefa #15).\n///\n/// Montagem no Editor:\n/// - Canvas (Screen Space - Overlay, sortingOrder alto — acima do HUD e do\n///   Menu de Pausa) com um \"panelRoot\" (Image full-screen, ex: preto/vermelho\n///   escuro) + \"canvasGroup\" no mesmo GameObject.\n/// - \"messageText\" (TMP_Text): ex. \"Perdeste os sentidos...\".\n/// - \"deathSfx\" (opcional): som ao mostrar a tela.\n/// </summary>\npublic class DeathScreenUI : MonoBehaviour\n{\n    public static DeathScreenUI Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private TMP_Text messageText;\n\n    [Header(\"Texto\")]\n    [SerializeField] private string deathMessage = \"Perdeste os sentidos...\";\n\n    [Header(\"Transição\")]\n    [Tooltip(\"Duração do fade in/out do overlay, em segundos.\")]\n    [SerializeField] private float fadeDuration = 0.5f;\n\n    [Tooltip(\"Tempo (s) com o overlay totalmente visível antes do callback de reaparecimento ser chamado.\")]\n    [SerializeField] private float holdDuration = 1f;\n\n    [Header(\"Som\")]\n    [SerializeField] private AudioClip deathSfx;\n\n    private bool isAutoFallback;\n    private bool isShowing;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (canvasGroup != null)\n        {\n            canvasGroup.alpha = 0f;\n            canvasGroup.blocksRaycasts = false;\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n        if (messageText != null) messageText.text = deathMessage;\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(DeathScreenUI) + \" (Fallback)\");\n        var instance = go.AddComponent<DeathScreenUI>();\n        instance.isAutoFallback = true;\n    }\n\n    public bool IsShowing => isShowing;\n\n    /// <summary>\n    /// Fade in do overlay de morte → espera \"holdDuration\" → chama \"onRespawn\"\n    /// (PlayerDeathHandler reposiciona/recupera o player AQUI, enquanto o\n    /// overlay ainda cobre o ecrã) → fade out.\n    /// </summary>\n    public void PlayDeathSequence(Action onRespawn)\n    {\n        if (isShowing) return;\n        StartCoroutine(DeathSequenceRoutine(onRespawn));\n    }\n\n    private IEnumerator DeathSequenceRoutine(Action onRespawn)\n    {\n        isShowing = true;\n\n        // Sem CanvasGroup configurado (ex.: instância \"Fallback\" auto-criada\n        // sem UI montada no Editor) — sem overlay, mas a sequência continua\n        // (espera + respawn) para não bloquear o jogo.\n        if (canvasGroup == null)\n        {\n            AudioManager.Instance?.PlaySE(deathSfx);\n\n            float tNoUi = 0f;\n            while (tNoUi < holdDuration)\n            {\n                tNoUi += Time.unscaledDeltaTime;\n                yield return null;\n            }\n\n            onRespawn?.Invoke();\n            isShowing = false;\n            yield break;\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n        canvasGroup.blocksRaycasts = true;\n\n        AudioManager.Instance?.PlaySE(deathSfx);\n\n        yield return FadeRoutine(0f, 1f);\n\n        float t = 0f;\n        while (t < holdDuration)\n        {\n            t += Time.unscaledDeltaTime;\n            yield return null;\n        }\n\n        onRespawn?.Invoke();\n\n        yield return FadeRoutine(1f, 0f);\n\n        canvasGroup.blocksRaycasts = false;\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        isShowing = false;\n    }\n\n    private IEnumerator FadeRoutine(float from, float to)\n    {\n        if (canvasGroup == null) yield break;\n\n        canvasGroup.alpha = from;\n\n        if (fadeDuration <= 0f)\n        {\n            canvasGroup.alpha = to;\n            yield break;\n        }\n\n        float t = 0f;\n        while (t < fadeDuration)\n        {\n            t += Time.unscaledDeltaTime;\n            canvasGroup.alpha = Mathf.Lerp(from, to, t / fadeDuration);\n            yield return null;\n        }\n        canvasGroup.alpha = to;\n    }\n}\n",
+  "id": "script-ui-deathscreenui-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-data-gamevariables-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-ui-challengeresultui-cs",
+    "script-ui-pickuppopupui-cs",
+    "script-player-playerdeathhandler-cs"
+  ]
+}

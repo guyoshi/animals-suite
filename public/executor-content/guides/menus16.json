@@ -1,0 +1,67 @@
+{
+  "slug": "menus16",
+  "title": "Menus, Emblemas e Pós-game — referência 16/06",
+  "category": "Histórico técnico",
+  "source": "Guia_Menus_Emblemas_PosGame_16-06.md",
+  "summary": "Referência histórica preservada para ligações antigas do roteiro.",
+  "html": "<h1 id=\"guia-menus-emblemas-e-pos-game-16-06\">Guia — Menus, Emblemas e Pós-Game (16/06)</h1>\n<h2 id=\"1-estrutura-final-de-botoes\">1. Estrutura final de botões</h2>\n<ul>\n<li><strong>+/Esc:</strong> <code>PauseMenuController</code>, abre diretamente Opções e mostra mundo, área, percentagem e forma atual.</li>\n<li><strong>-/SecondaryMenu:</strong> <code>SecondaryMenuController</code>, abre Área, Diário, Formas, Itens e Instintos, Progresso, Upgrades e Emblemas.</li>\n<li><strong>Map/M:</strong> abre a Terra de Gaia apenas em <code>WorldMapAccessZone</code>.</li>\n</ul>\n<p>Cria as actions <code>Pause</code>, <code>SecondaryMenu</code> e <code>Map</code> separadamente no Input Actions Asset.</p>\n<h2 id=\"2-montar-o-menu-secundario\">2. Montar o Menu Secundário</h2>\n<ol>\n<li>Cria <code>Canvas_SecondaryMenu</code>.</li>\n<li>Adiciona <code>SecondaryMenuController</code>.</li>\n<li>Liga <code>panelRoot</code>, <code>canvasGroup</code> e <code>animatedRoot</code>.</li>\n<li>Em <code>tabBehaviours</code>, arrasta nesta ordem: <code>AreaSectionUI</code>, <code>DiarySectionUI</code>, <code>FormsSectionUI</code>, <code>ItemsInstinctsSectionUI</code>, <code>ProgressSectionUI</code>, <code>UpgradesTabUI</code>, <code>EmblemsSectionUI</code>.</li>\n<li>Cria sete <code>tabLabels</code> na mesma ordem.</li>\n<li>Testa L/R, B/Escape e conflitos com a Pausa.</li>\n</ol>\n<h2 id=\"3-upgradestabui\">3. UpgradesTabUI</h2>\n<ul>\n<li><code>allUpgrades</code>: todos os upgrades candidatos.</li>\n<li><code>rowPrefab</code>: linha com nome, estado e botão.</li>\n<li><code>listContainer</code>: pai das linhas.</li>\n<li>Painel de detalhes: nome, descrição e estado.</li>\n<li>Toggable: permite ligar/desligar.</li>\n<li>Permanente: mostra Sempre Ativo.</li>\n</ul>\n<h2 id=\"4-emblemmanager\">4. EmblemManager</h2>\n<ol>\n<li>Cria EmblemData para os seis mundos, Gaia, Apolo e Zeus.</li>\n<li>Configura <code>obtainedVariable</code> em todos.</li>\n<li>Marca Gaia/Apolo/Zeus com as flags próprias.</li>\n<li>Adiciona <code>EmblemManager</code> ao objeto persistente.</li>\n<li>Liga os três emblemas globais, os seis <code>WorldData</code>, áreas, formas, missões e emblemas.</li>\n<li>Define <code>allWorldEmblemsVariable</code> para abrir o boss alternativo.</li>\n<li>Adiciona variáveis da Provação em <code>apoloTrialCompletedVariables</code>.</li>\n</ol>\n<p>O gestor verifica automaticamente após bosses, desafios, missões, animais, colecionáveis e ao carregar uma cena.</p>\n<h2 id=\"5-emblemssectionui\">5. EmblemsSectionUI</h2>\n<p>Cria uma grelha separada dos cartões de Progresso. Cada nó precisa de estados desconhecido, revelado e obtido. Inclui Gaia, Apolo, Zeus e seis emblemas de mundo.</p>\n<h2 id=\"6-auras-pos-game\">6. Auras pós-game</h2>\n<ol>\n<li>No Player, cria <code>Aura_Gaia</code>, <code>Aura_Apolo</code> e <code>Aura_Zeus</code> desactivadas.</li>\n<li>Adiciona <code>PostGameAuraController</code>.</li>\n<li>Liga os EmblemData e GameObjects.</li>\n<li>Testa save já concluído e concessão durante a sessão.</li>\n</ol>\n<p>Zeus tem prioridade visual e substitui as outras auras.</p>\n<h2 id=\"7-galeria\">7. Galeria</h2>\n<p>Em <code>GaleriaUI</code>, configura uma lista de <code>GaleriaEntry</code> com imagem, título e <code>unlockVariable</code>. Entradas bloqueadas usam uma silhueta. O viewer mostra a arte em tamanho grande e regressa à grelha.</p>\n<h2 id=\"8-creditos\">8. Créditos</h2>\n<p>Em <code>CreditosUI</code>, liga <code>contentRoot</code>, <code>creditsText</code>, velocidade, pausa final e botões. Testa scroll, saltar e fechar.</p>\n<h2 id=\"9-jukebox\">9. Jukebox</h2>\n<p>A Jukebox fica dentro de Opções. Pode exigir pós-game. Regista faixas apenas quando AudioClips e condições estiverem definidos.</p>\n<h2 id=\"10-percentagem-final\">10. Percentagem final</h2>\n<ul>\n<li>Formas secretas não entram no 100% normal.</li>\n<li>Gaia é concedido em 100%.</li>\n<li>Apolo é concedido pela Provação.</li>\n<li>Gaia + Apolo devolvem 101% e concedem Zeus.</li>\n<li>A variável dos seis emblemas de mundo prepara A Mente que Mata, mas a seleção efectiva do boss ainda precisa ser ligada.</li>\n</ul>",
+  "toc": [
+    {
+      "id": "guia-menus-emblemas-e-pos-game-16-06",
+      "level": 1,
+      "label": "Guia — Menus, Emblemas e Pós-Game (16/06)"
+    },
+    {
+      "id": "1-estrutura-final-de-botoes",
+      "level": 2,
+      "label": "1. Estrutura final de botões"
+    },
+    {
+      "id": "2-montar-o-menu-secundario",
+      "level": 2,
+      "label": "2. Montar o Menu Secundário"
+    },
+    {
+      "id": "3-upgradestabui",
+      "level": 2,
+      "label": "3. UpgradesTabUI"
+    },
+    {
+      "id": "4-emblemmanager",
+      "level": 2,
+      "label": "4. EmblemManager"
+    },
+    {
+      "id": "5-emblemssectionui",
+      "level": 2,
+      "label": "5. EmblemsSectionUI"
+    },
+    {
+      "id": "6-auras-pos-game",
+      "level": 2,
+      "label": "6. Auras pós-game"
+    },
+    {
+      "id": "7-galeria",
+      "level": 2,
+      "label": "7. Galeria"
+    },
+    {
+      "id": "8-creditos",
+      "level": 2,
+      "label": "8. Créditos"
+    },
+    {
+      "id": "9-jukebox",
+      "level": 2,
+      "label": "9. Jukebox"
+    },
+    {
+      "id": "10-percentagem-final",
+      "level": 2,
+      "label": "10. Percentagem final"
+    }
+  ],
+  "searchText": "Guia — Menus, Emblemas e Pós-Game (16/06) 1. Estrutura final de botões +/Esc: PauseMenuController , abre diretamente Opções e mostra mundo, área, percentagem e forma atual. -/SecondaryMenu: SecondaryMenuController , abre Área, Diário, Formas, Itens e Instintos, Progresso, Upgrades e Emblemas. Map/M: abre a Terra de Gaia apenas em WorldMapAccessZone . Cria as actions Pause , SecondaryMenu e Map separadamente no Input Actions Asset. 2. Montar o Menu Secundário Cria Canvas_SecondaryMenu . Adiciona SecondaryMenuController . Liga panelRoot , canvasGroup e animatedRoot . Em tabBehaviours , arrasta nesta ordem: AreaSectionUI , DiarySectionUI , FormsSectionUI , ItemsInstinctsSectionUI , ProgressSectionUI , UpgradesTabUI , EmblemsSectionUI . Cria sete tabLabels na mesma ordem. Testa L/R, B/Escape e conflitos com a Pausa. 3. UpgradesTabUI allUpgrades : todos os upgrades candidatos. rowPrefab : linha com nome, estado e botão. listContainer : pai das linhas. Painel de detalhes: nome, descrição e estado. Toggable: permite ligar/desligar. Permanente: mostra Sempre Ativo. 4. EmblemManager Cria EmblemData para os seis mundos, Gaia, Apolo e Zeus. Configura obtainedVariable em todos. Marca Gaia/Apolo/Zeus com as flags próprias. Adiciona EmblemManager ao objeto persistente. Liga os três emblemas globais, os seis WorldData , áreas, formas, missões e emblemas. Define allWorldEmblemsVariable para abrir o boss alternativo. Adiciona variáveis da Provação em apoloTrialCompletedVariables . O gestor verifica automaticamente após bosses, desafios, missões, animais, colecionáveis e ao carregar uma cena. 5. EmblemsSectionUI Cria uma grelha separada dos cartões de Progresso. Cada nó precisa de estados desconhecido, revelado e obtido. Inclui Gaia, Apolo, Zeus e seis emblemas de mundo. 6. Auras pós-game No Player, cria Aura_Gaia , Aura_Apolo e Aura_Zeus desactivadas. Adiciona PostGameAuraController . Liga os EmblemData e GameObjects. Testa save já concluído e concessão durante a sessão. Zeus tem prioridade visual e substitui as outras auras. 7. Galeria Em GaleriaUI , configura uma lista de GaleriaEntry com imagem, título e unlockVariable . Entradas bloqueadas usam uma silhueta. O viewer mostra a arte em tamanho grande e regressa à grelha. 8. Créditos Em CreditosUI , liga contentRoot , creditsText , velocidade, pausa final e botões. Testa scroll, saltar e fechar. 9. Jukebox A Jukebox fica dentro de Opções. Pode exigir pós-game. Regista faixas apenas quando AudioClips e condições estiverem definidos. 10. Percentagem final Formas secretas não entram no 100% normal. Gaia é concedido em 100%. Apolo é concedido pela Provação. Gaia + Apolo devolvem 101% e concedem Zeus. A variável dos seis emblemas de mundo prepara A Mente que Mata, mas a seleção efectiva do boss ainda precisa ser ligada.",
+  "historical": true
+}

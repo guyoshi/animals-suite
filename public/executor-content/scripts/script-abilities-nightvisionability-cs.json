@@ -1,0 +1,248 @@
+{
+  "path": "Abilities/NightVisionAbility.cs",
+  "filename": "NightVisionAbility.cs",
+  "category": "Abilities",
+  "primary": "NightVisionAbility",
+  "kind": "Componente",
+  "summary": "Visão Nocturna (P8 — Coruja H2, hasVision / PrimaryAbility.NightVision). Toggle (sem cooldown/duração): ao pressionar o botão de habilidade, ativa; ao pressionar de novo, desactiva. Enquanto ATIVA, revela periodicamente todos os dentro de 'form.nightVisionRadius' (fade in + colisão \"transparente para o player\" — ver NightVisionRevealable), e esconde de novo (fade out + colisão normal) os que saírem do raio. Ao desativar, esconde todos os que ainda estavam revelados.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "NightVisionAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "refreshInterval",
+      "type": "float",
+      "mods": "public",
+      "default": "0.2f",
+      "section": "",
+      "attrs": "[Tooltip(\"Repete a verificação do raio a cada X segundos (revela novos / esconde os que saíram).\")]",
+      "inspector": true,
+      "description": "Repete a verificação do raio a cada X segundos (revela novos / esconde os que saíram)."
+    },
+    {
+      "name": "playerCollider",
+      "type": "Collider2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isActive",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "refreshTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "radius",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "revealed",
+      "type": "HashSet<NightVisionRevealable>",
+      "mods": "private readonly",
+      "default": "new HashSet<NightVisionRevealable>()",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "OverlapBuffer",
+      "type": "Collider2D[]",
+      "mods": "private static readonly",
+      "default": "new Collider2D[32]",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> isActive",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> 0f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> 0f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "Toggle",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Toggle."
+    },
+    {
+      "name": "Activate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Activate."
+    },
+    {
+      "name": "Deactivate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Deactivate."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "RefreshRevealed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshRevealed."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "NightVisionRevealable",
+    "PrimaryAbility"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "NightVisionRevealable"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Visão Nocturna (P8 — Coruja H2, hasVision / PrimaryAbility.NightVision).\n///\n/// Toggle (sem cooldown/duração): ao premir o botão de habilidade, activa;\n/// ao premir de novo, desactiva. Enquanto ACTIVA, revela periodicamente todos\n/// os <see cref=\"NightVisionRevealable\"/> dentro de 'form.nightVisionRadius'\n/// (fade in + colisão \"transparente para o player\" — ver NightVisionRevealable),\n/// e esconde de novo (fade out + colisão normal) os que saírem do raio. Ao\n/// desactivar, esconde todos os que ainda estavam revelados.\n/// </summary>\npublic class NightVisionAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Tooltip(\"Repete a verificação do raio a cada X segundos (revela novos / esconde os que saíram).\")]\n    public float refreshInterval = 0.2f;\n\n    [SerializeField] private Collider2D playerCollider;\n\n    private bool enabledForForm;\n    private bool isActive;\n    private float refreshTimer;\n    private float radius;\n\n    private readonly HashSet<NightVisionRevealable> revealed = new HashSet<NightVisionRevealable>();\n    private static readonly Collider2D[] OverlapBuffer = new Collider2D[32];\n\n    /// <summary>true enquanto a visão nocturna está activa (toggle).</summary>\n    public bool IsActive => isActive;\n\n    private void Awake()\n    {\n        if (playerCollider == null) playerCollider = GetComponent<Collider2D>();\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.hasVision;\n        radius = form != null ? form.nightVisionRadius : 0f;\n\n        if (!enabledForForm) Deactivate();\n    }\n\n    /// <summary>Chamado pelo AbilityRouter (OnAbilityPressed) quando a forma tem PrimaryAbility.NightVision.</summary>\n    public void Toggle()\n    {\n        if (!enabledForForm) return;\n\n        if (isActive) Deactivate();\n        else Activate();\n    }\n\n    private void Activate()\n    {\n        if (isActive) return;\n\n        isActive = true;\n        refreshTimer = 0f; // força verificação já no próximo Update\n    }\n\n    private void Deactivate()\n    {\n        if (!isActive) return;\n\n        isActive = false;\n\n        foreach (var r in revealed)\n        {\n            if (r != null) r.SetRevealed(false, playerCollider);\n        }\n        revealed.Clear();\n    }\n\n    private void Update()\n    {\n        if (!isActive) return;\n\n        refreshTimer -= Time.deltaTime;\n        if (refreshTimer > 0f) return;\n        refreshTimer = refreshInterval;\n\n        RefreshRevealed();\n    }\n\n    private void RefreshRevealed()\n    {\n        int count = Physics2D.OverlapCircleNonAlloc(transform.position, radius, OverlapBuffer);\n\n        // Marca quais continuam dentro do raio (revela novos).\n        HashSet<NightVisionRevealable> stillInRange = null;\n\n        for (int i = 0; i < count; i++)\n        {\n            var hit = OverlapBuffer[i];\n            if (hit == null) continue;\n\n            var r = hit.GetComponent<NightVisionRevealable>();\n            if (r == null) continue;\n\n            if (stillInRange == null) stillInRange = new HashSet<NightVisionRevealable>();\n            stillInRange.Add(r);\n\n            if (!revealed.Contains(r))\n            {\n                r.SetRevealed(true, playerCollider);\n                revealed.Add(r);\n            }\n        }\n\n        // Esconde os que saíram do raio.\n        if (revealed.Count > 0)\n        {\n            revealed.RemoveWhere(r =>\n            {\n                if (r == null) return true;\n\n                bool stillIn = stillInRange != null && stillInRange.Contains(r);\n                if (!stillIn)\n                {\n                    r.SetRevealed(false, playerCollider);\n                    return true;\n                }\n                return false;\n            });\n        }\n    }\n\n    private void OnDisable() => Deactivate();\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(0.4f, 0.7f, 1f, 0.35f);\n        Gizmos.DrawWireSphere(transform.position, radius);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Toggle sem cooldown: Activate alterna (Toggle); Cancel desactiva\n    // imediatamente (transformar, morrer, etc.). IsActive já existe como\n    // propriedade pública (implementa IAbility.IsActive implicitamente).\n    void IAbility.Activate() => Toggle();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) => Deactivate();\n    public float CooldownRemaining => 0f;\n    public float CooldownDuration => 0f;\n    public bool CanActivate => enabledForForm;\n\n    /// <summary>AnimalsDebugPanel — sem cooldown próprio (no-op).</summary>\n    public void ResetCooldown() { }\n}\n",
+  "id": "script-abilities-nightvisionability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-interactables-nightvisionrevealable-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-interactables-nightvisionrevealable-cs"
+  ]
+}

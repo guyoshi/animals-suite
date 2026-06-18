@@ -1,0 +1,41 @@
+{
+  "path": "NPC/NpcRefUtil.cs",
+  "filename": "NpcRefUtil.cs",
+  "category": "NPC",
+  "primary": "NpcRefUtil",
+  "kind": "Definição",
+  "summary": "Resolve referências a NPCs por \"Npc Id\" (Etapa 8 — ver NpcController.npcId), como alternativa a arrastar uma referência direta de Transform no Inspector. Usado por ações que apontam para outro NPC (ex: olhar para, mover para).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "NpcRefUtil",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "Resolve",
+      "ret": "Transform",
+      "mods": "public static",
+      "params": "string npcId, Transform fallback",
+      "description": "Executa a operação Resolve."
+    }
+  ],
+  "dependencies": [
+    "NpcController"
+  ],
+  "used_by": [
+    "NpcFaceMode"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Resolve referências a NPCs por \"Npc Id\" (Etapa 8 — ver NpcController.npcId),\n/// como alternativa a arrastar uma referência directa de Transform no Inspector.\n/// Usado por ações que apontam para outro NPC (ex: olhar para, mover para).\n/// </summary>\npublic static class NpcRefUtil\n{\n    /// <summary>\n    /// Se \"npcId\" estiver definido e existir um NPC activo com esse ID, devolve\n    /// o seu Transform. Caso contrário devolve \"fallback\" (a referência directa\n    /// configurada no Inspector).\n    /// </summary>\n    public static Transform Resolve(string npcId, Transform fallback)\n    {\n        if (!string.IsNullOrEmpty(npcId))\n        {\n            var npc = NpcController.FindById(npcId);\n            if (npc != null) return npc.transform;\n        }\n\n        return fallback;\n    }\n}\n",
+  "id": "script-npc-npcrefutil-cs",
+  "dependencyIds": [
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-movementactions-cs"
+  ]
+}

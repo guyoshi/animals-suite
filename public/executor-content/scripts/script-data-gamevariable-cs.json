@@ -1,0 +1,257 @@
+{
+  "path": "Data/GameVariable.cs",
+  "filename": "GameVariable.cs",
+  "category": "Data",
+  "primary": "GameVariable",
+  "kind": "Definição",
+  "summary": "Tipo de valor guardado numa GameVariable. public enum VariableType { Bool, Int, Float, String } Onde uma variável vive: \"Global\" (GameVariables, partilhada por todo o jogo) ou \"Local\" (própria de um NpcController). public enum VariableScope { Global, Local } Uma variável configurável no Inspector (Etapa 8): tem um nome, um tipo, e um valor — apenas o campo correspondente a \"type\" é relevante. Permite criar condições/eventos \"trigger\" sem código (ex: ligar a variável bool \"porta_aberta\" numa ação, e condicionar outro evento a essa variável estar true).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "VariableType",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "VariableScope",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "GameVariable",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "GameVariableListUtil",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "GameVariableUtil",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "variableName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "type",
+      "type": "VariableType",
+      "mods": "public",
+      "default": "VariableType.Bool",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "boolValue",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "intValue",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "floatValue",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "stringValue",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Find",
+      "ret": "GameVariable",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name",
+      "description": "Executa a operação Find."
+    },
+    {
+      "name": "FindOrCreate",
+      "ret": "GameVariable",
+      "mods": "private static",
+      "params": "List<GameVariable> list, string name, VariableType type",
+      "description": "Executa a operação FindOrCreate."
+    },
+    {
+      "name": "GetBool",
+      "ret": "bool",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name, bool defaultValue = false",
+      "description": "Executa a operação GetBool."
+    },
+    {
+      "name": "GetInt",
+      "ret": "int",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name, int defaultValue = 0",
+      "description": "Executa a operação GetInt."
+    },
+    {
+      "name": "GetFloat",
+      "ret": "float",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name, float defaultValue = 0f",
+      "description": "Executa a operação GetFloat."
+    },
+    {
+      "name": "GetString",
+      "ret": "string",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name, string defaultValue = \"\"",
+      "description": "Executa a operação GetString."
+    },
+    {
+      "name": "SetBool",
+      "ret": "void",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name, bool value",
+      "description": "Executa a operação SetBool."
+    },
+    {
+      "name": "SetInt",
+      "ret": "void",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name, int value",
+      "description": "Executa a operação SetInt."
+    },
+    {
+      "name": "SetFloat",
+      "ret": "void",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name, float value",
+      "description": "Executa a operação SetFloat."
+    },
+    {
+      "name": "SetString",
+      "ret": "void",
+      "mods": "public static",
+      "params": "List<GameVariable> list, string name, string value",
+      "description": "Executa a operação SetString."
+    },
+    {
+      "name": "GetBool",
+      "ret": "bool",
+      "mods": "public static",
+      "params": "NpcController npc, VariableScope scope, string name, bool defaultValue = false",
+      "description": "Executa a operação GetBool."
+    },
+    {
+      "name": "GetInt",
+      "ret": "int",
+      "mods": "public static",
+      "params": "NpcController npc, VariableScope scope, string name, int defaultValue = 0",
+      "description": "Executa a operação GetInt."
+    },
+    {
+      "name": "GetFloat",
+      "ret": "float",
+      "mods": "public static",
+      "params": "NpcController npc, VariableScope scope, string name, float defaultValue = 0f",
+      "description": "Executa a operação GetFloat."
+    },
+    {
+      "name": "GetString",
+      "ret": "string",
+      "mods": "public static",
+      "params": "NpcController npc, VariableScope scope, string name, string defaultValue = \"\"",
+      "description": "Executa a operação GetString."
+    },
+    {
+      "name": "SetBool",
+      "ret": "void",
+      "mods": "public static",
+      "params": "NpcController npc, VariableScope scope, string name, bool value",
+      "description": "Executa a operação SetBool."
+    },
+    {
+      "name": "SetInt",
+      "ret": "void",
+      "mods": "public static",
+      "params": "NpcController npc, VariableScope scope, string name, int value",
+      "description": "Executa a operação SetInt."
+    },
+    {
+      "name": "SetFloat",
+      "ret": "void",
+      "mods": "public static",
+      "params": "NpcController npc, VariableScope scope, string name, float value",
+      "description": "Executa a operação SetFloat."
+    },
+    {
+      "name": "SetString",
+      "ret": "void",
+      "mods": "public static",
+      "params": "NpcController npc, VariableScope scope, string name, string value",
+      "description": "Executa a operação SetString."
+    }
+  ],
+  "dependencies": [
+    "GameVariables",
+    "NpcController"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "GameVariableListDrawer",
+    "GameVariables",
+    "NpcController",
+    "SaveData",
+    "VariableNumberOp"
+  ],
+  "source": "using System.Collections.Generic;\n\n/// <summary>Tipo de valor guardado numa GameVariable.</summary>\npublic enum VariableType\n{\n    Bool,\n    Int,\n    Float,\n    String\n}\n\n/// <summary>Onde uma variável vive: \"Global\" (GameVariables, partilhada por todo o jogo) ou \"Local\" (própria de um NpcController).</summary>\npublic enum VariableScope\n{\n    Global,\n    Local\n}\n\n/// <summary>\n/// Uma variável configurável no Inspector (Etapa 8): tem um nome, um tipo, e um\n/// valor — apenas o campo correspondente a \"type\" é relevante. Permite criar\n/// condições/eventos \"trigger\" sem código (ex: ligar a variável bool \"porta_aberta\"\n/// numa ação, e condicionar outro evento a essa variável estar true).\n/// </summary>\n[System.Serializable]\npublic class GameVariable\n{\n    public string variableName;\n    public VariableType type = VariableType.Bool;\n\n    public bool boolValue;\n    public int intValue;\n    public float floatValue;\n    public string stringValue;\n}\n\n/// <summary>\n/// Operações de leitura/escrita sobre uma List&lt;GameVariable&gt; (variáveis\n/// globais em GameVariables, ou locais num NpcController). Se a variável ainda\n/// não existir, Get* devolve o valor por omissão e Set* cria-a automaticamente\n/// (com o tipo correspondente) — útil para eventos feitos rapidamente no Editor\n/// sem pré-declarar a variável, embora pré-declarar permita aproveitar a\n/// verificação de nomes duplicados no Inspector.\n/// </summary>\npublic static class GameVariableListUtil\n{\n    public static GameVariable Find(List<GameVariable> list, string name)\n    {\n        if (list == null || string.IsNullOrEmpty(name)) return null;\n\n        foreach (var v in list)\n            if (v != null && v.variableName == name) return v;\n\n        return null;\n    }\n\n    private static GameVariable FindOrCreate(List<GameVariable> list, string name, VariableType type)\n    {\n        var v = Find(list, name);\n        if (v == null)\n        {\n            v = new GameVariable { variableName = name, type = type };\n            list.Add(v);\n        }\n        return v;\n    }\n\n    public static bool GetBool(List<GameVariable> list, string name, bool defaultValue = false)\n    {\n        var v = Find(list, name);\n        return v != null ? v.boolValue : defaultValue;\n    }\n\n    public static int GetInt(List<GameVariable> list, string name, int defaultValue = 0)\n    {\n        var v = Find(list, name);\n        return v != null ? v.intValue : defaultValue;\n    }\n\n    public static float GetFloat(List<GameVariable> list, string name, float defaultValue = 0f)\n    {\n        var v = Find(list, name);\n        return v != null ? v.floatValue : defaultValue;\n    }\n\n    public static string GetString(List<GameVariable> list, string name, string defaultValue = \"\")\n    {\n        var v = Find(list, name);\n        return v != null ? v.stringValue : defaultValue;\n    }\n\n    public static void SetBool(List<GameVariable> list, string name, bool value)\n    {\n        if (list == null || string.IsNullOrEmpty(name)) return;\n        FindOrCreate(list, name, VariableType.Bool).boolValue = value;\n    }\n\n    public static void SetInt(List<GameVariable> list, string name, int value)\n    {\n        if (list == null || string.IsNullOrEmpty(name)) return;\n        FindOrCreate(list, name, VariableType.Int).intValue = value;\n    }\n\n    public static void SetFloat(List<GameVariable> list, string name, float value)\n    {\n        if (list == null || string.IsNullOrEmpty(name)) return;\n        FindOrCreate(list, name, VariableType.Float).floatValue = value;\n    }\n\n    public static void SetString(List<GameVariable> list, string name, string value)\n    {\n        if (list == null || string.IsNullOrEmpty(name)) return;\n        FindOrCreate(list, name, VariableType.String).stringValue = value;\n    }\n}\n\n/// <summary>\n/// Ponte entre Actions/Conditions e as listas de variáveis: resolve \"scope\"\n/// (Global → GameVariables.Instance; Local → npc.localVariables) e delega para\n/// GameVariableListUtil. Usado por VariableActions / VariableConditions.\n/// </summary>\npublic static class GameVariableUtil\n{\n    public static bool GetBool(NpcController npc, VariableScope scope, string name, bool defaultValue = false) =>\n        scope == VariableScope.Global\n            ? (GameVariables.Instance != null ? GameVariables.Instance.GetBool(name, defaultValue) : defaultValue)\n            : (npc != null ? npc.GetLocalBool(name, defaultValue) : defaultValue);\n\n    public static int GetInt(NpcController npc, VariableScope scope, string name, int defaultValue = 0) =>\n        scope == VariableScope.Global\n            ? (GameVariables.Instance != null ? GameVariables.Instance.GetInt(name, defaultValue) : defaultValue)\n            : (npc != null ? npc.GetLocalInt(name, defaultValue) : defaultValue);\n\n    public static float GetFloat(NpcController npc, VariableScope scope, string name, float defaultValue = 0f) =>\n        scope == VariableScope.Global\n            ? (GameVariables.Instance != null ? GameVariables.Instance.GetFloat(name, defaultValue) : defaultValue)\n            : (npc != null ? npc.GetLocalFloat(name, defaultValue) : defaultValue);\n\n    public static string GetString(NpcController npc, VariableScope scope, string name, string defaultValue = \"\") =>\n        scope == VariableScope.Global\n            ? (GameVariables.Instance != null ? GameVariables.Instance.GetString(name, defaultValue) : defaultValue)\n            : (npc != null ? npc.GetLocalString(name, defaultValue) : defaultValue);\n\n    public static void SetBool(NpcController npc, VariableScope scope, string name, bool value)\n    {\n        if (scope == VariableScope.Global) GameVariables.Instance?.SetBool(name, value);\n        else npc?.SetLocalBool(name, value);\n    }\n\n    public static void SetInt(NpcController npc, VariableScope scope, string name, int value)\n    {\n        if (scope == VariableScope.Global) GameVariables.Instance?.SetInt(name, value);\n        else npc?.SetLocalInt(name, value);\n    }\n\n    public static void SetFloat(NpcController npc, VariableScope scope, string name, float value)\n    {\n        if (scope == VariableScope.Global) GameVariables.Instance?.SetFloat(name, value);\n        else npc?.SetLocalFloat(name, value);\n    }\n\n    public static void SetString(NpcController npc, VariableScope scope, string name, string value)\n    {\n        if (scope == VariableScope.Global) GameVariables.Instance?.SetString(name, value);\n        else npc?.SetLocalString(name, value);\n    }\n}\n",
+  "id": "script-data-gamevariable-cs",
+  "dependencyIds": [
+    "script-data-gamevariables-cs",
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-data-editor-gamevariablelistdrawer-cs",
+    "script-data-gamevariables-cs",
+    "script-npc-npccontroller-cs",
+    "script-data-savedata-cs",
+    "script-npc-actions-variableactions-cs"
+  ]
+}

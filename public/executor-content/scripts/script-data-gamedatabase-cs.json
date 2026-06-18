@@ -1,0 +1,206 @@
+{
+  "path": "Data/GameDatabase.cs",
+  "filename": "GameDatabase.cs",
+  "category": "Data",
+  "primary": "GameDatabase",
+  "kind": "Asset de dados",
+  "summary": "Base de dados central para resolver assets (ScriptableObjects) a partir do respectivo ID (worldId/areaId/formId/itemId/upgradeId). Necessária porque o sistema de Save (Etapa de Save) guarda apenas IDs em texto — as referências a ScriptableObject não podem ser serializadas em JSON. SETUP: cria UM asset deste tipo em \"Assets/Resources/GameDatabase.asset\" (\"Create &gt; Animals &gt; Game Database\") e arrasta para as listas abaixo todos os WorldData/AreaData/AnimalFormData/ItemData/UpgradeData do jogo. Só este asset precisa de estar dentro de uma pasta \"Resources\" — os restantes podem ficar onde já estão.",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "GameDatabase",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "ResourcesPath",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"GameDatabase\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_instance",
+      "type": "GameDatabase",
+      "mods": "private static",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "worlds",
+      "type": "List<WorldData>",
+      "mods": "public",
+      "default": "new List<WorldData>()",
+      "section": "Mundos e Áreas",
+      "attrs": "[Header(\"Mundos e Áreas\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areas",
+      "type": "List<AreaData>",
+      "mods": "public",
+      "default": "new List<AreaData>()",
+      "section": "Mundos e Áreas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "animalForms",
+      "type": "List<AnimalFormData>",
+      "mods": "public",
+      "default": "new List<AnimalFormData>()",
+      "section": "Formas de Animais",
+      "attrs": "[Header(\"Formas de Animais\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "items",
+      "type": "List<ItemData>",
+      "mods": "public",
+      "default": "new List<ItemData>()",
+      "section": "Itens e Upgrades",
+      "attrs": "[Header(\"Itens e Upgrades\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "upgrades",
+      "type": "List<UpgradeData>",
+      "mods": "public",
+      "default": "new List<UpgradeData>()",
+      "section": "Itens e Upgrades",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "missions",
+      "type": "List<MissionData>",
+      "mods": "public",
+      "default": "new List<MissionData>()",
+      "section": "Missões e Emblemas",
+      "attrs": "[Header(\"Missões e Emblemas\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emblems",
+      "type": "List<EmblemData>",
+      "mods": "public",
+      "default": "new List<EmblemData>()",
+      "section": "Missões e Emblemas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "FindWorld",
+      "ret": "WorldData",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação FindWorld."
+    },
+    {
+      "name": "FindArea",
+      "ret": "AreaData",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação FindArea."
+    },
+    {
+      "name": "FindAnimalForm",
+      "ret": "AnimalFormData",
+      "mods": "public",
+      "params": "string formId",
+      "description": "Executa a operação FindAnimalForm."
+    },
+    {
+      "name": "FindItem",
+      "ret": "ItemData",
+      "mods": "public",
+      "params": "string itemId",
+      "description": "Executa a operação FindItem."
+    },
+    {
+      "name": "FindUpgrade",
+      "ret": "UpgradeData",
+      "mods": "public",
+      "params": "string upgradeId",
+      "description": "Executa a operação FindUpgrade."
+    },
+    {
+      "name": "FindMission",
+      "ret": "MissionData",
+      "mods": "public",
+      "params": "string missionId",
+      "description": "Executa a operação FindMission."
+    },
+    {
+      "name": "FindEmblem",
+      "ret": "EmblemData",
+      "mods": "public",
+      "params": "string emblemId",
+      "description": "Executa a operação FindEmblem."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "AreaData",
+    "EmblemData",
+    "ItemData",
+    "MissionData",
+    "UpgradeData",
+    "WorldData"
+  ],
+  "used_by": [
+    "Action_SavePlayerSnapshot",
+    "AnimalsDebugPanel",
+    "FormSwitcher",
+    "GameDataValidatorWindow",
+    "HUDController",
+    "ItemWheelUI",
+    "MissionManager",
+    "PlayerProgress",
+    "SaveData",
+    "SaveSlotButtonUI",
+    "WorldState"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Base de dados central para resolver assets (ScriptableObjects) a partir do\n/// respectivo ID (worldId/areaId/formId/itemId/upgradeId). Necessária porque o\n/// sistema de Save (Etapa de Save) guarda apenas IDs em texto — as referências\n/// a ScriptableObject não podem ser serializadas em JSON.\n///\n/// SETUP: cria UM asset deste tipo em \"Assets/Resources/GameDatabase.asset\"\n/// (\"Create &gt; Animals &gt; Game Database\") e arrasta para as listas abaixo\n/// todos os WorldData/AreaData/AnimalFormData/ItemData/UpgradeData do jogo.\n/// Só este asset precisa de estar dentro de uma pasta \"Resources\" — os\n/// restantes podem ficar onde já estão.\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Game Database\", fileName = \"GameDatabase\")]\npublic class GameDatabase : ScriptableObject\n{\n    private const string ResourcesPath = \"GameDatabase\";\n\n    private static GameDatabase _instance;\n\n    /// <summary>Carrega (uma vez) e devolve o GameDatabase em Resources/GameDatabase. Null se não existir.</summary>\n    public static GameDatabase Instance\n    {\n        get\n        {\n            if (_instance == null)\n                _instance = Resources.Load<GameDatabase>(ResourcesPath);\n\n            return _instance;\n        }\n    }\n\n    [Header(\"Mundos e Áreas\")]\n    public List<WorldData> worlds = new List<WorldData>();\n    public List<AreaData> areas = new List<AreaData>();\n\n    [Header(\"Formas de Animais\")]\n    public List<AnimalFormData> animalForms = new List<AnimalFormData>();\n\n    [Header(\"Itens e Upgrades\")]\n    public List<ItemData> items = new List<ItemData>();\n    public List<UpgradeData> upgrades = new List<UpgradeData>();\n\n    [Header(\"Missões e Emblemas\")]\n    public List<MissionData> missions = new List<MissionData>();\n    public List<EmblemData> emblems = new List<EmblemData>();\n\n    public WorldData FindWorld(string worldId)\n    {\n        if (string.IsNullOrEmpty(worldId)) return null;\n        foreach (var w in worlds)\n            if (w != null && w.worldId == worldId) return w;\n        return null;\n    }\n\n    public AreaData FindArea(string areaId)\n    {\n        if (string.IsNullOrEmpty(areaId)) return null;\n        foreach (var a in areas)\n            if (a != null && a.areaId == areaId) return a;\n        return null;\n    }\n\n    public AnimalFormData FindAnimalForm(string formId)\n    {\n        if (string.IsNullOrEmpty(formId)) return null;\n        foreach (var f in animalForms)\n            if (f != null && f.formId == formId) return f;\n        return null;\n    }\n\n    public ItemData FindItem(string itemId)\n    {\n        if (string.IsNullOrEmpty(itemId)) return null;\n        foreach (var i in items)\n            if (i != null && i.itemId == itemId) return i;\n        return null;\n    }\n\n    public UpgradeData FindUpgrade(string upgradeId)\n    {\n        if (string.IsNullOrEmpty(upgradeId)) return null;\n        foreach (var u in upgrades)\n            if (u != null && u.upgradeId == upgradeId) return u;\n        return null;\n    }\n\n    public MissionData FindMission(string missionId)\n    {\n        if (string.IsNullOrEmpty(missionId)) return null;\n        foreach (var m in missions)\n            if (m != null && m.missionId == missionId) return m;\n        return null;\n    }\n\n    public EmblemData FindEmblem(string emblemId)\n    {\n        if (string.IsNullOrEmpty(emblemId)) return null;\n        foreach (var e in emblems)\n            if (e != null && e.emblemId == emblemId) return e;\n        return null;\n    }\n}\n",
+  "id": "script-data-gamedatabase-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-data-emblemdata-cs",
+    "script-data-itemdata-cs",
+    "script-data-missiondata-cs",
+    "script-data-upgradedata-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-editor-gamedatavalidatorwindow-cs",
+    "script-ui-hudcontroller-cs",
+    "script-ui-itemwheelui-cs",
+    "script-data-missionmanager-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savedata-cs",
+    "script-ui-saveslotbuttonui-cs",
+    "script-data-worldstate-cs"
+  ]
+}

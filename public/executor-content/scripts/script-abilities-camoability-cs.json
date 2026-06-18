@@ -1,0 +1,228 @@
+{
+  "path": "Abilities/CamoAbility.cs",
+  "filename": "CamoAbility.cs",
+  "category": "Abilities",
+  "primary": "CamoAbility",
+  "kind": "Componente",
+  "summary": "Camuflagem (Suricata, Raposa-do-ártico, Urso Panda — P5): durante \"camoDuration\" (P1), o player conta como Furtivo para TODOS os inimigos — EnemyDetection ignora-o, excepto inimigos que detectam furtivos (stealthDetection/canBeIgnoredByStealth — Etapa 8.1). Ativado via PrimaryAbility.Camo (AbilityRouter.OnAbilityPressed → TryCamo). Mover-se NÃO quebra a camuflagem por defeito (\"breakOnAttack\" cobre o ataque). Feedback visual: alpha do sprite reduzido.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "CamoAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "camoAlpha",
+      "type": "float",
+      "mods": "public",
+      "default": "0.4f",
+      "section": "Visual",
+      "attrs": "[Header(\"Visual\")] [Tooltip(\"Alpha do sprite enquanto camuflado (feedback simples).\")] [Range(0.1f, 1f)]",
+      "inspector": true,
+      "description": "Alpha do sprite enquanto camuflado (feedback simples)."
+    },
+    {
+      "name": "spriteRenderer",
+      "type": "SpriteRenderer",
+      "mods": "private",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"SpriteRenderer do player (auto-detectado se vazio).\")] [SerializeField]",
+      "inspector": true,
+      "description": "SpriteRenderer do player (auto-detectado se vazio)."
+    },
+    {
+      "name": "breakOnAttack",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Regras",
+      "attrs": "[Header(\"Regras\")] [Tooltip(\"Atacar quebra a camuflagem (PlayerAttack/AbilityRouter chama BreakCamo).\")]",
+      "inspector": true,
+      "description": "Atacar quebra a camuflagem (PlayerAttack/AbilityRouter chama BreakCamo)."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Regras",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "duration",
+      "type": "float",
+      "mods": "private",
+      "default": "4f",
+      "section": "Regras",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldown",
+      "type": "float",
+      "mods": "private",
+      "default": "6f",
+      "section": "Regras",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldownTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Regras",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "routine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Regras",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> Mathf.Max(0f, cooldownTimer)",
+      "section": "Regras",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> cooldown",
+      "section": "Regras",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm && !IsCamoActive && cooldownTimer <= 0f",
+      "section": "Regras",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "TryCamo",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação TryCamo."
+    },
+    {
+      "name": "BreakCamo",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação BreakCamo."
+    },
+    {
+      "name": "CamoRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação CamoRoutine."
+    },
+    {
+      "name": "ApplyAlpha",
+      "ret": "void",
+      "mods": "private",
+      "params": "float alpha",
+      "description": "Executa a operação ApplyAlpha."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "EnemyDetection",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "PlayerAttack",
+    "PrimaryAbility"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "EnemyDetection",
+    "PlayerCombat"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Camuflagem (Suricata, Raposa-do-ártico, Urso Panda — P5): durante\n/// \"camoDuration\" (P1), o player conta como Furtivo para TODOS os inimigos —\n/// EnemyDetection ignora-o, excepto inimigos que detectam furtivos\n/// (stealthDetection/canBeIgnoredByStealth — Etapa 8.1).\n///\n/// Activado via PrimaryAbility.Camo (AbilityRouter.OnAbilityPressed → TryCamo).\n/// Mover-se NÃO quebra a camuflagem por defeito (\"breakOnAttack\" cobre o\n/// ataque). Feedback visual: alpha do sprite reduzido.\n/// </summary>\npublic class CamoAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Visual\")]\n    [Tooltip(\"Alpha do sprite enquanto camuflado (feedback simples).\")]\n    [Range(0.1f, 1f)] public float camoAlpha = 0.4f;\n\n    [Tooltip(\"SpriteRenderer do player (auto-detectado se vazio).\")]\n    [SerializeField] private SpriteRenderer spriteRenderer;\n\n    [Header(\"Regras\")]\n    [Tooltip(\"Atacar quebra a camuflagem (PlayerAttack/AbilityRouter chama BreakCamo).\")]\n    public bool breakOnAttack = true;\n\n    private bool enabledForForm;\n    private float duration = 4f;\n    private float cooldown = 6f;\n    private float cooldownTimer;\n    private Coroutine routine;\n\n    /// <summary>true enquanto a camuflagem está activa (lido por EnemyDetection).</summary>\n    public bool IsCamoActive { get; private set; }\n\n    private void Awake()\n    {\n        if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && (form.canCamo || form.primaryAbility == PrimaryAbility.Camo);\n        duration = form != null ? Mathf.Max(0.5f, form.camoDuration) : 4f;\n        cooldown = form != null ? Mathf.Max(0f, form.camoCooldown) : 6f;\n\n        // Trocar de forma quebra a camuflagem.\n        BreakCamo();\n    }\n\n    /// <summary>Activa a camuflagem (AbilityRouter — PrimaryAbility.Camo).</summary>\n    public void TryCamo()\n    {\n        if (!enabledForForm || IsCamoActive) return;\n        if (cooldownTimer > 0f) return;\n\n        if (routine != null) StopCoroutine(routine);\n        routine = StartCoroutine(CamoRoutine());\n    }\n\n    /// <summary>Quebra a camuflagem imediatamente (atacar, trocar de forma, tomar dano...).</summary>\n    public void BreakCamo()\n    {\n        if (routine != null)\n        {\n            StopCoroutine(routine);\n            routine = null;\n        }\n\n        if (!IsCamoActive) return;\n\n        IsCamoActive = false;\n        ApplyAlpha(1f);\n        cooldownTimer = cooldown;\n    }\n\n    private IEnumerator CamoRoutine()\n    {\n        IsCamoActive = true;\n        ApplyAlpha(camoAlpha);\n\n        yield return new WaitForSeconds(duration);\n\n        routine = null;\n        BreakCamo();\n    }\n\n    private void ApplyAlpha(float alpha)\n    {\n        if (spriteRenderer == null) return;\n\n        var color = spriteRenderer.color;\n        color.a = alpha;\n        spriteRenderer.color = color;\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Activate dispara TryCamo (auto-termina após \"duration\"); Release\n    // não tem efeito (não é \"hold\"); Cancel quebra a camuflagem já.\n    void IAbility.Activate() => TryCamo();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) => BreakCamo();\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => IsCamoActive;\n    public float CooldownDuration => cooldown;\n    public bool CanActivate => enabledForForm && !IsCamoActive && cooldownTimer <= 0f;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown da camuflagem.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "id": "script-abilities-camoability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-enemy-enemydetection-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-player-playerattack-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-enemy-enemydetection-cs",
+    "script-player-playercombat-cs"
+  ]
+}

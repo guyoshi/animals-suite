@@ -1,0 +1,178 @@
+{
+  "path": "Interactables/AnimalSpiritRescue.cs",
+  "filename": "AnimalSpiritRescue.cs",
+  "category": "Interactables",
+  "primary": "AnimalSpiritRescue",
+  "kind": "Componente",
+  "summary": "Espírito de animal preso no mundo, com fluxo próprio de resgate (item 14 da auditoria): até agora, libertar animais só existia como (ação de diálogo/NPC), sem um componente dedicado de \"tocar -> sequência de resgate -> guardar\". Fluxo ao tocar no espírito (trigger, tag \"Player\" — mesmo padrão de / ): 1. Bloqueia o movimento do player e cancela habilidades \"com estado\" (mesmo padrão de Action_SetPlayerMovementLocked). 2. Toca animação/VFX/SFX de libertação e aguarda . 3. Liberta o animal ( ) e desbloqueia a forma em FormSwitcher — dispara , que o já mostra automaticamente (Tarefa #8). 4. Devolve o controlo ao player. 5. Autosave ( ). 6. Remove o espírito da cena. Anti-duplicação: usa — se o ",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "AnimalSpiritRescue",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "form",
+      "type": "AnimalFormData",
+      "mods": "public",
+      "default": "",
+      "section": "Animal",
+      "attrs": "[Header(\"Animal\")] [Tooltip(\"Forma a libertar/desbloquear ao resgatar este espírito.\")]",
+      "inspector": true,
+      "description": "Forma a libertar/desbloquear ao resgatar este espírito."
+    },
+    {
+      "name": "unlockForSwitching",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Animal",
+      "attrs": "[Tooltip(\"Se activo, também desbloqueia a forma em FormSwitcher.unlockedForms (necessário para o player a poder usar de imediato). Ver Action_FreeAnimal.\")]",
+      "inspector": true,
+      "description": "Se ativo, também desbloqueia a forma em FormSwitcher.unlockedForms (necessário para o player a poder usar de imediato). Ver Action_FreeAnimal."
+    },
+    {
+      "name": "releaseDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "1.2f",
+      "section": "Sequência de resgate",
+      "attrs": "[Header(\"Sequência de resgate\")] [Tooltip(\"Duração (segundos) da animação/VFX de libertação, durante a qual o player fica com o movimento bloqueado.\")]",
+      "inspector": true,
+      "description": "Duração (segundos) da animação/VFX de libertação, durante a qual o player fica com o movimento bloqueado."
+    },
+    {
+      "name": "releaseSfx",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sequência de resgate",
+      "attrs": "[Tooltip(\"Som tocado ao iniciar o resgate.\")]",
+      "inspector": true,
+      "description": "Som tocado ao iniciar o resgate."
+    },
+    {
+      "name": "releaseVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Sequência de resgate",
+      "attrs": "[Tooltip(\"Prefab de efeito visual instanciado na posição do espírito ao iniciar o resgate (opcional — partículas, brilho, etc.).\")]",
+      "inspector": true,
+      "description": "Prefab de efeito visual instanciado na posição do espírito ao iniciar o resgate (opcional — partículas, brilho, etc.)."
+    },
+    {
+      "name": "cancelReason",
+      "type": "AbilityCancelReason",
+      "mods": "public",
+      "default": "AbilityCancelReason.Dialogue",
+      "section": "Sequência de resgate",
+      "attrs": "[Tooltip(\"Motivo passado a AbilityRouter.CancelAll ao bloquear o movimento — ver Action_SetPlayerMovementLocked (por omissão, Dialogue: cutscene de resgate).\")]",
+      "inspector": true,
+      "description": "Motivo passado a AbilityRouter.CancelAll ao bloquear o movimento — ver Action_SetPlayerMovementLocked (por omissão, Dialogue: cutscene de resgate)."
+    },
+    {
+      "name": "autosaveOnRescue",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Autosave",
+      "attrs": "[Header(\"Autosave\")] [Tooltip(\"Se activo, chama SaveManager.SaveAutosave() no fim da sequência — resgatar um animal é progresso irreversível, tal como libertar via diálogo (ver Action_Autosave).\")]",
+      "inspector": true,
+      "description": "Se ativo, chama SaveManager.SaveAutosave() no fim da sequência — resgatar um animal é progresso irreversível, tal como libertar via diálogo (ver Action_Autosave)."
+    },
+    {
+      "name": "_rescuing",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Autosave",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_rescued",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Autosave",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "TryRescue",
+      "ret": "void",
+      "mods": "public",
+      "params": "GameObject player",
+      "description": "Executa a operação TryRescue."
+    },
+    {
+      "name": "RescueRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "GameObject player",
+      "description": "Executa a operação RescueRoutine."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "Action_Autosave",
+    "Action_FreeAnimal",
+    "Action_SetPlayerMovementLocked",
+    "AnimalFormData",
+    "AudioManager",
+    "FormSwitcher",
+    "NewAnimalUnlockedUI",
+    "PickupBase",
+    "PlayerMotor2D",
+    "PlayerProgress",
+    "SafeHaven",
+    "SaveManager"
+  ],
+  "used_by": [],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Espírito de animal preso no mundo, com fluxo próprio de resgate (item 14\n/// da auditoria): até agora, libertar animais só existia como\n/// <see cref=\"Action_FreeAnimal\"/> (acção de diálogo/NPC), sem um componente\n/// dedicado de \"tocar -> sequência de resgate -> guardar\".\n///\n/// Fluxo ao tocar no espírito (trigger, tag \"Player\" — mesmo padrão de\n/// <see cref=\"PickupBase\"/>/<see cref=\"SafeHaven\"/>):\n/// 1. Bloqueia o movimento do player e cancela habilidades \"com estado\"\n///    (mesmo padrão de Action_SetPlayerMovementLocked).\n/// 2. Toca animação/VFX/SFX de libertação e aguarda <see cref=\"releaseDuration\"/>.\n/// 3. Liberta o animal (<see cref=\"PlayerProgress.FreeAnimal\"/>) e desbloqueia\n///    a forma em FormSwitcher — dispara <see cref=\"PlayerProgress.AnimalUnlocked\"/>,\n///    que o <see cref=\"NewAnimalUnlockedUI\"/> já mostra automaticamente\n///    (Tarefa #8).\n/// 4. Devolve o controlo ao player.\n/// 5. Autosave (<see cref=\"SaveManager.SaveAutosave\"/>).\n/// 6. Remove o espírito da cena.\n///\n/// Anti-duplicação: usa <see cref=\"PlayerProgress.HasFreedAnimal\"/> — se o\n/// animal já foi libertado (save anterior), este objecto desactiva-se em\n/// Start() e nunca repete o resgate.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class AnimalSpiritRescue : MonoBehaviour\n{\n    [Header(\"Animal\")]\n    [Tooltip(\"Forma a libertar/desbloquear ao resgatar este espírito.\")]\n    public AnimalFormData form;\n\n    [Tooltip(\"Se activo, também desbloqueia a forma em FormSwitcher.unlockedForms (necessário para o player a poder usar de imediato). Ver Action_FreeAnimal.\")]\n    public bool unlockForSwitching = true;\n\n    [Header(\"Sequência de resgate\")]\n    [Tooltip(\"Duração (segundos) da animação/VFX de libertação, durante a qual o player fica com o movimento bloqueado.\")]\n    public float releaseDuration = 1.2f;\n\n    [Tooltip(\"Som tocado ao iniciar o resgate.\")]\n    public AudioClip releaseSfx;\n\n    [Tooltip(\"Prefab de efeito visual instanciado na posição do espírito ao iniciar o resgate (opcional — partículas, brilho, etc.).\")]\n    public GameObject releaseVfxPrefab;\n\n    [Tooltip(\"Motivo passado a AbilityRouter.CancelAll ao bloquear o movimento — ver Action_SetPlayerMovementLocked (por omissão, Dialogue: cutscene de resgate).\")]\n    public AbilityCancelReason cancelReason = AbilityCancelReason.Dialogue;\n\n    [Header(\"Autosave\")]\n    [Tooltip(\"Se activo, chama SaveManager.SaveAutosave() no fim da sequência — resgatar um animal é progresso irreversível, tal como libertar via diálogo (ver Action_Autosave).\")]\n    public bool autosaveOnRescue = true;\n\n    private bool _rescuing;\n    private bool _rescued;\n\n    private void Awake()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col != null) col.isTrigger = true;\n    }\n\n    private void Start()\n    {\n        // Já libertado num save anterior -> não voltar a aparecer nem repetir.\n        if (form != null && PlayerProgress.Instance != null\n            && PlayerProgress.Instance.HasFreedAnimal(form.formId))\n        {\n            _rescued = true;\n            gameObject.SetActive(false);\n        }\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        TryRescue(other.gameObject);\n    }\n\n    /// <summary>Inicia a sequência de resgate (idempotente — ignora se já em curso ou concluída).</summary>\n    public void TryRescue(GameObject player)\n    {\n        if (_rescuing || _rescued || form == null || player == null) return;\n\n        _rescuing = true;\n        StartCoroutine(RescueRoutine(player));\n    }\n\n    private IEnumerator RescueRoutine(GameObject player)\n    {\n        // 1. Bloquear controlos + cancelar habilidades \"com estado\" do player.\n        var motor = player.GetComponent<PlayerMotor2D>();\n        var abilityRouter = player.GetComponent<AbilityRouter>();\n\n        motor?.SetMovementLocked(true, this);\n        abilityRouter?.CancelAll(cancelReason);\n\n        // 2. Animação/VFX/SFX de libertação.\n        if (releaseVfxPrefab != null)\n            Instantiate(releaseVfxPrefab, transform.position, Quaternion.identity);\n\n        AudioManager.Instance?.PlaySEAtPoint(releaseSfx, transform.position);\n\n        if (releaseDuration > 0f)\n            yield return new WaitForSeconds(releaseDuration);\n\n        // 3. Adicionar a forma ao progresso — dispara AnimalUnlocked\n        // (NewAnimalUnlockedUI mostra-se automaticamente, Tarefa #8).\n        PlayerProgress.Instance?.FreeAnimal(form);\n\n        if (unlockForSwitching)\n        {\n            var switcher = player.GetComponent<FormSwitcher>();\n            switcher?.UnlockForm(form);\n        }\n\n        // 4. Devolver o controlo ao player (mesma \"source\" do bloqueio).\n        motor?.SetMovementLocked(false, this);\n\n        // 5. Guardar o resgate.\n        if (autosaveOnRescue)\n            SaveManager.Instance?.SaveAutosave();\n\n        // 6. Remover o espírito da cena.\n        _rescuing = false;\n        _rescued = true;\n        gameObject.SetActive(false);\n        Destroy(gameObject);\n    }\n}\n",
+  "id": "script-interactables-animalspiritrescue-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-audio-audiomanager-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-newanimalunlockedui-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-player-playermotor2d-cs",
+    "script-data-playerprogress-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savemanager-cs"
+  ],
+  "usedByIds": []
+}

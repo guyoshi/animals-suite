@@ -1,0 +1,37 @@
+{
+  "path": "UI/ISecondaryMenuTab.cs",
+  "filename": "ISecondaryMenuTab.cs",
+  "category": "UI",
+  "primary": "ISecondaryMenuTab",
+  "kind": "Interface",
+  "summary": "Contrato comum a todas as abas do Menu Secundário (\"-\"). O mantém uma lista ordenada de abas, ativa apenas a selecionada e chama sempre que o menu abre ou o jogador navega com L/R entre abas. Para adicionar uma nova aba: 1. Criar um MonoBehaviour que implemente esta interface. 2. Arrastar o componente para \"tabBehaviours\" no Inspector do . 3. Adicionar a label correspondente a \"tabLabels\".",
+  "attach": "GameObject/asset indicado pelo sistema; consulta a Missão ou o guia relacionado para a posição exata.",
+  "types": [
+    {
+      "name": "ISecondaryMenuTab",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [],
+  "dependencies": [
+    "SecondaryMenuController"
+  ],
+  "used_by": [
+    "EmblemsSectionUI",
+    "SecondaryMenuController",
+    "UpgradesTabUI"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Contrato comum a todas as abas do Menu Secundário (\"-\").\n///\n/// O <see cref=\"SecondaryMenuController\"/> mantém uma lista ordenada de abas,\n/// activa apenas a seleccionada e chama <see cref=\"Refresh\"/> sempre que o\n/// menu abre ou o jogador navega com L/R entre abas.\n///\n/// Para adicionar uma nova aba:\n/// 1. Criar um MonoBehaviour que implemente esta interface.\n/// 2. Arrastar o componente para \"tabBehaviours\" no Inspector do\n///    <see cref=\"SecondaryMenuController\"/>.\n/// 3. Adicionar a label correspondente a \"tabLabels\".\n/// </summary>\npublic interface ISecondaryMenuTab\n{\n    /// <summary>Nome da aba mostrado na barra de navegação (ex: \"UPGRADES\", \"EMBLEMAS\").</summary>\n    string TabName { get; }\n\n    /// <summary>GameObject raiz da aba — activado quando seleccionada, desactivado nas restantes.</summary>\n    GameObject Root { get; }\n\n    /// <summary>\n    /// Chamado sempre que a aba passa a estar visível (abertura do menu ou\n    /// navegação L/R até ela). Deve repopular o conteúdo a partir do estado\n    /// actual do jogo.\n    /// </summary>\n    void Refresh();\n\n    /// <summary>Chamado quando a aba deixa de estar visível (navegação para outra aba, ou fecho do menu).</summary>\n    void OnHide();\n}\n",
+  "id": "script-ui-isecondarymenutab-cs",
+  "dependencyIds": [
+    "script-ui-secondarymenucontroller-cs"
+  ],
+  "usedByIds": [
+    "script-ui-emblemssectionui-cs",
+    "script-ui-secondarymenucontroller-cs",
+    "script-ui-upgradestabui-cs"
+  ]
+}

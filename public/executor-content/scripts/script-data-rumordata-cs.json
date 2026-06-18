@@ -1,0 +1,107 @@
+{
+  "path": "Data/RumorData.cs",
+  "filename": "RumorData.cs",
+  "category": "Data",
+  "primary": "RumorData",
+  "kind": "Asset de dados",
+  "summary": "Define um \"Rumor\" (Sistema de Pistas/Rumores) — informação mais indirecta do que uma missão: não inicia nada, apenas fica registada na seção \"Rumores\" do Diário (DiarySectionUI) depois de ouvida (Action_AddRumor). Pode ser uma frase (\"text\"), uma imagem (\"image\"), ou ambos — ambos usam o mesmo sistema de exibição em tela inteiro (FullscreenImageUI) que as Pistas de missão, mas ficam guardados numa seção separada e NUNCA desaparecem do Diário. Quando o jogador descobre a que o rumor se referia (configurável via Action_MarkRumorFound, normalmente dentro de um Action_ConditionalBranch ou evento de NPC/objeto), aparece um ícone de \"Check\" junto ao rumor na lista — ver PlayerProgress.foundRumo",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "RumorData",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "rumorId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Identificador único deste rumor (Action_AddRumor/Action_MarkRumorFound/Condition_HeardRumor/Condition_RumorFound e persistência no save).\")]",
+      "inspector": true,
+      "description": "Identificador único deste rumor (Action_AddRumor/Action_MarkRumorFound/Condition_HeardRumor/Condition_RumorFound e persistência no save)."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Título curto mostrado na lista de Rumores do Diário (opcional — se vazio, usa o início de 'text').\")]",
+      "inspector": true,
+      "description": "Título curto mostrado na lista de Rumores do Diário (opcional — se vazio, usa o início de 'text')."
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[TextArea] [Tooltip(\"Frase/texto do rumor (opcional se houver imagem).\")]",
+      "inspector": true,
+      "description": "Frase/texto do rumor (opcional se houver imagem)."
+    },
+    {
+      "name": "image",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Imagem do rumor, mostrada em ecrã inteiro (FullscreenImageUI) — opcional se houver texto.\")]",
+      "inspector": true,
+      "description": "Imagem do rumor, mostrada em tela inteiro (FullscreenImageUI) — opcional se houver texto."
+    },
+    {
+      "name": "region",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Mundo/região associada a este rumor (apenas para agrupar no Diário, tal como MissionData.suggestedWorld — memória narrativa, não um marcador no mapa).\")]",
+      "inspector": true,
+      "description": "Mundo/região associada a este rumor (apenas para agrupar no Diário, tal como MissionData.suggestedWorld — memória narrativa, não um marcador no mapa)."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "Action_AddRumor",
+    "Action_ConditionalBranch",
+    "Action_MarkRumorFound",
+    "Condition_HeardRumor",
+    "Condition_RumorFound",
+    "DiarySectionUI",
+    "FullscreenImageUI",
+    "MissionData",
+    "PlayerProgress",
+    "WorldData"
+  ],
+  "used_by": [
+    "Action_ShowFullscreenImage",
+    "Condition_HasClue",
+    "DiarySectionUI",
+    "JournalManager",
+    "PlayerProgress",
+    "SaveData"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Define um \"Rumor\" (Sistema de Pistas/Rumores) — informação mais indirecta do\n/// que uma missão: não inicia nada, apenas fica registada na secção \"Rumores\"\n/// do Diário (DiarySectionUI) depois de ouvida (Action_AddRumor).\n///\n/// Pode ser uma frase (\"text\"), uma imagem (\"image\"), ou ambos — ambos usam o\n/// mesmo sistema de exibição em ecrã inteiro (FullscreenImageUI) que as Pistas\n/// de missão, mas ficam guardados numa secção separada e NUNCA desaparecem do\n/// Diário.\n///\n/// Quando o jogador descobre a que o rumor se referia (configurável via\n/// Action_MarkRumorFound, normalmente dentro de um Action_ConditionalBranch ou\n/// evento de NPC/objecto), aparece um ícone de \"Check\" junto ao rumor na lista\n/// — ver PlayerProgress.foundRumorIds / Condition_RumorFound.\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Rumor Data\", fileName = \"NewRumor\")]\npublic class RumorData : ScriptableObject\n{\n    [Tooltip(\"Identificador único deste rumor (Action_AddRumor/Action_MarkRumorFound/Condition_HeardRumor/Condition_RumorFound e persistência no save).\")]\n    public string rumorId;\n\n    [Tooltip(\"Título curto mostrado na lista de Rumores do Diário (opcional — se vazio, usa o início de 'text').\")]\n    public string title;\n\n    [TextArea]\n    [Tooltip(\"Frase/texto do rumor (opcional se houver imagem).\")]\n    public string text;\n\n    [Tooltip(\"Imagem do rumor, mostrada em ecrã inteiro (FullscreenImageUI) — opcional se houver texto.\")]\n    public Sprite image;\n\n    [Tooltip(\"Mundo/região associada a este rumor (apenas para agrupar no Diário, tal como MissionData.suggestedWorld — memória narrativa, não um marcador no mapa).\")]\n    public WorldData region;\n}\n",
+  "id": "script-data-rumordata-cs",
+  "dependencyIds": [
+    "script-ui-diarysectionui-cs",
+    "script-ui-fullscreenimageui-cs",
+    "script-data-missiondata-cs",
+    "script-data-playerprogress-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-journalactions-cs",
+    "script-npc-conditions-journalconditions-cs",
+    "script-ui-diarysectionui-cs",
+    "script-data-journalmanager-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savedata-cs"
+  ]
+}

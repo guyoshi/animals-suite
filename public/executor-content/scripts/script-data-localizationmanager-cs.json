@@ -1,0 +1,88 @@
+{
+  "path": "Data/LocalizationManager.cs",
+  "filename": "LocalizationManager.cs",
+  "category": "Data",
+  "primary": "LocalizationManager",
+  "kind": "Componente",
+  "summary": "Infraestrutura de localização (multi-idioma) para o jogo Animals. Estado atual: apenas Português está implementado. Os outros idiomas ( , Espanhol, Francês, Japonês) têm os seus dicionários criados mas vazios — ao serem preenchidos e marcados como disponíveis em , o seletor de idioma passa a aceitá-los automaticamente. Como usar em scripts: string texto = LocalizationManager.Get(\"UI_ConfirmButton\"); // → \"Confirmar\" / \"Confirm\" / … Como reagir a mudanças de idioma em tempo real: private void OnEnable() => LocalizationManager.LanguageChanged += RefreshTexts; private void OnDisable() => LocalizationManager.LanguageChanged -= RefreshTexts; private void RefreshTexts() { myLabel.text = Localizat",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "LocalizationManager",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnSettingsChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnSettingsChanged."
+    },
+    {
+      "name": "Get",
+      "ret": "string",
+      "mods": "public static",
+      "params": "string key",
+      "description": "Executa a operação Get."
+    }
+  ],
+  "dependencies": [
+    "GameLanguage",
+    "GameSettings"
+  ],
+  "used_by": [
+    "GameSettings"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Infraestrutura de localização (multi-idioma) para o jogo Animals.\n///\n/// <b>Estado actual:</b> apenas Português está implementado. Os outros idiomas\n/// (<see cref=\"GameLanguage.English\"/>, Espanhol, Francês, Japonês) têm os seus\n/// dicionários criados mas vazios — ao serem preenchidos e marcados como disponíveis\n/// em <see cref=\"GameSettings.IsLanguageAvailable\"/>, o seletor de idioma passa a\n/// aceitá-los automaticamente.\n///\n/// <b>Como usar em scripts:</b>\n/// <code>\n/// string texto = LocalizationManager.Get(\"UI_ConfirmButton\"); // → \"Confirmar\" / \"Confirm\" / …\n/// </code>\n///\n/// <b>Como reagir a mudanças de idioma em tempo real:</b>\n/// <code>\n/// private void OnEnable()  => LocalizationManager.LanguageChanged += RefreshTexts;\n/// private void OnDisable() => LocalizationManager.LanguageChanged -= RefreshTexts;\n/// private void RefreshTexts() { myLabel.text = LocalizationManager.Get(\"MinhaChave\"); }\n/// </code>\n///\n/// <b>Prioridade de fallback:</b> se a chave não existir no idioma activo, tenta\n/// Português; se não existir em Português, devolve a própria chave entre [ ] para\n/// facilitar a detecção de strings não localizadas durante o desenvolvimento.\n///\n/// <b>Para adicionar um novo idioma:</b>\n/// 1. Adicionar entrada em <see cref=\"GameLanguage\"/> (GameSettings.cs).\n/// 2. Marcar como available em <see cref=\"GameSettings.IsLanguageAvailable\"/>.\n/// 3. Preencher o dicionário correspondente nesta classe (bloco \"Dicionários\").\n/// 4. Garantir suporte de fonte TMP para o charset (ver Guia_HUD_Localizacao.md).\n///\n/// <b>Montagem no Editor:</b> este componente segue o padrão de singleton com\n/// auto-fallback — não precisa de ser colocado em cena manualmente, mas é\n/// recomendado incluí-lo no GameBootstrap para controlo total das chaves.\n/// </summary>\npublic class LocalizationManager : MonoBehaviour\n{\n    public static LocalizationManager Instance { get; private set; }\n\n    /// <summary>Disparado quando o idioma muda — todos os componentes de UI com\n    /// texto localizado devem subscrever e chamar o seu RefreshTexts().</summary>\n    public static event System.Action LanguageChanged;\n\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n                Destroy(Instance.gameObject);\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(LocalizationManager) + \" (Fallback)\");\n        var inst = go.AddComponent<LocalizationManager>();\n        inst.isAutoFallback = true;\n    }\n\n    private void OnEnable()\n    {\n        if (GameSettings.Instance != null)\n            GameSettings.Instance.SettingsChanged += OnSettingsChanged;\n    }\n\n    private void OnDisable()\n    {\n        if (GameSettings.Instance != null)\n            GameSettings.Instance.SettingsChanged -= OnSettingsChanged;\n    }\n\n    private void OnSettingsChanged() => LanguageChanged?.Invoke();\n\n    // =====================================================================\n    // API Pública\n    // =====================================================================\n\n    /// <summary>\n    /// Devolve o texto localizado da chave no idioma activo (GameSettings.Language).\n    /// Se a chave não existir no idioma activo, tenta Português como fallback.\n    /// Se não existir em Português, devolve \"[chave]\" para facilitar debug.\n    /// </summary>\n    public static string Get(string key)\n    {\n        if (string.IsNullOrEmpty(key)) return string.Empty;\n\n        var lang = GameSettings.Instance != null\n            ? GameSettings.Instance.Language\n            : GameLanguage.Portugues;\n\n        var dict = GetDictionary(lang);\n        if (dict != null && dict.TryGetValue(key, out var value) && !string.IsNullOrEmpty(value))\n            return value;\n\n        // Fallback → Português\n        var ptDict = GetDictionary(GameLanguage.Portugues);\n        if (ptDict != null && ptDict.TryGetValue(key, out var ptValue) && !string.IsNullOrEmpty(ptValue))\n            return ptValue;\n\n        // Chave não encontrada — devolve a chave para debug.\n        Debug.LogWarning($\"[LocalizationManager] Chave não localizada: \\\"{key}\\\" (idioma: {lang})\");\n        return $\"[{key}]\";\n    }\n\n    // =====================================================================\n    // Dicionários por idioma\n    // =====================================================================\n\n    private static Dictionary<string, string> GetDictionary(GameLanguage lang)\n    {\n        return lang switch\n        {\n            GameLanguage.Portugues => _pt,\n            GameLanguage.English   => _en,\n            GameLanguage.Espanhol  => _es,\n            GameLanguage.Frances   => _fr,\n            GameLanguage.Japones   => _ja,\n            _ => null,\n        };\n    }\n\n    // ---- Português (idioma base — OBRIGATÓRIO preencher todas as chaves aqui) ----\n\n    private static readonly Dictionary<string, string> _pt = new()\n    {\n        // Geral / UI\n        { \"UI_Confirm\",         \"Confirmar\" },\n        { \"UI_Cancel\",          \"Cancelar\"  },\n        { \"UI_Back\",            \"Voltar\"    },\n        { \"UI_Save\",            \"Guardar\"   },\n        { \"UI_Load\",            \"Carregar\"  },\n        { \"UI_Yes\",             \"Sim\"       },\n        { \"UI_No\",              \"Não\"       },\n\n        // Menu de Pausa — Opções\n        { \"Options_Language\",         \"Idioma\"            },\n        { \"Options_Language_Value\",   \"Português\"         },\n        { \"Options_ComingSoon\",       \"Brevemente...\"     },\n        { \"Options_TextSize_Small\",   \"Pequeno\"           },\n        { \"Options_TextSize_Medium\",  \"Médio\"             },\n        { \"Options_TextSize_Large\",   \"Grande\"            },\n        { \"Options_GaiaVoice_On\",     \"Dublado\"           },\n        { \"Options_GaiaVoice_Off\",    \"OFF\"               },\n\n        // Emblemas / Auras\n        { \"Aura_Apolo_Label\",  \"Aura de Fogo\"    },\n        { \"Aura_Gaia_Label\",   \"Aura de Gaia\"    },\n        { \"Aura_Zeus_Label\",   \"Aura de Zeus\"    },\n\n        // Tutoriais (exemplos — preencher ao longo do desenvolvimento)\n        // { \"Tutorial_WaterDanger\", \"Cuidado com a água!\" },\n    };\n\n    // ---- English (a preencher quando a tradução estiver completa) ----\n\n    private static readonly Dictionary<string, string> _en = new()\n    {\n        // Adicionar entradas aqui quando a tradução EN estiver disponível.\n        // Exemplo:\n        // { \"UI_Confirm\",        \"Confirm\"  },\n        // { \"UI_Cancel\",         \"Cancel\"   },\n        // { \"Options_Language_Value\", \"English\" },\n    };\n\n    // ---- Español ----\n\n    private static readonly Dictionary<string, string> _es = new()\n    {\n        // A preencher quando a tradução ES estiver disponível.\n    };\n\n    // ---- Français ----\n\n    private static readonly Dictionary<string, string> _fr = new()\n    {\n        // A preencher quando a tradução FR estiver disponível.\n    };\n\n    // ---- 日本語 ----\n    // NOTA: requer fonte TMP com suporte CJK (ex: Noto Sans JP ou similar).\n    // Ver Guia_HUD_Localizacao.md para instruções de configuração de fonte.\n\n    private static readonly Dictionary<string, string> _ja = new()\n    {\n        // A preencher quando a tradução JA estiver disponível.\n    };\n}\n",
+  "id": "script-data-localizationmanager-cs",
+  "dependencyIds": [
+    "script-data-gamesettings-cs"
+  ],
+  "usedByIds": [
+    "script-data-gamesettings-cs"
+  ]
+}

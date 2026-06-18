@@ -1,0 +1,98 @@
+{
+  "path": "NPC/Editor/NpcControllerEditor.cs",
+  "filename": "NpcControllerEditor.cs",
+  "category": "NPC",
+  "primary": "NpcControllerEditor",
+  "kind": "Editor",
+  "summary": "Editor customizado do NpcController. Desenha a lista de eventos com foldouts, e para as listas polimórficas \"Conditions\" e \"Actions\" de cada evento (e para \"Condições de Visibilidade\") usa PolymorphicListDrawer, que mostra um botão \"+ Adicionar...\" listando (via reflexão) todas as subclasses de NpcCondition / NpcAction encontradas no projeto — incluindo novas que sejam adicionadas no futuro, sem precisar de tocar neste editor.",
+  "attach": "Ferramenta do Unity Editor; não adicionar a GameObjects de gameplay.",
+  "types": [
+    {
+      "name": "NpcControllerEditor",
+      "kind": "class",
+      "bases": "Editor",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "_eventsProp",
+      "type": "SerializedProperty",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnInspectorGUI",
+      "ret": "void",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação OnInspectorGUI."
+    },
+    {
+      "name": "DrawEvent",
+      "ret": "bool",
+      "mods": "private",
+      "params": "int index",
+      "description": "Executa a operação DrawEvent."
+    },
+    {
+      "name": "ValidateRescueNpcAutosave",
+      "ret": "void",
+      "mods": "private static",
+      "params": "SerializedProperty actionsProp",
+      "description": "Executa a operação ValidateRescueNpcAutosave."
+    },
+    {
+      "name": "AddNewEvent",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação AddNewEvent."
+    }
+  ],
+  "dependencies": [
+    "Action_Autosave",
+    "Action_RescueNpc",
+    "GameVariableListDrawer",
+    "NpcAction",
+    "NpcCondition",
+    "NpcController",
+    "NpcInteractionType",
+    "PolymorphicListDrawer"
+  ],
+  "used_by": [
+    "EnemyAttackControllerEditor",
+    "EnemyControllerEditor",
+    "GameVariableListDrawer",
+    "PolymorphicListDrawer"
+  ],
+  "source": "#if UNITY_EDITOR\nusing System;\nusing UnityEditor;\nusing UnityEngine;\n\n/// <summary>\n/// Editor customizado do NpcController. Desenha a lista de eventos com\n/// foldouts, e para as listas polimórficas \"Conditions\" e \"Actions\" de cada\n/// evento (e para \"Condições de Visibilidade\") usa PolymorphicListDrawer, que\n/// mostra um botão \"+ Adicionar...\" listando (via reflexão) todas as subclasses\n/// de NpcCondition / NpcAction encontradas no projecto — incluindo novas que\n/// sejam adicionadas no futuro, sem precisar de tocar neste editor.\n/// </summary>\n[CustomEditor(typeof(NpcController))]\npublic class NpcControllerEditor : Editor\n{\n    private SerializedProperty _eventsProp;\n\n    private void OnEnable()\n    {\n        _eventsProp = serializedObject.FindProperty(\"events\");\n    }\n\n    public override void OnInspectorGUI()\n    {\n        serializedObject.Update();\n\n        DrawPropertiesExcluding(serializedObject, \"m_Script\", \"events\", \"visibilityConditions\", \"localVariables\");\n\n        EditorGUILayout.Space();\n        GameVariableListDrawer.Draw(serializedObject.FindProperty(\"localVariables\"), \"Variáveis Locais (Etapa 8)\");\n\n        EditorGUILayout.Space();\n        PolymorphicListDrawer.Draw(serializedObject, serializedObject.FindProperty(\"visibilityConditions\"), \"Condições de Visibilidade (Etapa 7)\", typeof(NpcCondition), \"Adicionar Condição de Visibilidade\");\n\n        EditorGUILayout.Space();\n        EditorGUILayout.LabelField(\"Eventos do NPC\", EditorStyles.boldLabel);\n\n        int removeIndex = -1;\n\n        for (int i = 0; i < _eventsProp.arraySize; i++)\n        {\n            if (DrawEvent(i)) removeIndex = i;\n        }\n\n        if (removeIndex >= 0)\n            _eventsProp.DeleteArrayElementAtIndex(removeIndex);\n\n        EditorGUILayout.Space();\n\n        if (GUILayout.Button(\"+ Adicionar Evento\"))\n            AddNewEvent();\n\n        serializedObject.ApplyModifiedProperties();\n    }\n\n    // ---------------- Eventos ----------------\n\n    /// <summary>Desenha um evento. Devolve true se o utilizador pediu para o remover.</summary>\n    private bool DrawEvent(int index)\n    {\n        var eventProp = _eventsProp.GetArrayElementAtIndex(index);\n        var labelProp = eventProp.FindPropertyRelative(\"label\");\n\n        bool removeRequested = false;\n\n        EditorGUILayout.BeginVertical(\"box\");\n        EditorGUILayout.BeginHorizontal();\n\n        string title = string.IsNullOrEmpty(labelProp.stringValue) ? $\"Evento {index}\" : labelProp.stringValue;\n        eventProp.isExpanded = EditorGUILayout.Foldout(eventProp.isExpanded, title, true);\n\n        GUILayout.FlexibleSpace();\n\n        if (Application.isPlaying)\n        {\n            var activeProp = eventProp.FindPropertyRelative(\"isActive\");\n            EditorGUILayout.LabelField(activeProp.boolValue ? \"Activo\" : \"Inactivo\", GUILayout.Width(60));\n        }\n\n        if (GUILayout.Button(\"Remover\", GUILayout.Width(70)))\n            removeRequested = true;\n\n        EditorGUILayout.EndHorizontal();\n\n        if (eventProp.isExpanded && !removeRequested)\n        {\n            EditorGUI.indentLevel++;\n\n            EditorGUILayout.PropertyField(eventProp.FindPropertyRelative(\"eventId\"));\n            EditorGUILayout.PropertyField(labelProp);\n            EditorGUILayout.PropertyField(eventProp.FindPropertyRelative(\"priority\"));\n            EditorGUILayout.PropertyField(eventProp.FindPropertyRelative(\"interactionType\"));\n            EditorGUILayout.PropertyField(eventProp.FindPropertyRelative(\"interactionRange\"));\n            EditorGUILayout.PropertyField(eventProp.FindPropertyRelative(\"startActive\"));\n            EditorGUILayout.PropertyField(eventProp.FindPropertyRelative(\"overrideSprite\"));\n\n            EditorGUILayout.Space();\n            PolymorphicListDrawer.Draw(serializedObject, eventProp.FindPropertyRelative(\"conditions\"), \"Condições\", typeof(NpcCondition), \"Adicionar Condição\");\n\n            EditorGUILayout.Space();\n            PolymorphicListDrawer.Draw(serializedObject, eventProp.FindPropertyRelative(\"actions\"), \"Ações\", typeof(NpcAction), \"Adicionar Ação\");\n\n            // Validação: avisar se Action_RescueNpc existe sem Action_Autosave depois dela.\n            ValidateRescueNpcAutosave(eventProp.FindPropertyRelative(\"actions\"));\n\n            EditorGUILayout.Space();\n            EditorGUILayout.PropertyField(eventProp.FindPropertyRelative(\"deactivateOnComplete\"));\n            EditorGUILayout.PropertyField(eventProp.FindPropertyRelative(\"activateEventIdOnComplete\"));\n\n            EditorGUI.indentLevel--;\n        }\n\n        EditorGUILayout.EndVertical();\n\n        return removeRequested;\n    }\n\n    // ---------------- Validação ----------------\n\n    /// <summary>\n    /// Verifica se a lista de acções contém Action_RescueNpc sem Action_Autosave\n    /// a seguir. Mostra um HelpBox de aviso no Inspector caso seja omitida.\n    /// </summary>\n    private static void ValidateRescueNpcAutosave(SerializedProperty actionsProp)\n    {\n        if (actionsProp == null || actionsProp.arraySize == 0) return;\n\n        int rescueIndex = -1;\n        bool hasAutosaveAfterRescue = false;\n\n        for (int i = 0; i < actionsProp.arraySize; i++)\n        {\n            var elem = actionsProp.GetArrayElementAtIndex(i);\n            string typeName = elem.managedReferenceFullTypename;\n\n            if (typeName != null && typeName.EndsWith(\"Action_RescueNpc\"))\n            {\n                rescueIndex = i;\n                hasAutosaveAfterRescue = false; // reset: pode haver várias rescues\n            }\n            else if (rescueIndex >= 0 && typeName != null && typeName.EndsWith(\"Action_Autosave\"))\n            {\n                hasAutosaveAfterRescue = true;\n            }\n        }\n\n        if (rescueIndex >= 0 && !hasAutosaveAfterRescue)\n        {\n            EditorGUILayout.HelpBox(\n                \"Este evento tem Action_RescueNpc mas não tem Action_Autosave depois dela.\\n\" +\n                \"Adicionar Action_Autosave após Action_RescueNpc para não perder o progresso.\",\n                MessageType.Warning);\n        }\n    }\n\n    private void AddNewEvent()\n    {\n        int newIndex = _eventsProp.arraySize;\n        _eventsProp.arraySize++;\n\n        var newEvent = _eventsProp.GetArrayElementAtIndex(newIndex);\n\n        newEvent.FindPropertyRelative(\"eventId\").stringValue = \"evento_\" + Guid.NewGuid().ToString(\"N\").Substring(0, 8);\n        newEvent.FindPropertyRelative(\"label\").stringValue = \"Novo Evento\";\n        newEvent.FindPropertyRelative(\"priority\").intValue = 0;\n        newEvent.FindPropertyRelative(\"interactionType\").enumValueIndex = (int)NpcInteractionType.Button;\n        newEvent.FindPropertyRelative(\"interactionRange\").floatValue = 0f;\n        newEvent.FindPropertyRelative(\"startActive\").boolValue = true;\n        newEvent.FindPropertyRelative(\"overrideSprite\").objectReferenceValue = null;\n        newEvent.FindPropertyRelative(\"deactivateOnComplete\").boolValue = false;\n        newEvent.FindPropertyRelative(\"activateEventIdOnComplete\").stringValue = string.Empty;\n        newEvent.isExpanded = true;\n\n        newEvent.FindPropertyRelative(\"conditions\").arraySize = 0;\n        newEvent.FindPropertyRelative(\"actions\").arraySize = 0;\n    }\n}\n#endif\n",
+  "id": "script-npc-editor-npccontrollereditor-cs",
+  "dependencyIds": [
+    "script-npc-actions-villageactions-cs",
+    "script-data-editor-gamevariablelistdrawer-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccondition-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-editor-enemyattackcontrollereditor-cs",
+    "script-enemy-editor-enemycontrollereditor-cs",
+    "script-data-editor-gamevariablelistdrawer-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ]
+}

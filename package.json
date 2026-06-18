@@ -1,0 +1,50 @@
+{
+  "name": "animals-suite",
+  "private": true,
+  "version": "1.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "node ./node_modules/eslint/bin/eslint.js src --max-warnings 0",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "manifest:sync": "node scripts/sync-suite-manifest.mjs",
+    "predev": "npm run manifest:sync",
+    "prebuild": "npm run manifest:sync",
+    "validate:stage1": "npm run manifest:sync && node scripts/validate-stage1.mjs && tsc -b && vite build",
+    "content:import": "node scripts/import-guide-content.mjs",
+    "validate:stage2": "npm run manifest:sync && node scripts/validate-stage2.mjs && eslint . && tsc -b && vite build",
+    "validate:stage3": "npm run manifest:sync && node scripts/validate-stage3.mjs && eslint . && tsc -b && vite build",
+    "validate:stage4": "npm run manifest:sync && node scripts/validate-stage4.mjs && eslint . && tsc -b && vite build",
+    "validate:final": "npm run manifest:sync && node scripts/validate-final.mjs && npm run lint && tsc -b && vite build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.11.0",
+    "konva": "^10.3.0",
+    "lucide-react": "^1.18.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-konva": "^19.2.5",
+    "react-router-dom": "^7.17.0",
+    "use-image": "^1.1.4",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tauri-apps/cli": "^2.11.2",
+    "@types/node": "^24.12.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^8.0.12"
+  }
+}

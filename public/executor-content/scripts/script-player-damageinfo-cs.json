@@ -1,0 +1,114 @@
+{
+  "path": "Player/DamageInfo.cs",
+  "filename": "DamageInfo.cs",
+  "category": "Player",
+  "primary": "DamageInfo",
+  "kind": "Definição",
+  "summary": "Origem/tipo de um dano recebido pelo player. Usado por e por sistemas de feedback/imunidade temporária (ex: \"imune a Hazard por X segundos depois de uma queda\").",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "DamageType",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "DamageInfo",
+      "kind": "struct",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "Amount",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Type",
+      "type": "DamageType",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SourcePosition",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Knockback",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "KnockbackDir",
+      "type": "Vector2?",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IgnoreDefense",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "PlayerCombat"
+  ],
+  "used_by": [
+    "FallingPlatform",
+    "FallingSpike",
+    "InvertingSpikes",
+    "PlayerCombat",
+    "PlayerConsumableEffects",
+    "PlayerFeedback",
+    "PlayerHealthRegen",
+    "ProjectileController"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Origem/tipo de um dano recebido pelo player. Usado por <see cref=\"DamageInfo\"/>\n/// e por sistemas de feedback/imunidade temporária (ex: \"imune a Hazard por X\n/// segundos depois de uma queda\").\n/// </summary>\npublic enum DamageType\n{\n    /// <summary>Ataque directo de um inimigo (corpo, garra, etc.).</summary>\n    Enemy,\n\n    /// <summary>Perigo do ambiente: espinhos, lava, armadilhas, etc.</summary>\n    Hazard,\n\n    /// <summary>Dano por queda de grande altura.</summary>\n    Fall,\n\n    /// <summary>Projéctil inimigo.</summary>\n    Projectile,\n\n    /// <summary>Explosão (ex: projéctil com \"explosionDamage\").</summary>\n    Explosion,\n}\n\n/// <summary>\n/// Pacote de informação sobre um dano recebido pelo player — substitui a lista\n/// de parâmetros avulsos de <see cref=\"PlayerCombat.TryDamagePlayer\"/> (P2 →\n/// auditoria item 10). Permite estender o sistema de dano (tipo, imunidades\n/// temporárias por tipo, resistência a knockback, feedback diferenciado) sem\n/// voltar a mexer na assinatura do método.\n/// </summary>\npublic struct DamageInfo\n{\n    /// <summary>Quantidade de dano antes de Defesa/Escudo (corações).</summary>\n    public int Amount;\n\n    /// <summary>Origem/tipo do dano — ver <see cref=\"DamageType\"/>.</summary>\n    public DamageType Type;\n\n    /// <summary>Posição de onde o dano partiu (usada para calcular a direcção do knockback).</summary>\n    public Vector2 SourcePosition;\n\n    /// <summary>Força do knockback aplicado ao player (0 = sem empurrão).</summary>\n    public float Knockback;\n\n    /// <summary>Direcção explícita do knockback. Null = calculada a partir de SourcePosition.</summary>\n    public Vector2? KnockbackDir;\n\n    /// <summary>Se true, ignora a Defesa da forma actual e a Postura de Escudo (ex: dano de queda, hazards \"puros\").</summary>\n    public bool IgnoreDefense;\n\n    public DamageInfo(int amount, DamageType type, Vector2 sourcePosition, float knockback = 0f, Vector2? knockbackDir = null, bool ignoreDefense = false)\n    {\n        Amount = amount;\n        Type = type;\n        SourcePosition = sourcePosition;\n        Knockback = knockback;\n        KnockbackDir = knockbackDir;\n        IgnoreDefense = ignoreDefense;\n    }\n}\n",
+  "id": "script-player-damageinfo-cs",
+  "dependencyIds": [
+    "script-player-playercombat-cs"
+  ],
+  "usedByIds": [
+    "script-platforms-fallingplatform-cs",
+    "script-platforms-fallingspike-cs",
+    "script-platforms-invertingspikes-cs",
+    "script-player-playercombat-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-player-playerfeedback-cs",
+    "script-player-playerhealthregen-cs",
+    "script-enemy-projectilecontroller-cs"
+  ]
+}

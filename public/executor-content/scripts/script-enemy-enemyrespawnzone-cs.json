@@ -1,0 +1,117 @@
+{
+  "path": "Enemy/EnemyRespawnZone.cs",
+  "filename": "EnemyRespawnZone.cs",
+  "category": "Enemy",
+  "primary": "EnemyRespawnZone",
+  "kind": "Componente",
+  "summary": "Zona de respawn de inimigos (Etapa 7.3): um Collider2D (trigger) que cobre uma área do nível. Quando o player SAI e volta a ENTRAR na zona, todos os inimigos com EnemyRespawn cuja HomePosition está dentro da zona fazem : - Comuns voltam (vida/drops comuns/posição/estado); - Especiais e mini-bosses derrotados permanecem mortos (registro no PlayerProgress); - Desactivados por variável global voltam a desativar-se de imediato (a condição da Etapa 5.4 continua verdadeira). Enquanto o player permanecer dentro da zona, nada respawna.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyRespawnZone",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "respawnOnPlayerReenter",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, o respawn acontece na reentrada do player na zona (padrão). Desliga para zonas controladas manualmente via RespawnAll().\")]",
+      "inspector": true,
+      "description": "Se ativo, o respawn acontece na reentrada do player na zona (padrão). Desliga para zonas controladas manualmente via RespawnAll()."
+    },
+    {
+      "name": "_collider",
+      "type": "Collider2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_playerInside",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_playerLeftOnce",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_respawnSnapshot",
+      "type": "List<EnemyRespawn>",
+      "mods": "private readonly",
+      "default": "new List<EnemyRespawn>()",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnTriggerExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerExit2D."
+    },
+    {
+      "name": "RespawnAll",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RespawnAll."
+    }
+  ],
+  "dependencies": [
+    "EnemyController",
+    "EnemyRespawn",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "EnemyRespawn"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Zona de respawn de inimigos (Etapa 7.3): um Collider2D (trigger) que cobre\n/// uma área do nível. Quando o player SAI e volta a ENTRAR na zona, todos os\n/// inimigos com EnemyRespawn cuja HomePosition está dentro da zona fazem\n/// <see cref=\"EnemyRespawn.TryRespawn\"/>:\n///\n/// - Comuns voltam (vida/drops comuns/posição/estado);\n/// - Especiais e mini-bosses derrotados permanecem mortos (registo no\n///   PlayerProgress);\n/// - Desactivados por variável global voltam a desactivar-se de imediato\n///   (a condição da Etapa 5.4 continua verdadeira).\n///\n/// Enquanto o player permanecer dentro da zona, nada respawna.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class EnemyRespawnZone : MonoBehaviour\n{\n    [Tooltip(\"Se activo, o respawn acontece na reentrada do player na zona (padrão). Desliga para zonas controladas manualmente via RespawnAll().\")]\n    public bool respawnOnPlayerReenter = true;\n\n    private Collider2D _collider;\n    private bool _playerInside;\n    private bool _playerLeftOnce;\n\n    // Snapshot reutilizável — evita ToArray() (alocação) em RespawnAll().\n    private readonly List<EnemyRespawn> _respawnSnapshot = new List<EnemyRespawn>();\n\n    private void Awake()\n    {\n        _collider = GetComponent<Collider2D>();\n\n        if (!_collider.isTrigger)\n            Debug.LogWarning($\"[{name}] O Collider2D da EnemyRespawnZone deve ser 'Is Trigger'.\", this);\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        // Guard: se já está marcado como dentro (múltiplos colliders no player\n        // com tag \"Player\"), ignorar entradas duplicadas no mesmo frame.\n        if (_playerInside) return;\n\n        bool reentering = _playerLeftOnce;\n        _playerInside = true;\n\n        if (reentering && respawnOnPlayerReenter)\n            RespawnAll();\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        _playerInside = false;\n        _playerLeftOnce = true;\n    }\n\n    /// <summary>Respawna todos os inimigos (EnemyRespawn) cuja HomePosition está dentro desta zona. Também chamável manualmente (eventos/checkpoints).</summary>\n    public void RespawnAll()\n    {\n        var bounds = _collider.bounds;\n\n        // Itera uma cópia: TryRespawn pode activar/desactivar GameObjects (altera EnemyRespawn.All).\n        _respawnSnapshot.Clear();\n        _respawnSnapshot.AddRange(EnemyRespawn.All);\n        var snapshot = _respawnSnapshot;\n\n        foreach (var respawn in snapshot)\n        {\n            if (respawn == null) continue;\n\n            var controller = respawn.GetComponent<EnemyController>();\n            Vector3 home = controller != null ? controller.HomePosition : respawn.transform.position;\n\n            if (bounds.Contains(new Vector3(home.x, home.y, bounds.center.z)))\n                respawn.TryRespawn();\n        }\n    }\n}\n",
+  "id": "script-enemy-enemyrespawnzone-cs",
+  "dependencyIds": [
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemyrespawn-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemyrespawn-cs"
+  ]
+}

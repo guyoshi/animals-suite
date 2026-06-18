@@ -1,0 +1,123 @@
+{
+  "path": "Data/JournalManager.cs",
+  "filename": "JournalManager.cs",
+  "category": "Data",
+  "primary": "JournalManager",
+  "kind": "Componente",
+  "summary": "Gestor do Diário — Sistema de Pistas/Rumores, no mesmo padrão singleton de GameVariables/PlayerProgress/MissionManager (auto-criado antes da primeira cena). Não guarda estado próprio: lê/escreve as listas de IDs em PlayerProgress (obtainedClueIds/heardRumorIds/foundRumorIds — persistidas no save). Os dados de exibição (imagem/título/descrição) vivem nos ScriptableObjects (MissionData.clues / RumorData), nunca aqui. Usado por Action_ShowFullscreenImage (guardar pista), Action_AddRumor, Action_MarkRumorFound e pelas condições Condition_HasClue/ Condition_HeardRumor/Condition_RumorFound. DiarySectionUI subscreve os eventos abaixo para repopular a lista de Pistas/Rumores quando algo muda enquant",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "JournalManager",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "HasClue",
+      "ret": "bool",
+      "mods": "public",
+      "params": "MissionData mission, string clueId",
+      "description": "Executa a operação HasClue."
+    },
+    {
+      "name": "GiveClue",
+      "ret": "void",
+      "mods": "public",
+      "params": "MissionData mission, string clueId",
+      "description": "Executa a operação GiveClue."
+    },
+    {
+      "name": "HasHeardRumor",
+      "ret": "bool",
+      "mods": "public",
+      "params": "RumorData rumor",
+      "description": "Executa a operação HasHeardRumor."
+    },
+    {
+      "name": "AddRumor",
+      "ret": "void",
+      "mods": "public",
+      "params": "RumorData rumor",
+      "description": "Executa a operação AddRumor."
+    },
+    {
+      "name": "IsRumorFound",
+      "ret": "bool",
+      "mods": "public",
+      "params": "RumorData rumor",
+      "description": "Executa a operação IsRumorFound."
+    },
+    {
+      "name": "MarkRumorFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "RumorData rumor",
+      "description": "Executa a operação MarkRumorFound."
+    }
+  ],
+  "dependencies": [
+    "Action_AddRumor",
+    "Action_MarkRumorFound",
+    "Action_ShowFullscreenImage",
+    "Condition_HasClue",
+    "Condition_HeardRumor",
+    "Condition_RumorFound",
+    "DiarySectionUI",
+    "GameVariables",
+    "MissionData",
+    "MissionManager",
+    "PlayerProgress",
+    "RumorData"
+  ],
+  "used_by": [
+    "Action_ShowFullscreenImage",
+    "Condition_HasClue",
+    "DiarySectionUI"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Gestor do Diário — Sistema de Pistas/Rumores, no mesmo padrão singleton de\n/// GameVariables/PlayerProgress/MissionManager (auto-criado antes da primeira\n/// cena).\n///\n/// Não guarda estado próprio: lê/escreve as listas de IDs em\n/// PlayerProgress (obtainedClueIds/heardRumorIds/foundRumorIds — persistidas no\n/// save). Os dados de exibição (imagem/título/descrição) vivem nos\n/// ScriptableObjects (MissionData.clues / RumorData), nunca aqui.\n///\n/// Usado por Action_ShowFullscreenImage (guardar pista), Action_AddRumor,\n/// Action_MarkRumorFound e pelas condições Condition_HasClue/\n/// Condition_HeardRumor/Condition_RumorFound. DiarySectionUI subscreve os\n/// eventos abaixo para repopular a lista de Pistas/Rumores quando algo muda\n/// enquanto o Menu de Pausa está aberto (normalmente não acontece, mas é seguro).\n/// </summary>\npublic class JournalManager : MonoBehaviour\n{\n    public static JournalManager Instance { get; private set; }\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\").\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(JournalManager) + \" (Fallback)\");\n        var instance = go.AddComponent<JournalManager>();\n        instance.isAutoFallback = true;\n    }\n\n    /// <summary>Disparado quando uma pista de missão é obtida pela primeira vez (Action_ShowFullscreenImage com \"saveAsClue\").</summary>\n    public static event System.Action<MissionData, string> OnClueObtained;\n\n    /// <summary>Disparado quando um rumor é ouvido pela primeira vez (Action_AddRumor).</summary>\n    public static event System.Action<RumorData> OnRumorHeard;\n\n    /// <summary>Disparado quando um rumor é marcado como \"encontrado\" pela primeira vez (Action_MarkRumorFound).</summary>\n    public static event System.Action<RumorData> OnRumorFound;\n\n    // ---------------- Pistas de Missão ----------------\n\n    /// <summary>True se a pista \"clueId\" da missão indicada já foi obtida.</summary>\n    public bool HasClue(MissionData mission, string clueId)\n    {\n        return PlayerProgress.Instance != null && PlayerProgress.Instance.HasClue(mission, clueId);\n    }\n\n    /// <summary>Regista \"clueId\" da missão indicada como obtido (idempotente) e dispara <see cref=\"OnClueObtained\"/> na primeira vez.</summary>\n    public void GiveClue(MissionData mission, string clueId)\n    {\n        if (mission == null || string.IsNullOrEmpty(clueId) || PlayerProgress.Instance == null) return;\n\n        bool wasObtained = PlayerProgress.Instance.HasClue(mission, clueId);\n        PlayerProgress.Instance.MarkClueObtained(mission, clueId);\n\n        if (!wasObtained) OnClueObtained?.Invoke(mission, clueId);\n    }\n\n    // ---------------- Rumores ----------------\n\n    /// <summary>True se este rumor já foi ouvido (aparece na secção \"Rumores\" do Diário).</summary>\n    public bool HasHeardRumor(RumorData rumor)\n    {\n        return rumor != null && PlayerProgress.Instance != null && PlayerProgress.Instance.HasHeardRumor(rumor.rumorId);\n    }\n\n    /// <summary>Regista o rumor como ouvido (idempotente) e dispara <see cref=\"OnRumorHeard\"/> na primeira vez.</summary>\n    public void AddRumor(RumorData rumor)\n    {\n        if (rumor == null || string.IsNullOrEmpty(rumor.rumorId) || PlayerProgress.Instance == null) return;\n\n        bool wasHeard = PlayerProgress.Instance.HasHeardRumor(rumor.rumorId);\n        PlayerProgress.Instance.MarkRumorHeard(rumor.rumorId);\n\n        if (!wasHeard) OnRumorHeard?.Invoke(rumor);\n    }\n\n    /// <summary>True se este rumor já foi marcado como \"encontrado\" (ícone de \"Check\").</summary>\n    public bool IsRumorFound(RumorData rumor)\n    {\n        return rumor != null && PlayerProgress.Instance != null && PlayerProgress.Instance.IsRumorFound(rumor.rumorId);\n    }\n\n    /// <summary>Marca o rumor como \"encontrado\" (idempotente) e dispara <see cref=\"OnRumorFound\"/> na primeira vez. Não remove o rumor da lista de \"Rumores\" — apenas mostra o \"Check\".</summary>\n    public void MarkRumorFound(RumorData rumor)\n    {\n        if (rumor == null || string.IsNullOrEmpty(rumor.rumorId) || PlayerProgress.Instance == null) return;\n\n        bool wasFound = PlayerProgress.Instance.IsRumorFound(rumor.rumorId);\n        PlayerProgress.Instance.MarkRumorFound(rumor.rumorId);\n\n        if (!wasFound) OnRumorFound?.Invoke(rumor);\n    }\n}\n",
+  "id": "script-data-journalmanager-cs",
+  "dependencyIds": [
+    "script-npc-actions-journalactions-cs",
+    "script-npc-conditions-journalconditions-cs",
+    "script-ui-diarysectionui-cs",
+    "script-data-gamevariables-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-data-playerprogress-cs",
+    "script-data-rumordata-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-journalactions-cs",
+    "script-npc-conditions-journalconditions-cs",
+    "script-ui-diarysectionui-cs"
+  ]
+}

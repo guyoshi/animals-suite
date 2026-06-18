@@ -1,0 +1,123 @@
+{
+  "path": "Platforms/SpringPlatform.cs",
+  "filename": "SpringPlatform.cs",
+  "category": "Platforms",
+  "primary": "SpringPlatform",
+  "kind": "Componente",
+  "summary": "Mola: ao ser pisada por cima, lança o player para cima com força fixa (add-on opcional — combina com MovingPlatform/PlatformSpinner, etc).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SpringPlatform",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "forcaImpulso",
+      "type": "float",
+      "mods": "public",
+      "default": "16f",
+      "section": "",
+      "attrs": "[Tooltip(\"Velocidade vertical aplicada ao player ao pisar na mola (substitui a velocidade Y actual).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Velocidade vertical aplicada ao player ao pisar na mola (substitui a velocidade Y atual)."
+    },
+    {
+      "name": "afectaInimigos",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "",
+      "attrs": "[Tooltip(\"Também afecta inimigos (com Rigidbody2D) que pisem na mola, não só o player.\")]",
+      "inspector": true,
+      "description": "Também afecta inimigos (com Rigidbody2D) que pisem na mola, não só o player."
+    },
+    {
+      "name": "cooldown",
+      "type": "float",
+      "mods": "public",
+      "default": "0.1f",
+      "section": "",
+      "attrs": "[Tooltip(\"Tempo mínimo (segundos) entre dois impulsos consecutivos ao mesmo objecto.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Tempo mínimo (segundos) entre dois impulsos consecutivos ao mesmo objeto."
+    },
+    {
+      "name": "onImpulsionou",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_col",
+      "type": "Collider2D",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_nextTime",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnCollisionEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionEnter2D."
+    },
+    {
+      "name": "OnCollisionStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionStay2D."
+    },
+    {
+      "name": "TryLaunch",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação TryLaunch."
+    }
+  ],
+  "dependencies": [
+    "EnemyController",
+    "MovingPlatform",
+    "PlatformSpinner"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Mola: ao ser pisada por cima, lança o player para cima com força fixa\n/// (add-on opcional — combina com MovingPlatform/PlatformSpinner, etc).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\n[DisallowMultipleComponent]\npublic class SpringPlatform : MonoBehaviour\n{\n    [Tooltip(\"Velocidade vertical aplicada ao player ao pisar na mola (substitui a velocidade Y actual).\")]\n    [Min(0f)] public float forcaImpulso = 16f;\n\n    [Tooltip(\"Também afecta inimigos (com Rigidbody2D) que pisem na mola, não só o player.\")]\n    public bool afectaInimigos = false;\n\n    [Tooltip(\"Tempo mínimo (segundos) entre dois impulsos consecutivos ao mesmo objecto.\")]\n    [Min(0f)] public float cooldown = 0.1f;\n\n    [Header(\"Eventos\")]\n    public UnityEvent onImpulsionou;\n\n    private Collider2D _col;\n    private float _nextTime;\n\n    private void Awake()\n    {\n        _col = GetComponent<Collider2D>();\n    }\n\n    private void OnCollisionEnter2D(Collision2D collision) => TryLaunch(collision);\n    private void OnCollisionStay2D(Collision2D collision) => TryLaunch(collision);\n\n    private void TryLaunch(Collision2D collision)\n    {\n        if (Time.time < _nextTime) return;\n\n        bool isPlayer = collision.collider.CompareTag(\"Player\");\n        if (!isPlayer && !afectaInimigos) return;\n        if (!isPlayer && collision.collider.GetComponent<EnemyController>() == null) return;\n\n        var rb = collision.rigidbody;\n        if (rb == null) return;\n\n        // Só impulsiona se estiver a pisar a mola por cima (não de lado/baixo).\n        if (collision.collider.bounds.min.y < _col.bounds.max.y - 0.15f) return;\n\n        rb.velocity = new Vector2(rb.velocity.x, forcaImpulso);\n        _nextTime = Time.time + cooldown;\n\n        onImpulsionou?.Invoke();\n    }\n}\n",
+  "id": "script-platforms-springplatform-cs",
+  "dependencyIds": [
+    "script-enemy-enemycontroller-cs",
+    "script-platforms-movingplatform-cs",
+    "script-platforms-platformspinner-cs"
+  ],
+  "usedByIds": []
+}

@@ -1,0 +1,81 @@
+{
+  "path": "Interactables/ThermalCurrent.cs",
+  "filename": "ThermalCurrent.cs",
+  "category": "Interactables",
+  "primary": "ThermalCurrent",
+  "kind": "Componente",
+  "summary": "Corrente térmica (P8 — Arara H2 \"ganha altura ao planar\"): zona de Collider2D (Trigger) que, enquanto um player a PLANAR (GlideAbility.IsGliding) estiver dentro, aplica uma velocidade vertical ascendente — em vez de só \"cair lento\" (comportamento normal do Glide), o player GANHA altura. Colocar num GameObject com Collider2D marcado como \"Is Trigger\" sobre a área da corrente (ex.: por cima de uma fonte de calor/vulcão/areal ao sol).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ThermalCurrent",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "liftSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "4f",
+      "section": "Subida",
+      "attrs": "[Header(\"Subida\")] [Tooltip(\"Velocidade vertical (m/s) que o player atinge dentro da corrente, enquanto planar.\")]",
+      "inspector": true,
+      "description": "Velocidade vertical (m/s) que o player atinge dentro da corrente, enquanto planar."
+    },
+    {
+      "name": "liftAcceleration",
+      "type": "float",
+      "mods": "public",
+      "default": "12f",
+      "section": "Subida",
+      "attrs": "[Tooltip(\"Aceleração (m/s²) com que a velocidade vertical actual se aproxima de 'liftSpeed' — suaviza a entrada/saída da corrente.\")]",
+      "inspector": true,
+      "description": "Aceleração (m/s²) com que a velocidade vertical atual se aproxima de 'liftSpeed' — suaviza a entrada/saída da corrente."
+    },
+    {
+      "name": "requireActiveGlide",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Requisitos",
+      "attrs": "[Header(\"Requisitos\")] [Tooltip(\"Se activo, só afecta o player enquanto estiver ACTIVAMENTE a planar (GlideAbility.IsGliding — botão de habilidade premido). Se desactivado, basta a forma ter 'canGlide' (mesmo sem activar o glide).\")]",
+      "inspector": true,
+      "description": "Se ativo, só afecta o player enquanto estiver ACTIVAMENTE a planar (GlideAbility.IsGliding — botão de habilidade premido). Se desativado, basta a forma ter 'canGlide' (mesmo sem ativar o glide)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnTriggerStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerStay2D."
+    },
+    {
+      "name": "OnDrawGizmos",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmos."
+    }
+  ],
+  "dependencies": [
+    "FormSwitcher",
+    "GlideAbility"
+  ],
+  "used_by": [
+    "GlideAbility"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Corrente térmica (P8 — Arara H2 \"ganha altura ao planar\"): zona de\n/// Collider2D (Trigger) que, enquanto um player a PLANAR (GlideAbility.IsGliding)\n/// estiver dentro, aplica uma velocidade vertical ascendente — em vez de só\n/// \"cair lento\" (comportamento normal do Glide), o player GANHA altura.\n///\n/// Colocar num GameObject com Collider2D marcado como \"Is Trigger\" sobre a\n/// área da corrente (ex.: por cima de uma fonte de calor/vulcão/areal ao sol).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class ThermalCurrent : MonoBehaviour\n{\n    [Header(\"Subida\")]\n    [Tooltip(\"Velocidade vertical (m/s) que o player atinge dentro da corrente, enquanto planar.\")]\n    public float liftSpeed = 4f;\n\n    [Tooltip(\"Aceleração (m/s²) com que a velocidade vertical actual se aproxima de 'liftSpeed' — suaviza a entrada/saída da corrente.\")]\n    public float liftAcceleration = 12f;\n\n    [Header(\"Requisitos\")]\n    [Tooltip(\"Se activo, só afecta o player enquanto estiver ACTIVAMENTE a planar (GlideAbility.IsGliding — botão de habilidade premido). Se desactivado, basta a forma ter 'canGlide' (mesmo sem activar o glide).\")]\n    public bool requireActiveGlide = true;\n\n    private void OnTriggerStay2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        var glide = other.GetComponent<GlideAbility>();\n        if (glide == null) return;\n\n        if (requireActiveGlide)\n        {\n            if (!glide.IsGliding) return;\n        }\n        else\n        {\n            var switcher = other.GetComponent<FormSwitcher>();\n            var form = switcher != null ? switcher.CurrentForm : null;\n            if (form == null || !form.canGlide) return;\n        }\n\n        var rb = other.GetComponent<Rigidbody2D>();\n        if (rb == null) return;\n\n        float newVy = Mathf.MoveTowards(rb.velocity.y, liftSpeed, liftAcceleration * Time.deltaTime);\n        rb.velocity = new Vector2(rb.velocity.x, newVy);\n    }\n\n    private void OnDrawGizmos()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col == null) return;\n\n        Gizmos.color = new Color(1f, 0.5f, 0.1f, 0.35f);\n        Gizmos.DrawCube(col.bounds.center, col.bounds.size);\n    }\n}\n",
+  "id": "script-interactables-thermalcurrent-cs",
+  "dependencyIds": [
+    "script-forms-formswitcher-cs",
+    "script-abilities-glideability-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-glideability-cs"
+  ]
+}

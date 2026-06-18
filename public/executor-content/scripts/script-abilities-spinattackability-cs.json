@@ -1,0 +1,231 @@
+{
+  "path": "Abilities/SpinAttackAbility.cs",
+  "filename": "SpinAttackAbility.cs",
+  "category": "Abilities",
+  "primary": "SpinAttackAbility",
+  "kind": "Componente",
+  "summary": "Tarefa #7 — Diabo-da-Tasmânia: rodopio ofensivo. Enquanto gira no lugar (no chão, movimento bloqueado), causa dano em área a intervalos regulares a todos os inimigos dentro de spinAttackRadius.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SpinAttackAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "MaxHits",
+      "type": "int",
+      "mods": "private const",
+      "default": "8",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "HitBuffer",
+      "type": "Collider2D[]",
+      "mods": "private static readonly",
+      "default": "new Collider2D[MaxHits]",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "form",
+      "type": "AnimalFormData",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldownTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spinRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsSpinning",
+      "type": "bool",
+      "mods": "public",
+      "default": "> spinRoutine != null",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> Mathf.Max(0f, cooldownTimer)",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> form != null ? form.spinAttackCooldown : 0f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm && cooldownTimer <= 0f && spinRoutine == null && !motor.MovementLocked && motor.IsGrounded",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData newForm",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "TrySpin",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação TrySpin."
+    },
+    {
+      "name": "SpinRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SpinRoutine."
+    },
+    {
+      "name": "HitNearbyEnemies",
+      "ret": "void",
+      "mods": "private",
+      "params": "HashSet<EnemyHealth> hitThisTick",
+      "description": "Executa a operação HitNearbyEnemies."
+    },
+    {
+      "name": "EndSpin",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação EndSpin."
+    },
+    {
+      "name": "StopSpinIfRunning",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação StopSpinIfRunning."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "EnemyHealth",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "PlayerConsumableEffects",
+    "PlayerMotor2D",
+    "PrimaryAbility"
+  ],
+  "used_by": [
+    "AbilityRouter"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #7 — Diabo-da-Tasmânia: rodopio ofensivo. Enquanto gira no lugar\n/// (no chão, movimento bloqueado), causa dano em área a intervalos\n/// regulares a todos os inimigos dentro de spinAttackRadius.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D))]\npublic class SpinAttackAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private const int MaxHits = 8;\n    private static readonly Collider2D[] HitBuffer = new Collider2D[MaxHits];\n\n    private bool enabledForForm;\n    private AnimalFormData form;\n    private PlayerMotor2D motor;\n\n    private float cooldownTimer;\n    private Coroutine spinRoutine;\n\n    /// <summary>true enquanto o rodopio está em curso.</summary>\n    public bool IsSpinning => spinRoutine != null;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.SpinAttack;\n        if (!enabledForForm) StopSpinIfRunning();\n    }\n\n    /// <summary>Chamado pelo AbilityRouter (botão de Habilidade).</summary>\n    public void TrySpin()\n    {\n        if (!enabledForForm || cooldownTimer > 0f || spinRoutine != null) return;\n        if (motor.MovementLocked || !motor.IsGrounded) return;\n        // GDD: enquanto invisível (Pó Dourado) o player não causa dano.\n        if (PlayerConsumableEffects.Instance != null && PlayerConsumableEffects.Instance.IsInvisible) return;\n\n        spinRoutine = StartCoroutine(SpinRoutine());\n    }\n\n    private IEnumerator SpinRoutine()\n    {\n        cooldownTimer = form.spinAttackCooldown;\n\n        motor.SetMovementLocked(true, this);\n        motor.Anim?.SetBool(\"IsSpinning\", true);\n\n        var hitEnemies = new HashSet<EnemyHealth>();\n        float elapsed = 0f;\n        float tickTimer = 0f;\n\n        while (elapsed < form.spinAttackDuration)\n        {\n            tickTimer -= Time.deltaTime;\n            if (tickTimer <= 0f)\n            {\n                tickTimer = Mathf.Max(0.05f, form.spinAttackTickInterval);\n                hitEnemies.Clear();\n                HitNearbyEnemies(hitEnemies);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        EndSpin();\n    }\n\n    private void HitNearbyEnemies(HashSet<EnemyHealth> hitThisTick)\n    {\n        // GDD: enquanto invisível (Pó Dourado) o player não causa dano.\n        if (PlayerConsumableEffects.Instance != null && PlayerConsumableEffects.Instance.IsInvisible) return;\n\n        int count = Physics2D.OverlapCircleNonAlloc(transform.position, form.spinAttackRadius, HitBuffer);\n        for (int i = 0; i < count; i++)\n        {\n            var col = HitBuffer[i];\n            if (col == null) continue;\n\n            var enemyHealth = col.GetComponentInParent<EnemyHealth>();\n            if (enemyHealth == null || !hitThisTick.Add(enemyHealth)) continue;\n\n            enemyHealth.TakeDamage(form.spinAttackDamage, form.categories, transform.position, form.spinAttackKnockback);\n        }\n    }\n\n    private void EndSpin()\n    {\n        motor.Anim?.SetBool(\"IsSpinning\", false);\n        motor.SetMovementLocked(false, this);\n        spinRoutine = null;\n    }\n\n    private void StopSpinIfRunning()\n    {\n        if (spinRoutine == null) return;\n        StopCoroutine(spinRoutine);\n        EndSpin();\n    }\n\n    public void Cancel(AbilityCancelReason reason) => StopSpinIfRunning();\n\n    void IAbility.Activate() => TrySpin();\n    void IAbility.Release() { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => spinRoutine != null;\n    public float CooldownDuration => form != null ? form.spinAttackCooldown : 0f;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && spinRoutine == null && !motor.MovementLocked && motor.IsGrounded;\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "id": "script-abilities-spinattackability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-player-playermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs"
+  ]
+}

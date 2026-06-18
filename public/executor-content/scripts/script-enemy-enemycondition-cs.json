@@ -1,0 +1,57 @@
+{
+  "path": "Enemy/EnemyCondition.cs",
+  "filename": "EnemyCondition.cs",
+  "category": "Enemy",
+  "primary": "EnemyCondition",
+  "kind": "Definição",
+  "summary": "Classe-base das condições de desactivação de um inimigo (Enemy Creator — infra-estrutura preparada na Etapa 1.6, populada na Etapa 5.4 com condições baseadas em variáveis globais — ver GameVariables). Cada subclasse [System.Serializable] implementa e aparece automaticamente no botão \"+ Adicionar Condição de Desactivação\" do Inspector do EnemyController (via PolymorphicListDrawer — ver EnemyControllerEditor).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "EnemyCondition",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [],
+  "dependencies": [
+    "EnemyController",
+    "EnemyControllerEditor",
+    "GameVariables",
+    "PolymorphicListDrawer"
+  ],
+  "used_by": [
+    "Boss_SolDePlastico",
+    "Condition_GlobalBoolVariable",
+    "EnemyAttack",
+    "EnemyController",
+    "EnemyControllerEditor",
+    "EnemyHealth",
+    "EnemyHealthEditor",
+    "EnemyMultiPartBoss",
+    "Objective_DefeatSpecificEnemy",
+    "PolymorphicListDrawer"
+  ],
+  "source": "/// <summary>\n/// Classe-base das condições de desactivação de um inimigo (Enemy Creator —\n/// infra-estrutura preparada na Etapa 1.6, populada na Etapa 5.4 com condições\n/// baseadas em variáveis globais — ver GameVariables).\n///\n/// Cada subclasse [System.Serializable] implementa <see cref=\"Evaluate\"/> e\n/// aparece automaticamente no botão \"+ Adicionar Condição de Desactivação\" do\n/// Inspector do EnemyController (via PolymorphicListDrawer — ver\n/// EnemyControllerEditor).\n/// </summary>\n[System.Serializable]\npublic abstract class EnemyCondition\n{\n    /// <summary>Devolve true se a condição está cumprida (o inimigo deve passar a Desactivado).</summary>\n    public abstract bool Evaluate(EnemyController enemy);\n}\n",
+  "id": "script-enemy-enemycondition-cs",
+  "dependencyIds": [
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-editor-enemycontrollereditor-cs",
+    "script-data-gamevariables-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-bosses-boss-soldeplastico-cs",
+    "script-enemy-enemyconditions-variables-cs",
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-editor-enemycontrollereditor-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-editor-enemyhealtheditor-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-data-objectives-challengeobjectives-enemy-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ]
+}

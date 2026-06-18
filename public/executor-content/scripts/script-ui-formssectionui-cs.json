@@ -1,0 +1,564 @@
+{
+  "path": "UI/FormsSectionUI.cs",
+  "filename": "FormsSectionUI.cs",
+  "category": "UI",
+  "primary": "FormsSectionUI",
+  "kind": "Componente",
+  "summary": "Seção \"Formas\" do Menu de Pausa (Tarefa #9) — a árvore das transformações. No centro, uma grande árvore onde cada mundo ocupa um ramo ( ). Em cada ramo, cada cujo seja esse mundo aparece como: - constelação/gravação/espírito luminoso ( , ou \"icon\" se vazio) — se já libertado ( ); - silhueta ( ), semi-transparente e não seleccionável — se ainda não libertado e NÃO for ; - nada — se ainda não libertado e for \"isSecretForm\" (animais secretos só passam a existir como ramo depois de desbloqueados). Ao selecionar um animal libertado, mostra a sua ficha (centro): nome, categorias (com ícones via ), \"Habilidade natural\", \"Instinto\", \"Boa para\", \"Fraqueza\", \"Libertada em\" — e, ao lado, uma pequena ",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "FormsSectionUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, IPauseMenuSection",
+      "attrs": ""
+    },
+    {
+      "name": "Branch",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "FormNodeUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, ISelectHandler",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "world",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "container",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Header(\"Framework\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "branches",
+      "type": "List<Branch>",
+      "mods": "private",
+      "default": "new List<Branch>()",
+      "section": "Árvore das Transformações",
+      "attrs": "[Header(\"Árvore das Transformações\")] [Tooltip(\"Um ramo por mundo — define onde os nós de cada AnimalFormData (por 'originWorld') são gerados.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Um ramo por mundo — define onde os nós de cada AnimalFormData (por 'originWorld') são gerados."
+    },
+    {
+      "name": "allForms",
+      "type": "List<AnimalFormData>",
+      "mods": "private",
+      "default": "new List<AnimalFormData>()",
+      "section": "Árvore das Transformações",
+      "attrs": "[Tooltip(\"Todas as AnimalFormData do jogo. Cada uma aparece no ramo do seu 'originWorld'.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Todas as AnimalFormData do jogo. Cada uma aparece no ramo do seu 'originWorld'."
+    },
+    {
+      "name": "formNodePrefab",
+      "type": "FormNodeUI",
+      "mods": "private",
+      "default": "",
+      "section": "Árvore das Transformações",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "categoryIcons",
+      "type": "AnimalCategoryIconSet",
+      "mods": "private",
+      "default": "",
+      "section": "Categorias",
+      "attrs": "[Header(\"Categorias\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "categorySeparator",
+      "type": "string",
+      "mods": "private",
+      "default": "\" • \"",
+      "section": "Categorias",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "categoryIconContainer",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Categorias",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "categoryIconPrefab",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Categorias",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "detailRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[Header(\"Ficha da Forma (centro)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "nameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "categoriesText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "naturalAbilityFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Habilidade natural\\n{0}\"",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "naturalAbilityText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "instinctFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Instinto\\n{0}\"",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "instinctText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "goodForFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Boa para\\n{0}\"",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "goodForText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "weaknessFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Fraqueza\\n{0}\"",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "weaknessText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "releasedInFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Libertada em\\n{0}\"",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "releasedInText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Ficha da Forma (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "idleRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Animação Idle (ao lado da ficha)",
+      "attrs": "[Header(\"Animação Idle (ao lado da ficha)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "idleAnimator",
+      "type": "Animator",
+      "mods": "private",
+      "default": "",
+      "section": "Animação Idle (ao lado da ficha)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emptyState",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "[Header(\"Estado Vazio\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emptyText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Nenhuma transformação libertada ainda.\"",
+      "section": "Estado Vazio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "revealPulseDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.6f",
+      "section": "Revelação de Nova Forma",
+      "attrs": "[Header(\"Revelação de Nova Forma\")] [Tooltip(\"Duração do pulso de escala ao revelar uma forma nova no ramo.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração do pulso de escala ao revelar uma forma nova no ramo."
+    },
+    {
+      "name": "revealPulseScale",
+      "type": "float",
+      "mods": "private",
+      "default": "1.6f",
+      "section": "Revelação de Nova Forma",
+      "attrs": "[Tooltip(\"Escala máxima do nó durante o pulso de revelação (1 = tamanho normal).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Escala máxima do nó durante o pulso de revelação (1 = tamanho normal)."
+    },
+    {
+      "name": "revealSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Revelação de Nova Forma",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "selectedForm",
+      "type": "AnimalFormData",
+      "mods": "private",
+      "default": "",
+      "section": "Revelação de Nova Forma",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "revealRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Revelação de Nova Forma",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SectionName",
+      "type": "string",
+      "mods": "public",
+      "default": "> \"FORMAS\"",
+      "section": "Revelação de Nova Forma",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Root",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "> root != null ? root : gameObject",
+      "section": "Revelação de Nova Forma",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spawnedCategoryIcons",
+      "type": "List<GameObject>",
+      "mods": "private readonly",
+      "default": "new List<GameObject>()",
+      "section": "Revelação de Nova Forma",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "iconImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Revelação de Nova Forma",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "silhouetteAlpha",
+      "type": "float",
+      "mods": "private",
+      "default": "0.35f",
+      "section": "Revelação de Nova Forma",
+      "attrs": "[Tooltip(\"Opacidade do ícone quando ainda é uma silhueta (animal não libertado).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Opacidade do ícone quando ainda é uma silhueta (animal não libertado)."
+    },
+    {
+      "name": "onSelected",
+      "type": "Action<AnimalFormData>",
+      "mods": "private",
+      "default": "",
+      "section": "Revelação de Nova Forma",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDestroy",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDestroy."
+    },
+    {
+      "name": "Refresh",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Refresh."
+    },
+    {
+      "name": "OnHide",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação OnHide."
+    },
+    {
+      "name": "BuildTree",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação BuildTree."
+    },
+    {
+      "name": "ClearTree",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ClearTree."
+    },
+    {
+      "name": "FindBranch",
+      "ret": "Branch",
+      "mods": "private",
+      "params": "WorldData world",
+      "description": "Executa a operação FindBranch."
+    },
+    {
+      "name": "IsFreed",
+      "ret": "bool",
+      "mods": "private",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação IsFreed."
+    },
+    {
+      "name": "FindFirstFreedForm",
+      "ret": "AnimalFormData",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FindFirstFreedForm."
+    },
+    {
+      "name": "OnFormSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação OnFormSelected."
+    },
+    {
+      "name": "ShowDetails",
+      "ret": "void",
+      "mods": "private",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ShowDetails."
+    },
+    {
+      "name": "BuildCategoriesLabel",
+      "ret": "string",
+      "mods": "private",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação BuildCategoriesLabel."
+    },
+    {
+      "name": "SpawnCategoryIcons",
+      "ret": "void",
+      "mods": "private",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação SpawnCategoryIcons."
+    },
+    {
+      "name": "PlayUnlockReveal",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação PlayUnlockReveal."
+    },
+    {
+      "name": "RevealPulse",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "FormNodeUI node",
+      "description": "Executa a operação RevealPulse."
+    },
+    {
+      "name": "Setup",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form, bool freed, Action<AnimalFormData> onSelected",
+      "description": "Executa a operação Setup."
+    },
+    {
+      "name": "OnSelect",
+      "ret": "void",
+      "mods": "public",
+      "params": "BaseEventData eventData",
+      "description": "Executa a operação OnSelect."
+    }
+  ],
+  "dependencies": [
+    "Action_RevealAnimalForm",
+    "AnimalCategoryIconSet",
+    "AnimalFormData",
+    "AudioManager",
+    "IPauseMenuSection",
+    "PauseMenuController",
+    "PlayerProgress",
+    "WorldData"
+  ],
+  "used_by": [
+    "Action_RevealAnimalForm",
+    "ProgressSectionUI",
+    "SecondaryMenuController"
+  ],
+  "source": "using System;\nusing System.Collections;\nusing System.Collections.Generic;\nusing System.Text;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Secção \"Formas\" do Menu de Pausa (Tarefa #9) — a árvore das transformações.\n///\n/// No centro, uma grande árvore onde cada mundo ocupa um ramo\n/// (<see cref=\"branches\"/>). Em cada ramo, cada <see cref=\"AnimalFormData\"/>\n/// cujo <see cref=\"AnimalFormData.originWorld\"/> seja esse mundo aparece como:\n/// - constelação/gravação/espírito luminoso (<see cref=\"AnimalFormData.constellationIcon\"/>,\n///   ou \"icon\" se vazio) — se já libertado (<see cref=\"PlayerProgress.HasFreedAnimal\"/>);\n/// - silhueta (<see cref=\"AnimalFormData.silhouette\"/>), semi-transparente e não\n///   seleccionável — se ainda não libertado e NÃO for\n///   <see cref=\"AnimalFormData.isSecretForm\"/>;\n/// - nada — se ainda não libertado e for \"isSecretForm\" (animais secretos só\n///   passam a existir como ramo depois de desbloqueados).\n///\n/// Ao seleccionar um animal libertado, mostra a sua ficha (centro):\n/// nome, categorias (com ícones via <see cref=\"categoryIcons\"/>), \"Habilidade\n/// natural\", \"Instinto\", \"Boa para\", \"Fraqueza\", \"Libertada em\" — e, ao lado,\n/// uma pequena animação idle (<see cref=\"AnimalFormData.menuIdleController\"/>).\n///\n/// Quando uma nova forma é desbloqueada, outro sistema pode chamar\n/// <see cref=\"PlayUnlockReveal\"/> (ex: Action_RevealAnimalForm) para abrir esta\n/// secção e tocar uma pequena animação de revelação no ramo correspondente.\n///\n/// Montagem no Editor:\n/// - \"branches\": um por mundo (Bosque de Bruma, Planícies do Sol Alto, Verde\n///   Infinito, Terras da Aurora, Eucalipto e Coral, Bambu e Lanternas, ...),\n///   cada um com o \"container\" (Transform) onde os nós desse ramo são gerados.\n/// - \"allForms\": todas as AnimalFormData do jogo (qualquer ordem — cada uma vai\n///   para o ramo do seu \"originWorld\").\n/// - \"formNodePrefab\": prefab com <see cref=\"FormNodeUI\"/> (Image + Selectable\n///   opcional, para animais libertados poderem ser navegados/seleccionados).\n/// </summary>\npublic class FormsSectionUI : MonoBehaviour, IPauseMenuSection\n{\n    /// <summary>\n    /// Referência para outros sistemas (ex: Action_RevealAnimalForm) chamarem\n    /// <see cref=\"PlayUnlockReveal\"/> quando uma forma é desbloqueada.\n    /// </summary>\n    public static FormsSectionUI Instance { get; private set; }\n\n    [Serializable]\n    public class Branch\n    {\n        public WorldData world;\n        public Transform container;\n    }\n\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject root;\n\n    [Header(\"Árvore das Transformações\")]\n    [Tooltip(\"Um ramo por mundo — define onde os nós de cada AnimalFormData (por 'originWorld') são gerados.\")]\n    [SerializeField] private List<Branch> branches = new List<Branch>();\n\n    [Tooltip(\"Todas as AnimalFormData do jogo. Cada uma aparece no ramo do seu 'originWorld'.\")]\n    [SerializeField] private List<AnimalFormData> allForms = new List<AnimalFormData>();\n\n    [SerializeField] private FormNodeUI formNodePrefab;\n\n    [Header(\"Categorias\")]\n    [SerializeField] private AnimalCategoryIconSet categoryIcons;\n    [SerializeField] private string categorySeparator = \" • \";\n    [SerializeField] private Transform categoryIconContainer;\n    [SerializeField] private Image categoryIconPrefab;\n\n    [Header(\"Ficha da Forma (centro)\")]\n    [SerializeField] private GameObject detailRoot;\n    [SerializeField] private TMP_Text nameText;\n    [SerializeField] private TMP_Text categoriesText;\n\n    [SerializeField] private string naturalAbilityFormat = \"Habilidade natural\\n{0}\";\n    [SerializeField] private TMP_Text naturalAbilityText;\n\n    [SerializeField] private string instinctFormat = \"Instinto\\n{0}\";\n    [SerializeField] private TMP_Text instinctText;\n\n    [SerializeField] private string goodForFormat = \"Boa para\\n{0}\";\n    [SerializeField] private TMP_Text goodForText;\n\n    [SerializeField] private string weaknessFormat = \"Fraqueza\\n{0}\";\n    [SerializeField] private TMP_Text weaknessText;\n\n    [SerializeField] private string releasedInFormat = \"Libertada em\\n{0}\";\n    [SerializeField] private TMP_Text releasedInText;\n\n    [Header(\"Animação Idle (ao lado da ficha)\")]\n    [SerializeField] private GameObject idleRoot;\n    [SerializeField] private Animator idleAnimator;\n\n    [Header(\"Estado Vazio\")]\n    [SerializeField] private GameObject emptyState;\n    [SerializeField] private string emptyText = \"Nenhuma transformação libertada ainda.\";\n\n    [Header(\"Revelação de Nova Forma\")]\n    [Tooltip(\"Duração do pulso de escala ao revelar uma forma nova no ramo.\")]\n    [SerializeField] private float revealPulseDuration = 0.6f;\n\n    [Tooltip(\"Escala máxima do nó durante o pulso de revelação (1 = tamanho normal).\")]\n    [SerializeField] private float revealPulseScale = 1.6f;\n\n    [SerializeField] private AudioClip revealSfx;\n\n    private readonly Dictionary<AnimalFormData, FormNodeUI> spawnedNodes = new Dictionary<AnimalFormData, FormNodeUI>();\n    private AnimalFormData selectedForm;\n    private Coroutine revealRoutine;\n\n    public string SectionName => \"FORMAS\";\n    public GameObject Root => root != null ? root : gameObject;\n\n    private void Awake()\n    {\n        if (Instance == null) Instance = this;\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    // ---------------- IPauseMenuSection ----------------\n\n    public void Refresh()\n    {\n        BuildTree();\n\n        if (selectedForm == null || !IsFreed(selectedForm))\n            selectedForm = FindFirstFreedForm();\n\n        if (selectedForm == null)\n        {\n            if (emptyState != null)\n            {\n                emptyState.SetActive(true);\n\n                var emptyTextComponent = emptyState.GetComponentInChildren<TMP_Text>();\n                if (emptyTextComponent != null) emptyTextComponent.text = emptyText;\n            }\n\n            if (detailRoot != null) detailRoot.SetActive(false);\n            return;\n        }\n\n        if (emptyState != null) emptyState.SetActive(false);\n        if (detailRoot != null) detailRoot.SetActive(true);\n\n        ShowDetails(selectedForm);\n\n        if (spawnedNodes.TryGetValue(selectedForm, out var node) && EventSystem.current != null)\n            EventSystem.current.SetSelectedGameObject(node.gameObject);\n    }\n\n    public void OnHide()\n    {\n        // Sem estado próprio a limpar — Refresh() reconstrói o ramo na próxima vez.\n    }\n\n    // ---------------- Árvore ----------------\n\n    private void BuildTree()\n    {\n        ClearTree();\n\n        var progress = PlayerProgress.Instance;\n\n        foreach (var form in allForms)\n        {\n            if (form == null) continue;\n\n            bool freed = progress != null && progress.HasFreedAnimal(form.formId);\n            if (!freed && form.isSecretForm) continue; // animais secretos: nada até serem desbloqueados.\n\n            var branch = FindBranch(form.originWorld);\n            if (branch?.container == null)\n            {\n                Debug.LogWarning($\"[FormsSectionUI] '{form.displayName}' não tem ramo configurado para o mundo '{(form.originWorld != null ? form.originWorld.displayName : \"(nenhum)\")}'.\");\n                continue;\n            }\n\n            if (formNodePrefab == null) continue;\n\n            var node = Instantiate(formNodePrefab, branch.container);\n            node.gameObject.SetActive(true);\n            node.Setup(form, freed, OnFormSelected);\n\n            spawnedNodes[form] = node;\n        }\n    }\n\n    private void ClearTree()\n    {\n        foreach (var node in spawnedNodes.Values)\n            if (node != null) Destroy(node.gameObject);\n\n        spawnedNodes.Clear();\n    }\n\n    private Branch FindBranch(WorldData world)\n    {\n        if (world == null) return null;\n\n        foreach (var branch in branches)\n            if (branch != null && branch.world == world) return branch;\n\n        return null;\n    }\n\n    private bool IsFreed(AnimalFormData form)\n    {\n        var progress = PlayerProgress.Instance;\n        return form != null && progress != null && progress.HasFreedAnimal(form.formId);\n    }\n\n    private AnimalFormData FindFirstFreedForm()\n    {\n        foreach (var form in allForms)\n            if (form != null && IsFreed(form)) return form;\n\n        return null;\n    }\n\n    // ---------------- Selecção / Ficha ----------------\n\n    private void OnFormSelected(AnimalFormData form)\n    {\n        if (form == null || !IsFreed(form)) return;\n\n        selectedForm = form;\n        ShowDetails(form);\n    }\n\n    private void ShowDetails(AnimalFormData form)\n    {\n        if (form == null) return;\n\n        if (nameText != null) nameText.text = form.displayName;\n\n        if (categoriesText != null) categoriesText.text = BuildCategoriesLabel(form);\n        SpawnCategoryIcons(form);\n\n        if (naturalAbilityText != null) naturalAbilityText.text = string.Format(naturalAbilityFormat, form.naturalAbilityText);\n        if (instinctText != null) instinctText.text = string.Format(instinctFormat, form.instinctText);\n        if (goodForText != null) goodForText.text = string.Format(goodForFormat, form.goodForText);\n        if (weaknessText != null) weaknessText.text = string.Format(weaknessFormat, form.weaknessText);\n\n        if (releasedInText != null)\n        {\n            string worldName = form.originWorld != null ? form.originWorld.displayName : string.Empty;\n            releasedInText.text = string.Format(releasedInFormat, worldName);\n        }\n\n        if (idleAnimator != null)\n        {\n            idleAnimator.runtimeAnimatorController = form.menuIdleController;\n            if (idleRoot != null) idleRoot.SetActive(form.menuIdleController != null);\n        }\n    }\n\n    private string BuildCategoriesLabel(AnimalFormData form)\n    {\n        if (categoryIcons == null) return string.Empty;\n\n        var sb = new StringBuilder();\n        bool first = true;\n\n        foreach (var entry in categoryIcons.Match(form.categories))\n        {\n            if (string.IsNullOrEmpty(entry.displayName)) continue;\n\n            if (!first) sb.Append(categorySeparator);\n            sb.Append(entry.displayName);\n            first = false;\n        }\n\n        return sb.ToString();\n    }\n\n    private readonly List<GameObject> spawnedCategoryIcons = new List<GameObject>();\n\n    private void SpawnCategoryIcons(AnimalFormData form)\n    {\n        foreach (var go in spawnedCategoryIcons)\n            if (go != null) Destroy(go);\n        spawnedCategoryIcons.Clear();\n\n        if (categoryIcons == null || categoryIconPrefab == null || categoryIconContainer == null) return;\n\n        foreach (var entry in categoryIcons.Match(form.categories))\n        {\n            if (entry.icon == null) continue;\n\n            var image = Instantiate(categoryIconPrefab, categoryIconContainer);\n            image.gameObject.SetActive(true);\n            image.sprite = entry.icon;\n            spawnedCategoryIcons.Add(image.gameObject);\n        }\n    }\n\n    // ---------------- Revelação de Nova Forma ----------------\n\n    /// <summary>\n    /// Abre o Menu de Pausa nesta secção e toca uma pequena animação de\n    /// revelação (pulso de escala + som) no nó de \"form\" — chamado quando o\n    /// jogador acaba de libertar essa transformação (Tarefa #9: \"essa tela\n    /// abre, e aparece a animação do animal sendo revelado no ramo\").\n    /// </summary>\n    public void PlayUnlockReveal(AnimalFormData form)\n    {\n        if (PauseMenuController.Instance != null)\n            PauseMenuController.Instance.OpenToSection(this);\n        else\n            Refresh();\n\n        if (form == null) return;\n        selectedForm = form;\n\n        if (!spawnedNodes.ContainsKey(form)) BuildTree();\n        ShowDetails(form);\n\n        if (spawnedNodes.TryGetValue(form, out var node))\n        {\n            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(node.gameObject);\n\n            if (revealRoutine != null) StopCoroutine(revealRoutine);\n            revealRoutine = StartCoroutine(RevealPulse(node));\n        }\n\n        AudioManager.Instance?.PlaySE(revealSfx);\n    }\n\n    private IEnumerator RevealPulse(FormNodeUI node)\n    {\n        if (node == null) yield break;\n\n        var rect = node.transform as RectTransform;\n        if (rect == null) yield break;\n\n        float duration = Mathf.Max(0.01f, revealPulseDuration);\n        float t = 0f;\n\n        while (t < duration)\n        {\n            t += Time.unscaledDeltaTime;\n            float p = Mathf.Clamp01(t / duration);\n\n            // Sobe até \"revealPulseScale\" a meio e volta a 1 no fim (ease-out).\n            float pulse = Mathf.Sin(p * Mathf.PI);\n            float scale = Mathf.Lerp(1f, revealPulseScale, pulse);\n\n            rect.localScale = Vector3.one * scale;\n            yield return null;\n        }\n\n        rect.localScale = Vector3.one;\n    }\n}\n\n/// <summary>\n/// Nó de um animal na árvore das transformações (FormsSectionUI). Mostra a\n/// constelação (animal libertado) ou a silhueta (animal ainda não libertado,\n/// não-secreto). Implementa <see cref=\"ISelectHandler\"/> para que a navegação\n/// por D-pad/teclado actualize a ficha ao focar o nó — apenas animais\n/// libertados são interactivos.\n/// </summary>\npublic class FormNodeUI : MonoBehaviour, ISelectHandler\n{\n    [SerializeField] private Image iconImage;\n\n    [Tooltip(\"Opacidade do ícone quando ainda é uma silhueta (animal não libertado).\")]\n    [SerializeField] private float silhouetteAlpha = 0.35f;\n\n    private Action<AnimalFormData> onSelected;\n\n    public AnimalFormData Form { get; private set; }\n    public bool IsFreed { get; private set; }\n\n    public void Setup(AnimalFormData form, bool freed, Action<AnimalFormData> onSelected)\n    {\n        Form = form;\n        IsFreed = freed;\n        this.onSelected = onSelected;\n\n        if (iconImage != null)\n        {\n            Sprite sprite = freed\n                ? (form.constellationIcon != null ? form.constellationIcon : form.icon)\n                : form.silhouette;\n\n            iconImage.sprite = sprite;\n            iconImage.enabled = sprite != null;\n            iconImage.color = freed ? Color.white : new Color(1f, 1f, 1f, silhouetteAlpha);\n        }\n\n        var selectable = GetComponent<Selectable>();\n        if (selectable != null) selectable.interactable = freed;\n    }\n\n    public void OnSelect(BaseEventData eventData)\n    {\n        if (IsFreed) onSelected?.Invoke(Form);\n    }\n}\n",
+  "id": "script-ui-formssectionui-cs",
+  "dependencyIds": [
+    "script-npc-actions-formactions-cs",
+    "script-data-animalcategoryiconset-cs",
+    "script-forms-animalformdata-cs",
+    "script-audio-audiomanager-cs",
+    "script-ui-ipausemenusection-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-data-playerprogress-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-formactions-cs",
+    "script-ui-progresssectionui-cs",
+    "script-ui-secondarymenucontroller-cs"
+  ]
+}

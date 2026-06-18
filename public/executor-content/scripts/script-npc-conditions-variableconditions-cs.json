@@ -1,0 +1,163 @@
+{
+  "path": "NPC/Conditions/VariableConditions.cs",
+  "filename": "VariableConditions.cs",
+  "category": "NPC",
+  "primary": "Condition_BoolVariable",
+  "kind": "Condição de NPC",
+  "summary": "/ <summary>O valor de uma variável bool é igual a \"expectedValue\".</summary>",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Condition_BoolVariable",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_IntVariable",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_FloatVariable",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_StringVariable",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "scope",
+      "type": "VariableScope",
+      "mods": "public",
+      "default": "VariableScope.Global",
+      "section": "",
+      "attrs": "[Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]",
+      "inspector": true,
+      "description": "Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC)."
+    },
+    {
+      "name": "variableName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (false).\")]",
+      "inspector": true,
+      "description": "Nome da variável. Se não existir, é tratada como tendo o valor por omissão (false)."
+    },
+    {
+      "name": "expectedValue",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "comparison",
+      "type": "Comparison",
+      "mods": "public",
+      "default": "Comparison.Equal",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "value",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "value",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mustEqual",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"true = a condição cumpre-se quando a variável É IGUAL a 'value'; false = quando é DIFERENTE.\")]",
+      "inspector": true,
+      "description": "true = a condição cumpre-se quando a variável É IGUAL a 'value'; false = quando é DIFERENTE."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Evaluate",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Evaluate."
+    }
+  ],
+  "dependencies": [
+    "Comparison",
+    "GameVariableUtil",
+    "GameVariables",
+    "NpcCondition",
+    "NpcConditionUtil",
+    "NpcController",
+    "VariableScope"
+  ],
+  "used_by": [
+    "Action_RescueNpc",
+    "Action_StartChallenge",
+    "ChallengeDefinition",
+    "EmblemData",
+    "MissionData",
+    "MissionManager",
+    "Objective_BoolVariable",
+    "PlayerProgress"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>O valor de uma variável bool é igual a \"expectedValue\".</summary>\n[System.Serializable]\npublic class Condition_BoolVariable : NpcCondition\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (false).\")]\n    public string variableName;\n\n    public bool expectedValue = true;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return GameVariableUtil.GetBool(npc, scope, variableName) == expectedValue;\n    }\n}\n\n/// <summary>Compara o valor de uma variável int com \"value\".</summary>\n[System.Serializable]\npublic class Condition_IntVariable : NpcCondition\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (0).\")]\n    public string variableName;\n\n    public Comparison comparison = Comparison.Equal;\n    public int value;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        int actual = GameVariableUtil.GetInt(npc, scope, variableName);\n        return NpcConditionUtil.Compare(actual, comparison, value);\n    }\n}\n\n/// <summary>Compara o valor de uma variável float com \"value\".</summary>\n[System.Serializable]\npublic class Condition_FloatVariable : NpcCondition\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (0).\")]\n    public string variableName;\n\n    public Comparison comparison = Comparison.Equal;\n    public float value;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        float actual = GameVariableUtil.GetFloat(npc, scope, variableName);\n        return NpcConditionUtil.CompareFloat(actual, comparison, value);\n    }\n}\n\n/// <summary>Compara o valor de uma variável de texto com \"value\" (igual ou diferente).</summary>\n[System.Serializable]\npublic class Condition_StringVariable : NpcCondition\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (\\\"\\\").\")]\n    public string variableName;\n\n    [Tooltip(\"true = a condição cumpre-se quando a variável É IGUAL a 'value'; false = quando é DIFERENTE.\")]\n    public bool mustEqual = true;\n\n    public string value;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        string actual = GameVariableUtil.GetString(npc, scope, variableName);\n        bool equal = actual == value;\n        return equal == mustEqual;\n    }\n}\n",
+  "id": "script-npc-conditions-variableconditions-cs",
+  "dependencyIds": [
+    "script-data-gamevariables-cs",
+    "script-npc-npccondition-cs",
+    "script-npc-npcconditionutil-cs",
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-villageactions-cs",
+    "script-npc-actions-challengeactions-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-emblemdata-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-data-objectives-challengeobjectives-variables-cs",
+    "script-data-playerprogress-cs"
+  ]
+}

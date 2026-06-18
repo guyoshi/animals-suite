@@ -1,0 +1,70 @@
+{
+  "path": "Data/ChallengeFailCondition.cs",
+  "filename": "ChallengeFailCondition.cs",
+  "category": "Data",
+  "primary": "ChallengeFailCondition",
+  "kind": "Definição",
+  "summary": "Classe-base de todas as condições de FALHA adicionais de um (além do tempo esgotado, que é tratado diretamente pelo ChallengeManager via 'hasTimeLimit'/'timeLimitSeconds'). Para adicionar uma nova condição de falha: cria uma subclasse [System.Serializable] em Data/Objectives/ com prefixo \"FailCondition_\" e implementa IsFailed() (e, se fizer sentido, ResetState()). Aparece automaticamente no botão \"+ Adicionar Condição de Falha\" do ChallengeDefinitionEditor (PolymorphicListDrawer, Tarefa #10/#14). Exemplos previstos: FailCondition_PlayerDamaged (desafios \"sem dano\"), FailCondition_NpcDefeated (NPC defendido morreu), FailCondition_Variable (uma variável global bool atingiu o valor de falha).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "ChallengeFailCondition",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "failMessage",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "ResetState",
+      "ret": "void",
+      "mods": "public virtual",
+      "params": "",
+      "description": "Executa a operação ResetState."
+    }
+  ],
+  "dependencies": [
+    "ChallengeDefinition",
+    "ChallengeDefinitionEditor",
+    "ChallengeManager",
+    "FailCondition_PlayerDamaged",
+    "PolymorphicListDrawer"
+  ],
+  "used_by": [
+    "ChallengeDefinition",
+    "ChallengeDefinitionEditor",
+    "ChallengeManager",
+    "ChallengeResultUI",
+    "FailCondition_BoolVariable",
+    "FailCondition_PlayerDamaged"
+  ],
+  "source": "/// <summary>\n/// Classe-base de todas as condições de FALHA adicionais de um\n/// <see cref=\"ChallengeDefinition\"/> (além do tempo esgotado, que é tratado\n/// directamente pelo ChallengeManager via 'hasTimeLimit'/'timeLimitSeconds').\n///\n/// Para adicionar uma nova condição de falha: cria uma subclasse\n/// [System.Serializable] em Data/Objectives/ com prefixo \"FailCondition_\" e\n/// implementa IsFailed() (e, se fizer sentido, ResetState()). Aparece\n/// automaticamente no botão \"+ Adicionar Condição de Falha\" do\n/// ChallengeDefinitionEditor (PolymorphicListDrawer, Tarefa #10/#14).\n///\n/// Exemplos previstos: FailCondition_PlayerDamaged (desafios \"sem dano\"),\n/// FailCondition_NpcDefeated (NPC defendido morreu), FailCondition_Variable\n/// (uma variável global bool atingiu o valor de falha).\n/// </summary>\n[System.Serializable]\npublic abstract class ChallengeFailCondition\n{\n    /// <summary>Mensagem opcional mostrada no ecrã \"FALHOU\" quando esta condição causa a falha (ex: \"Foste atingido!\"). Vazio = usa a mensagem genérica do desafio.</summary>\n    public string failMessage;\n\n    /// <summary>Chamado ao iniciar ou reiniciar o desafio — repõe estado interno.</summary>\n    public virtual void ResetState() { }\n\n    /// <summary>Devolve true quando esta condição causa a falha imediata do desafio.</summary>\n    public abstract bool IsFailed();\n}\n",
+  "id": "script-data-challengefailcondition-cs",
+  "dependencyIds": [
+    "script-data-challengedefinition-cs",
+    "script-data-editor-challengedefinitioneditor-cs",
+    "script-data-challengemanager-cs",
+    "script-data-objectives-challengefailconditions-player-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-data-challengedefinition-cs",
+    "script-data-editor-challengedefinitioneditor-cs",
+    "script-data-challengemanager-cs",
+    "script-ui-challengeresultui-cs",
+    "script-data-objectives-challengefailconditions-variables-cs",
+    "script-data-objectives-challengefailconditions-player-cs"
+  ]
+}

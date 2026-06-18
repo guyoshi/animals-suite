@@ -1,0 +1,368 @@
+{
+  "version": "18-06-att",
+  "oldCount": 278,
+  "newCount": 278,
+  "newFiles": [],
+  "removedFiles": [],
+  "changedFiles": [
+    "UI/JukeboxSectionUI.cs",
+    "UI/JukeboxTrackButtonUI.cs"
+  ],
+  "completedSystems": [
+    {
+      "system": "Resgates de NPC idempotentes",
+      "state": "Implementado",
+      "scripts": [
+        "Action_RescueNpc",
+        "PlayerProgress",
+        "NpcControllerEditor"
+      ],
+      "what": "Cada resgate pode usar npcId único, impede duplicações, cria NpcResgatado_<id> automaticamente e o Inspector avisa quando falta Autosave.",
+      "guide": "vila18"
+    },
+    {
+      "system": "População e evolução das vilas",
+      "state": "Implementado e automatizado",
+      "scripts": [
+        "WorldState",
+        "HUDController",
+        "VillageEvolutionController",
+        "Action_AddVillagePopulation"
+      ],
+      "what": "Resgatados e habitantes adicionais são persistidos separadamente; o HUD reage imediatamente e cinco níveis podem activar música, lojas e decoração.",
+      "guide": "vila18"
+    },
+    {
+      "system": "Save schema v1",
+      "state": "Implementado",
+      "scripts": [
+        "SaveData",
+        "SaveManager",
+        "PlayerProgress",
+        "WorldState"
+      ],
+      "what": "Saves guardam versão, Ecos Perdidos, rescuedNpcIds, additionalPopulation e snapshots activos; saves antigos recebem aviso e podem ser regravados.",
+      "guide": "save"
+    },
+    {
+      "system": "Água, dano e formas",
+      "state": "Corrigido",
+      "scripts": [
+        "AnimalFormData",
+        "WaterMotor2D",
+        "OxygenSystem",
+        "PlayerCombat",
+        "FormSwitcher"
+      ],
+      "what": "Validação de flags aquáticas contraditórias, afogamento pelo fluxo de vida correcto, HUD de oxigénio menos ruidoso e dano compatível com hitboxes filhas.",
+      "guide": "animal"
+    },
+    {
+      "system": "Performance das interacções",
+      "state": "Optimizado",
+      "scripts": [
+        "ClimbAbility",
+        "GrabThrowAbility",
+        "SwingAbility",
+        "TonguePullAbility",
+        "PlayerConsumableEffects"
+      ],
+      "what": "Overlap/Raycast passaram a buffers NonAlloc reutilizáveis para reduzir garbage collection durante gameplay.",
+      "guide": "puzzles"
+    },
+    {
+      "system": "Respawn e checkpoints",
+      "state": "Optimizado e esclarecido",
+      "scripts": [
+        "PlayerDeathHandler",
+        "SafeHaven",
+        "AreaSpawnPoint",
+        "Checkpoint",
+        "EnemyRespawnZone"
+      ],
+      "what": "Listas estáticas substituem pesquisas globais; checkpoints temporários continuam apenas na sessão e entradas duplicadas por múltiplos colliders são ignoradas.",
+      "guide": "save"
+    },
+    {
+      "system": "Menu Secundário final",
+      "state": "Implementado",
+      "scripts": [
+        "SecondaryMenuController",
+        "ISecondaryMenuTab",
+        "UpgradesTabUI",
+        "EmblemsSectionUI"
+      ],
+      "what": "+/Esc fica em Pausa/Opções; - abre Área, Diário, Formas, Itens/Instintos, Progresso, Upgrades e Emblemas.",
+      "guide": "menus16"
+    },
+    {
+      "system": "Emblemas, 100/101% e auras",
+      "state": "Implementado",
+      "scripts": [
+        "EmblemManager",
+        "EmblemData",
+        "PostGameAuraController"
+      ],
+      "what": "Emblemas de mundo, Gaia, Apolo e Zeus possuem verificação automática, variável persistente e auras com prioridade de Zeus.",
+      "guide": "menus16"
+    },
+    {
+      "system": "Galeria, Créditos e Jukebox",
+      "state": "Implementado e ampliado",
+      "scripts": [
+        "GaleriaUI",
+        "CreditosUI",
+        "JukeboxSectionUI",
+        "JukeboxTrackButtonUI",
+        "WildMelodyPickup"
+      ],
+      "what": "O Jukebox é compra única e possui faixas estáticas, Melodias filtradas por melodyId, secções por mundo, abas Normal/Favoritos, disco animado, favoritos persistentes, avanço automático e actualização em tempo real.",
+      "guide": "menus17"
+    },
+    {
+      "system": "Terra de Gaia",
+      "state": "Implementado em scripts",
+      "scripts": [
+        "WorldMapController",
+        "WorldMapNode",
+        "WorldMapConnection",
+        "LightBallController",
+        "WorldMapCameraRig",
+        "WorldMapUI",
+        "WorldMapEntryPoint"
+      ],
+      "what": "Árvore contínua, bola nó a nó, custos, vilas gratuitas, boss por missão, câmara por trechos, Visão, apresentações e cancelamento estão disponíveis; a cena ainda precisa ser montada.",
+      "guide": "mapa"
+    },
+    {
+      "system": "Transformação ambiental",
+      "state": "Implementado",
+      "scripts": [
+        "FormSwitcher",
+        "AnimalFormData",
+        "WaterDetector"
+      ],
+      "what": "Superfície aceita formas terrestres/aquáticas; submersa só formas que mergulham; terra bloqueia aquáticas incapazes de actuar em terra; pós-game mantém regras ambientais.",
+      "guide": "animal"
+    },
+    {
+      "system": "Missões, diário e rumores",
+      "state": "Implementado",
+      "scripts": [
+        "MissionData",
+        "MissionManager",
+        "JournalManager",
+        "RumorData"
+      ],
+      "what": "Conteúdo é criado por assets, Actions e Conditions; conclusão também pode disparar verificação de emblemas.",
+      "guide": "missoes"
+    },
+    {
+      "system": "Desafios e Provação",
+      "state": "Implementado",
+      "scripts": [
+        "ChallengeDefinition",
+        "ChallengeManager",
+        "ChallengeTrigger",
+        "ChallengeHudUI",
+        "ChallengeResultUI"
+      ],
+      "what": "Desafios repetíveis, recompensa primária/secundária, falhas, HUD, reinício e Provação de Apolo estão disponíveis.",
+      "guide": "desafios"
+    },
+    {
+      "system": "Itens e Instintos",
+      "state": "Implementado",
+      "scripts": [
+        "ItemData",
+        "PlayerItemUser",
+        "UpgradeData",
+        "UpgradesTabUI"
+      ],
+      "what": "Consumíveis e quatro Instintos jogáveis têm valores configuráveis e estado persistente; a interface final está disponível.",
+      "guide": "coleccionaveis"
+    },
+    {
+      "system": "Resgate de animais",
+      "state": "Implementado",
+      "scripts": [
+        "AnimalSpiritRescue",
+        "Action_FreeAnimal",
+        "Action_RevealAnimalForm"
+      ],
+      "what": "Resgate normal, revelação e autosave estão disponíveis. O Cavalo usa uma sequência narrativa especial por Actions.",
+      "guide": "animal"
+    },
+    {
+      "system": "Bosses",
+      "state": "Base/scaffolding",
+      "scripts": [
+        "BossController",
+        "EnemyMultiPartBoss",
+        "BossHealthBarUI"
+      ],
+      "what": "A arquitectura existe, mas movesets, telegraphs, arenas, recompensas e sequências de cada boss ainda são conteúdo de produção.",
+      "guide": "inimigos"
+    },
+    {
+      "system": "Acessibilidade base",
+      "state": "Parcialmente implementado",
+      "scripts": [
+        "ControlsRebindSectionUI",
+        "CameraManager.Shake",
+        "GameSettings"
+      ],
+      "what": "Remapeamento, redução de tremor e flashes existem; alto contraste, dicas adicionais e assistência de timers continuam planeados.",
+      "guide": "menus16"
+    }
+  ],
+  "limitations": [
+    {
+      "title": "Configuração duplicada de Melodias no Jukebox",
+      "severity": "Configuração a evitar",
+      "detail": "SyncAllEntries não elimina duplicados entre tracks e knownMelodies. Regista cada Melodia Selvagem em knownMelodies e usa tracks para trilha base, ou garante conscientemente que não estás a criar a mesma entrada duas vezes."
+    },
+    {
+      "title": "Melodia sem AreaData/WorldData",
+      "severity": "Configuração obrigatória",
+      "detail": "O agrupamento usa WildMelodyData.area.world. Na implementação actual, uma melodia sem mundo acaba junto das entradas sem mundo; preenche Area e World em todos os assets."
+    },
+    {
+      "title": "Migração de NPCs em saves versão 0",
+      "severity": "Compatibilidade a testar",
+      "detail": "Saves antigos guardam apenas a contagem agregada e não conseguem reconstruir rescuedNpcIds históricos. Regrava o save e impede repetição de eventos antigos de resgate por flags/estado."
+    },
+    {
+      "title": "Actualização do nível pós-boss",
+      "severity": "Configuração necessária",
+      "detail": "VillageEvolutionController reage a mudanças de população. Depois de marcar o boss derrotado, chama ApplyCurrentLevel ou provoca uma actualização equivalente para entrar imediatamente no nível 4."
+    },
+    {
+      "title": "Buffers NonAlloc fixos",
+      "severity": "Medição necessária",
+      "detail": "Os buffers melhoram GC, mas têm capacidades fixas. Testa cenas densas para confirmar que 8/16/32 resultados são suficientes para cada mecânica."
+    },
+    {
+      "title": "Íris Base → Cavalo",
+      "severity": "Action/helper ainda necessário",
+      "detail": "O fluxo pode ser montado por Actions, mas o backup não expõe uma Action stock para retirar Iris_Base de FormSwitcher.unlockedForms. O helper opcional continua incluído e deve ser testado com save/load."
+    },
+    {
+      "title": "Movesets e sequências dos bosses",
+      "severity": "Conteúdo pendente",
+      "detail": "BossController é base. Ataques, fases, telegraphs, animações, 5 Runas, emblema, cutscene e retorno precisam ser produzidos por boss."
+    },
+    {
+      "title": "Portão final de 1 Runa",
+      "severity": "Design aprovado/pendente",
+      "detail": "Ainda precisa de lógica específica, gasto de 1 Runa e variável persistente de abertura."
+    },
+    {
+      "title": "A Mente que Mata",
+      "severity": "Ligação pendente",
+      "detail": "EmblemManager define a variável dos seis emblemas; a selecção efectiva da cena/variante do boss alternativo ainda precisa ser ligada."
+    },
+    {
+      "title": "NG+",
+      "severity": "Validação obrigatória",
+      "detail": "É preciso confirmar que o save escolhido carrega antes de preservar formas/upgrades e resetar o restante, sobretudo ao iniciar pelo autosave."
+    },
+    {
+      "title": "Acessibilidade avançada",
+      "severity": "Planeada",
+      "detail": "Alto contraste global, modo de dicas adicionais e assistência em timers não estão implementados de forma global."
+    }
+  ],
+  "productionOrder": [
+    {
+      "phase": 1,
+      "name": "Página/cena de testes",
+      "range": "Missões 1–26",
+      "why": "Validar todas as mecânicas, recursos, inputs, UI e Debug Panel antes de produzir conteúdo."
+    },
+    {
+      "phase": 2,
+      "name": "Coração de Gaia e Terra de Gaia",
+      "range": "Missões 27–46",
+      "why": "Construir Íris Base, Cavalo, Prova, Gaia, primeira Runa, acessos e a Terra de Gaia."
+    },
+    {
+      "phase": 3,
+      "name": "Trilho do Musgo",
+      "range": "Missões 47–59",
+      "why": "Produzir a primeira área completa com documentação, arte mínima e todos os sistemas de conteúdo."
+    },
+    {
+      "phase": 4,
+      "name": "Clareira dos Contos",
+      "range": "Missões 60–64",
+      "why": "Validar vila, população, loja, diário, rumores, Sussurros e estados audiovisuais."
+    },
+    {
+      "phase": 5,
+      "name": "Vertical Slice: Bosque de Bruma",
+      "range": "Missões 65–79",
+      "why": "Concluir cinco formas, sete áreas e boss funcional com qualidade quase final."
+    },
+    {
+      "phase": 6,
+      "name": "Produção dos mundos",
+      "range": "Missões 80–84",
+      "why": "Repetir o pipeline aprovado, respeitando ordem livre e gates flexíveis."
+    },
+    {
+      "phase": 7,
+      "name": "Endgame",
+      "range": "Missões 85–89",
+      "why": "Caminho, bosses finais, pós-game, NG+, 100% e 101%."
+    },
+    {
+      "phase": 8,
+      "name": "Polimento e lançamento",
+      "range": "Missões 90–95",
+      "why": "Acessibilidade, performance, áudio/VFX, localização, QA e build final."
+    }
+  ],
+  "gddDecisions": [
+    {
+      "title": "Nome oficial",
+      "detail": "A interface de selecção global chama-se Terra de Gaia. Os nomes técnicos dos scripts continuam WorldMap*."
+    },
+    {
+      "title": "Menus",
+      "detail": "+/Esc abre Pausa/Opções; - abre o Menu Secundário; Map é uma action separada e só funciona em zonas autorizadas."
+    },
+    {
+      "title": "Vida e morte",
+      "detail": "Íris começa com 6 corações, máximo 12; regenera após 5 s e cura 1 a cada 3 s; morte não remove Sementes nem Runas."
+    },
+    {
+      "title": "Transformação na água",
+      "detail": "Na superfície, terrestres e aquáticos; submersa, apenas formas com mergulho; em terra, aquáticas só se funcionarem em terra."
+    },
+    {
+      "title": "Terra de Gaia",
+      "detail": "Bola percorre cada ligação e pára em todos os nós; para mudar de mundo volta ao Coração; B regressa à área de origem."
+    },
+    {
+      "title": "Economia",
+      "detail": "40 áreas custam 330 Runas; bosses regionais custam 0 e abrem por missão; portão final custa 1; total 361, sobra 30."
+    },
+    {
+      "title": "Conclusão",
+      "detail": "Gaia em 100%, Apolo pela Provação e Zeus em 101%; formas secretas não entram no cálculo normal."
+    },
+    {
+      "title": "Vilas em cinco níveis",
+      "detail": "Nível 0 vazio; 1 primeiros resgates; 2 pelo menos 50% + habitante adicional; 3 todos os resgates; 4 restaurada + boss derrotado."
+    },
+    {
+      "title": "Save versionado",
+      "detail": "Novos campos persistentes pertencem ao schema v1; cargas devem começar em Start ou mais tarde, nunca em Awake."
+    },
+    {
+      "title": "Jukebox e Melodias",
+      "detail": "Jukebox é compra única, não pós-game. Faixas estáticas podem ser base ou condicionadas por melodyId; Melodias Selvagens aparecem individualmente após recolha e podem ser favoritas."
+    }
+  ]
+}

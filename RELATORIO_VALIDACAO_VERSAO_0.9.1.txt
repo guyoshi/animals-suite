@@ -1,0 +1,26 @@
+ANIMALS — PLANEJADOR 0.9.1
+HOTFIX DE COMPILAÇÃO TAURI
+Data: 18/06/2026
+
+ERRO RECEBIDO
+- Rust E0597: `stmt` does not live long enough.
+- Local: src-tauri/src/lib.rs, verificação PRAGMA table_info(snapshots).
+
+CORRECÇÃO
+- O resultado de `columns.filter_map(...).any(...)` agora é guardado numa variável local.
+- O iterador é consumido e libertado antes de `stmt` sair do escopo.
+- Correcção equivalente à recomendada pelo compilador Rust.
+
+IMPACTO
+- Nenhuma alteração no formato do banco SQLite.
+- Nenhuma alteração na migração de projectos.
+- Nenhuma perda ou reinicialização de dados.
+- Identificador Tauri preservado: com.gui.animals.planejador.
+
+VALIDAÇÕES NESTE AMBIENTE
+- ESLint: aprovado, sem erros.
+- TypeScript/Vite: aprovado; build de produção concluído.
+- Rust/Tauri: o ambiente actual não possui rustc/cargo; a validação final do instalador deve ocorrer no Windows pelo ATUALIZAR_E_COMPILAR.bat.
+
+OBSERVAÇÃO
+- O Vite mantém apenas um aviso não bloqueante de chunk principal acima de 500 kB.

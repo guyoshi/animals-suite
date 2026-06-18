@@ -1,0 +1,209 @@
+{
+  "path": "Abilities/EggAbility.cs",
+  "filename": "EggAbility.cs",
+  "category": "Abilities",
+  "primary": "EggAbility",
+  "kind": "Componente",
+  "summary": "Botar ovo (P5 — \"a galinha bota o ovo\"): instancia o \"eggPrefab\" da forma (P1) atrás do player. O ovo é um objeto PESADO (prefab com EggObject + ObjectWeight + Carryable): dá dano ao cair em cima de inimigos, pressiona placas de peso, e pode ser carregado/atirado por formas com canGrab/canThrow. Ativado via PrimaryAbility.Egg (AbilityRouter.OnAbilityPressed → TryLayEgg).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EggAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "spawnOffset",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "new Vector2(-0.6f, 0.2f)",
+      "section": "Spawn",
+      "attrs": "[Header(\"Spawn\")] [Tooltip(\"Deslocamento do ovo em relação ao player (X é espelhado para 'atrás' conforme o facing).\")]",
+      "inspector": true,
+      "description": "Deslocamento do ovo em relação ao player (X é espelhado para 'atrás' conforme o facing)."
+    },
+    {
+      "name": "maxEggsAlive",
+      "type": "int",
+      "mods": "public",
+      "default": "2",
+      "section": "Spawn",
+      "attrs": "[Tooltip(\"Máximo de ovos deste player em simultâneo (0 = sem limite). O mais antigo é destruído ao exceder.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Máximo de ovos deste player em simultâneo (0 = sem limite). O mais antigo é destruído ao exceder."
+    },
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "eggPrefab",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldown",
+      "type": "float",
+      "mods": "private",
+      "default": "3f",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldownTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_eggs",
+      "type": "System.Collections.Generic.Queue<GameObject>",
+      "mods": "private readonly",
+      "default": "new System.Collections.Generic.Queue<GameObject>()",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> Mathf.Max(0f, cooldownTimer)",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> cooldown",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm && cooldownTimer <= 0f",
+      "section": "Spawn",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "TryLayEgg",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação TryLayEgg."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "Carryable",
+    "EggObject",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "ObjectWeight",
+    "PlayerMotor2D",
+    "PrimaryAbility"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "EggObject"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Botar ovo (P5 — \"a galinha bota o ovo\"): instancia o \"eggPrefab\" da forma\n/// (P1) atrás do player. O ovo é um objecto PESADO (prefab com EggObject +\n/// ObjectWeight + Carryable): dá dano ao cair em cima de inimigos, pressiona\n/// placas de peso, e pode ser carregado/atirado por formas com canGrab/canThrow.\n///\n/// Activado via PrimaryAbility.Egg (AbilityRouter.OnAbilityPressed → TryLayEgg).\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D))]\npublic class EggAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Spawn\")]\n    [Tooltip(\"Deslocamento do ovo em relação ao player (X é espelhado para 'atrás' conforme o facing).\")]\n    public Vector2 spawnOffset = new Vector2(-0.6f, 0.2f);\n\n    [Tooltip(\"Máximo de ovos deste player em simultâneo (0 = sem limite). O mais antigo é destruído ao exceder.\")]\n    [Min(0)] public int maxEggsAlive = 2;\n\n    private PlayerMotor2D motor;\n\n    private bool enabledForForm;\n    private GameObject eggPrefab;\n    private float cooldown = 3f;\n    private float cooldownTimer;\n\n    private readonly System.Collections.Generic.Queue<GameObject> _eggs = new System.Collections.Generic.Queue<GameObject>();\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.Egg && form.eggPrefab != null;\n        eggPrefab = form != null ? form.eggPrefab : null;\n        cooldown = form != null ? Mathf.Max(0.2f, form.eggCooldown) : 3f;\n    }\n\n    /// <summary>Bota um ovo (AbilityRouter — PrimaryAbility.Egg).</summary>\n    public void TryLayEgg()\n    {\n        if (!enabledForForm || cooldownTimer > 0f) return;\n\n        cooldownTimer = cooldown;\n\n        int dir = motor.FacingSign != 0 ? motor.FacingSign : 1;\n        Vector3 pos = transform.position + new Vector3(spawnOffset.x * dir, spawnOffset.y, 0f);\n\n        var egg = Instantiate(eggPrefab, pos, Quaternion.identity);\n        _eggs.Enqueue(egg);\n\n        // Limite de ovos vivos: remove o mais antigo.\n        while (maxEggsAlive > 0 && _eggs.Count > maxEggsAlive)\n        {\n            var oldest = _eggs.Dequeue();\n            if (oldest != null) Destroy(oldest);\n        }\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Instantânea, sem estado persistente — só o cooldown importa para a HUD.\n    void IAbility.Activate() => TryLayEgg();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => cooldown;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown de pôr ovo.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "id": "script-abilities-eggability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-interactables-carryable-cs",
+    "script-interactables-eggobject-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-interactables-objectweight-cs",
+    "script-player-playermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-interactables-eggobject-cs"
+  ]
+}

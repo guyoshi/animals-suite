@@ -1,0 +1,89 @@
+{
+  "path": "Abilities/IAbility.cs",
+  "filename": "IAbility.cs",
+  "category": "Abilities",
+  "primary": "IAbility",
+  "kind": "Definição",
+  "summary": "Motivo pelo qual uma habilidade está a ser cancelada centralmente (item 8 da auditoria — \"IAbility + cancelamento\"). Usado por e por para que cada habilidade possa, se quiser, reagir de forma diferente conforme o motivo (ex: tocar um som de \"largar\" só quando é o jogador a soltar por opção própria, e não ao morrer). Na prática, todas as implementações actuais tratam qualquer motivo da mesma forma (paragem imediata, sem efeitos extra) — o enum existe para permitir essa diferenciação no futuro sem mudar a assinatura.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "AbilityCancelReason",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "IAbility",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [],
+  "dependencies": [
+    "AbilityRouter",
+    "FormSwitcher",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "Action_Heal",
+    "AnimalsDebugPanel",
+    "CamoAbility",
+    "ChargeAbility",
+    "ClimbAbility",
+    "DashAbility",
+    "EggAbility",
+    "GlideAbility",
+    "GrabThrowAbility",
+    "HUDController",
+    "HeavyStrikeAbility",
+    "IActiveAbility",
+    "IceBrakeAbility",
+    "NightVisionAbility",
+    "PounceAbility",
+    "RoarAbility",
+    "RollAbility",
+    "ShellGuardAbility",
+    "SonarAbility",
+    "SpinAttackAbility",
+    "SprintAbility",
+    "SwingAbility",
+    "TonguePullAbility"
+  ],
+  "source": "/// <summary>\n/// Motivo pelo qual uma habilidade está a ser cancelada centralmente (item 8 da\n/// auditoria — \"IAbility + cancelamento\"). Usado por <see cref=\"IAbility.Cancel\"/>\n/// e por <see cref=\"AbilityRouter.CancelAll\"/> para que cada habilidade possa, se\n/// quiser, reagir de forma diferente conforme o motivo (ex: tocar um som de\n/// \"largar\" só quando é o jogador a soltar por opção própria, e não ao morrer).\n/// Na prática, todas as implementações actuais tratam qualquer motivo da mesma\n/// forma (paragem imediata, sem efeitos extra) — o enum existe para permitir essa\n/// diferenciação no futuro sem mudar a assinatura.\n/// </summary>\npublic enum AbilityCancelReason\n{\n    /// <summary>O jogador transformou-se noutro animal (FormSwitcher.ApplyForm).</summary>\n    Transform,\n\n    /// <summary>O jogador morreu (PlayerProgress.OnHeartsDepleted).</summary>\n    Death,\n\n    /// <summary>Um diálogo com NPC foi aberto.</summary>\n    Dialogue,\n\n    /// <summary>Uma cutscene foi iniciada.</summary>\n    Cutscene,\n\n    /// <summary>Um menu (pausa, mapa, etc.) foi aberto.</summary>\n    MenuOpened,\n\n    /// <summary>O jogador ficou preso numa armadilha/efeito que bloqueia o movimento.</summary>\n    Trapped,\n\n    /// <summary>O jogador saiu da água (deixou de estar submerso/dentro de água).</summary>\n    LeftWater,\n\n    /// <summary>Uma nova cena vai ser carregada.</summary>\n    SceneLoad,\n}\n\n/// <summary>\n/// Contrato comum a habilidades \"com estado\" (que podem ficar activas durante\n/// vários frames e precisam de ser interrompidas de fora — item 8 da auditoria).\n///\n/// Nem todas as ~19 habilidades do projecto precisam de implementar isto: muitas\n/// (Roll, Egg, HeavyStrike, Roar, Sonar, Charge sem hold, etc.) são \"instantâneas\"\n/// — disparam um efeito de curta duração com o próprio cooldown interno e não\n/// deixam o player num estado que precise de ser cancelado de fora. Para essas,\n/// não implementar IAbility está bem.\n///\n/// Implementar IAbility faz sentido para habilidades que:\n/// - bloqueiam o movimento normal (motor.SetMovementLocked) enquanto activas\n///   (Climb, Dash, Swing, TonguePull, ShellGuard), ou\n/// - colocam o player num estado persistente que outro sistema pode precisar de\n///   interromper (GrabThrow — a carregar um objecto).\n///\n/// \"Activate\"/\"Release\" mapeiam para o botão de habilidade (ver AbilityRouter,\n/// OnAbilityPressed/OnAbilityReleased) quando essa habilidade já é controlada por\n/// esse botão. Para habilidades cujo gatilho é outro (Climb/Swing via Interagir,\n/// GrabThrow automático em Update) estes métodos podem ser no-ops — o que importa\n/// para o cancelamento central é <see cref=\"Cancel\"/> e <see cref=\"IsActive\"/>.\n/// </summary>\npublic interface IAbility\n{\n    /// <summary>Tenta iniciar/activar a habilidade (equivalente a premir o botão de habilidade).</summary>\n    void Activate();\n\n    /// <summary>Reage a soltar o botão de habilidade, para habilidades do tipo \"hold\".</summary>\n    void Release();\n\n    /// <summary>\n    /// Interrompe imediatamente a habilidade se estiver activa, restaurando\n    /// movimento/gravidade/etc. Chamado por <see cref=\"AbilityRouter.CancelAll\"/>.\n    /// Deve ser seguro chamar mesmo que a habilidade já esteja inactiva (no-op).\n    /// </summary>\n    void Cancel(AbilityCancelReason reason);\n\n    /// <summary>Tempo restante (segundos) até a habilidade poder ser activada de novo. 0 se não tiver cooldown ou já estiver disponível.</summary>\n    float CooldownRemaining { get; }\n\n    /// <summary>True enquanto a habilidade está num estado activo/persistente que ocupa o player (ex: a escalar, a balançar, a carregar um objecto).</summary>\n    bool IsActive { get; }\n}\n",
+  "id": "script-abilities-iability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-npc-actions-playeractions-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-camoability-cs",
+    "script-abilities-chargeability-cs",
+    "script-abilities-climbability-cs",
+    "script-abilities-dashability-cs",
+    "script-abilities-eggability-cs",
+    "script-abilities-glideability-cs",
+    "script-abilities-grabthrowability-cs",
+    "script-ui-hudcontroller-cs",
+    "script-abilities-heavystrikeability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-icebrakeability-cs",
+    "script-abilities-nightvisionability-cs",
+    "script-abilities-pounceability-cs",
+    "script-abilities-roarability-cs",
+    "script-abilities-rollability-cs",
+    "script-abilities-shellguardability-cs",
+    "script-abilities-sonarability-cs",
+    "script-abilities-spinattackability-cs",
+    "script-abilities-sprintability-cs",
+    "script-abilities-swingability-cs",
+    "script-abilities-tonguepullability-cs"
+  ]
+}

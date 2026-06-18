@@ -1,0 +1,154 @@
+{
+  "path": "UI/HoldToConfirmButton.cs",
+  "filename": "HoldToConfirmButton.cs",
+  "category": "UI",
+  "primary": "HoldToConfirmButton",
+  "kind": "Componente",
+  "summary": "Botão que só confirma a ação depois de mantido premido durante segundos — usado por \"Regressar ao Coração de Gaia\" (Menu de Pausa: Opções, Tarefa #12): \"Confirmar precisaria de segurar o botão durante um segundo\", precisamente para não ser escolhido por acidente. Funciona por rato/toque (IPointerDownHandler/IPointerUpHandler) E por comando/teclado: enquanto este botão está selecionado (EventSystem.current.currentSelectedGameObject == este GameObject), mantém \"Sul\"/Enter/Espaço premido para acumular o progresso. (Image do tipo \"Filled\") mostra o progresso (0 → 1). Soltar antes do tempo reinicia o progresso sem confirmar.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "HoldToConfirmButton",
+      "kind": "class",
+      "bases": "MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "holdDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "1f",
+      "section": "",
+      "attrs": "[Tooltip(\"Tempo (segundos) que o botão precisa de ser mantido premido para confirmar (GDD: \\\"durante um segundo\\\").\")] [SerializeField]",
+      "inspector": true,
+      "description": "Tempo (segundos) que o botão precisa de ser mantido premido para confirmar (GDD: \"durante um segundo\\"
+    },
+    {
+      "name": "fillImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Image do tipo \\\"Filled\\\" que mostra o progresso do hold (0 a 1). Opcional.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Image do tipo \"Filled\" que mostra o progresso do hold (0 a 1). Opcional."
+    },
+    {
+      "name": "OnConfirmed",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "holdTime",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "pointerHeld",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "confirmed",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "IsSubmitHeldWhileSelected",
+      "ret": "bool",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação IsSubmitHeldWhileSelected."
+    },
+    {
+      "name": "UpdateFill",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateFill."
+    },
+    {
+      "name": "ResetProgress",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ResetProgress."
+    },
+    {
+      "name": "OnPointerDown",
+      "ret": "void",
+      "mods": "public",
+      "params": "PointerEventData eventData",
+      "description": "Executa a operação OnPointerDown."
+    },
+    {
+      "name": "OnPointerUp",
+      "ret": "void",
+      "mods": "public",
+      "params": "PointerEventData eventData",
+      "description": "Executa a operação OnPointerUp."
+    },
+    {
+      "name": "OnPointerExit",
+      "ret": "void",
+      "mods": "public",
+      "params": "PointerEventData eventData",
+      "description": "Executa a operação OnPointerExit."
+    }
+  ],
+  "dependencies": [],
+  "used_by": [
+    "OptionsSectionUI"
+  ],
+  "source": "using UnityEngine;\nusing UnityEngine.Events;\nusing UnityEngine.EventSystems;\nusing UnityEngine.InputSystem;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Botão que só confirma a acção depois de mantido premido durante\n/// <see cref=\"holdDuration\"/> segundos — usado por \"Regressar ao Coração de\n/// Gaia\" (Menu de Pausa: Opções, Tarefa #12): \"Confirmar precisaria de segurar\n/// o botão durante um segundo\", precisamente para não ser escolhido por acidente.\n///\n/// Funciona por rato/toque (IPointerDownHandler/IPointerUpHandler) E por\n/// comando/teclado: enquanto este botão está seleccionado\n/// (EventSystem.current.currentSelectedGameObject == este GameObject), mantém\n/// \"Sul\"/Enter/Espaço premido para acumular o progresso.\n///\n/// <see cref=\"fillImage\"/> (Image do tipo \"Filled\") mostra o progresso\n/// (0 → 1). Soltar antes do tempo reinicia o progresso sem confirmar.\n/// </summary>\npublic class HoldToConfirmButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler\n{\n    [Tooltip(\"Tempo (segundos) que o botão precisa de ser mantido premido para confirmar (GDD: \\\"durante um segundo\\\").\")]\n    [SerializeField] private float holdDuration = 1f;\n\n    [Tooltip(\"Image do tipo \\\"Filled\\\" que mostra o progresso do hold (0 a 1). Opcional.\")]\n    [SerializeField] private Image fillImage;\n\n    /// <summary>Disparado quando o hold completa \"holdDuration\" segundos sem ser solto.</summary>\n    public UnityEvent OnConfirmed;\n\n    private float holdTime;\n    private bool pointerHeld;\n    private bool confirmed;\n\n    private void OnEnable()\n    {\n        ResetProgress();\n    }\n\n    private void OnDisable()\n    {\n        ResetProgress();\n    }\n\n    private void Update()\n    {\n        bool held = pointerHeld || IsSubmitHeldWhileSelected();\n\n        if (!held)\n        {\n            if (holdTime > 0f) ResetProgress();\n            return;\n        }\n\n        if (confirmed) return;\n\n        holdTime += Time.unscaledDeltaTime;\n        UpdateFill();\n\n        if (holdTime >= holdDuration)\n        {\n            confirmed = true;\n            OnConfirmed?.Invoke();\n        }\n    }\n\n    private bool IsSubmitHeldWhileSelected()\n    {\n        if (EventSystem.current == null) return false;\n        if (EventSystem.current.currentSelectedGameObject != gameObject) return false;\n\n        if (Keyboard.current != null && (Keyboard.current.enterKey.isPressed || Keyboard.current.spaceKey.isPressed)) return true;\n        if (Gamepad.current != null && Gamepad.current.buttonSouth.isPressed) return true;\n\n        return false;\n    }\n\n    private void UpdateFill()\n    {\n        if (fillImage != null) fillImage.fillAmount = Mathf.Clamp01(holdTime / Mathf.Max(0.01f, holdDuration));\n    }\n\n    private void ResetProgress()\n    {\n        holdTime = 0f;\n        confirmed = false;\n        pointerHeld = false;\n        UpdateFill();\n    }\n\n    public void OnPointerDown(PointerEventData eventData) => pointerHeld = true;\n\n    public void OnPointerUp(PointerEventData eventData) => pointerHeld = false;\n\n    public void OnPointerExit(PointerEventData eventData) => pointerHeld = false;\n}\n",
+  "id": "script-ui-holdtoconfirmbutton-cs",
+  "dependencyIds": [],
+  "usedByIds": [
+    "script-ui-optionssectionui-cs"
+  ]
+}

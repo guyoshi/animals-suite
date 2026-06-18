@@ -1,0 +1,118 @@
+{
+  "path": "Combat/VfxPoolManager.cs",
+  "filename": "VfxPoolManager.cs",
+  "category": "Combat",
+  "primary": "VfxPoolManager",
+  "kind": "Componente",
+  "summary": "Tarefa #29 — pool genérica de prefabs de VFX (faíscas de impacto, poeira, explosões, etc.) usada pelo feedback de combate (PlayerFeedback, EnemyFeedback) para evitar Instantiate/Destroy repetidos durante combates intensos. devolve uma instância (reaproveitada da pool, se disponível) já posicionada/rotacionada e ativa, e agenda automaticamente o seu retorno à pool — duração calculada a partir do ParticleSystem do prefab (duration + startLifetime), ou se o prefab não tiver ParticleSystem. Segue o mesmo padrão de singleton de AudioManager/GameSettings (Instance, DontDestroyOnLoad, EnsureExists/isAutoFallback).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "VfxPoolManager",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "defaultLifetime",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "",
+      "attrs": "[Tooltip(\"Duração de vida usada quando o prefab não tem ParticleSystem (ou a duração não pode ser calculada).\")] [Min(0.05f)]",
+      "inspector": true,
+      "description": "Duração de vida usada quando o prefab não tem ParticleSystem (ou a duração não pode ser calculada)."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "Spawn",
+      "ret": "GameObject",
+      "mods": "public",
+      "params": "GameObject prefab, Vector3 position, Quaternion? rotation = null",
+      "description": "Executa a operação Spawn."
+    },
+    {
+      "name": "ReturnToPool",
+      "ret": "void",
+      "mods": "public",
+      "params": "GameObject prefab, GameObject instance",
+      "description": "Executa a operação ReturnToPool."
+    },
+    {
+      "name": "GetFromPool",
+      "ret": "GameObject",
+      "mods": "private",
+      "params": "GameObject prefab",
+      "description": "Executa a operação GetFromPool."
+    },
+    {
+      "name": "RestartParticles",
+      "ret": "void",
+      "mods": "private static",
+      "params": "GameObject instance",
+      "description": "Executa a operação RestartParticles."
+    },
+    {
+      "name": "ComputeLifetime",
+      "ret": "float",
+      "mods": "private",
+      "params": "GameObject instance",
+      "description": "Executa a operação ComputeLifetime."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "EnemyFeedback",
+    "GameSettings",
+    "PlayerFeedback",
+    "PlayerProgress",
+    "PooledVfxInstance"
+  ],
+  "used_by": [
+    "EnemyFeedback",
+    "PlayerFeedback",
+    "PooledVfxInstance"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #29 — pool genérica de prefabs de VFX (faíscas de impacto, poeira,\n/// explosões, etc.) usada pelo feedback de combate (PlayerFeedback,\n/// EnemyFeedback) para evitar Instantiate/Destroy repetidos durante combates\n/// intensos.\n///\n/// <see cref=\"Spawn\"/> devolve uma instância (reaproveitada da pool, se\n/// disponível) já posicionada/rotacionada e activa, e agenda automaticamente\n/// o seu retorno à pool — duração calculada a partir do ParticleSystem do\n/// prefab (duration + startLifetime), ou <see cref=\"defaultLifetime\"/> se o\n/// prefab não tiver ParticleSystem.\n///\n/// Segue o mesmo padrão de singleton de AudioManager/GameSettings (Instance,\n/// DontDestroyOnLoad, EnsureExists/isAutoFallback).\n/// </summary>\npublic class VfxPoolManager : MonoBehaviour\n{\n    public static VfxPoolManager Instance { get; private set; }\n\n    [Tooltip(\"Duração de vida usada quando o prefab não tem ParticleSystem (ou a duração não pode ser calculada).\")]\n    [Min(0.05f)] public float defaultLifetime = 1.5f;\n\n    private readonly Dictionary<GameObject, Queue<GameObject>> _pools = new Dictionary<GameObject, Queue<GameObject>>();\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\").\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(VfxPoolManager) + \" (Fallback)\");\n        var instance = go.AddComponent<VfxPoolManager>();\n        instance.isAutoFallback = true;\n    }\n\n    /// <summary>\n    /// Instancia (ou reaproveita da pool) \"prefab\" em \"position\"/\"rotation\", já\n    /// activo, com os ParticleSystems reiniciados, e agenda o seu retorno\n    /// automático à pool. Devolve null se \"prefab\" for null.\n    /// </summary>\n    public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion? rotation = null)\n    {\n        if (prefab == null) return null;\n\n        Quaternion rot = rotation ?? Quaternion.identity;\n        GameObject instance = GetFromPool(prefab);\n\n        if (instance == null)\n        {\n            instance = Instantiate(prefab, position, rot);\n            instance.AddComponent<PooledVfxInstance>().SourcePrefab = prefab;\n        }\n        else\n        {\n            instance.transform.SetPositionAndRotation(position, rot);\n            instance.SetActive(true);\n        }\n\n        RestartParticles(instance);\n\n        float lifetime = ComputeLifetime(instance);\n        instance.GetComponent<PooledVfxInstance>().BeginLifetime(lifetime);\n\n        return instance;\n    }\n\n    /// <summary>Chamado por PooledVfxInstance ao fim da sua duração — devolve a instância à pool (desactivada) para reutilização futura.</summary>\n    public void ReturnToPool(GameObject prefab, GameObject instance)\n    {\n        if (prefab == null || instance == null) return;\n\n        instance.SetActive(false);\n\n        if (!_pools.TryGetValue(prefab, out var queue))\n        {\n            queue = new Queue<GameObject>();\n            _pools[prefab] = queue;\n        }\n\n        queue.Enqueue(instance);\n    }\n\n    private GameObject GetFromPool(GameObject prefab)\n    {\n        if (_pools.TryGetValue(prefab, out var queue))\n        {\n            while (queue.Count > 0)\n            {\n                var instance = queue.Dequeue();\n                if (instance != null) return instance;\n            }\n        }\n\n        return null;\n    }\n\n    private static void RestartParticles(GameObject instance)\n    {\n        var systems = instance.GetComponentsInChildren<ParticleSystem>(true);\n        foreach (var ps in systems)\n        {\n            ps.Clear(true);\n            ps.Play(true);\n        }\n    }\n\n    private float ComputeLifetime(GameObject instance)\n    {\n        var root = instance.GetComponent<ParticleSystem>();\n        if (root == null) root = instance.GetComponentInChildren<ParticleSystem>(true);\n\n        if (root != null)\n        {\n            var main = root.main;\n            float duration = main.duration + main.startLifetime.constantMax;\n            if (duration > 0f) return duration;\n        }\n\n        return defaultLifetime;\n    }\n}\n",
+  "id": "script-combat-vfxpoolmanager-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-enemy-enemyfeedback-cs",
+    "script-data-gamesettings-cs",
+    "script-player-playerfeedback-cs",
+    "script-data-playerprogress-cs",
+    "script-combat-pooledvfxinstance-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemyfeedback-cs",
+    "script-player-playerfeedback-cs",
+    "script-combat-pooledvfxinstance-cs"
+  ]
+}

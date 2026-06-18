@@ -1,0 +1,308 @@
+{
+  "path": "World/WorldMapConnection.cs",
+  "filename": "WorldMapConnection.cs",
+  "category": "World",
+  "primary": "WorldMapConnection",
+  "kind": "Componente",
+  "summary": "Mapa-Múndi (GDD \"Estrutura Geral do Mapa-Múndi\"): representa um RAMO/RAIZ entre dois — o caminho físico que a \"bola de luz\" percorre, os planos de câmera (\"trechos\") configuráveis ao longo desse percurso, e os pontos-chave de transição visual (luz, neblina, partículas) usados por WorldMapController . IMPORTANTE — direção da árvore: é sempre o nó mais próximo do Coração de Gaia (\"nó-pai\"); é o nó mais afastado (\"nó-filho\"). Esta convenção define a regra de \"revelação de áreas e raízes\" do GDD: Este ramo fica ILUMINADO/atravessável quando fromNode estiver desbloqueado ( ). toNode fica ALCANÇÁVEL (a bola pode viajar até lá, painel mostra o custo) assim que este ramo estiver iluminado — mesmo q",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "WorldMapConnection",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "CameraShot",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "RegionVisualKeyframe",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "fromNode",
+      "type": "WorldMapNode",
+      "mods": "public",
+      "default": "",
+      "section": "Nós Ligados",
+      "attrs": "[Header(\"Nós Ligados\")] [Tooltip(\"Nó de ORIGEM (mais próximo do Coração de Gaia). Este ramo só fica iluminado/atravessável quando este nó estiver desbloqueado.\")]",
+      "inspector": true,
+      "description": "Nó de ORIGEM (mais próximo do Coração de Gaia). Este ramo só fica iluminado/atravessável quando este nó estiver desbloqueado."
+    },
+    {
+      "name": "toNode",
+      "type": "WorldMapNode",
+      "mods": "public",
+      "default": "",
+      "section": "Nós Ligados",
+      "attrs": "[Tooltip(\"Nó de DESTINO (mais afastado do Coração de Gaia). Fica 'alcançável' assim que 'fromNode' for desbloqueado, mesmo que continue bloqueado.\")]",
+      "inspector": true,
+      "description": "Nó de DESTINO (mais afastado do Coração de Gaia). Fica 'alcançável' assim que 'fromNode' for desbloqueado, mesmo que continue bloqueado."
+    },
+    {
+      "name": "waypoints",
+      "type": "Transform[]",
+      "mods": "public",
+      "default": "",
+      "section": "Caminho",
+      "attrs": "[Header(\"Caminho\")] [Tooltip(\"Pontos intermédios do caminho, em ordem de 'fromNode' para 'toNode' (NÃO incluir os próprios nós — as posições deles são usadas automaticamente como extremidades). Pode ficar vazio para uma ligação em linha recta.\")]",
+      "inspector": true,
+      "description": "Pontos intermédios do caminho, em ordem de 'fromNode' para 'toNode' (NÃO incluir os próprios nós — as posições deles são usadas automaticamente como extremidades). Pode ficar vazio para uma ligação em linha recta."
+    },
+    {
+      "name": "cameraShots",
+      "type": "List<CameraShot>",
+      "mods": "public",
+      "default": "new List<CameraShot>()",
+      "section": "Câmara — Trechos (\\\"Shots\\\")",
+      "attrs": "[Header(\"Câmara — Trechos (\\\"Shots\\\")\")] [Tooltip(\"Lista de planos de câmara ao longo deste ramo. 'progress' vai de 0 (em fromNode) a 1 (em toNode). À medida que a bola avança, a câmara faz blend para o plano mais avançado cujo 'progress' já foi atingido — permite controlo preciso de quando uma área entra em quadro, drama do boss, aproximação/afastamento de Gaia, etc. Não precisa de estar ordenada (é ordenada automaticamente por 'progress' em runtime).\")]",
+      "inspector": true,
+      "description": "Lista de planos de câmera ao longo deste ramo. 'progress' vai de 0 (em fromNode) a 1 (em toNode). À medida que a bola avança, a câmera faz blend para o plano mais avançado cujo 'progress' já foi atingido — permite controlo preciso de quando uma área entra em quadro, drama do boss, aproximação/afastamento de Gaia, etc. Não precisa de estar ordenada (é ordenada automaticamente por 'progress' em runtime)."
+    },
+    {
+      "name": "visualKeyframes",
+      "type": "List<RegionVisualKeyframe>",
+      "mods": "public",
+      "default": "new List<RegionVisualKeyframe>()",
+      "section": "Transição Visual entre Regiões",
+      "attrs": "[Header(\"Transição Visual entre Regiões\")] [Tooltip(\"Pontos-chave de luminosidade/cor/neblina/clima/partículas ao longo do ramo, interpolados pelo progresso da bola (WorldMapController.ApplyVisualKeyframes). Não precisa de estar ordenada.\")]",
+      "inspector": true,
+      "description": "Pontos-chave de luminosidade/cor/neblina/clima/partículas ao longo do ramo, interpolados pelo progresso da bola (WorldMapController.ApplyVisualKeyframes). Não precisa de estar ordenada."
+    },
+    {
+      "name": "world",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "",
+      "section": "Mundo",
+      "attrs": "[Header(\"Mundo\")] [Tooltip(\"Mundo a que este ramo pertence — usado para WorldData.rootColor/rootColorPostBoss (cor da raiz, normal vs. pós-boss). Deixar vazio para ramos neutros próximos do Coração de Gaia (comuns a vários mundos).\")]",
+      "inspector": true,
+      "description": "Mundo a que este ramo pertence — usado para WorldData.rootColor/rootColorPostBoss (cor da raiz, normal vs. pós-boss). Deixar vazio para ramos neutros próximos do Coração de Gaia (comuns a vários mundos)."
+    },
+    {
+      "name": "rootRenderer",
+      "type": "LineRenderer",
+      "mods": "public",
+      "default": "",
+      "section": "Visual da Raiz (opcional)",
+      "attrs": "[Header(\"Visual da Raiz (opcional)\")] [Tooltip(\"LineRenderer usado para desenhar este ramo no Mapa-Múndi. Se atribuído, a sua cor é actualizada automaticamente (apagado/sombrio se !IsLit, WorldData.rootColor ou rootColorPostBoss se IsLit).\")]",
+      "inspector": true,
+      "description": "LineRenderer usado para desenhar este ramo no Mapa-Múndi. Se atribuído, a sua cor é atualizada automaticamente (apagado/sombrio se !IsLit, WorldData.rootColor ou rootColorPostBoss se IsLit)."
+    },
+    {
+      "name": "unlitColor",
+      "type": "Color",
+      "mods": "public",
+      "default": "new Color(0.25f, 0.25f, 0.3f, 1f)",
+      "section": "Visual da Raiz (opcional)",
+      "attrs": "[Tooltip(\"Cor usada para o ramo enquanto NÃO estiver iluminado (sombrio/escuro).\")]",
+      "inspector": true,
+      "description": "Cor usada para o ramo enquanto NÃO estiver iluminado (sombrio/escuro)."
+    },
+    {
+      "name": "IsLit",
+      "type": "bool",
+      "mods": "public",
+      "default": "> fromNode != null && fromNode.IsUnlocked",
+      "section": "Visual da Raiz (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "progress",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "Visual da Raiz (opcional)",
+      "attrs": "[Range(0f, 1f)] [Tooltip(\"Progresso ao longo do ramo (0 = fromNode, 1 = toNode) a partir do qual este plano passa a ser o alvo da câmara.\")]",
+      "inspector": true,
+      "description": "Progresso ao longo do ramo (0 = fromNode, 1 = toNode) a partir do qual este plano passa a ser o alvo da câmera."
+    },
+    {
+      "name": "cameraAnchor",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "Visual da Raiz (opcional)",
+      "attrs": "[Tooltip(\"Ponto da cena que define a posição (X/Y) da câmara neste trecho (ex: um GameObject vazio colocado à frente da área que deve entrar em quadro). Se vazio, usa a posição do próprio ramo em 'progress'.\")]",
+      "inspector": true,
+      "description": "Ponto da cena que define a posição (X/Y) da câmera neste trecho (ex: um GameObject vazio colocado à frente da área que deve entrar em quadro). Se vazio, usa a posição do próprio ramo em 'progress'."
+    },
+    {
+      "name": "orthographicSize",
+      "type": "float",
+      "mods": "public",
+      "default": "5f",
+      "section": "Visual da Raiz (opcional)",
+      "attrs": "[Tooltip(\"Tamanho ortográfico (zoom) da câmara neste trecho. Valores maiores = câmara mais afastada.\")]",
+      "inspector": true,
+      "description": "Tamanho ortográfico (zoom) da câmera neste trecho. Valores maiores = câmera mais afastada."
+    },
+    {
+      "name": "blendDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Visual da Raiz (opcional)",
+      "attrs": "[Tooltip(\"Duração (segundos) do movimento/zoom da câmara até este plano.\")]",
+      "inspector": true,
+      "description": "Duração (segundos) do movimento/zoom da câmera até este plano."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Visual da Raiz (opcional)",
+      "attrs": "[Tooltip(\"Nome opcional, apenas para organização no Inspector (ex: \\\"Aproximação à Clareira\\\", \\\"Drama da Coroa\\\", \\\"Afastar para Gaia\\\").\")]",
+      "inspector": true,
+      "description": "Nome opcional, apenas para organização no Inspector (ex: \"Aproximação à Clareira\", \"Drama da Coroa\", \"Afastar para Gaia\\"
+    },
+    {
+      "name": "ambientColor",
+      "type": "Color",
+      "mods": "public",
+      "default": "Color.white",
+      "section": "Luz / Cor Ambiente",
+      "attrs": "[Header(\"Luz / Cor Ambiente\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ambientIntensity",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Luz / Cor Ambiente",
+      "attrs": "[Range(0f, 3f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fogDensity",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "Neblina",
+      "attrs": "[Header(\"Neblina\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fogColor",
+      "type": "Color",
+      "mods": "public",
+      "default": "Color.gray",
+      "section": "Neblina",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rainIntensity",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "Clima / Partículas (0-1)",
+      "attrs": "[Header(\"Clima / Partículas (0-1)\")] [Tooltip(\"Intensidade da chuva (0 = sem chuva, 1 = intensidade máxima configurada em WorldMapController.maxRainEmissionRate).\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Intensidade da chuva (0 = sem chuva, 1 = intensidade máxima configurada em WorldMapController.maxRainEmissionRate)."
+    },
+    {
+      "name": "snowIntensity",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "Clima / Partículas (0-1)",
+      "attrs": "[Tooltip(\"Intensidade da neve (0 = sem neve, 1 = intensidade máxima configurada em WorldMapController.maxSnowEmissionRate).\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Intensidade da neve (0 = sem neve, 1 = intensidade máxima configurada em WorldMapController.maxSnowEmissionRate)."
+    },
+    {
+      "name": "ambientParticlesIntensity",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "Clima / Partículas (0-1)",
+      "attrs": "[Tooltip(\"Intensidade de partículas ambiente/decorativas (pólen, vagalumes, fuligem, etc.).\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Intensidade de partículas ambiente/decorativas (pólen, vagalumes, fuligem, etc.)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "GetFullPath",
+      "ret": "List<Vector3>",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação GetFullPath."
+    },
+    {
+      "name": "GetLength",
+      "ret": "float",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação GetLength."
+    },
+    {
+      "name": "GetPositionAtProgress",
+      "ret": "Vector3",
+      "mods": "public",
+      "params": "float t",
+      "description": "Executa a operação GetPositionAtProgress."
+    },
+    {
+      "name": "RefreshRootVisual",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RefreshRootVisual."
+    },
+    {
+      "name": "OnDrawGizmos",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmos."
+    }
+  ],
+  "dependencies": [
+    "PlayerProgress",
+    "WorldData",
+    "WorldMapCameraRig",
+    "WorldMapController",
+    "WorldMapNode"
+  ],
+  "used_by": [
+    "LightBallController",
+    "WorldData",
+    "WorldMapCameraRig",
+    "WorldMapController",
+    "WorldMapNode"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Mapa-Múndi (GDD \"Estrutura Geral do Mapa-Múndi\"): representa um RAMO/RAIZ\n/// entre dois <see cref=\"WorldMapNode\"/> — o caminho físico que a \"bola de luz\"\n/// percorre, os planos de câmara (\"trechos\") configuráveis ao longo desse\n/// percurso, e os pontos-chave de transição visual (luz, neblina, partículas)\n/// usados por <c>WorldMapController</c>.\n///\n/// IMPORTANTE — direcção da árvore: <see cref=\"fromNode\"/> é sempre o nó mais\n/// próximo do Coração de Gaia (\"nó-pai\"); <see cref=\"toNode\"/> é o nó mais\n/// afastado (\"nó-filho\"). Esta convenção define a regra de \"revelação de\n/// áreas e raízes\" do GDD:\n/// <list type=\"bullet\">\n/// <item><description>Este ramo fica ILUMINADO/atravessável quando <c>fromNode</c> estiver desbloqueado (<see cref=\"IsLit\"/>).</description></item>\n/// <item><description><c>toNode</c> fica ALCANÇÁVEL (a bola pode viajar até lá, painel mostra o custo) assim que este ramo estiver iluminado — mesmo que <c>toNode</c> continue bloqueado.</description></item>\n/// <item><description>Os ramos que partem de <c>toNode</c> só ficam iluminados quando <c>toNode</c> for desbloqueado — por isso \"dá para chegar até lá, mas não atravessar sem pagar\".</description></item>\n/// </list>\n/// </summary>\n[DisallowMultipleComponent]\npublic class WorldMapConnection : MonoBehaviour\n{\n    [Header(\"Nós Ligados\")]\n    [Tooltip(\"Nó de ORIGEM (mais próximo do Coração de Gaia). Este ramo só fica iluminado/atravessável quando este nó estiver desbloqueado.\")]\n    public WorldMapNode fromNode;\n\n    [Tooltip(\"Nó de DESTINO (mais afastado do Coração de Gaia). Fica 'alcançável' assim que 'fromNode' for desbloqueado, mesmo que continue bloqueado.\")]\n    public WorldMapNode toNode;\n\n    [Header(\"Caminho\")]\n    [Tooltip(\"Pontos intermédios do caminho, em ordem de 'fromNode' para 'toNode' (NÃO incluir os próprios nós — as posições deles são usadas automaticamente como extremidades). Pode ficar vazio para uma ligação em linha recta.\")]\n    public Transform[] waypoints;\n\n    [Header(\"Câmara — Trechos (\\\"Shots\\\")\")]\n    [Tooltip(\"Lista de planos de câmara ao longo deste ramo. 'progress' vai de 0 (em fromNode) a 1 (em toNode). À medida que a bola avança, a câmara faz blend para o plano mais avançado cujo 'progress' já foi atingido — permite controlo preciso de quando uma área entra em quadro, drama do boss, aproximação/afastamento de Gaia, etc. Não precisa de estar ordenada (é ordenada automaticamente por 'progress' em runtime).\")]\n    public List<CameraShot> cameraShots = new List<CameraShot>();\n\n    [Header(\"Transição Visual entre Regiões\")]\n    [Tooltip(\"Pontos-chave de luminosidade/cor/neblina/clima/partículas ao longo do ramo, interpolados pelo progresso da bola (WorldMapController.ApplyVisualKeyframes). Não precisa de estar ordenada.\")]\n    public List<RegionVisualKeyframe> visualKeyframes = new List<RegionVisualKeyframe>();\n\n    [Header(\"Mundo\")]\n    [Tooltip(\"Mundo a que este ramo pertence — usado para WorldData.rootColor/rootColorPostBoss (cor da raiz, normal vs. pós-boss). Deixar vazio para ramos neutros próximos do Coração de Gaia (comuns a vários mundos).\")]\n    public WorldData world;\n\n    [Header(\"Visual da Raiz (opcional)\")]\n    [Tooltip(\"LineRenderer usado para desenhar este ramo no Mapa-Múndi. Se atribuído, a sua cor é actualizada automaticamente (apagado/sombrio se !IsLit, WorldData.rootColor ou rootColorPostBoss se IsLit).\")]\n    public LineRenderer rootRenderer;\n\n    [Tooltip(\"Cor usada para o ramo enquanto NÃO estiver iluminado (sombrio/escuro).\")]\n    public Color unlitColor = new Color(0.25f, 0.25f, 0.3f, 1f);\n\n    // -------------------- Estado --------------------\n\n    /// <summary>Este ramo está iluminado/atravessável — verdadeiro quando 'fromNode' estiver desbloqueado (ou for o Coração de Gaia).</summary>\n    public bool IsLit => fromNode != null && fromNode.IsUnlocked;\n\n    // -------------------- Caminho --------------------\n\n    /// <summary>Lista completa de pontos do caminho, incluindo as posições de fromNode e toNode.</summary>\n    public List<Vector3> GetFullPath()\n    {\n        var points = new List<Vector3>();\n\n        if (fromNode != null) points.Add(fromNode.transform.position);\n\n        if (waypoints != null)\n            foreach (var wp in waypoints)\n                if (wp != null) points.Add(wp.position);\n\n        if (toNode != null) points.Add(toNode.transform.position);\n\n        return points;\n    }\n\n    /// <summary>Comprimento total do caminho (soma das distâncias entre pontos consecutivos).</summary>\n    public float GetLength()\n    {\n        var pts = GetFullPath();\n        float len = 0f;\n        for (int i = 1; i < pts.Count; i++)\n            len += Vector3.Distance(pts[i - 1], pts[i]);\n        return len;\n    }\n\n    /// <summary>Posição no mundo correspondente ao progresso 0-1 ao longo do caminho (0 = fromNode, 1 = toNode).</summary>\n    public Vector3 GetPositionAtProgress(float t)\n    {\n        t = Mathf.Clamp01(t);\n        var pts = GetFullPath();\n\n        if (pts.Count == 0) return transform.position;\n        if (pts.Count == 1) return pts[0];\n\n        float total = GetLength();\n        if (total <= 0f) return pts[0];\n\n        float target = t * total;\n        float covered = 0f;\n\n        for (int i = 1; i < pts.Count; i++)\n        {\n            float segLen = Vector3.Distance(pts[i - 1], pts[i]);\n\n            if (covered + segLen >= target || i == pts.Count - 1)\n            {\n                float segT = segLen > 0f ? Mathf.Clamp01((target - covered) / segLen) : 0f;\n                return Vector3.Lerp(pts[i - 1], pts[i], segT);\n            }\n\n            covered += segLen;\n        }\n\n        return pts[pts.Count - 1];\n    }\n\n    // -------------------- Visual da Raiz --------------------\n\n    /// <summary>Actualiza a cor/visibilidade de 'rootRenderer' de acordo com IsLit e o estado de boss do mundo (chamado por WorldMapController.RefreshAllNodeVisuals).</summary>\n    public void RefreshRootVisual()\n    {\n        if (rootRenderer == null) return;\n\n        Color color;\n\n        if (!IsLit)\n        {\n            color = unlitColor;\n        }\n        else if (world != null)\n        {\n            bool postBoss = PlayerProgress.Instance != null && PlayerProgress.Instance.HasDefeatedBoss(world);\n            color = postBoss ? world.rootColorPostBoss : world.rootColor;\n        }\n        else\n        {\n            color = Color.white;\n        }\n\n        rootRenderer.startColor = color;\n        rootRenderer.endColor = color;\n\n        var pts = GetFullPath();\n        rootRenderer.positionCount = pts.Count;\n        for (int i = 0; i < pts.Count; i++)\n            rootRenderer.SetPosition(i, pts[i]);\n    }\n\n    private void OnDrawGizmos()\n    {\n        var pts = GetFullPath();\n        Gizmos.color = IsLit ? Color.yellow : new Color(0.4f, 0.4f, 0.45f);\n\n        for (int i = 1; i < pts.Count; i++)\n            Gizmos.DrawLine(pts[i - 1], pts[i]);\n    }\n}\n\n/// <summary>\n/// Um \"plano\"/trecho de câmara configurável no Inspector ao longo de um\n/// <see cref=\"WorldMapConnection\"/>. Ver <see cref=\"WorldMapCameraRig.FollowConnectionProgress\"/>.\n/// </summary>\n[System.Serializable]\npublic class CameraShot\n{\n    [Range(0f, 1f)]\n    [Tooltip(\"Progresso ao longo do ramo (0 = fromNode, 1 = toNode) a partir do qual este plano passa a ser o alvo da câmara.\")]\n    public float progress;\n\n    [Tooltip(\"Ponto da cena que define a posição (X/Y) da câmara neste trecho (ex: um GameObject vazio colocado à frente da área que deve entrar em quadro). Se vazio, usa a posição do próprio ramo em 'progress'.\")]\n    public Transform cameraAnchor;\n\n    [Tooltip(\"Tamanho ortográfico (zoom) da câmara neste trecho. Valores maiores = câmara mais afastada.\")]\n    public float orthographicSize = 5f;\n\n    [Tooltip(\"Duração (segundos) do movimento/zoom da câmara até este plano.\")]\n    public float blendDuration = 1f;\n\n    [Tooltip(\"Nome opcional, apenas para organização no Inspector (ex: \\\"Aproximação à Clareira\\\", \\\"Drama da Coroa\\\", \\\"Afastar para Gaia\\\").\")]\n    public string label;\n}\n\n/// <summary>\n/// Ponto-chave de transição visual entre regiões (GDD \"Transição visual entre\n/// regiões\"), associado a um progresso 0-1 ao longo de um\n/// <see cref=\"WorldMapConnection\"/>. <c>WorldMapController.ApplyVisualKeyframes</c>\n/// interpola entre dois pontos-chave consecutivos de acordo com o progresso da\n/// bola e aplica o resultado à luz ambiente/neblina globais (RenderSettings) e\n/// a sistemas de partículas de chuva/neve/ambiente configurados no Inspector.\n/// </summary>\n[System.Serializable]\npublic class RegionVisualKeyframe\n{\n    [Range(0f, 1f)]\n    [Tooltip(\"Progresso ao longo do ramo (0 = fromNode, 1 = toNode) onde este conjunto de valores se aplica totalmente.\")]\n    public float progress;\n\n    [Header(\"Luz / Cor Ambiente\")]\n    public Color ambientColor = Color.white;\n    [Range(0f, 3f)] public float ambientIntensity = 1f;\n\n    [Header(\"Neblina\")]\n    [Range(0f, 1f)] public float fogDensity;\n    public Color fogColor = Color.gray;\n\n    [Header(\"Clima / Partículas (0-1)\")]\n    [Tooltip(\"Intensidade da chuva (0 = sem chuva, 1 = intensidade máxima configurada em WorldMapController.maxRainEmissionRate).\")]\n    [Range(0f, 1f)] public float rainIntensity;\n\n    [Tooltip(\"Intensidade da neve (0 = sem neve, 1 = intensidade máxima configurada em WorldMapController.maxSnowEmissionRate).\")]\n    [Range(0f, 1f)] public float snowIntensity;\n\n    [Tooltip(\"Intensidade de partículas ambiente/decorativas (pólen, vagalumes, fuligem, etc.).\")]\n    [Range(0f, 1f)] public float ambientParticlesIntensity;\n\n    [Tooltip(\"Nome opcional, apenas para organização no Inspector (ex: \\\"Saída de Gaia\\\", \\\"Atmosfera do Bosque\\\", \\\"Pós-Boss\\\").\")]\n    public string label;\n}\n",
+  "id": "script-world-worldmapconnection-cs",
+  "dependencyIds": [
+    "script-data-playerprogress-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapcamerarig-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapnode-cs"
+  ],
+  "usedByIds": [
+    "script-world-lightballcontroller-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapcamerarig-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapnode-cs"
+  ]
+}

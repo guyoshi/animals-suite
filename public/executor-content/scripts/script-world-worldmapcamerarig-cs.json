@@ -1,0 +1,263 @@
+{
+  "path": "World/WorldMapCameraRig.cs",
+  "filename": "WorldMapCameraRig.cs",
+  "category": "World",
+  "primary": "WorldMapCameraRig",
+  "kind": "Componente",
+  "summary": "Mapa-Múndi (GDD \"Câmera\"): controla a câmera do Mapa-Múndi de forma totalmente configurável no Inspector — vista geral do Coração de Gaia, aproximação por \"trechos\" ( ) definidos em cada , foco direto num nó (ex: cutscene de desbloqueio do boss) e o modo livre \"Visão do Mapa-Múndi\". Todo o movimento é feito diretamente sobre uma ortográfica 2D (posição X/Y + orthographicSize), com blends suaves — não depende de Cinemachine, para permitir o controlo \"por trechos\" exigido pelo GDD (não apenas distância).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "WorldMapCameraRig",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "mapCamera",
+      "type": "Camera",
+      "mods": "public",
+      "default": "",
+      "section": "Câmara",
+      "attrs": "[Header(\"Câmara\")] [Tooltip(\"Câmara usada pelo Mapa-Múndi. Se vazio, usa a Camera neste GameObject.\")]",
+      "inspector": true,
+      "description": "Câmera usada pelo Mapa-Múndi. Se vazio, usa a Camera neste GameObject."
+    },
+    {
+      "name": "gaiaHubAnchor",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "Coração de Gaia — Vista Geral",
+      "attrs": "[Header(\"Coração de Gaia — Vista Geral\")] [Tooltip(\"Ponto onde a câmara fica centrada quando o jogador está no Coração de Gaia (vê Gaia e os 6 mundos em simultâneo).\")]",
+      "inspector": true,
+      "description": "Ponto onde a câmera fica centrada quando o jogador está no Coração de Gaia (vê Gaia e os 6 mundos em simultâneo)."
+    },
+    {
+      "name": "gaiaHubOrthographicSize",
+      "type": "float",
+      "mods": "public",
+      "default": "12f",
+      "section": "Coração de Gaia — Vista Geral",
+      "attrs": "[Tooltip(\"Zoom (tamanho ortográfico) da câmara no Coração de Gaia — bem afastado, para mostrar Gaia e os 6 mundos. Caminhos/áreas internas dos mundos ficam invisíveis a este zoom.\")]",
+      "inspector": true,
+      "description": "Zoom (tamanho ortográfico) da câmera no Coração de Gaia — bem afastado, para mostrar Gaia e os 6 mundos. Caminhos/áreas internas dos mundos ficam invisíveis a este zoom."
+    },
+    {
+      "name": "defaultBlendDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Transição Padrão",
+      "attrs": "[Header(\"Transição Padrão\")] [Tooltip(\"Duração (segundos) usada para mudanças de plano que não especificam a sua própria duração (ex: ir para o Coração de Gaia, centrar no nó actual ao abrir o mapa, regresso da Visão do Mapa-Múndi).\")] [Min(0.01f)]",
+      "inspector": true,
+      "description": "Duração (segundos) usada para mudanças de plano que não especificam a sua própria duração (ex: ir para o Coração de Gaia, centrar no nó atual ao abrir o mapa, regresso da Visão do Mapa-Múndi)."
+    },
+    {
+      "name": "defaultNodeOrthographicSize",
+      "type": "float",
+      "mods": "public",
+      "default": "5f",
+      "section": "Transição Padrão",
+      "attrs": "[Tooltip(\"Zoom (tamanho ortográfico) padrão usado para centrar a câmara num nó comum (1-2 áreas em quadro), quando o ramo não define um CameraShot próprio para esse ponto.\")]",
+      "inspector": true,
+      "description": "Zoom (tamanho ortográfico) padrão usado para centrar a câmera num nó comum (1-2 áreas em quadro), quando o ramo não define um CameraShot próprio para esse ponto."
+    },
+    {
+      "name": "freeLookPanSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "6f",
+      "section": "Visão do Mapa-Múndi (Upgrade)",
+      "attrs": "[Header(\"Visão do Mapa-Múndi (Upgrade)\")] [Tooltip(\"Velocidade de deslocação da câmara em modo Visão do Mapa-Múndi (analógico direito), em unidades de mundo por segundo.\")]",
+      "inspector": true,
+      "description": "Velocidade de deslocação da câmera em modo Visão do Mapa-Múndi (analógico direito), em unidades de mundo por segundo."
+    },
+    {
+      "name": "freeLookOrthographicSize",
+      "type": "float",
+      "mods": "public",
+      "default": "8f",
+      "section": "Visão do Mapa-Múndi (Upgrade)",
+      "attrs": "[Tooltip(\"Zoom (tamanho ortográfico) usado durante a Visão do Mapa-Múndi (mais afastado que o normal, para ver mais do mundo actual).\")]",
+      "inspector": true,
+      "description": "Zoom (tamanho ortográfico) usado durante a Visão do Mapa-Múndi (mais afastado que o normal, para ver mais do mundo atual)."
+    },
+    {
+      "name": "freeLookMaxOffset",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "new Vector2(20f, 12f)",
+      "section": "Visão do Mapa-Múndi (Upgrade)",
+      "attrs": "[Tooltip(\"Distância máxima (unidades de mundo, X e Y) que a câmara se pode afastar da bola durante a Visão do Mapa-Múndi.\")]",
+      "inspector": true,
+      "description": "Distância máxima (unidades de mundo, X e Y) que a câmera se pode afastar da bola durante a Visão do Mapa-Múndi."
+    },
+    {
+      "name": "blendRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Visão do Mapa-Múndi (Upgrade)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freeLookOffset",
+      "type": "Vector3",
+      "mods": "private",
+      "default": "",
+      "section": "Visão do Mapa-Múndi (Upgrade)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freeLookPivot",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Visão do Mapa-Múndi (Upgrade)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "trackedConnection",
+      "type": "WorldMapConnection",
+      "mods": "private",
+      "default": "",
+      "section": "Visão do Mapa-Múndi (Upgrade)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "trackedShotIndex",
+      "type": "int",
+      "mods": "private",
+      "default": "-1",
+      "section": "Visão do Mapa-Múndi (Upgrade)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "MoveTo",
+      "ret": "void",
+      "mods": "public",
+      "params": "Vector3 position, float orthographicSize, float duration",
+      "description": "Executa a operação MoveTo."
+    },
+    {
+      "name": "MoveTo",
+      "ret": "void",
+      "mods": "public",
+      "params": "Transform anchor, float orthographicSize, float duration",
+      "description": "Executa a operação MoveTo."
+    },
+    {
+      "name": "SnapTo",
+      "ret": "void",
+      "mods": "public",
+      "params": "Vector3 position, float orthographicSize",
+      "description": "Executa a operação SnapTo."
+    },
+    {
+      "name": "SnapTo",
+      "ret": "void",
+      "mods": "public",
+      "params": "Transform anchor, float orthographicSize",
+      "description": "Executa a operação SnapTo."
+    },
+    {
+      "name": "ShowGaiaHub",
+      "ret": "void",
+      "mods": "public",
+      "params": "float duration = -1f",
+      "description": "Executa a operação ShowGaiaHub."
+    },
+    {
+      "name": "FocusNode",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldMapNode node, float orthographicSize = -1f, float duration = -1f",
+      "description": "Executa a operação FocusNode."
+    },
+    {
+      "name": "FollowConnectionProgress",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldMapConnection connection, float progress",
+      "description": "Executa a operação FollowConnectionProgress."
+    },
+    {
+      "name": "ResetShotTracking",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetShotTracking."
+    },
+    {
+      "name": "BlendTo",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "Vector3 targetPos, float targetSize, float duration",
+      "description": "Executa a operação BlendTo."
+    },
+    {
+      "name": "EnterFreeLook",
+      "ret": "void",
+      "mods": "public",
+      "params": "Transform ballPivot",
+      "description": "Executa a operação EnterFreeLook."
+    },
+    {
+      "name": "Pan",
+      "ret": "void",
+      "mods": "public",
+      "params": "Vector2 input",
+      "description": "Executa a operação Pan."
+    },
+    {
+      "name": "ExitFreeLook",
+      "ret": "void",
+      "mods": "public",
+      "params": "Transform ballPivot, float orthographicSize = -1f, float duration = -1f",
+      "description": "Executa a operação ExitFreeLook."
+    }
+  ],
+  "dependencies": [
+    "CameraShot",
+    "WorldMapConnection",
+    "WorldMapNode"
+  ],
+  "used_by": [
+    "LightBallController",
+    "WorldMapConnection",
+    "WorldMapController"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Mapa-Múndi (GDD \"Câmara\"): controla a câmara do Mapa-Múndi de forma\n/// totalmente configurável no Inspector — vista geral do Coração de Gaia,\n/// aproximação por \"trechos\" (<see cref=\"CameraShot\"/>) definidos em cada\n/// <see cref=\"WorldMapConnection\"/>, foco directo num nó (ex: cutscene de\n/// desbloqueio do boss) e o modo livre \"Visão do Mapa-Múndi\".\n///\n/// Todo o movimento é feito directamente sobre uma <see cref=\"Camera\"/>\n/// ortográfica 2D (posição X/Y + orthographicSize), com blends suaves —\n/// não depende de Cinemachine, para permitir o controlo \"por trechos\"\n/// exigido pelo GDD (não apenas distância).\n/// </summary>\n[RequireComponent(typeof(Camera))]\npublic class WorldMapCameraRig : MonoBehaviour\n{\n    [Header(\"Câmara\")]\n    [Tooltip(\"Câmara usada pelo Mapa-Múndi. Se vazio, usa a Camera neste GameObject.\")]\n    public Camera mapCamera;\n\n    [Header(\"Coração de Gaia — Vista Geral\")]\n    [Tooltip(\"Ponto onde a câmara fica centrada quando o jogador está no Coração de Gaia (vê Gaia e os 6 mundos em simultâneo).\")]\n    public Transform gaiaHubAnchor;\n\n    [Tooltip(\"Zoom (tamanho ortográfico) da câmara no Coração de Gaia — bem afastado, para mostrar Gaia e os 6 mundos. Caminhos/áreas internas dos mundos ficam invisíveis a este zoom.\")]\n    public float gaiaHubOrthographicSize = 12f;\n\n    [Header(\"Transição Padrão\")]\n    [Tooltip(\"Duração (segundos) usada para mudanças de plano que não especificam a sua própria duração (ex: ir para o Coração de Gaia, centrar no nó actual ao abrir o mapa, regresso da Visão do Mapa-Múndi).\")]\n    [Min(0.01f)]\n    public float defaultBlendDuration = 1f;\n\n    [Tooltip(\"Zoom (tamanho ortográfico) padrão usado para centrar a câmara num nó comum (1-2 áreas em quadro), quando o ramo não define um CameraShot próprio para esse ponto.\")]\n    public float defaultNodeOrthographicSize = 5f;\n\n    [Header(\"Visão do Mapa-Múndi (Upgrade)\")]\n    [Tooltip(\"Velocidade de deslocação da câmara em modo Visão do Mapa-Múndi (analógico direito), em unidades de mundo por segundo.\")]\n    public float freeLookPanSpeed = 6f;\n\n    [Tooltip(\"Zoom (tamanho ortográfico) usado durante a Visão do Mapa-Múndi (mais afastado que o normal, para ver mais do mundo actual).\")]\n    public float freeLookOrthographicSize = 8f;\n\n    [Tooltip(\"Distância máxima (unidades de mundo, X e Y) que a câmara se pode afastar da bola durante a Visão do Mapa-Múndi.\")]\n    public Vector2 freeLookMaxOffset = new Vector2(20f, 12f);\n\n    /// <summary>A câmara está a meio de um blend de posição/zoom.</summary>\n    public bool IsBlending { get; private set; }\n\n    /// <summary>A câmara está no modo \"Visão do Mapa-Múndi\" (analógico direito controla o pan).</summary>\n    public bool IsFreeLooking { get; private set; }\n\n    private Coroutine blendRoutine;\n    private Vector3 freeLookOffset;\n    private Transform freeLookPivot;\n\n    private WorldMapConnection trackedConnection;\n    private int trackedShotIndex = -1;\n\n    private void Awake()\n    {\n        if (mapCamera == null) mapCamera = GetComponent<Camera>();\n    }\n\n    // -------------------- Movimentos Directos --------------------\n\n    /// <summary>Move a câmara para \"position\" com o zoom \"orthographicSize\", em \"duration\" segundos (corta qualquer blend em curso).</summary>\n    public void MoveTo(Vector3 position, float orthographicSize, float duration)\n    {\n        if (blendRoutine != null) StopCoroutine(blendRoutine);\n        blendRoutine = StartCoroutine(BlendTo(position, orthographicSize, Mathf.Max(0.01f, duration)));\n    }\n\n    public void MoveTo(Transform anchor, float orthographicSize, float duration)\n    {\n        if (anchor == null) return;\n        MoveTo(anchor.position, orthographicSize, duration);\n    }\n\n    /// <summary>Posiciona a câmara instantaneamente (sem blend) — usado ao abrir o mapa, antes do primeiro fade-in.</summary>\n    public void SnapTo(Vector3 position, float orthographicSize)\n    {\n        if (blendRoutine != null) { StopCoroutine(blendRoutine); blendRoutine = null; }\n        IsBlending = false;\n\n        position.z = mapCamera.transform.position.z;\n        mapCamera.transform.position = position;\n        if (mapCamera.orthographic) mapCamera.orthographicSize = orthographicSize;\n    }\n\n    public void SnapTo(Transform anchor, float orthographicSize)\n    {\n        if (anchor != null) SnapTo(anchor.position, orthographicSize);\n    }\n\n    /// <summary>Vista geral do Coração de Gaia (afastada, mostra os 6 mundos; caminhos/áreas internas ficam invisíveis).</summary>\n    public void ShowGaiaHub(float duration = -1f)\n    {\n        IsFreeLooking = false;\n        ResetShotTracking();\n        Vector3 pos = gaiaHubAnchor != null ? gaiaHubAnchor.position : mapCamera.transform.position;\n        MoveTo(pos, gaiaHubOrthographicSize, duration > 0f ? duration : defaultBlendDuration);\n    }\n\n    /// <summary>Centra a câmara num nó com um zoom específico — usado ao abrir o mapa sobre o nó actual e na cutscene de desbloqueio do boss.</summary>\n    public void FocusNode(WorldMapNode node, float orthographicSize = -1f, float duration = -1f)\n    {\n        if (node == null) return;\n\n        IsFreeLooking = false;\n        ResetShotTracking();\n        MoveTo(node.transform.position, orthographicSize > 0f ? orthographicSize : defaultNodeOrthographicSize, duration > 0f ? duration : defaultBlendDuration);\n    }\n\n    // -------------------- Trechos ao Longo de um Ramo --------------------\n\n    /// <summary>\n    /// Chamado continuamente enquanto a bola percorre \"connection\" (progress 0-1).\n    /// Escolhe o <see cref=\"CameraShot\"/> mais avançado cujo \"progress\" já foi\n    /// atingido e inicia um blend até lá — só um blend por trecho (não reinicia\n    /// a cada frame). Se \"connection\" não tiver nenhum CameraShot, a câmara\n    /// segue a bola directamente com o zoom padrão.\n    /// </summary>\n    public void FollowConnectionProgress(WorldMapConnection connection, float progress)\n    {\n        if (connection == null) return;\n\n        if (connection != trackedConnection)\n        {\n            trackedConnection = connection;\n            trackedShotIndex = -1;\n        }\n\n        if (connection.cameraShots == null || connection.cameraShots.Count == 0)\n        {\n            // Sem trechos configurados: segue a bola directamente.\n            Vector3 pos = connection.GetPositionAtProgress(progress);\n            pos.z = mapCamera.transform.position.z;\n            mapCamera.transform.position = pos;\n            return;\n        }\n\n        int best = -1;\n        for (int i = 0; i < connection.cameraShots.Count; i++)\n            if (connection.cameraShots[i].progress <= progress && (best < 0 || connection.cameraShots[i].progress >= connection.cameraShots[best].progress))\n                best = i;\n\n        if (best < 0) best = 0;\n        if (best == trackedShotIndex) return;\n\n        trackedShotIndex = best;\n        var shot = connection.cameraShots[best];\n\n        Vector3 shotPos = shot.cameraAnchor != null ? shot.cameraAnchor.position : connection.GetPositionAtProgress(shot.progress);\n        MoveTo(shotPos, shot.orthographicSize, Mathf.Max(0.01f, shot.blendDuration));\n    }\n\n    /// <summary>Repõe o rastreio de trechos — chamar sempre que a bola para num nó ou troca de ramo, para reavaliar os CameraShots desde o início.</summary>\n    public void ResetShotTracking()\n    {\n        trackedConnection = null;\n        trackedShotIndex = -1;\n    }\n\n    private IEnumerator BlendTo(Vector3 targetPos, float targetSize, float duration)\n    {\n        IsBlending = true;\n\n        Vector3 startPos = mapCamera.transform.position;\n        float startSize = mapCamera.orthographic ? mapCamera.orthographicSize : targetSize;\n        targetPos.z = startPos.z;\n\n        float elapsed = 0f;\n        while (elapsed < duration)\n        {\n            elapsed += Time.deltaTime;\n            float k = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));\n\n            mapCamera.transform.position = Vector3.Lerp(startPos, targetPos, k);\n            if (mapCamera.orthographic) mapCamera.orthographicSize = Mathf.Lerp(startSize, targetSize, k);\n\n            yield return null;\n        }\n\n        mapCamera.transform.position = targetPos;\n        if (mapCamera.orthographic) mapCamera.orthographicSize = targetSize;\n\n        IsBlending = false;\n        blendRoutine = null;\n    }\n\n    // -------------------- Visão do Mapa-Múndi (Upgrade) --------------------\n\n    /// <summary>\n    /// Entra no modo \"Visão do Mapa-Múndi\": a câmara passa a ser controlada pelo\n    /// analógico direito (<see cref=\"Pan\"/>), afastando-se a partir da posição\n    /// da bola (que permanece parada). Não revela outros mundos — apenas o\n    /// mundo onde a bola está.\n    /// </summary>\n    public void EnterFreeLook(Transform ballPivot)\n    {\n        IsFreeLooking = true;\n        freeLookPivot = ballPivot;\n        freeLookOffset = Vector3.zero;\n\n        Vector3 pos = ballPivot != null ? ballPivot.position : mapCamera.transform.position;\n        MoveTo(pos, freeLookOrthographicSize, defaultBlendDuration);\n    }\n\n    /// <summary>Move a câmara em modo Visão do Mapa-Múndi (analógico direito), limitado por <see cref=\"freeLookMaxOffset\"/> em torno da bola.</summary>\n    public void Pan(Vector2 input)\n    {\n        if (!IsFreeLooking || freeLookPivot == null || IsBlending) return;\n\n        freeLookOffset += (Vector3)(input * freeLookPanSpeed * Time.deltaTime);\n        freeLookOffset.x = Mathf.Clamp(freeLookOffset.x, -freeLookMaxOffset.x, freeLookMaxOffset.x);\n        freeLookOffset.y = Mathf.Clamp(freeLookOffset.y, -freeLookMaxOffset.y, freeLookMaxOffset.y);\n\n        Vector3 target = freeLookPivot.position + freeLookOffset;\n        target.z = mapCamera.transform.position.z;\n        mapCamera.transform.position = target;\n    }\n\n    /// <summary>\n    /// Sai do modo Visão do Mapa-Múndi e devolve a câmara suavemente à bola —\n    /// chamado quando o jogador move a bola com o analógico esquerdo (GDD:\n    /// \"mover a bola com o stick esquerdo termina a observação e retorna a\n    /// câmara suavemente\").\n    /// </summary>\n    public void ExitFreeLook(Transform ballPivot, float orthographicSize = -1f, float duration = -1f)\n    {\n        IsFreeLooking = false;\n        freeLookOffset = Vector3.zero;\n\n        if (ballPivot != null)\n            MoveTo(ballPivot.position, orthographicSize > 0f ? orthographicSize : defaultNodeOrthographicSize, duration > 0f ? duration : defaultBlendDuration);\n    }\n}\n",
+  "id": "script-world-worldmapcamerarig-cs",
+  "dependencyIds": [
+    "script-world-worldmapconnection-cs",
+    "script-world-worldmapnode-cs"
+  ],
+  "usedByIds": [
+    "script-world-lightballcontroller-cs",
+    "script-world-worldmapconnection-cs",
+    "script-world-worldmapcontroller-cs"
+  ]
+}

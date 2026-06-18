@@ -1,0 +1,81 @@
+{
+  "path": "Abilities/IFormAbility.cs",
+  "filename": "IFormAbility.cs",
+  "category": "Abilities",
+  "primary": "IFormAbility",
+  "kind": "Interface",
+  "summary": "Implementado por qualquer m�dulo de habilidade (Dash, Charge, Roll, Glide, etc.). O FormSwitcher chama ConfigureFromForm em todos os IFormAbility do Player sempre que a forma atual muda, para que cada m�dulo se active/desactive e atualize os seus par�metros de acordo com a nova AnimalFormData.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "IFormAbility",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [],
+  "dependencies": [
+    "AnimalFormData",
+    "FormSwitcher"
+  ],
+  "used_by": [
+    "CamoAbility",
+    "ChargeAbility",
+    "ClimbAbility",
+    "CrawlAbility",
+    "DashAbility",
+    "EggAbility",
+    "FormSwitcher",
+    "GlideAbility",
+    "GrabThrowAbility",
+    "HeavyStrikeAbility",
+    "IceBrakeAbility",
+    "NightVisionAbility",
+    "PlayerAttack",
+    "PounceAbility",
+    "PullAbility",
+    "RoarAbility",
+    "RollAbility",
+    "ShellGuardAbility",
+    "SonarAbility",
+    "SpinAttackAbility",
+    "SprintAbility",
+    "SwingAbility",
+    "TonguePullAbility",
+    "WaterMotor2D"
+  ],
+  "source": "/// <summary>\n/// Implementado por qualquer m�dulo de habilidade (Dash, Charge, Roll, Glide, etc.).\n/// O FormSwitcher chama ConfigureFromForm em todos os IFormAbility do Player\n/// sempre que a forma actual muda, para que cada m�dulo se active/desactive\n/// e actualize os seus par�metros de acordo com a nova AnimalFormData.\n/// </summary>\npublic interface IFormAbility\n{\n    void ConfigureFromForm(AnimalFormData form);\n}\n",
+  "id": "script-abilities-iformability-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-forms-formswitcher-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-camoability-cs",
+    "script-abilities-chargeability-cs",
+    "script-abilities-climbability-cs",
+    "script-abilities-crawlability-cs",
+    "script-abilities-dashability-cs",
+    "script-abilities-eggability-cs",
+    "script-forms-formswitcher-cs",
+    "script-abilities-glideability-cs",
+    "script-abilities-grabthrowability-cs",
+    "script-abilities-heavystrikeability-cs",
+    "script-abilities-icebrakeability-cs",
+    "script-abilities-nightvisionability-cs",
+    "script-player-playerattack-cs",
+    "script-abilities-pounceability-cs",
+    "script-abilities-pullability-cs",
+    "script-abilities-roarability-cs",
+    "script-abilities-rollability-cs",
+    "script-abilities-shellguardability-cs",
+    "script-abilities-sonarability-cs",
+    "script-abilities-spinattackability-cs",
+    "script-abilities-sprintability-cs",
+    "script-abilities-swingability-cs",
+    "script-abilities-tonguepullability-cs",
+    "script-player-watermotor2d-cs"
+  ]
+}

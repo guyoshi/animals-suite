@@ -1,0 +1,611 @@
+{
+  "path": "World/WorldMapUI.cs",
+  "filename": "WorldMapUI.cs",
+  "category": "World",
+  "primary": "WorldMapUI",
+  "kind": "Componente",
+  "summary": "Mapa-Múndi (GDD \"HUD\" / \"Painel Automático de Área\" / \"Apresentação do Mundo\"): toda a interface do Mapa-Múndi — HUD do Coração de Gaia (Runas de Gaia + emblemas dos 6 mundos), HUD dentro de um mundo (nome + emblema do mundo, se já obtido), apresentação de mundo (logo/música/frase, mostrada uma única vez por mundo), painel automático de área (bloqueada/Vila/Boss/ desbloqueada, com custo, \"Desbloquear\"/\"Viajar\" e contadores \"X/Y\" ou \"X/?\") e a legenda de comandos no rodapé. Chamado por — todos os textos/formatos são configuráveis no Inspector.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "WorldMapUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "WorldEmblemSlot",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "gaiaHubHudRoot",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "HUD — Coração de Gaia",
+      "attrs": "[Header(\"HUD — Coração de Gaia\")] [Tooltip(\"Raiz do HUD mostrado quando a bola está no Coração de Gaia (Runas de Gaia + emblemas dos 6 mundos).\")]",
+      "inspector": true,
+      "description": "Raiz do HUD mostrado quando a bola está no Coração de Gaia (Runas de Gaia + emblemas dos 6 mundos)."
+    },
+    {
+      "name": "worldEmblemSlots",
+      "type": "WorldEmblemSlot[]",
+      "mods": "public",
+      "default": "",
+      "section": "HUD — Coração de Gaia",
+      "attrs": "[Tooltip(\"Lista dos 6 mundos: logo (WorldData.mapLogo), estado de \\\"já visitado\\\" (ícone normal vs. silhueta) e emblema do mundo (mostrado se já obtido).\")]",
+      "inspector": true,
+      "description": "Lista dos 6 mundos: logo (WorldData.mapLogo), estado de \"já visitado\" (ícone normal vs. silhueta) e emblema do mundo (mostrado se já obtido)."
+    },
+    {
+      "name": "worldHudRoot",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "HUD — Dentro de um Mundo",
+      "attrs": "[Header(\"HUD — Dentro de um Mundo\")] [Tooltip(\"Raiz do HUD mostrado sempre que a bola está fora do Coração de Gaia (nome do mundo + emblema, se obtido).\")]",
+      "inspector": true,
+      "description": "Raiz do HUD mostrado sempre que a bola está fora do Coração de Gaia (nome do mundo + emblema, se obtido)."
+    },
+    {
+      "name": "worldNameText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "HUD — Dentro de um Mundo",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "worldEmblemImage",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "HUD — Dentro de um Mundo",
+      "attrs": "[Tooltip(\"Imagem do emblema do mundo (WorldData.worldEmblem.icon) — só fica visível depois de obtido (GameVariables, emblem.obtainedVariable).\")]",
+      "inspector": true,
+      "description": "Imagem do emblema do mundo (WorldData.worldEmblem.icon) — só fica visível depois de obtido (GameVariables, emblem.obtainedVariable)."
+    },
+    {
+      "name": "worldEmblemContainer",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "HUD — Dentro de um Mundo",
+      "attrs": "[Tooltip(\"Contentor do emblema do mundo (activado/desactivado consoante o emblema já tenha sido obtido).\")]",
+      "inspector": true,
+      "description": "Contentor do emblema do mundo (ativado/desativado conforme o emblema já tenha sido obtido)."
+    },
+    {
+      "name": "runasDeGaiaText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "HUD — Recursos (Comum)",
+      "attrs": "[Header(\"HUD — Recursos (Comum)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasDeGaiaFormat",
+      "type": "string",
+      "mods": "public",
+      "default": "\"{0}\"",
+      "section": "HUD — Recursos (Comum)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "presentationRoot",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Apresentação do Mundo (1ª vez)",
+      "attrs": "[Header(\"Apresentação do Mundo (1ª vez)\")] [Tooltip(\"Raiz do painel de apresentação em ecrã cheio — logo, nome e frase temática do mundo, mostrado apenas na primeira vez que o jogador chega à 1ª área de cada mundo.\")]",
+      "inspector": true,
+      "description": "Raiz do painel de apresentação em tela cheio — logo, nome e frase temática do mundo, mostrado apenas na primeira vez que o jogador chega à 1ª área de cada mundo."
+    },
+    {
+      "name": "presentationCanvasGroup",
+      "type": "CanvasGroup",
+      "mods": "public",
+      "default": "",
+      "section": "Apresentação do Mundo (1ª vez)",
+      "attrs": "[Tooltip(\"CanvasGroup de 'presentationRoot', usado para o fade de entrada/saída.\")]",
+      "inspector": true,
+      "description": "CanvasGroup de 'presentationRoot', usado para o fade de entrada/saída."
+    },
+    {
+      "name": "presentationLogoImage",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Apresentação do Mundo (1ª vez)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "presentationWorldNameText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Apresentação do Mundo (1ª vez)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "presentationThemePhraseText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Apresentação do Mundo (1ª vez)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "presentationFadeDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Apresentação do Mundo (1ª vez)",
+      "attrs": "[Tooltip(\"Duração (segundos) do fade-in/fade-out da apresentação do mundo.\")]",
+      "inspector": true,
+      "description": "Duração (segundos) do fade-in/fade-out da apresentação do mundo."
+    },
+    {
+      "name": "presentationHoldDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "4f",
+      "section": "Apresentação do Mundo (1ª vez)",
+      "attrs": "[Tooltip(\"Tempo (segundos) que a apresentação fica visível antes de desaparecer automaticamente.\")]",
+      "inspector": true,
+      "description": "Tempo (segundos) que a apresentação fica visível antes de desaparecer automaticamente."
+    },
+    {
+      "name": "panelRoot",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Painel Automático de Área",
+      "attrs": "[Header(\"Painel Automático de Área\")] [Tooltip(\"Raiz do painel automático — aparece sempre que a bola pára num nó que não seja o Coração de Gaia.\")]",
+      "inspector": true,
+      "description": "Raiz do painel automático — aparece sempre que a bola pára num nó que não seja o Coração de Gaia."
+    },
+    {
+      "name": "panelNameText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Painel Automático de Área",
+      "attrs": "[Tooltip(\"Nome da área (ou \\\"?????????????\\\"/\\\"????????\\\" enquanto oculto).\")]",
+      "inspector": true,
+      "description": "Nome da área (ou \"?????????????\"/\"????????\" enquanto oculto)."
+    },
+    {
+      "name": "panelCostText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Painel Automático de Área",
+      "attrs": "[Tooltip(\"Custo de desbloqueio (\\\"Custo: X Runas de Gaia\\\") — visível apenas em áreas Normais bloqueadas mas alcançáveis.\")]",
+      "inspector": true,
+      "description": "Custo de desbloqueio (\"Custo: X Runas de Gaia\\"
+    },
+    {
+      "name": "panelActionText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Painel Automático de Área",
+      "attrs": "[Tooltip(\"Acção disponível: \\\"A: Desbloquear\\\" ou \\\"A: Viajar\\\". Fica oculto para áreas de Boss ainda não desbloqueadas (não compráveis).\")]",
+      "inspector": true,
+      "description": "Ação disponível: \"A: Desbloquear\" ou \"A: Viajar\". Fica oculto para áreas de Boss ainda não desbloqueadas (não compráveis)."
+    },
+    {
+      "name": "panelStatsRoot",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Painel Automático de Área",
+      "attrs": "[Tooltip(\"Contentor dos contadores da área (Runas/NPCs/Sussurros/Baús/Fragmentos) — só visível em áreas desbloqueadas (ou Boss já descoberto).\")]",
+      "inspector": true,
+      "description": "Contentor dos contadores da área (Runas/NPCs/Sussurros/Baús/Fragmentos) — só visível em áreas desbloqueadas (ou Boss já descoberto)."
+    },
+    {
+      "name": "panelStatsText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Painel Automático de Área",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "lockedNamePlaceholder",
+      "type": "string",
+      "mods": "public",
+      "default": "\"?????????????\"",
+      "section": "Painel — Textos",
+      "attrs": "[Header(\"Painel — Textos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "bossNamePlaceholder",
+      "type": "string",
+      "mods": "public",
+      "default": "\"????????\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "costFormat",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Custo: {0} Runas de Gaia\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "actionUnlockText",
+      "type": "string",
+      "mods": "public",
+      "default": "\"A: Desbloquear\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "actionTravelText",
+      "type": "string",
+      "mods": "public",
+      "default": "\"A: Viajar\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "statLineFormat",
+      "type": "string",
+      "mods": "public",
+      "default": "\"{0}: {1}/{2}\"",
+      "section": "Painel — Textos",
+      "attrs": "[Tooltip(\"Formato de cada linha de contador. {0} = nome do contador, {1} = encontrados, {2} = total (ou \\\"?\\\" se ainda não revelado).\")]",
+      "inspector": true,
+      "description": "Formato de cada linha de contador. {0} = nome do contador, {1} = encontrados, {2} = total (ou \"?\" se ainda não revelado)."
+    },
+    {
+      "name": "statRunasLabel",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Runas de Gaia\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "statNpcsLabel",
+      "type": "string",
+      "mods": "public",
+      "default": "\"NPCs\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "statWhispersLabel",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Sussurros\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "statChestsLabel",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Baús\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "statFragmentsLabel",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Fragmentos Vitais\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hiddenTotalSymbol",
+      "type": "string",
+      "mods": "public",
+      "default": "\"?\"",
+      "section": "Painel — Textos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "legendRoot",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "[Header(\"Legenda de Comandos (Rodapé)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "legendText",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "legendDefault",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Mover: Analógico Esquerdo   •   A: Confirmar   •   B: Voltar\"",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "[TextArea] [Tooltip(\"Legenda mostrada normalmente: navegação (analógico esquerdo) + confirmar/voltar.\")]",
+      "inspector": true,
+      "description": "Legenda mostrada normalmente: navegação (analógico esquerdo) + confirmar/voltar."
+    },
+    {
+      "name": "legendWithMapVision",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Mover: Analógico Esquerdo   •   A: Confirmar   •   B: Voltar   •   Analógico Direito: Visão do Mapa-Múndi\"",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "[TextArea] [Tooltip(\"Legenda mostrada quando o jogador tem a Visão do Mapa-Múndi (acrescenta o analógico direito).\")]",
+      "inspector": true,
+      "description": "Legenda mostrada quando o jogador tem a Visão do Mapa-Múndi (acrescenta o analógico direito)."
+    },
+    {
+      "name": "presentationRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "world",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "[Tooltip(\"Mundo representado por este slot.\")]",
+      "inspector": true,
+      "description": "Mundo representado por este slot."
+    },
+    {
+      "name": "logoImage",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "[Tooltip(\"Imagem que mostra WorldData.mapLogo.\")]",
+      "inspector": true,
+      "description": "Imagem que mostra WorldData.mapLogo."
+    },
+    {
+      "name": "unvisitedOverlay",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "[Tooltip(\"Objecto activado enquanto o jogador NUNCA tiver visitado a área de entrada deste mundo (ex: silhueta/sombra sobre o logo). Deixar vazio para mostrar sempre o logo normal.\")]",
+      "inspector": true,
+      "description": "Objeto ativado enquanto o jogador NUNCA tiver visitado a área de entrada deste mundo (ex: silhueta/sombra sobre o logo). Deixar vazio para mostrar sempre o logo normal."
+    },
+    {
+      "name": "entryArea",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "[Tooltip(\"Área de entrada deste mundo (1ª área, ligada directamente ao Coração de Gaia) — usada apenas para determinar 'unvisitedOverlay' via PlayerProgress.HasVisited.\")]",
+      "inspector": true,
+      "description": "Área de entrada deste mundo (1ª área, ligada diretamente ao Coração de Gaia) — usada apenas para determinar 'unvisitedOverlay' via PlayerProgress.HasVisited."
+    },
+    {
+      "name": "emblemImage",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Legenda de Comandos (Rodapé)",
+      "attrs": "[Tooltip(\"Imagem do emblema do mundo (WorldData.worldEmblem.icon) — fica visível apenas depois de obtido.\")]",
+      "inspector": true,
+      "description": "Imagem do emblema do mundo (WorldData.worldEmblem.icon) — fica visível apenas depois de obtido."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "HandleRunasChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int current, int total",
+      "description": "Executa a operação HandleRunasChanged."
+    },
+    {
+      "name": "RefreshRunasDeGaia",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshRunasDeGaia."
+    },
+    {
+      "name": "ShowGaiaHubHud",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldMapController controller",
+      "description": "Executa a operação ShowGaiaHubHud."
+    },
+    {
+      "name": "RefreshWorldEmblemSlots",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshWorldEmblemSlots."
+    },
+    {
+      "name": "ShowWorldHud",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação ShowWorldHud."
+    },
+    {
+      "name": "IsEmblemObtained",
+      "ret": "bool",
+      "mods": "private static",
+      "params": "EmblemData emblem",
+      "description": "Executa a operação IsEmblemObtained."
+    },
+    {
+      "name": "ShowWorldPresentation",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação ShowWorldPresentation."
+    },
+    {
+      "name": "PresentationRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "WorldData world",
+      "description": "Executa a operação PresentationRoutine."
+    },
+    {
+      "name": "Fade",
+      "ret": "IEnumerator",
+      "mods": "private static",
+      "params": "CanvasGroup group, float from, float to, float duration",
+      "description": "Executa a operação Fade."
+    },
+    {
+      "name": "HidePanel",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação HidePanel."
+    },
+    {
+      "name": "RefreshPanel",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RefreshPanel."
+    },
+    {
+      "name": "ShowPanelForNode",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldMapNode node",
+      "description": "Executa a operação ShowPanelForNode."
+    },
+    {
+      "name": "RefreshPanelStats",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area, bool unlocked, bool bossDiscovered",
+      "description": "Executa a operação RefreshPanelStats."
+    },
+    {
+      "name": "AppendStatLine",
+      "ret": "void",
+      "mods": "private",
+      "params": "StringBuilder sb, string label, int found, int total, bool revealTotals",
+      "description": "Executa a operação AppendStatLine."
+    },
+    {
+      "name": "RefreshLegend",
+      "ret": "void",
+      "mods": "private",
+      "params": "WorldMapController controller",
+      "description": "Executa a operação RefreshLegend."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AudioManager",
+    "EmblemData",
+    "GameVariables",
+    "MapNodeType",
+    "PlayerProgress",
+    "PlayerResourceType",
+    "WorldData",
+    "WorldMapController",
+    "WorldMapNode"
+  ],
+  "used_by": [
+    "PlayerProgress",
+    "WorldMapController",
+    "WorldMapNode"
+  ],
+  "source": "using System.Collections;\nusing System.Text;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Mapa-Múndi (GDD \"HUD\" / \"Painel Automático de Área\" / \"Apresentação do\n/// Mundo\"): toda a interface do Mapa-Múndi — HUD do Coração de Gaia (Runas de\n/// Gaia + emblemas dos 6 mundos), HUD dentro de um mundo (nome + emblema do\n/// mundo, se já obtido), apresentação de mundo (logo/música/frase, mostrada\n/// uma única vez por mundo), painel automático de área (bloqueada/Vila/Boss/\n/// desbloqueada, com custo, \"Desbloquear\"/\"Viajar\" e contadores \"X/Y\" ou\n/// \"X/?\") e a legenda de comandos no rodapé.\n///\n/// Chamado por <see cref=\"WorldMapController\"/> — todos os textos/formatos são\n/// configuráveis no Inspector.\n/// </summary>\npublic class WorldMapUI : MonoBehaviour\n{\n    [Header(\"HUD — Coração de Gaia\")]\n    [Tooltip(\"Raiz do HUD mostrado quando a bola está no Coração de Gaia (Runas de Gaia + emblemas dos 6 mundos).\")]\n    public GameObject gaiaHubHudRoot;\n\n    [Tooltip(\"Lista dos 6 mundos: logo (WorldData.mapLogo), estado de \\\"já visitado\\\" (ícone normal vs. silhueta) e emblema do mundo (mostrado se já obtido).\")]\n    public WorldEmblemSlot[] worldEmblemSlots;\n\n    [Header(\"HUD — Dentro de um Mundo\")]\n    [Tooltip(\"Raiz do HUD mostrado sempre que a bola está fora do Coração de Gaia (nome do mundo + emblema, se obtido).\")]\n    public GameObject worldHudRoot;\n\n    public TMP_Text worldNameText;\n\n    [Tooltip(\"Imagem do emblema do mundo (WorldData.worldEmblem.icon) — só fica visível depois de obtido (GameVariables, emblem.obtainedVariable).\")]\n    public Image worldEmblemImage;\n\n    [Tooltip(\"Contentor do emblema do mundo (activado/desactivado consoante o emblema já tenha sido obtido).\")]\n    public GameObject worldEmblemContainer;\n\n    [Header(\"HUD — Recursos (Comum)\")]\n    public TMP_Text runasDeGaiaText;\n    public string runasDeGaiaFormat = \"{0}\";\n\n    [Header(\"Apresentação do Mundo (1ª vez)\")]\n    [Tooltip(\"Raiz do painel de apresentação em ecrã cheio — logo, nome e frase temática do mundo, mostrado apenas na primeira vez que o jogador chega à 1ª área de cada mundo.\")]\n    public GameObject presentationRoot;\n\n    [Tooltip(\"CanvasGroup de 'presentationRoot', usado para o fade de entrada/saída.\")]\n    public CanvasGroup presentationCanvasGroup;\n\n    public Image presentationLogoImage;\n    public TMP_Text presentationWorldNameText;\n    public TMP_Text presentationThemePhraseText;\n\n    [Tooltip(\"Duração (segundos) do fade-in/fade-out da apresentação do mundo.\")]\n    public float presentationFadeDuration = 0.5f;\n\n    [Tooltip(\"Tempo (segundos) que a apresentação fica visível antes de desaparecer automaticamente.\")]\n    public float presentationHoldDuration = 4f;\n\n    [Header(\"Painel Automático de Área\")]\n    [Tooltip(\"Raiz do painel automático — aparece sempre que a bola pára num nó que não seja o Coração de Gaia.\")]\n    public GameObject panelRoot;\n\n    [Tooltip(\"Nome da área (ou \\\"?????????????\\\"/\\\"????????\\\" enquanto oculto).\")]\n    public TMP_Text panelNameText;\n\n    [Tooltip(\"Custo de desbloqueio (\\\"Custo: X Runas de Gaia\\\") — visível apenas em áreas Normais bloqueadas mas alcançáveis.\")]\n    public TMP_Text panelCostText;\n\n    [Tooltip(\"Acção disponível: \\\"A: Desbloquear\\\" ou \\\"A: Viajar\\\". Fica oculto para áreas de Boss ainda não desbloqueadas (não compráveis).\")]\n    public TMP_Text panelActionText;\n\n    [Tooltip(\"Contentor dos contadores da área (Runas/NPCs/Sussurros/Baús/Fragmentos) — só visível em áreas desbloqueadas (ou Boss já descoberto).\")]\n    public GameObject panelStatsRoot;\n\n    public TMP_Text panelStatsText;\n\n    [Header(\"Painel — Textos\")]\n    public string lockedNamePlaceholder = \"?????????????\";\n    public string bossNamePlaceholder = \"????????\";\n    public string costFormat = \"Custo: {0} Runas de Gaia\";\n    public string actionUnlockText = \"A: Desbloquear\";\n    public string actionTravelText = \"A: Viajar\";\n\n    [Tooltip(\"Formato de cada linha de contador. {0} = nome do contador, {1} = encontrados, {2} = total (ou \\\"?\\\" se ainda não revelado).\")]\n    public string statLineFormat = \"{0}: {1}/{2}\";\n    public string statRunasLabel = \"Runas de Gaia\";\n    public string statNpcsLabel = \"NPCs\";\n    public string statWhispersLabel = \"Sussurros\";\n    public string statChestsLabel = \"Baús\";\n    public string statFragmentsLabel = \"Fragmentos Vitais\";\n    public string hiddenTotalSymbol = \"?\";\n\n    [Header(\"Legenda de Comandos (Rodapé)\")]\n    public GameObject legendRoot;\n    public TMP_Text legendText;\n\n    [TextArea]\n    [Tooltip(\"Legenda mostrada normalmente: navegação (analógico esquerdo) + confirmar/voltar.\")]\n    public string legendDefault = \"Mover: Analógico Esquerdo   •   A: Confirmar   •   B: Voltar\";\n\n    [TextArea]\n    [Tooltip(\"Legenda mostrada quando o jogador tem a Visão do Mapa-Múndi (acrescenta o analógico direito).\")]\n    public string legendWithMapVision = \"Mover: Analógico Esquerdo   •   A: Confirmar   •   B: Voltar   •   Analógico Direito: Visão do Mapa-Múndi\";\n\n    private Coroutine presentationRoutine;\n\n    // ==================================================================\n    // Ciclo de Vida\n    // ==================================================================\n\n    private void OnEnable()\n    {\n        var pp = PlayerProgress.Instance;\n        if (pp != null) pp.RunasChanged += HandleRunasChanged;\n\n        RefreshRunasDeGaia();\n        HidePanel();\n        if (presentationRoot != null) presentationRoot.SetActive(false);\n    }\n\n    private void OnDisable()\n    {\n        var pp = PlayerProgress.Instance;\n        if (pp != null) pp.RunasChanged -= HandleRunasChanged;\n    }\n\n    private void HandleRunasChanged(int current, int total) => RefreshRunasDeGaia();\n\n    private void RefreshRunasDeGaia()\n    {\n        if (runasDeGaiaText == null) return;\n\n        int amount = PlayerProgress.Instance != null ? PlayerProgress.Instance.GetResourceAmount(PlayerResourceType.RunasDeGaia) : 0;\n        runasDeGaiaText.text = string.Format(runasDeGaiaFormat, amount);\n    }\n\n    // ==================================================================\n    // HUD — Coração de Gaia\n    // ==================================================================\n\n    /// <summary>Mostra o HUD do Coração de Gaia (Runas de Gaia + emblemas dos 6 mundos) e esconde o HUD/painel de mundo.</summary>\n    public void ShowGaiaHubHud(WorldMapController controller)\n    {\n        HidePanel();\n\n        if (gaiaHubHudRoot != null) gaiaHubHudRoot.SetActive(true);\n        if (worldHudRoot != null) worldHudRoot.SetActive(false);\n\n        RefreshRunasDeGaia();\n        RefreshWorldEmblemSlots();\n        RefreshLegend(controller);\n    }\n\n    private void RefreshWorldEmblemSlots()\n    {\n        if (worldEmblemSlots == null) return;\n\n        var pp = PlayerProgress.Instance;\n\n        foreach (var slot in worldEmblemSlots)\n        {\n            if (slot == null || slot.world == null) continue;\n\n            bool visited = slot.entryArea == null || pp == null || pp.HasVisited(slot.entryArea);\n\n            if (slot.logoImage != null)\n            {\n                slot.logoImage.sprite = slot.world.mapLogo;\n                slot.logoImage.enabled = slot.world.mapLogo != null;\n            }\n\n            if (slot.unvisitedOverlay != null)\n                slot.unvisitedOverlay.SetActive(!visited);\n\n            if (slot.emblemImage != null)\n            {\n                bool hasEmblem = IsEmblemObtained(slot.world.worldEmblem);\n                slot.emblemImage.enabled = hasEmblem && slot.world.worldEmblem != null && slot.world.worldEmblem.icon != null;\n                if (slot.emblemImage.enabled) slot.emblemImage.sprite = slot.world.worldEmblem.icon;\n            }\n        }\n    }\n\n    // ==================================================================\n    // HUD — Dentro de um Mundo\n    // ==================================================================\n\n    /// <summary>Mostra o HUD de mundo (nome + emblema, se já obtido) e esconde o HUD do Coração de Gaia.</summary>\n    public void ShowWorldHud(WorldData world)\n    {\n        if (gaiaHubHudRoot != null) gaiaHubHudRoot.SetActive(false);\n        if (worldHudRoot != null) worldHudRoot.SetActive(true);\n\n        if (worldNameText != null) worldNameText.text = world != null ? world.mapWorldName : \"\";\n\n        bool hasEmblem = world != null && IsEmblemObtained(world.worldEmblem) && world.worldEmblem.icon != null;\n\n        if (worldEmblemContainer != null) worldEmblemContainer.SetActive(hasEmblem);\n        if (worldEmblemImage != null)\n        {\n            worldEmblemImage.enabled = hasEmblem;\n            if (hasEmblem) worldEmblemImage.sprite = world.worldEmblem.icon;\n        }\n\n        RefreshRunasDeGaia();\n        RefreshLegend(WorldMapController.Instance);\n    }\n\n    private static bool IsEmblemObtained(EmblemData emblem)\n    {\n        if (emblem == null || string.IsNullOrEmpty(emblem.obtainedVariable)) return false;\n        var vars = GameVariables.Instance;\n        return vars != null && vars.GetBool(emblem.obtainedVariable);\n    }\n\n    // ==================================================================\n    // Apresentação do Mundo (1ª vez)\n    // ==================================================================\n\n    /// <summary>\n    /// Mostra, em ecrã cheio, o logo/nome/frase temática de \"world\" (GDD:\n    /// apenas na primeira vez que o jogador chega à 1ª área desse mundo).\n    /// Toca 'world.presentationMusic' (se definido) e bloqueia os controlos do\n    /// Mapa-Múndi enquanto estiver visível.\n    /// </summary>\n    public void ShowWorldPresentation(WorldData world)\n    {\n        if (world == null || presentationRoot == null) return;\n\n        if (presentationRoutine != null) StopCoroutine(presentationRoutine);\n        presentationRoutine = StartCoroutine(PresentationRoutine(world));\n    }\n\n    private IEnumerator PresentationRoutine(WorldData world)\n    {\n        var controller = WorldMapController.Instance;\n        controller?.SetControlsLocked(true);\n\n        if (presentationLogoImage != null)\n        {\n            presentationLogoImage.sprite = world.mapLogo;\n            presentationLogoImage.enabled = world.mapLogo != null;\n        }\n\n        if (presentationWorldNameText != null)\n            presentationWorldNameText.text = world.mapWorldName;\n\n        if (presentationThemePhraseText != null)\n        {\n            bool hasPhrase = !string.IsNullOrEmpty(world.themePhrase);\n            presentationThemePhraseText.gameObject.SetActive(hasPhrase);\n            presentationThemePhraseText.text = world.themePhrase;\n        }\n\n        if (world.presentationMusic != null && AudioManager.Instance != null)\n            AudioManager.Instance.PlaySE(world.presentationMusic);\n\n        presentationRoot.SetActive(true);\n        yield return Fade(presentationCanvasGroup, 0f, 1f, presentationFadeDuration);\n\n        yield return new WaitForSeconds(Mathf.Max(0f, presentationHoldDuration));\n\n        yield return Fade(presentationCanvasGroup, 1f, 0f, presentationFadeDuration);\n        presentationRoot.SetActive(false);\n\n        controller?.SetControlsLocked(false);\n        presentationRoutine = null;\n    }\n\n    private static IEnumerator Fade(CanvasGroup group, float from, float to, float duration)\n    {\n        if (group == null) yield break;\n\n        if (duration <= 0f) { group.alpha = to; yield break; }\n\n        float elapsed = 0f;\n        group.alpha = from;\n\n        while (elapsed < duration)\n        {\n            elapsed += Time.deltaTime;\n            group.alpha = Mathf.Lerp(from, to, Mathf.Clamp01(elapsed / duration));\n            yield return null;\n        }\n\n        group.alpha = to;\n    }\n\n    // ==================================================================\n    // Painel Automático de Área\n    // ==================================================================\n\n    /// <summary>Esconde o painel automático de área (Coração de Gaia, ou enquanto a bola viaja).</summary>\n    public void HidePanel()\n    {\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    /// <summary>Re-mostra o painel para o nó actual (ex: depois de desbloquear uma área, para reflectir o novo estado).</summary>\n    public void RefreshPanel()\n    {\n        var node = WorldMapController.Instance != null ? WorldMapController.Instance.CurrentNode : null;\n        if (node != null) ShowPanelForNode(node);\n    }\n\n    /// <summary>\n    /// Mostra o painel automático para \"node\" (GDD \"Painel Automático de\n    /// Área\"): bloqueada mostra \"?????????????\" + custo + \"Desbloquear\";\n    /// desbloqueada mostra o nome real + \"Viajar\" + contadores; Vilas têm\n    /// custo 0 e desbloqueiam automaticamente; áreas de Boss mostram\n    /// \"????????\" até serem descobertas e nunca são compráveis. Não faz nada\n    /// para o Coração de Gaia.\n    /// </summary>\n    public void ShowPanelForNode(WorldMapNode node)\n    {\n        if (node == null || node.isGaiaHub || node.area == null)\n        {\n            HidePanel();\n            return;\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        var area = node.area;\n        var pp = PlayerProgress.Instance;\n\n        bool unlocked = node.IsUnlocked;\n        bool isBoss = area.mapNodeType == AreaData.MapNodeType.Boss;\n        bool isVila = area.mapNodeType == AreaData.MapNodeType.Vila;\n        bool bossDiscovered = isBoss && pp != null && pp.HasDiscoveredBoss(area.world);\n\n        string displayName;\n        if (isBoss) displayName = bossDiscovered ? area.bossDisplayName : bossNamePlaceholder;\n        else if (!unlocked) displayName = lockedNamePlaceholder;\n        else displayName = area.displayName;\n\n        if (panelNameText != null) panelNameText.text = displayName;\n\n        if (panelCostText != null)\n        {\n            bool showCost = !unlocked && !isVila && !isBoss;\n            panelCostText.gameObject.SetActive(showCost);\n            if (showCost) panelCostText.text = string.Format(costFormat, Mathf.Max(0, area.unlockCost));\n        }\n\n        if (panelActionText != null)\n        {\n            if (unlocked)\n            {\n                panelActionText.gameObject.SetActive(true);\n                panelActionText.text = actionTravelText;\n            }\n            else if (isBoss)\n            {\n                // Áreas de Boss nunca são compráveis — desbloqueiam automaticamente.\n                panelActionText.gameObject.SetActive(false);\n            }\n            else\n            {\n                panelActionText.gameObject.SetActive(true);\n                panelActionText.text = actionUnlockText;\n            }\n        }\n\n        RefreshPanelStats(area, unlocked, bossDiscovered);\n    }\n\n    private void RefreshPanelStats(AreaData area, bool unlocked, bool bossDiscovered)\n    {\n        if (panelStatsRoot == null) return;\n\n        var pp = PlayerProgress.Instance;\n        bool isBoss = area.mapNodeType == AreaData.MapNodeType.Boss;\n\n        bool show = pp != null && unlocked && (!isBoss || bossDiscovered);\n        panelStatsRoot.SetActive(show);\n        if (!show) return;\n\n        bool revealTotals = pp.AreWorldTotalsDiscovered(area.world)\n                             || pp.HasDefeatedBoss(area.world)\n                             || (WorldMapController.Instance != null\n                                 && WorldMapController.Instance.mapVisionUpgrade != null\n                                 && pp.HasUpgrade(WorldMapController.Instance.mapVisionUpgrade));\n\n        var sb = new StringBuilder();\n\n        AppendStatLine(sb, statRunasLabel, pp.GetRunasFound(area), area.totalRunas, revealTotals);\n        AppendStatLine(sb, statNpcsLabel, pp.GetNpcsRescued(area), area.totalNpcsToRescue, revealTotals);\n        AppendStatLine(sb, statWhispersLabel, pp.GetWhispersFound(area), area.totalWhispers, revealTotals);\n        AppendStatLine(sb, statChestsLabel, pp.GetChestsFound(area), area.totalChests, revealTotals);\n        AppendStatLine(sb, statFragmentsLabel, pp.GetFragmentsFound(area), area.totalFragments, revealTotals);\n\n        if (panelStatsText != null) panelStatsText.text = sb.ToString().TrimEnd('\\n');\n        if (sb.Length == 0) panelStatsRoot.SetActive(false);\n    }\n\n    private void AppendStatLine(StringBuilder sb, string label, int found, int total, bool revealTotals)\n    {\n        if (total <= 0) return;\n\n        string totalStr = revealTotals ? total.ToString() : hiddenTotalSymbol;\n        sb.AppendLine(string.Format(statLineFormat, label, found, totalStr));\n    }\n\n    // ==================================================================\n    // Legenda de Comandos\n    // ==================================================================\n\n    private void RefreshLegend(WorldMapController controller)\n    {\n        if (legendText == null) return;\n\n        bool hasMapVision = controller != null\n                            && controller.mapVisionUpgrade != null\n                            && PlayerProgress.Instance != null\n                            && PlayerProgress.Instance.HasUpgrade(controller.mapVisionUpgrade);\n\n        legendText.text = hasMapVision ? legendWithMapVision : legendDefault;\n        if (legendRoot != null) legendRoot.SetActive(true);\n    }\n}\n\n/// <summary>\n/// Mapa-Múndi (HUD do Coração de Gaia): associa um <see cref=\"WorldData\"/> ao\n/// seu logo, estado de \"já visitado\" e emblema (mostrado depois de obtido).\n/// </summary>\n[System.Serializable]\npublic class WorldEmblemSlot\n{\n    [Tooltip(\"Mundo representado por este slot.\")]\n    public WorldData world;\n\n    [Tooltip(\"Imagem que mostra WorldData.mapLogo.\")]\n    public Image logoImage;\n\n    [Tooltip(\"Objecto activado enquanto o jogador NUNCA tiver visitado a área de entrada deste mundo (ex: silhueta/sombra sobre o logo). Deixar vazio para mostrar sempre o logo normal.\")]\n    public GameObject unvisitedOverlay;\n\n    [Tooltip(\"Área de entrada deste mundo (1ª área, ligada directamente ao Coração de Gaia) — usada apenas para determinar 'unvisitedOverlay' via PlayerProgress.HasVisited.\")]\n    public AreaData entryArea;\n\n    [Tooltip(\"Imagem do emblema do mundo (WorldData.worldEmblem.icon) — fica visível apenas depois de obtido.\")]\n    public Image emblemImage;\n}\n",
+  "id": "script-world-worldmapui-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-audio-audiomanager-cs",
+    "script-data-emblemdata-cs",
+    "script-data-gamevariables-cs",
+    "script-data-playerprogress-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapnode-cs"
+  ],
+  "usedByIds": [
+    "script-data-playerprogress-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapnode-cs"
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "path": "Enemy/EnemyAttack.cs",
+  "filename": "EnemyAttack.cs",
+  "category": "Enemy",
+  "primary": "EnemyAttack",
+  "kind": "Definição",
+  "summary": "Restrição de posição na água para um ataque (Enemy Creator — Etapa 3.2). Só relevante quando o ataque tem \"usableInWater\" ativo.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "WaterAttackPosition",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyAttack",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "attackName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Ataque\"",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Nome usado em logs/feedback (ex: \\\"Garra\\\", \\\"Investida\\\").\")]",
+      "inspector": true,
+      "description": "Nome usado em logs/feedback (ex: \"Garra\", \"Investida\\"
+    },
+    {
+      "name": "damage",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Combate",
+      "attrs": "[Header(\"Combate\")] [Tooltip(\"Dano causado ao player, em corações (PlayerProgress.Damage).\")]",
+      "inspector": true,
+      "description": "Dano causado ao player, em corações (PlayerProgress.Damage)."
+    },
+    {
+      "name": "knockbackForce",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Combate",
+      "attrs": "[Tooltip(\"Força de empurrão aplicada ao player ao ser atingido (0 = sem empurrão).\")]",
+      "inspector": true,
+      "description": "Força de empurrão aplicada ao player ao ser atingido (0 = sem empurrão)."
+    },
+    {
+      "name": "range",
+      "type": "float",
+      "mods": "public",
+      "default": "3f",
+      "section": "Selecção",
+      "attrs": "[Header(\"Selecção\")] [Tooltip(\"Distância máxima ao alvo para este ataque poder ser escolhido.\")]",
+      "inspector": true,
+      "description": "Distância máxima ao alvo para este ataque poder ser escolhido."
+    },
+    {
+      "name": "minRange",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Selecção",
+      "attrs": "[Tooltip(\"Distância mínima ao alvo (útil para ataques à distância que não devem disparar muito perto).\")]",
+      "inspector": true,
+      "description": "Distância mínima ao alvo (útil para ataques à distância que não devem disparar muito perto)."
+    },
+    {
+      "name": "requiresLineOfSight",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Selecção",
+      "attrs": "[Tooltip(\"Exige linha de visão directa ao alvo (sem 'Bloqueadores de Linha de Visão' entre o inimigo e o alvo) para poder ser escolhido.\")]",
+      "inspector": true,
+      "description": "Exige linha de visão direta ao alvo (sem 'Bloqueadores de Linha de Visão' entre o inimigo e o alvo) para poder ser escolhido."
+    },
+    {
+      "name": "priority",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "Selecção",
+      "attrs": "[Tooltip(\"Prioridade na escolha entre ataques disponíveis no mesmo instante (maior = preferido).\")]",
+      "inspector": true,
+      "description": "Prioridade na escolha entre ataques disponíveis no mesmo instante (maior = preferido)."
+    },
+    {
+      "name": "usableOnGround",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Onde Pode Ser Usado",
+      "attrs": "[Header(\"Onde Pode Ser Usado\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "usableInAir",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Onde Pode Ser Usado",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "usableInWater",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Onde Pode Ser Usado",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "waterPosition",
+      "type": "WaterAttackPosition",
+      "mods": "public",
+      "default": "WaterAttackPosition.Qualquer",
+      "section": "Água (Etapa 3.2)",
+      "attrs": "[Header(\"Água (Etapa 3.2)\")] [Tooltip(\"Restrição de posição na água: só à superfície / só submerso / qualquer. Ignorado fora de água (ver 'usableInWater').\")]",
+      "inspector": true,
+      "description": "Restrição de posição na água: só à superfície / só submerso / qualquer. Ignorado fora de água (ver 'usableInWater')."
+    },
+    {
+      "name": "attackSwimSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Água (Etapa 3.2)",
+      "attrs": "[Tooltip(\"Velocidade de nado do inimigo DURANTE este ataque (0 = não se desloca). Usada por ataques aquáticos que se movem (ex: Investida Aquática) via ctx.SwimTowardsTarget.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Velocidade de nado do inimigo DURANTE este ataque (0 = não se desloca). Usada por ataques aquáticos que se movem (ex: Investida Aquática) via ctx.SwimTowardsTarget."
+    },
+    {
+      "name": "prepTime",
+      "type": "float",
+      "mods": "public",
+      "default": "0.3f",
+      "section": "Tempos (segundos)",
+      "attrs": "[Header(\"Tempos (segundos)\")] [Tooltip(\"Telegraph: aviso antes do ataque ficar perigoso (EnemyState.PreparandoAtaque).\")]",
+      "inspector": true,
+      "description": "Telegraph: aviso antes do ataque ficar perigoso (EnemyState.PreparandoAtaque)."
+    },
+    {
+      "name": "recoveryTime",
+      "type": "float",
+      "mods": "public",
+      "default": "0.4f",
+      "section": "Tempos (segundos)",
+      "attrs": "[Tooltip(\"Recuperação após o ataque, antes de poder agir de novo (EnemyState.Recuperando).\")]",
+      "inspector": true,
+      "description": "Recuperação após o ataque, antes de poder agir de novo (EnemyState.Recuperando)."
+    },
+    {
+      "name": "cooldown",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "Tempos (segundos)",
+      "attrs": "[Tooltip(\"Tempo mínimo entre usos deste ataque.\")]",
+      "inspector": true,
+      "description": "Tempo mínimo entre usos deste ataque."
+    },
+    {
+      "name": "availableAt",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "Tempos (segundos)",
+      "attrs": "[NonSerialized]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "CanUse",
+      "ret": "bool",
+      "mods": "public virtual",
+      "params": "EnemyAttackController ctx",
+      "description": "Executa a operação CanUse."
+    }
+  ],
+  "dependencies": [
+    "EnemyAttackController",
+    "EnemyCondition",
+    "EnemyFeedback",
+    "EnemyState",
+    "NpcAction",
+    "NpcCondition",
+    "PlayerProgress",
+    "PolymorphicListDrawer"
+  ],
+  "used_by": [
+    "Attack_ClawShort",
+    "Attack_Net",
+    "Attack_ProjectileStraight",
+    "EnemyAttackController",
+    "EnemyAttackControllerEditor",
+    "EnemyController",
+    "EnemyDetection",
+    "EnemyMovement",
+    "EnemyPuzzleInteraction",
+    "EnemyWaterBehavior",
+    "PolymorphicListDrawer",
+    "ProjectileController",
+    "ProjectileData",
+    "WaterCurrentMode"
+  ],
+  "source": "using System;\nusing System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Restrição de posição na água para um ataque (Enemy Creator — Etapa 3.2).\n/// Só relevante quando o ataque tem \"usableInWater\" activo.\n/// </summary>\npublic enum WaterAttackPosition\n{\n    /// <summary>Sem restrição: usável em qualquer profundidade.</summary>\n    Qualquer,\n\n    /// <summary>Só usável com o inimigo à superfície (IsAtSurface).</summary>\n    SoSuperficie,\n\n    /// <summary>Só usável com o inimigo submerso (IsSubmerged).</summary>\n    SoSubmerso\n}\n\n/// <summary>\n/// Classe-base de um ataque de inimigo (Enemy Creator — Etapa 2.1).\n///\n/// Cada subclasse [System.Serializable] (prefixo \"Attack_\") representa um tipo\n/// de ataque e é adicionada à lista <see cref=\"EnemyAttackController.attacks\"/>\n/// via PolymorphicListDrawer — mesmo padrão de EnemyCondition/NpcAction/NpcCondition.\n///\n/// Ciclo de vida de um ataque, gerido por EnemyAttackController:\n///\n/// 1. <see cref=\"CanUse\"/> — true se este ataque pode ser escolhido agora\n///    (alcance, ambiente, linha de visão, cooldown). O controller escolhe, entre\n///    os ataques disponíveis, o de maior <see cref=\"priority\"/>.\n/// 2. EnemyState.PreparandoAtaque durante <see cref=\"prepTime\"/> — telegraph/aviso\n///    (EnemyFeedback, Etapa 7.1, pode reagir a este estado para mostrar ícones/VFX).\n/// 3. EnemyState.Atacando — corre <see cref=\"Execute\"/> (coroutine). É aqui que o\n///    dano/efeito acontece.\n/// 4. EnemyState.Recuperando durante <see cref=\"recoveryTime\"/>.\n/// 5. Volta a Perseguindo (se ainda houver alvo) e fica indisponível durante\n///    <see cref=\"cooldown\"/> (controlado por <see cref=\"availableAt\"/>).\n/// </summary>\n[System.Serializable]\npublic abstract class EnemyAttack\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Nome usado em logs/feedback (ex: \\\"Garra\\\", \\\"Investida\\\").\")]\n    public string attackName = \"Ataque\";\n\n    [Header(\"Combate\")]\n    [Tooltip(\"Dano causado ao player, em corações (PlayerProgress.Damage).\")]\n    public int damage = 1;\n\n    [Tooltip(\"Força de empurrão aplicada ao player ao ser atingido (0 = sem empurrão).\")]\n    public float knockbackForce = 0f;\n\n    [Header(\"Selecção\")]\n    [Tooltip(\"Distância máxima ao alvo para este ataque poder ser escolhido.\")]\n    public float range = 3f;\n\n    [Tooltip(\"Distância mínima ao alvo (útil para ataques à distância que não devem disparar muito perto).\")]\n    public float minRange = 0f;\n\n    [Tooltip(\"Exige linha de visão directa ao alvo (sem 'Bloqueadores de Linha de Visão' entre o inimigo e o alvo) para poder ser escolhido.\")]\n    public bool requiresLineOfSight = false;\n\n    [Tooltip(\"Prioridade na escolha entre ataques disponíveis no mesmo instante (maior = preferido).\")]\n    public int priority = 0;\n\n    [Header(\"Onde Pode Ser Usado\")]\n    public bool usableOnGround = true;\n    public bool usableInAir = false;\n    public bool usableInWater = false;\n\n    [Header(\"Água (Etapa 3.2)\")]\n    [Tooltip(\"Restrição de posição na água: só à superfície / só submerso / qualquer. Ignorado fora de água (ver 'usableInWater').\")]\n    public WaterAttackPosition waterPosition = WaterAttackPosition.Qualquer;\n\n    [Tooltip(\"Velocidade de nado do inimigo DURANTE este ataque (0 = não se desloca). Usada por ataques aquáticos que se movem (ex: Investida Aquática) via ctx.SwimTowardsTarget.\")]\n    [Min(0f)]\n    public float attackSwimSpeed = 0f;\n\n    [Header(\"Tempos (segundos)\")]\n    [Tooltip(\"Telegraph: aviso antes do ataque ficar perigoso (EnemyState.PreparandoAtaque).\")]\n    public float prepTime = 0.3f;\n\n    [Tooltip(\"Recuperação após o ataque, antes de poder agir de novo (EnemyState.Recuperando).\")]\n    public float recoveryTime = 0.4f;\n\n    [Tooltip(\"Tempo mínimo entre usos deste ataque.\")]\n    public float cooldown = 1.5f;\n\n    /// <summary>\n    /// Tempo (Time.time) a partir do qual este ataque volta a estar disponível.\n    /// Gerido por EnemyAttackController — não editar no Inspector.\n    /// </summary>\n    [NonSerialized] public float availableAt;\n\n    /// <summary>\n    /// True se este ataque pode ser escolhido agora: alcance\n    /// (minRange &lt;= distância &lt;= range), ambiente\n    /// (usableOnGround/InAir/InWater — ver <see cref=\"EnemyAttackController.EnvironmentAllows\"/>),\n    /// linha de visão (se exigida) e cooldown (<see cref=\"availableAt\"/>).\n    /// Subclasses podem adicionar condições extra chamando\n    /// \"base.CanUse(ctx) &amp;&amp; ...\".\n    /// </summary>\n    public virtual bool CanUse(EnemyAttackController ctx)\n    {\n        if (Time.time < availableAt) return false;\n\n        var target = ctx.Target;\n        if (target == null) return false;\n\n        float dist = Vector2.Distance(ctx.transform.position, target.position);\n        if (dist > range || dist < minRange) return false;\n\n        if (!ctx.EnvironmentAllows(this)) return false;\n        if (!ctx.WaterPositionAllows(this)) return false;\n        if (requiresLineOfSight && !ctx.HasLineOfSight(target)) return false;\n\n        return true;\n    }\n\n    /// <summary>\n    /// Executa a fase activa do ataque (EnemyState.Atacando). Corre como\n    /// coroutine — pode \"yield return\" para ataques com duração (laser,\n    /// corrente, investida, etc). Ao terminar, o controller marca o cooldown e\n    /// passa o inimigo a Recuperando.\n    /// </summary>\n    public abstract IEnumerator Execute(EnemyAttackController ctx);\n}\n",
+  "id": "script-enemy-enemyattack-cs",
+  "dependencyIds": [
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemycondition-cs",
+    "script-enemy-enemyfeedback-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccondition-cs",
+    "script-data-playerprogress-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-attacks-enemyattacks-melee-cs",
+    "script-enemy-attacks-enemyattacks-areacontrol-cs",
+    "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-editor-enemyattackcontrollereditor-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemymovement-cs",
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-enemy-enemywaterbehavior-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-enemy-projectiledata-cs",
+    "script-enemy-attacks-enemyattacks-water-cs"
+  ]
+}

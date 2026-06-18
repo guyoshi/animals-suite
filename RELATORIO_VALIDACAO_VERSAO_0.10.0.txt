@@ -1,0 +1,22 @@
+ANIMALS SUITE 0.10.0 — VALIDAÇÃO DA ETAPA 1
+Data: 18/06/2026
+
+VALIDAÇÕES CONCLUÍDAS
+[OK] Manifesto sincronizado com package.json.
+[OK] Manifesto sincronizado com tauri.conf.json.
+[OK] Manifesto sincronizado com Cargo.toml.
+[OK] Identificador com.gui.animals.planejador preservado.
+[OK] Schema do projecto actualizado para 10.
+[OK] Schema do Executor criado na versão 1.
+[OK] Tabelas SQLite do Executor declaradas.
+[OK] Comando de abertura planner/executor declarado.
+[OK] Alias GameMissionDef criado para separar missões do jogo.
+[OK] TypeScript compilado.
+[OK] Vite build de produção concluído.
+[OK] ESLint concluído sem erros.
+
+AVISO
+O ambiente de preparação não possui cargo/rustc. Por isso, cargo check e a criação do instalador NSIS não foram executados aqui. O script ATUALIZAR_E_COMPILAR.bat executará a compilação Rust no Windows onde as ferramentas estiverem instaladas.
+
+RESULTADO
+Etapa 1 aprovada para entrega como código-fonte Animals Suite 0.10.0.

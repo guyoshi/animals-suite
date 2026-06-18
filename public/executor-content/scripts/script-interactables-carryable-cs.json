@@ -1,0 +1,112 @@
+{
+  "path": "Interactables/Carryable.cs",
+  "filename": "Carryable.cs",
+  "category": "Interactables",
+  "primary": "Carryable",
+  "kind": "Componente",
+  "summary": "Objeto que pode ser carregado e atirado pelo player (P6 — GrabThrowAbility): caixas, pedras pequenas, o ovo da galinha (EggObject), etc. O peso vem do ObjectWeight no mesmo GameObject (1 se não existir) e é comparado com GrabThrowAbility.maxCarryWeight.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "Carryable",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "onPickedUp",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Eventos para feedback (sons/VFX) ao ser apanhado/largado.\")]",
+      "inspector": true,
+      "description": "Eventos para feedback (sons/VFX) ao ser apanhado/largado."
+    },
+    {
+      "name": "onReleased",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_colliders",
+      "type": "Collider2D[]",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnPickedUp",
+      "ret": "void",
+      "mods": "public",
+      "params": "Transform anchor",
+      "description": "Executa a operação OnPickedUp."
+    },
+    {
+      "name": "OnReleased",
+      "ret": "void",
+      "mods": "public",
+      "params": "Vector2 position, Vector2 velocity",
+      "description": "Executa a operação OnReleased."
+    }
+  ],
+  "dependencies": [
+    "EggObject",
+    "GrabThrowAbility",
+    "ObjectWeight"
+  ],
+  "used_by": [
+    "AnimalFormData",
+    "EggAbility",
+    "EggObject",
+    "GrabThrowAbility",
+    "TonguePullAbility",
+    "WindAffectable",
+    "WindZone"
+  ],
+  "source": "using UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Objecto que pode ser carregado e atirado pelo player (P6 — GrabThrowAbility):\n/// caixas, pedras pequenas, o ovo da galinha (EggObject), etc.\n///\n/// O peso vem do ObjectWeight no mesmo GameObject (1 se não existir) e é\n/// comparado com GrabThrowAbility.maxCarryWeight.\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]\npublic class Carryable : MonoBehaviour\n{\n    [Tooltip(\"Eventos para feedback (sons/VFX) ao ser apanhado/largado.\")]\n    public UnityEvent onPickedUp;\n    public UnityEvent onReleased;\n\n    private Rigidbody2D _rb;\n    private Collider2D[] _colliders;\n\n    /// <summary>true enquanto está a ser carregado.</summary>\n    public bool IsCarried { get; private set; }\n\n    /// <summary>Peso de jogo (ObjectWeight; 1 se não existir).</summary>\n    public float Weight\n    {\n        get\n        {\n            var ow = GetComponent<ObjectWeight>();\n            return ow != null ? ow.weight : 1f;\n        }\n    }\n\n    private void Awake()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n        _colliders = GetComponents<Collider2D>();\n    }\n\n    /// <summary>Chamado por GrabThrowAbility ao apanhar: prende ao \"anchor\" e desliga a física.</summary>\n    public void OnPickedUp(Transform anchor)\n    {\n        IsCarried = true;\n\n        _rb.velocity = Vector2.zero;\n        _rb.bodyType = RigidbodyType2D.Kinematic;\n\n        foreach (var col in _colliders)\n            col.enabled = false;\n\n        transform.SetParent(anchor);\n        transform.localPosition = Vector3.zero;\n\n        onPickedUp?.Invoke();\n    }\n\n    /// <summary>Chamado por GrabThrowAbility ao largar/atirar: solta, religa a física e aplica \"velocity\".</summary>\n    public void OnReleased(Vector2 position, Vector2 velocity)\n    {\n        IsCarried = false;\n\n        transform.SetParent(null);\n        transform.position = position;\n\n        foreach (var col in _colliders)\n            col.enabled = true;\n\n        _rb.bodyType = RigidbodyType2D.Dynamic;\n        _rb.velocity = velocity;\n\n        onReleased?.Invoke();\n    }\n}\n",
+  "id": "script-interactables-carryable-cs",
+  "dependencyIds": [
+    "script-interactables-eggobject-cs",
+    "script-abilities-grabthrowability-cs",
+    "script-interactables-objectweight-cs"
+  ],
+  "usedByIds": [
+    "script-forms-animalformdata-cs",
+    "script-abilities-eggability-cs",
+    "script-interactables-eggobject-cs",
+    "script-abilities-grabthrowability-cs",
+    "script-abilities-tonguepullability-cs",
+    "script-interactables-windaffectable-cs",
+    "script-interactables-windzone-cs"
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "path": "Interactables/WeightPlate.cs",
+  "filename": "WeightPlate.cs",
+  "category": "Interactables",
+  "primary": "WeightPlate",
+  "kind": "Componente",
+  "summary": "Placa de peso genérica (Etapa 6.1). Soma o peso de tudo o que está em cima (trigger) e, quando atinge \"requiredWeight\" (configurável por placa), fica pressionada — escrevendo numa variável global (GameVariables). Todos os pesos são \"de jogo\" (não a massa física do Unity, que afectaria knockback/colisões), por esta prioridade: 1. ObjectWeight no objeto (override explícito — vence sempre); 2. Player = peso da forma animal atual (AnimalFormData.weightMultiplier via FormSwitcher; formas pesadas pressionam placas que leves não); 3. Inimigo = EnemyData.stats.weight (apenas se 'canPressWeightPlate' — Etapa 6.2: \"peso necessário vs peso do inimigo\"); 4. Outros Rigidbody2D = rb.mass (fallback, se '",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "WeightPlate",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "requiredWeight",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Peso",
+      "attrs": "[Header(\"Peso\")] [Tooltip(\"Peso total mínimo em cima da placa para ela ficar pressionada (configurável por placa).\")] [Min(0.01f)]",
+      "inspector": true,
+      "description": "Peso total mínimo em cima da placa para ela ficar pressionada (configurável por placa)."
+    },
+    {
+      "name": "playerFallbackWeight",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Peso",
+      "attrs": "[Tooltip(\"Peso usado para o player se a forma actual não for encontrada (sem FormSwitcher/CurrentForm). Normalmente vem de AnimalFormData.weightMultiplier.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Peso usado para o player se a forma atual não for encontrada (sem FormSwitcher/CurrentForm). Normalmente vem de AnimalFormData.weightMultiplier."
+    },
+    {
+      "name": "useRigidbodyMassFallback",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Peso",
+      "attrs": "[Tooltip(\"Objectos sem ObjectWeight usam Rigidbody2D.mass como peso. Desliga para só contar objectos com ObjectWeight explícito.\")]",
+      "inspector": true,
+      "description": "Objetos sem ObjectWeight usam Rigidbody2D.mass como peso. Desliga para só contar objetos com ObjectWeight explícito."
+    },
+    {
+      "name": "variableName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Variável Global (GameVariables)",
+      "attrs": "[Header(\"Variável Global (GameVariables)\")] [Tooltip(\"Nome da variável global escrita com o estado (true/1 = pressionada). Vazio = não escreve.\")]",
+      "inspector": true,
+      "description": "Nome da variável global escrita com o estado (true/1 = pressionada). Vazio = não escreve."
+    },
+    {
+      "name": "writeAsInt",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Variável Global (GameVariables)",
+      "attrs": "[Tooltip(\"Se activo, escreve a variável como INT (1/0) em vez de BOOL.\")]",
+      "inspector": true,
+      "description": "Se ativo, escreve a variável como INT (1/0) em vez de BOOL."
+    },
+    {
+      "name": "latchOnce",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Variável Global (GameVariables)",
+      "attrs": "[Tooltip(\"Se activo, a placa fica presa em 'pressionada' na primeira activação (não volta a soltar).\")]",
+      "inspector": true,
+      "description": "Se ativo, a placa fica presa em 'pressionada' na primeira ativação (não volta a soltar)."
+    },
+    {
+      "name": "persistState",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Persistência após Morte / Saída de Área",
+      "attrs": "[Header(\"Persistência após Morte / Saída de Área\")] [Tooltip(\"GDD: puzzle persistente vs. de tentativa.\\n\\nPrimariamente útil com 'latchOnce': ao reentrar na cena, a placa restaura o estado de latch a partir de 'variableName' (GameVariables).\\nSem 'latchOnce', a placa está sempre desactivada ao carregar (nada em cima) — persistState não tem efeito prático.\\n\\nLigado → restaura o estado da variável global ao Start.\\nDesligado (padrão) → placa começa desactivada → puzzle reinicia.\")]",
+      "inspector": true,
+      "description": "GDD: puzzle persistente vs. de tentativa.\\n\\nPrimariamente útil com 'latchOnce': ao reentrar na cena, a placa restaura o estado de latch a partir de 'variableName' (GameVariables).\\nSem 'latchOnce', a placa está sempre desativada ao carregar (nada em cima) — persistState não tem efeito prático.\\n\\nLigado → restaura o estado da variável global ao Start.\\nDesligado (padrão) → placa começa desativada → puzzle reinicia."
+    },
+    {
+      "name": "spriteRenderer",
+      "type": "SpriteRenderer",
+      "mods": "public",
+      "default": "",
+      "section": "Visual (opcional)",
+      "attrs": "[Header(\"Visual (opcional)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spritePressed",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Visual (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spriteReleased",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Visual (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onPressedChanged",
+      "type": "UnityEvent<bool>",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_occupants",
+      "type": "HashSet<Collider2D>",
+      "mods": "private readonly",
+      "default": "new HashSet<Collider2D>()",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnTriggerExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerExit2D."
+    },
+    {
+      "name": "Recalculate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Recalculate."
+    },
+    {
+      "name": "GetWeightOf",
+      "ret": "float",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação GetWeightOf."
+    },
+    {
+      "name": "Apply",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Apply."
+    },
+    {
+      "name": "ApplyVisual",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ApplyVisual."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "EnemyData",
+    "FloatingPlatform",
+    "FormSwitcher",
+    "GameVariables",
+    "GameWeightUtil",
+    "ObjectWeight",
+    "SeesawPlatform"
+  ],
+  "used_by": [
+    "EnemyPuzzleInteraction",
+    "FloatingPlatform",
+    "GameWeightUtil",
+    "ObjectWeight",
+    "SeesawPlatform"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Placa de peso genérica (Etapa 6.1). Soma o peso de tudo o que está em cima\n/// (trigger) e, quando atinge \"requiredWeight\" (configurável por placa), fica\n/// pressionada — escrevendo numa variável global (GameVariables).\n///\n/// Todos os pesos são \"de jogo\" (não a massa física do Unity, que afectaria\n/// knockback/colisões), por esta prioridade:\n/// 1. ObjectWeight no objecto (override explícito — vence sempre);\n/// 2. Player = peso da forma animal actual (AnimalFormData.weightMultiplier\n///    via FormSwitcher; formas pesadas pressionam placas que leves não);\n/// 3. Inimigo = EnemyData.stats.weight (apenas se 'canPressWeightPlate' —\n///    Etapa 6.2: \"peso necessário vs peso do inimigo\");\n/// 4. Outros Rigidbody2D = rb.mass (fallback, se 'useRigidbodyMassFallback').\n/// </summary>\npublic class WeightPlate : MonoBehaviour\n{\n    [Header(\"Peso\")]\n    [Tooltip(\"Peso total mínimo em cima da placa para ela ficar pressionada (configurável por placa).\")]\n    [Min(0.01f)] public float requiredWeight = 1f;\n\n    [Tooltip(\"Peso usado para o player se a forma actual não for encontrada (sem FormSwitcher/CurrentForm). Normalmente vem de AnimalFormData.weightMultiplier.\")]\n    [Min(0f)] public float playerFallbackWeight = 1f;\n\n    [Tooltip(\"Objectos sem ObjectWeight usam Rigidbody2D.mass como peso. Desliga para só contar objectos com ObjectWeight explícito.\")]\n    public bool useRigidbodyMassFallback = true;\n\n    [Header(\"Variável Global (GameVariables)\")]\n    [Tooltip(\"Nome da variável global escrita com o estado (true/1 = pressionada). Vazio = não escreve.\")]\n    public string variableName = \"\";\n\n    [Tooltip(\"Se activo, escreve a variável como INT (1/0) em vez de BOOL.\")]\n    public bool writeAsInt = false;\n\n    [Tooltip(\"Se activo, a placa fica presa em 'pressionada' na primeira activação (não volta a soltar).\")]\n    public bool latchOnce = false;\n\n    [Header(\"Persistência após Morte / Saída de Área\")]\n    [Tooltip(\"GDD: puzzle persistente vs. de tentativa.\\n\\nPrimariamente útil com 'latchOnce': ao reentrar na cena, a placa restaura o estado de latch a partir de 'variableName' (GameVariables).\\nSem 'latchOnce', a placa está sempre desactivada ao carregar (nada em cima) — persistState não tem efeito prático.\\n\\nLigado → restaura o estado da variável global ao Start.\\nDesligado (padrão) → placa começa desactivada → puzzle reinicia.\")]\n    public bool persistState = false;\n\n    [Header(\"Visual (opcional)\")]\n    public SpriteRenderer spriteRenderer;\n    public Sprite spritePressed;\n    public Sprite spriteReleased;\n\n    [Header(\"Eventos\")]\n    public UnityEvent<bool> onPressedChanged;\n\n    /// <summary>True enquanto o peso em cima da placa é &gt;= \"requiredWeight\".</summary>\n    public bool IsPressed { get; private set; }\n\n    /// <summary>Peso total actual em cima da placa.</summary>\n    public float CurrentWeight { get; private set; }\n\n    private readonly HashSet<Collider2D> _occupants = new HashSet<Collider2D>();\n\n    private void Start()\n    {\n        if (persistState && !string.IsNullOrEmpty(variableName) && GameVariables.Instance != null)\n        {\n            bool saved = writeAsInt\n                ? GameVariables.Instance.GetInt(variableName) != 0\n                : GameVariables.Instance.GetBool(variableName);\n            IsPressed = saved;\n            ApplyVisual();\n        }\n        else\n        {\n            Apply();\n        }\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (GetWeightOf(other) <= 0f) return;\n        _occupants.Add(other);\n        Recalculate();\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (_occupants.Remove(other))\n            Recalculate();\n    }\n\n    private void Recalculate()\n    {\n        // Remove ocupantes destruídos/desactivados entretanto.\n        _occupants.RemoveWhere(c => c == null || !c.gameObject.activeInHierarchy);\n\n        float total = 0f;\n        foreach (var occupant in _occupants)\n            total += GetWeightOf(occupant);\n\n        CurrentWeight = total;\n\n        bool pressed = total >= requiredWeight;\n        if (latchOnce && IsPressed) pressed = true;\n\n        if (pressed == IsPressed) return;\n\n        IsPressed = pressed;\n        Apply();\n        onPressedChanged?.Invoke(IsPressed);\n    }\n\n    /// <summary>Peso de um collider, pela prioridade descrita no cabeçalho: ObjectWeight > forma do player > stats.weight do inimigo > rb.mass (fallback) > 0. Ver GameWeightUtil (partilhado com SeesawPlatform/FloatingPlatform).</summary>\n    private float GetWeightOf(Collider2D other) => GameWeightUtil.GetWeightOf(other, playerFallbackWeight, useRigidbodyMassFallback);\n\n    private void Apply()\n    {\n        if (!string.IsNullOrEmpty(variableName) && GameVariables.Instance != null)\n        {\n            if (writeAsInt) GameVariables.Instance.SetInt(variableName, IsPressed ? 1 : 0);\n            else GameVariables.Instance.SetBool(variableName, IsPressed);\n        }\n\n        ApplyVisual();\n    }\n\n    private void ApplyVisual()\n    {\n        if (spriteRenderer != null)\n        {\n            var sprite = IsPressed ? spritePressed : spriteReleased;\n            if (sprite != null) spriteRenderer.sprite = sprite;\n        }\n    }\n}\n",
+  "id": "script-interactables-weightplate-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-enemy-enemydata-cs",
+    "script-platforms-floatingplatform-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-gamevariables-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-interactables-objectweight-cs",
+    "script-platforms-seesawplatform-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-platforms-floatingplatform-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-interactables-objectweight-cs",
+    "script-platforms-seesawplatform-cs"
+  ]
+}

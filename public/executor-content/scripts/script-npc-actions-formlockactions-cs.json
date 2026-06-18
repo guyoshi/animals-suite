@@ -1,0 +1,93 @@
+{
+  "path": "NPC/Actions/FormLockActions.cs",
+  "filename": "FormLockActions.cs",
+  "category": "NPC",
+  "primary": "Action_LockForms",
+  "kind": "Acção de NPC",
+  "summary": "Bloqueia temporariamente uma ou mais formas: ficam visíveis (cinzentas) na roda de formas mas não podem ser equipadas. As formas já bloqueadas são ignoradas (idempotente).",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "Action_LockForms",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_UnlockForms",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_ClearFormLocks",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_LockAllFormsExceptStart",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "FormLockUtil",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "forms",
+      "type": "List<AnimalFormData>",
+      "mods": "public",
+      "default": "new List<AnimalFormData>()",
+      "section": "",
+      "attrs": "[Tooltip(\"Formas a bloquear temporariamente. Ficam visíveis na roda mas não seleccionáveis (cinzentas).\")]",
+      "inspector": true,
+      "description": "Formas a bloquear temporariamente. Ficam visíveis na roda mas não seleccionáveis (cinzentas)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    },
+    {
+      "name": "GetSwitcher",
+      "ret": "FormSwitcher",
+      "mods": "internal static",
+      "params": "",
+      "description": "Executa a operação GetSwitcher."
+    }
+  ],
+  "dependencies": [
+    "Action_FreeAnimal",
+    "Action_RestorePlayerSnapshot",
+    "Action_SavePlayerSnapshot",
+    "AnimalFormData",
+    "FormSwitcher",
+    "NpcAction",
+    "NpcController"
+  ],
+  "used_by": [
+    "FormSwitcher"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n// ─── Acções NPC — Bloqueio Temporário de Formas ────────────────────────────\n//\n// Usadas quando uma área \"retira\" temporariamente animais ao player (ex: uma\n// zona onde animais foram selados ou confiscados). As formas bloqueadas\n// continuam visíveis (cinzentas) na roda de formas, mas não podem ser equipadas.\n//\n// Fluxo típico de \"área com animais selados\":\n//   1. Action_LockForms         — bloqueia os animais da lista ao entrar na área.\n//   2. [player joga a área sem esses animais]\n//   3. Action_UnlockForms       — desbloqueia formas específicas (ou)\n//      Action_ClearFormLocks    — remove TODOS os bloqueios de uma vez.\n//\n// Para bloquear (e opcionalmente restaurar) o estado completo do player\n// (seeds, corações, inventário...) em conjunto com estes bloqueios, usar\n// Action_SavePlayerSnapshot / Action_RestorePlayerSnapshot (Task #5).\n//\n// Nota: se o player estiver actualmente numa forma que vai ser bloqueada, o\n// bloqueio NÃO o expulsa dela — o designer deve forçar uma troca de forma\n// primeiro (ex: via Action_FreeAnimal → Action_ForceForm, se existir).\n\n/// <summary>\n/// Bloqueia temporariamente uma ou mais formas: ficam visíveis (cinzentas) na\n/// roda de formas mas não podem ser equipadas. As formas já bloqueadas são\n/// ignoradas (idempotente).\n/// </summary>\n[System.Serializable]\npublic class Action_LockForms : NpcAction\n{\n    [Tooltip(\"Formas a bloquear temporariamente. Ficam visíveis na roda mas não seleccionáveis (cinzentas).\")]\n    public List<AnimalFormData> forms = new List<AnimalFormData>();\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var switcher = FormLockUtil.GetSwitcher();\n        if (switcher == null) yield break;\n\n        foreach (var form in forms)\n            switcher.LockForm(form);\n    }\n}\n\n/// <summary>\n/// Remove o bloqueio de uma ou mais formas específicas, tornando-as novamente\n/// seleccionáveis (sem afectar outros bloqueios activos). As formas não\n/// bloqueadas são ignoradas (idempotente).\n/// </summary>\n[System.Serializable]\npublic class Action_UnlockForms : NpcAction\n{\n    [Tooltip(\"Formas a desbloquear. Remove apenas o bloqueio temporário; a forma precisa de continuar na lista 'unlockedForms' do FormSwitcher para ser usável.\")]\n    public List<AnimalFormData> forms = new List<AnimalFormData>();\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var switcher = FormLockUtil.GetSwitcher();\n        if (switcher == null) yield break;\n\n        foreach (var form in forms)\n            switcher.UnlockFormLock(form);\n    }\n}\n\n/// <summary>\n/// Remove TODOS os bloqueios temporários de formas de uma vez, restaurando\n/// todas as formas desbloqueadas como seleccionáveis. Útil no final de uma\n/// área de evento para garantir que nenhum bloqueio ficou activo.\n/// </summary>\n[System.Serializable]\npublic class Action_ClearFormLocks : NpcAction\n{\n    public override IEnumerator Execute(NpcController npc)\n    {\n        FormLockUtil.GetSwitcher()?.ClearAllFormLocks();\n        yield break;\n    }\n}\n\n/// <summary>\n/// Bloqueia TODAS as formas desbloqueadas excepto a forma inicial\n/// (startingForm). Equivale a \"o player perde todos os animais\n/// temporariamente\" sem removê-los da lista — o player continua a ver os\n/// animais cinzentos na roda de formas como recordação do que tinha.\n///\n/// Nota: a forma actual do player NÃO é alterada por esta acção. Se quiser\n/// que o player seja forçado para a forma inicial, use outra acção antes.\n/// </summary>\n[System.Serializable]\npublic class Action_LockAllFormsExceptStart : NpcAction\n{\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var switcher = FormLockUtil.GetSwitcher();\n        if (switcher == null) yield break;\n\n        foreach (var form in switcher.unlockedForms)\n        {\n            if (form == null || form == switcher.startingForm) continue;\n            switcher.LockForm(form);\n        }\n    }\n}\n\n// ─── Utilitário interno ────────────────────────────────────────────────────\n\ninternal static class FormLockUtil\n{\n    internal static FormSwitcher GetSwitcher()\n    {\n        var playerGo = GameObject.FindWithTag(\"Player\");\n        if (playerGo == null)\n        {\n            Debug.LogWarning(\"[FormLockActions] Player não encontrado na cena.\");\n            return null;\n        }\n\n        var switcher = playerGo.GetComponent<FormSwitcher>()\n                    ?? playerGo.GetComponentInChildren<FormSwitcher>();\n\n        if (switcher == null)\n            Debug.LogWarning(\"[FormLockActions] FormSwitcher não encontrado no Player.\");\n\n        return switcher;\n    }\n}\n",
+  "id": "script-npc-actions-formlockactions-cs",
+  "dependencyIds": [
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-forms-animalformdata-cs",
+    "script-forms-formswitcher-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-forms-formswitcher-cs"
+  ]
+}

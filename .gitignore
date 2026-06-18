@@ -1,0 +1,38 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Chaves e segredos de atualização — nunca enviar ao GitHub
+*.key
+*.key.pub
+*.pem
+.env
+.env.*
+!.env.example
+signing/
+.tauri-signing/
+
+# Builds locais do Tauri
+src-tauri/target/
+Instalador/

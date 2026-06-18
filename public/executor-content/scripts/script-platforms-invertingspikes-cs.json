@@ -1,0 +1,185 @@
+{
+  "path": "Platforms/InvertingSpikes.cs",
+  "filename": "InvertingSpikes.cs",
+  "category": "Platforms",
+  "primary": "InvertingSpikes",
+  "kind": "Componente",
+  "summary": "Espinhos que invertem de lado (ex: baixo -> cima) a cada \"intervalo\" segundos (add-on opcional — coloca-se na plataforma, junto com MovingPlatform se quiseres que ela também se mova). Coloca este script num GameObject FILHO da plataforma, com o sprite dos espinhos + um Collider2D (Trigger) próprios — a rotação de 180° desse filho leva o sprite e a zona de dano para o lado oposto juntos.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "InvertingSpikes",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "intervalo",
+      "type": "float",
+      "mods": "public",
+      "default": "3f",
+      "section": "Temporização",
+      "attrs": "[Header(\"Temporização\")] [Tooltip(\"Tempo (segundos) entre cada inversão.\")] [Min(0.1f)]",
+      "inspector": true,
+      "description": "Tempo (segundos) entre cada inversão."
+    },
+    {
+      "name": "duracaoRotacao",
+      "type": "float",
+      "mods": "public",
+      "default": "0.25f",
+      "section": "Temporização",
+      "attrs": "[Tooltip(\"Duração (segundos) da rotação até ao lado oposto. 0 = instantâneo.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Duração (segundos) da rotação até ao lado oposto. 0 = instantâneo."
+    },
+    {
+      "name": "comecaEmBaixo",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Temporização",
+      "attrs": "[Tooltip(\"Começa com os espinhos em baixo (true) ou em cima (false)?\")]",
+      "inspector": true,
+      "description": "Começa com os espinhos em baixo (true) ou em cima (false)?"
+    },
+    {
+      "name": "damage",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Dano",
+      "attrs": "[Header(\"Dano\")] [Tooltip(\"Corações de dano ao tocar nos espinhos.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Corações de dano ao tocar nos espinhos."
+    },
+    {
+      "name": "knockback",
+      "type": "float",
+      "mods": "public",
+      "default": "6f",
+      "section": "Dano",
+      "attrs": "[Tooltip(\"Força de empurrão aplicada ao tocar nos espinhos.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Força de empurrão aplicada ao tocar nos espinhos."
+    },
+    {
+      "name": "tickInterval",
+      "type": "float",
+      "mods": "public",
+      "default": "0.6f",
+      "section": "Dano",
+      "attrs": "[Tooltip(\"Intervalo mínimo (segundos) entre danos de contacto, enquanto o player ficar em contacto.\")] [Min(0.05f)]",
+      "inspector": true,
+      "description": "Intervalo mínimo (segundos) entre danos de contato, enquanto o player ficar em contato."
+    },
+    {
+      "name": "onInverteu",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_emBaixo",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_timer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_nextDamageTime",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "RotateTo",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float targetZ",
+      "description": "Executa a operação RotateTo."
+    },
+    {
+      "name": "OnTriggerStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerStay2D."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "TryHit",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação TryHit."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "DamageInfo",
+    "DamageType",
+    "MovingPlatform",
+    "PlayerCombat"
+  ],
+  "used_by": [],
+  "source": "using System.Collections;\nusing UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Espinhos que invertem de lado (ex: baixo -> cima) a cada \"intervalo\"\n/// segundos (add-on opcional — coloca-se na plataforma, junto com\n/// MovingPlatform se quiseres que ela também se mova).\n///\n/// Coloca este script num GameObject FILHO da plataforma, com o sprite dos\n/// espinhos + um Collider2D (Trigger) próprios — a rotação de 180° desse\n/// filho leva o sprite e a zona de dano para o lado oposto juntos.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\n[DisallowMultipleComponent]\npublic class InvertingSpikes : MonoBehaviour\n{\n    [Header(\"Temporização\")]\n    [Tooltip(\"Tempo (segundos) entre cada inversão.\")]\n    [Min(0.1f)] public float intervalo = 3f;\n\n    [Tooltip(\"Duração (segundos) da rotação até ao lado oposto. 0 = instantâneo.\")]\n    [Min(0f)] public float duracaoRotacao = 0.25f;\n\n    [Tooltip(\"Começa com os espinhos em baixo (true) ou em cima (false)?\")]\n    public bool comecaEmBaixo = true;\n\n    [Header(\"Dano\")]\n    [Tooltip(\"Corações de dano ao tocar nos espinhos.\")]\n    [Min(0)] public int damage = 1;\n\n    [Tooltip(\"Força de empurrão aplicada ao tocar nos espinhos.\")]\n    [Min(0f)] public float knockback = 6f;\n\n    [Tooltip(\"Intervalo mínimo (segundos) entre danos de contacto, enquanto o player ficar em contacto.\")]\n    [Min(0.05f)] public float tickInterval = 0.6f;\n\n    [Header(\"Eventos\")]\n    public UnityEvent onInverteu;\n\n    private bool _emBaixo;\n    private float _timer;\n    private float _nextDamageTime;\n\n    private void Awake()\n    {\n        _emBaixo = comecaEmBaixo;\n        _timer = intervalo;\n\n        // Garante orientação inicial coerente com \"comecaEmBaixo\" sem animação.\n        transform.localRotation = _emBaixo ? Quaternion.identity : Quaternion.Euler(0f, 0f, 180f);\n    }\n\n    private void Update()\n    {\n        _timer -= Time.deltaTime;\n        if (_timer > 0f) return;\n\n        _timer = intervalo;\n        _emBaixo = !_emBaixo;\n\n        float targetZ = _emBaixo ? 0f : 180f;\n\n        if (duracaoRotacao > 0f)\n            StartCoroutine(RotateTo(targetZ));\n        else\n            transform.localRotation = Quaternion.Euler(0f, 0f, targetZ);\n\n        onInverteu?.Invoke();\n    }\n\n    private IEnumerator RotateTo(float targetZ)\n    {\n        Quaternion from = transform.localRotation;\n        Quaternion to = Quaternion.Euler(0f, 0f, targetZ);\n\n        float t = 0f;\n        while (t < duracaoRotacao)\n        {\n            t += Time.deltaTime;\n            transform.localRotation = Quaternion.Slerp(from, to, Mathf.Clamp01(t / duracaoRotacao));\n            yield return null;\n        }\n\n        transform.localRotation = to;\n    }\n\n    private void OnTriggerStay2D(Collider2D other) => TryHit(other);\n    private void OnTriggerEnter2D(Collider2D other) => TryHit(other);\n\n    private void TryHit(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (Time.time < _nextDamageTime) return;\n        if (damage <= 0) return;\n\n        var info = new DamageInfo(damage, DamageType.Hazard, transform.position, knockback, null, ignoreDefense: true);\n\n        if (PlayerCombat.TryDamagePlayer(other.transform, info))\n            _nextDamageTime = Time.time + tickInterval;\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = Color.red;\n        Vector3 dir = transform.up;\n        Gizmos.DrawLine(transform.position, transform.position + dir * 0.5f);\n    }\n}\n",
+  "id": "script-platforms-invertingspikes-cs",
+  "dependencyIds": [
+    "script-player-damageinfo-cs",
+    "script-platforms-movingplatform-cs",
+    "script-player-playercombat-cs"
+  ],
+  "usedByIds": []
+}

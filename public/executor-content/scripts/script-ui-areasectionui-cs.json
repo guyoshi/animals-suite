@@ -1,0 +1,526 @@
+{
+  "path": "UI/AreaSectionUI.cs",
+  "filename": "AreaSectionUI.cs",
+  "category": "UI",
+  "primary": "AreaSectionUI",
+  "kind": "Componente",
+  "summary": "Seção \"Área Atual\" do Menu de Pausa (Tarefa #7) — substitui por completo o antigo Mapa Local. Mostra APENAS o que existe na área e quanto o jogador já encontrou. NUNCA mostra: caminhos, salas, posição do jogador, entradas, locais secretos, direções de objetivos, posições de Runas/NPCs/baús, dicas automáticas ou o animal recomendado para segredos. Conteúdo (ver AreaData + PlayerProgress.AreaProgress): - Nome da área, mundo a que pertence, descrição atmosférica, ilustração ambiente. - DESCOBERTAS: Runas de Gaia, NPCs resgatados, Sussurros da Terra, Baús encontrados, Fragmentos Vitais — cada linha só aparece se AreaData.totalX > 0 (a área tem esse tipo de colecionável). - Desafio da área: \"?",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "AreaSectionUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, IPauseMenuSection",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Header(\"Framework\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaNameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Cabeçalho da Secção",
+      "attrs": "[Header(\"Cabeçalho da Secção\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "worldNameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Cabeçalho da Secção",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "descriptionText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Cabeçalho da Secção",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "illustrationImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Cabeçalho da Secção",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasRow",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — Runas de Gaia",
+      "attrs": "[Header(\"Descobertas — Runas de Gaia\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — Runas de Gaia",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Runas de Gaia\"",
+      "section": "Descobertas — Runas de Gaia",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "npcsRow",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — NPCs Resgatados",
+      "attrs": "[Header(\"Descobertas — NPCs Resgatados\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "npcsText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — NPCs Resgatados",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "npcsLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"NPCs resgatados\"",
+      "section": "Descobertas — NPCs Resgatados",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "whispersRow",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — Sussurros da Terra",
+      "attrs": "[Header(\"Descobertas — Sussurros da Terra\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "whispersText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — Sussurros da Terra",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "whispersLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Sussurros da Terra\"",
+      "section": "Descobertas — Sussurros da Terra",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "chestsRow",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — Baús",
+      "attrs": "[Header(\"Descobertas — Baús\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "chestsText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — Baús",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "chestsLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Baús encontrados\"",
+      "section": "Descobertas — Baús",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fragmentsRow",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — Fragmentos Vitais",
+      "attrs": "[Header(\"Descobertas — Fragmentos Vitais\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fragmentsText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Descobertas — Fragmentos Vitais",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fragmentsLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Fragmentos Vitais\"",
+      "section": "Descobertas — Fragmentos Vitais",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeRow",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Desafio da Área",
+      "attrs": "[Header(\"Desafio da Área\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Desafio da Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Desafio da área\"",
+      "section": "Desafio da Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeUnknown",
+      "type": "string",
+      "mods": "private",
+      "default": "\"?\"",
+      "section": "Desafio da Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeNotDone",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Não concluído\"",
+      "section": "Desafio da Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeDone",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Concluído\"",
+      "section": "Desafio da Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freedAnimalRow",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Animal Libertado",
+      "attrs": "[Header(\"Animal Libertado\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freedAnimalText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Animal Libertado",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freedAnimalLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Animal libertado\"",
+      "section": "Animal Libertado",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freedAnimalUnknown",
+      "type": "string",
+      "mods": "private",
+      "default": "\"?\"",
+      "section": "Animal Libertado",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "completionText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Conclusão da Área",
+      "attrs": "[Header(\"Conclusão da Área\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "completionFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Conclusão da área {0}%\"",
+      "section": "Conclusão da Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "restoredText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"ÁREA RESTAURADA — 100%\"",
+      "section": "Conclusão da Área",
+      "attrs": "[Tooltip(\"Mostrado em vez do texto normal quando a área chega a 100% (ex: \\\"ÁREA RESTAURADA — 100%\\\").\")] [SerializeField]",
+      "inspector": true,
+      "description": "Mostrado em vez do texto normal quando a área chega a 100% (ex: \"ÁREA RESTAURADA — 100%\\"
+    },
+    {
+      "name": "restoredAuraEffect",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Conclusão da Área",
+      "attrs": "[Tooltip(\"Activado quando a área está a 100% — efeito de moldura a florescer/aura permanente.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Ativado quando a área está a 100% — efeito de moldura a florescer/aura permanente."
+    },
+    {
+      "name": "sussurrosTitleText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Sussurros da Terra — Frases Ouvidas",
+      "attrs": "[Header(\"Sussurros da Terra — Frases Ouvidas\")] [FormerlySerializedAs(\"echoesTitleText\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sussurrosTitle",
+      "type": "string",
+      "mods": "private",
+      "default": "\"SUSSURROS DA TERRA\"",
+      "section": "Sussurros da Terra — Frases Ouvidas",
+      "attrs": "[FormerlySerializedAs(\"echoesTitle\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sussurrosContainer",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Sussurros da Terra — Frases Ouvidas",
+      "attrs": "[FormerlySerializedAs(\"echoesContainer\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sussurroLinePrefab",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Sussurros da Terra — Frases Ouvidas",
+      "attrs": "[FormerlySerializedAs(\"echoLinePrefab\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "noSussurrosText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Nenhum sussurro da terra foi ouvido neste lugar.\"",
+      "section": "Sussurros da Terra — Frases Ouvidas",
+      "attrs": "[FormerlySerializedAs(\"noEchoesText\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spawnedSussurroLines",
+      "type": "List<GameObject>",
+      "mods": "private readonly",
+      "default": "new List<GameObject>()",
+      "section": "Sussurros da Terra — Frases Ouvidas",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SectionName",
+      "type": "string",
+      "mods": "public",
+      "default": "> \"ÁREA\"",
+      "section": "Sussurros da Terra — Frases Ouvidas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Root",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "> root != null ? root : gameObject",
+      "section": "Sussurros da Terra — Frases Ouvidas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Refresh",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Refresh."
+    },
+    {
+      "name": "OnHide",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação OnHide."
+    },
+    {
+      "name": "SetupCountRow",
+      "ret": "void",
+      "mods": "private",
+      "params": "GameObject row, TMP_Text text, string label, int total, int found",
+      "description": "Executa a operação SetupCountRow."
+    },
+    {
+      "name": "SetupChallengeRow",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area, PlayerProgress progress",
+      "description": "Executa a operação SetupChallengeRow."
+    },
+    {
+      "name": "SetupFreedAnimalRow",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area, PlayerProgress progress",
+      "description": "Executa a operação SetupFreedAnimalRow."
+    },
+    {
+      "name": "SetupCompletion",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area, PlayerProgress progress",
+      "description": "Executa a operação SetupCompletion."
+    },
+    {
+      "name": "SetupSussurros",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area, PlayerProgress progress",
+      "description": "Executa a operação SetupSussurros."
+    },
+    {
+      "name": "ClearSussurroLines",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ClearSussurroLines."
+    },
+    {
+      "name": "ClearAll",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ClearAll."
+    }
+  ],
+  "dependencies": [
+    "Action_AddAreaSussurroDaTerra",
+    "AreaData",
+    "AreaProgress",
+    "IPauseMenuSection",
+    "PlayerProgress",
+    "WorldState"
+  ],
+  "used_by": [
+    "SecondaryMenuController"
+  ],
+  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.Serialization;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Secção \"Área Atual\" do Menu de Pausa (Tarefa #7) — substitui por completo o\n/// antigo Mapa Local.\n///\n/// Mostra APENAS o que existe na área e quanto o jogador já encontrou. NUNCA\n/// mostra: caminhos, salas, posição do jogador, entradas, locais secretos,\n/// direcções de objectivos, posições de Runas/NPCs/baús, dicas automáticas ou\n/// o animal recomendado para segredos.\n///\n/// Conteúdo (ver AreaData + PlayerProgress.AreaProgress):\n/// - Nome da área, mundo a que pertence, descrição atmosférica, ilustração ambiente.\n/// - DESCOBERTAS: Runas de Gaia, NPCs resgatados, Sussurros da Terra, Baús\n///   encontrados, Fragmentos Vitais — cada linha só aparece se\n///   AreaData.totalX > 0 (a área tem esse tipo de colecionável).\n/// - Desafio da área: \"?\" até <see cref=\"PlayerProgress.IsChallengeDiscovered\"/>,\n///   depois \"Não concluído\"/\"Concluído\".\n/// - Animal libertado: \"?\" até o animal estar em PlayerProgress.freedAnimalIds.\n/// - Conclusão da área (%) — a 100% mostra \"ÁREA RESTAURADA — 100%\" com aura.\n/// - \"SUSSURROS DA TERRA\": frases exactas (ditas por NPCs) já ouvidas sobre\n///   esta área — ver Action_AddAreaSussurroDaTerra (mesma colecionável da\n///   contagem \"Sussurros da Terra\" nas Descobertas). Se nenhuma, mostra a\n///   frase de \"nenhum sussurro ouvido\".\n/// </summary>\npublic class AreaSectionUI : MonoBehaviour, IPauseMenuSection\n{\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject root;\n\n    [Header(\"Cabeçalho da Secção\")]\n    [SerializeField] private TMP_Text areaNameText;\n    [SerializeField] private TMP_Text worldNameText;\n    [SerializeField] private TMP_Text descriptionText;\n    [SerializeField] private Image illustrationImage;\n\n    [Header(\"Descobertas — Runas de Gaia\")]\n    [SerializeField] private GameObject runasRow;\n    [SerializeField] private TMP_Text runasText;\n    [SerializeField] private string runasLabel = \"Runas de Gaia\";\n\n    [Header(\"Descobertas — NPCs Resgatados\")]\n    [SerializeField] private GameObject npcsRow;\n    [SerializeField] private TMP_Text npcsText;\n    [SerializeField] private string npcsLabel = \"NPCs resgatados\";\n\n    [Header(\"Descobertas — Sussurros da Terra\")]\n    [SerializeField] private GameObject whispersRow;\n    [SerializeField] private TMP_Text whispersText;\n    [SerializeField] private string whispersLabel = \"Sussurros da Terra\";\n\n    [Header(\"Descobertas — Baús\")]\n    [SerializeField] private GameObject chestsRow;\n    [SerializeField] private TMP_Text chestsText;\n    [SerializeField] private string chestsLabel = \"Baús encontrados\";\n\n    [Header(\"Descobertas — Fragmentos Vitais\")]\n    [SerializeField] private GameObject fragmentsRow;\n    [SerializeField] private TMP_Text fragmentsText;\n    [SerializeField] private string fragmentsLabel = \"Fragmentos Vitais\";\n\n    [Header(\"Desafio da Área\")]\n    [SerializeField] private GameObject challengeRow;\n    [SerializeField] private TMP_Text challengeText;\n    [SerializeField] private string challengeLabel = \"Desafio da área\";\n    [SerializeField] private string challengeUnknown = \"?\";\n    [SerializeField] private string challengeNotDone = \"Não concluído\";\n    [SerializeField] private string challengeDone = \"Concluído\";\n\n    [Header(\"Animal Libertado\")]\n    [SerializeField] private GameObject freedAnimalRow;\n    [SerializeField] private TMP_Text freedAnimalText;\n    [SerializeField] private string freedAnimalLabel = \"Animal libertado\";\n    [SerializeField] private string freedAnimalUnknown = \"?\";\n\n    [Header(\"Conclusão da Área\")]\n    [SerializeField] private TMP_Text completionText;\n    [SerializeField] private string completionFormat = \"Conclusão da área {0}%\";\n\n    [Tooltip(\"Mostrado em vez do texto normal quando a área chega a 100% (ex: \\\"ÁREA RESTAURADA — 100%\\\").\")]\n    [SerializeField] private string restoredText = \"ÁREA RESTAURADA — 100%\";\n\n    [Tooltip(\"Activado quando a área está a 100% — efeito de moldura a florescer/aura permanente.\")]\n    [SerializeField] private GameObject restoredAuraEffect;\n\n    [Header(\"Sussurros da Terra — Frases Ouvidas\")]\n    [FormerlySerializedAs(\"echoesTitleText\")]\n    [SerializeField] private TMP_Text sussurrosTitleText;\n    [FormerlySerializedAs(\"echoesTitle\")]\n    [SerializeField] private string sussurrosTitle = \"SUSSURROS DA TERRA\";\n    [FormerlySerializedAs(\"echoesContainer\")]\n    [SerializeField] private Transform sussurrosContainer;\n    [FormerlySerializedAs(\"echoLinePrefab\")]\n    [SerializeField] private TMP_Text sussurroLinePrefab;\n    [FormerlySerializedAs(\"noEchoesText\")]\n    [SerializeField] private string noSussurrosText = \"Nenhum sussurro da terra foi ouvido neste lugar.\";\n\n    private readonly List<GameObject> spawnedSussurroLines = new List<GameObject>();\n\n    public string SectionName => \"ÁREA\";\n    public GameObject Root => root != null ? root : gameObject;\n\n    public void Refresh()\n    {\n        var area = WorldState.Instance != null ? WorldState.Instance.CurrentArea : null;\n        var progress = PlayerProgress.Instance;\n\n        if (area == null)\n        {\n            ClearAll();\n            return;\n        }\n\n        if (areaNameText != null) areaNameText.text = area.displayName;\n        if (worldNameText != null) worldNameText.text = area.world != null ? area.world.displayName : string.Empty;\n        if (descriptionText != null) descriptionText.text = area.description;\n\n        if (illustrationImage != null)\n        {\n            illustrationImage.sprite = area.illustration;\n            illustrationImage.enabled = area.illustration != null;\n        }\n\n        SetupCountRow(runasRow, runasText, runasLabel, area.totalRunas, progress != null ? progress.GetRunasFound(area) : 0);\n        SetupCountRow(npcsRow, npcsText, npcsLabel, area.totalNpcsToRescue, progress != null ? progress.GetNpcsRescued(area) : 0);\n        SetupCountRow(whispersRow, whispersText, whispersLabel, area.totalWhispers, progress != null ? progress.GetWhispersFound(area) : 0);\n        SetupCountRow(chestsRow, chestsText, chestsLabel, area.totalChests, progress != null ? progress.GetChestsFound(area) : 0);\n        SetupCountRow(fragmentsRow, fragmentsText, fragmentsLabel, area.totalFragments, progress != null ? progress.GetFragmentsFound(area) : 0);\n\n        SetupChallengeRow(area, progress);\n        SetupFreedAnimalRow(area, progress);\n        SetupCompletion(area, progress);\n        SetupSussurros(area, progress);\n    }\n\n    public void OnHide()\n    {\n        // Sem estado próprio a limpar — Refresh() repõe tudo na próxima vez.\n    }\n\n    // ---------------- Linhas de Descobertas ----------------\n\n    private void SetupCountRow(GameObject row, TMP_Text text, string label, int total, int found)\n    {\n        if (row != null) row.SetActive(total > 0);\n        if (total <= 0 || text == null) return;\n\n        text.text = $\"{label} {Mathf.Min(found, total)}/{total}\";\n    }\n\n    private void SetupChallengeRow(AreaData area, PlayerProgress progress)\n    {\n        if (challengeRow != null) challengeRow.SetActive(area.hasOptionalChallenge);\n        if (!area.hasOptionalChallenge || challengeText == null) return;\n\n        bool discovered = progress != null && progress.IsChallengeDiscovered(area);\n        bool completed = progress != null && progress.IsChallengeCompleted(area);\n\n        string status = !discovered ? challengeUnknown : (completed ? challengeDone : challengeNotDone);\n        challengeText.text = $\"{challengeLabel}: {status}\";\n    }\n\n    private void SetupFreedAnimalRow(AreaData area, PlayerProgress progress)\n    {\n        bool hasAnimal = area.freedAnimalForm != null;\n        if (freedAnimalRow != null) freedAnimalRow.SetActive(hasAnimal);\n        if (!hasAnimal || freedAnimalText == null) return;\n\n        bool freed = progress != null && progress.freedAnimalIds.Contains(area.freedAnimalForm.formId);\n        string status = freed ? area.freedAnimalForm.displayName : freedAnimalUnknown;\n        freedAnimalText.text = $\"{freedAnimalLabel}: {status}\";\n    }\n\n    // ---------------- Conclusão ----------------\n\n    private void SetupCompletion(AreaData area, PlayerProgress progress)\n    {\n        int percent = progress != null ? progress.GetAreaCompletionPercent(area) : 0;\n        bool restored = percent >= 100;\n\n        if (completionText != null)\n            completionText.text = restored ? restoredText : string.Format(completionFormat, percent);\n\n        if (restoredAuraEffect != null) restoredAuraEffect.SetActive(restored);\n    }\n\n    // ---------------- Sussurros da Terra (frases ouvidas) ----------------\n\n    private void SetupSussurros(AreaData area, PlayerProgress progress)\n    {\n        if (sussurrosTitleText != null) sussurrosTitleText.text = sussurrosTitle;\n\n        ClearSussurroLines();\n\n        var sussurros = progress != null ? progress.GetSussurrosDaTerraOuvidos(area) : null;\n\n        if (sussurros == null || sussurros.Count == 0)\n        {\n            if (sussurroLinePrefab != null && sussurrosContainer != null)\n            {\n                var line = Instantiate(sussurroLinePrefab, sussurrosContainer);\n                line.gameObject.SetActive(true);\n                line.text = noSussurrosText;\n                spawnedSussurroLines.Add(line.gameObject);\n            }\n\n            return;\n        }\n\n        if (sussurroLinePrefab == null || sussurrosContainer == null) return;\n\n        foreach (var phrase in sussurros)\n        {\n            var line = Instantiate(sussurroLinePrefab, sussurrosContainer);\n            line.gameObject.SetActive(true);\n            line.text = $\"“{phrase}”\";\n            spawnedSussurroLines.Add(line.gameObject);\n        }\n    }\n\n    private void ClearSussurroLines()\n    {\n        foreach (var go in spawnedSussurroLines)\n            if (go != null) Destroy(go);\n\n        spawnedSussurroLines.Clear();\n    }\n\n    private void ClearAll()\n    {\n        if (areaNameText != null) areaNameText.text = string.Empty;\n        if (worldNameText != null) worldNameText.text = string.Empty;\n        if (descriptionText != null) descriptionText.text = string.Empty;\n        if (illustrationImage != null) illustrationImage.enabled = false;\n\n        if (runasRow != null) runasRow.SetActive(false);\n        if (npcsRow != null) npcsRow.SetActive(false);\n        if (whispersRow != null) whispersRow.SetActive(false);\n        if (chestsRow != null) chestsRow.SetActive(false);\n        if (fragmentsRow != null) fragmentsRow.SetActive(false);\n        if (challengeRow != null) challengeRow.SetActive(false);\n        if (freedAnimalRow != null) freedAnimalRow.SetActive(false);\n\n        if (completionText != null) completionText.text = string.Empty;\n        if (restoredAuraEffect != null) restoredAuraEffect.SetActive(false);\n\n        ClearSussurroLines();\n    }\n}\n",
+  "id": "script-ui-areasectionui-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-ui-ipausemenusection-cs",
+    "script-data-playerprogress-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-ui-secondarymenucontroller-cs"
+  ]
+}

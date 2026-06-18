@@ -1,0 +1,41 @@
+{
+  "path": "Interactables/TongueAnchor.cs",
+  "filename": "TongueAnchor.cs",
+  "category": "Interactables",
+  "primary": "TongueAnchor",
+  "kind": "Componente",
+  "summary": "Argola/ponto de fixação para a língua (P5 — TonguePullAbility, \"canPullToSelf: língua / puxar argolas\"): quando a língua acerta numa argola, é o PLAYER que é puxado até ela (travessias de precipícios, etc). Requer um Collider2D (pode ser trigger).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "TongueAnchor",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "OnDrawGizmos",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmos."
+    }
+  ],
+  "dependencies": [
+    "TonguePullAbility"
+  ],
+  "used_by": [
+    "TonguePullAbility"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Argola/ponto de fixação para a língua (P5 — TonguePullAbility,\n/// \"canPullToSelf: língua / puxar argolas\"): quando a língua acerta numa\n/// argola, é o PLAYER que é puxado até ela (travessias de precipícios, etc).\n/// Requer um Collider2D (pode ser trigger).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class TongueAnchor : MonoBehaviour\n{\n    private void OnDrawGizmos()\n    {\n        Gizmos.color = new Color(1f, 0.5f, 0.8f, 0.8f);\n        Gizmos.DrawWireSphere(transform.position, 0.25f);\n    }\n}\n",
+  "id": "script-interactables-tongueanchor-cs",
+  "dependencyIds": [
+    "script-abilities-tonguepullability-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-tonguepullability-cs"
+  ]
+}

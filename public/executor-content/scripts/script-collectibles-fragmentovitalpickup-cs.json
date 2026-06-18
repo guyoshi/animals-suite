@@ -1,0 +1,54 @@
+{
+  "path": "Collectibles/FragmentoVitalPickup.cs",
+  "filename": "FragmentoVitalPickup.cs",
+  "category": "Collectibles",
+  "primary": "FragmentoVitalPickup",
+  "kind": "Definição",
+  "summary": "Fragmento Vital — concede Fragmentos Vitais ( PlayerProgress.GiveFragmentosVitais , que converte automaticamente em corações extra ao atingir o limiar configurado) e regista \"encontrado\" na área ( AreaProgress.fragmentsFound / AreaData.totalFragments ) uma vez por unidade concedida.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "FragmentoVitalPickup",
+      "kind": "class",
+      "bases": "PickupBase",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Fragmento Vital",
+      "attrs": "[Header(\"Fragmento Vital\")] [Tooltip(\"Quantidade de Fragmentos Vitais concedidos (normalmente 1).\")] [Min(1)]",
+      "inspector": true,
+      "description": "Quantidade de Fragmentos Vitais concedidos (normalmente 1)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "GrantReward",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação GrantReward."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AreaProgress",
+    "PickupBase",
+    "PickupType",
+    "PlayerProgress"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Fragmento Vital — concede <see cref=\"amount\"/> Fragmentos Vitais\n/// (<c>PlayerProgress.GiveFragmentosVitais</c>, que converte automaticamente\n/// em corações extra ao atingir o limiar configurado) e regista \"encontrado\"\n/// na área (<c>AreaProgress.fragmentsFound</c> / <c>AreaData.totalFragments</c>)\n/// uma vez por unidade concedida.\n/// </summary>\npublic class FragmentoVitalPickup : PickupBase\n{\n    [Header(\"Fragmento Vital\")]\n    [Tooltip(\"Quantidade de Fragmentos Vitais concedidos (normalmente 1).\")]\n    [Min(1)] public int amount = 1;\n\n    public override PickupType Type => PickupType.FragmentoVital;\n\n    protected override void GrantReward()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return;\n\n        progress.GiveFragmentosVitais(amount);\n\n        if (area != null)\n            for (int i = 0; i < amount; i++) progress.AddFragmentFound(area);\n    }\n}\n",
+  "id": "script-collectibles-fragmentovitalpickup-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": []
+}

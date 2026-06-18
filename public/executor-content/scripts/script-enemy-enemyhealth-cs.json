@@ -1,0 +1,373 @@
+{
+  "path": "Enemy/EnemyHealth.cs",
+  "filename": "EnemyHealth.cs",
+  "category": "Enemy",
+  "primary": "EnemyHealth",
+  "kind": "Componente",
+  "summary": "Vida, dano e reação a dano de um inimigo (Enemy Creator — Etapa 1.3). Lê os valores base de .stats (maxHealth, knockbackResistance, weight, invincibilityTimeAfterHit, canBeDestroyed, canOnlyBeDeactivated, isInvincible, recoilOnHit, freezeOnHit, flashOnHit) e expõe como ponto de entrada único para qualquer fonte de dano (contato com o player, ataques do player, hazards, outros inimigos — ver EnemyWeaknessConfig.canTakeDamageFromHazards/OtherEnemyProjectiles). Ao chegar a 0 de vida, chama EnemyController.SetState(Morto) ou SetState(Desativado) conforme \"canOnlyBeDeactivated\"/\"canBeDestroyed\" (estados terminais — ver EnemyController). EnemyDropTable (Etapa 4.3) e EnemyFeedback (Etapa 7.1) de",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyHealth",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "vulnerabilityConditions",
+      "type": "List<EnemyCondition>",
+      "mods": "public",
+      "default": "new List<EnemyCondition>()",
+      "section": "Janela de Vulnerabilidade (Etapa 8.3 — bosses/puzzles)",
+      "attrs": "[Header(\"Janela de Vulnerabilidade (Etapa 8.3 — bosses/puzzles)\")] [Tooltip(\"Se não-vazia, o inimigo SÓ é vulnerável enquanto estas condições se cumprirem (ex: Condition_GlobalBoolVariable \\\"GeradorDesligado\\\"=true, Condition_BossPartsDestroyed). Fora da janela, IsInvincible = true. Lista editável via EnemyHealthEditor.\")] [SerializeReference]",
+      "inspector": true,
+      "description": "Se não-vazia, o inimigo SÓ é vulnerável enquanto estas condições se cumprirem (ex: Condition_GlobalBoolVariable \"GeradorDesligado\"=true, Condition_BossPartsDestroyed). Fora da janela, IsInvincible = true. Lista editável via EnemyHealthEditor."
+    },
+    {
+      "name": "requireAllVulnerabilityConditions",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Janela de Vulnerabilidade (Etapa 8.3 — bosses/puzzles)",
+      "attrs": "[Tooltip(\"Se activo, TODAS as condições de vulnerabilidade têm de se cumprir; senão, basta UMA.\")]",
+      "inspector": true,
+      "description": "Se ativo, TODAS as condições de vulnerabilidade têm de se cumprir; senão, basta UMA."
+    },
+    {
+      "name": "flashColor",
+      "type": "Color",
+      "mods": "public",
+      "default": "new Color(1f, 0.5f, 0.5f, 1f)",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "[Header(\"Feedback Básico (Pisca ao Tomar Dano)\")] [Tooltip(\"Cor usada no pisca (ver stats.flashOnHit). Aplicada por cima da cor original do sprite, alternadamente.\")]",
+      "inspector": true,
+      "description": "Cor usada no pisca (ver stats.flashOnHit). Aplicada por cima da cor original do sprite, alternadamente."
+    },
+    {
+      "name": "flashInterval",
+      "type": "float",
+      "mods": "public",
+      "default": "0.06f",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "[Tooltip(\"Duração de cada alternância do pisca, em segundos.\")]",
+      "inspector": true,
+      "description": "Duração de cada alternância do pisca, em segundos."
+    },
+    {
+      "name": "fallbackFlashDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.2f",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "[Tooltip(\"Duração total do pisca, em segundos, se 'invincibilityTimeAfterHit' for 0 (sem janela de invencibilidade definida).\")]",
+      "inspector": true,
+      "description": "Duração total do pisca, em segundos, se 'invincibilityTimeAfterHit' for 0 (sem janela de invencibilidade definida)."
+    },
+    {
+      "name": "_controller",
+      "type": "EnemyController",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_sprite",
+      "type": "SpriteRenderer",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_baseColor",
+      "type": "Color",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_currentHealth",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_invincibleUntil",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_stateBeforeStun",
+      "type": "EnemyState",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_flashRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_stunRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "MaxHealth",
+      "type": "int",
+      "mods": "public",
+      "default": "> _controller.Data != null ? Mathf.Max(1, _controller.Data.stats.maxHealth) : 1",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CurrentHealth",
+      "type": "int",
+      "mods": "public",
+      "default": "> _currentHealth",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "HealthPercent",
+      "type": "float",
+      "mods": "public",
+      "default": "> (float)_currentHealth / MaxHealth",
+      "section": "Feedback Básico (Pisca ao Tomar Dano)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "IsVulnerableByConditions",
+      "ret": "bool",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação IsVulnerableByConditions."
+    },
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "ResetHealth",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetHealth."
+    },
+    {
+      "name": "Heal",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação Heal."
+    },
+    {
+      "name": "TakeDamage",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int amount",
+      "description": "Executa a operação TakeDamage."
+    },
+    {
+      "name": "TakeDamage",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int amount, AnimalCategory attackerCategory, Vector2 hitOrigin, float knockbackForce = 0f",
+      "description": "Executa a operação TakeDamage."
+    },
+    {
+      "name": "TakeDamage",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int amount, Vector2 hitOrigin, float knockbackForce = 0f",
+      "description": "Executa a operação TakeDamage."
+    },
+    {
+      "name": "Kill",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Kill."
+    },
+    {
+      "name": "HandleDeath",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyStats stats",
+      "description": "Executa a operação HandleDeath."
+    },
+    {
+      "name": "ApplyExternalKnockback",
+      "ret": "void",
+      "mods": "public",
+      "params": "Vector2 hitOrigin, float knockbackForce",
+      "description": "Executa a operação ApplyExternalKnockback."
+    },
+    {
+      "name": "ApplyKnockback",
+      "ret": "void",
+      "mods": "private",
+      "params": "Vector2 hitOrigin, float knockbackForce, EnemyStats stats",
+      "description": "Executa a operação ApplyKnockback."
+    },
+    {
+      "name": "StartStun",
+      "ret": "void",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação StartStun."
+    },
+    {
+      "name": "StunRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação StunRoutine."
+    },
+    {
+      "name": "StartFlash",
+      "ret": "void",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação StartFlash."
+    },
+    {
+      "name": "FlashRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação FlashRoutine."
+    }
+  ],
+  "dependencies": [
+    "AnimalCategory",
+    "Condition_BossPartsDestroyed",
+    "Condition_GlobalBoolVariable",
+    "EnemyCondition",
+    "EnemyController",
+    "EnemyData",
+    "EnemyDropTable",
+    "EnemyFeedback",
+    "EnemyHealthEditor",
+    "EnemyState",
+    "EnemyStats",
+    "EnemyWeaknessConfig",
+    "RollAbility",
+    "State"
+  ],
+  "used_by": [
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "BossController",
+    "EggObject",
+    "EnemyController",
+    "EnemyData",
+    "EnemyDetection",
+    "EnemyFeedback",
+    "EnemyHealthEditor",
+    "EnemyMovement",
+    "EnemyMultiPartBoss",
+    "EnemyPuzzleInteraction",
+    "EnemyRespawn",
+    "EnemyStatusEffectReceiver",
+    "EnemyVoidTrigger",
+    "EnemyWaterBehavior",
+    "PlayerAttack",
+    "PlayerFeedback",
+    "PounceAbility",
+    "ProjectileController",
+    "ProjectileData",
+    "RollAbility",
+    "SpinAttackAbility",
+    "WaterCurrentMode"
+  ],
+  "source": "using System;\nusing System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Vida, dano e reacção a dano de um inimigo (Enemy Creator — Etapa 1.3).\n///\n/// Lê os valores base de <see cref=\"EnemyController.Data\"/>.stats\n/// (maxHealth, knockbackResistance, weight, invincibilityTimeAfterHit,\n/// canBeDestroyed, canOnlyBeDeactivated, isInvincible, recoilOnHit,\n/// freezeOnHit, flashOnHit) e expõe <see cref=\"TakeDamage\"/> como ponto de\n/// entrada único para qualquer fonte de dano (contacto com o player, ataques\n/// do player, hazards, outros inimigos — ver\n/// EnemyWeaknessConfig.canTakeDamageFromHazards/OtherEnemyProjectiles).\n///\n/// Ao chegar a 0 de vida, chama EnemyController.SetState(Morto) ou\n/// SetState(Desactivado) conforme \"canOnlyBeDeactivated\"/\"canBeDestroyed\"\n/// (estados terminais — ver EnemyController). EnemyDropTable (Etapa 4.3) e\n/// EnemyFeedback (Etapa 7.1) devem reagir a essas transições via\n/// EnemyController.OnStateChanged. Para reagir apenas a \"tomei dano mas não\n/// morri\" (ex: som de hit), usa <see cref=\"OnDamaged\"/>.\n/// </summary>\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyHealth : MonoBehaviour\n{\n    [Header(\"Janela de Vulnerabilidade (Etapa 8.3 — bosses/puzzles)\")]\n    [Tooltip(\"Se não-vazia, o inimigo SÓ é vulnerável enquanto estas condições se cumprirem (ex: Condition_GlobalBoolVariable \\\"GeradorDesligado\\\"=true, Condition_BossPartsDestroyed). Fora da janela, IsInvincible = true. Lista editável via EnemyHealthEditor.\")]\n    [SerializeReference] public List<EnemyCondition> vulnerabilityConditions = new List<EnemyCondition>();\n\n    [Tooltip(\"Se activo, TODAS as condições de vulnerabilidade têm de se cumprir; senão, basta UMA.\")]\n    public bool requireAllVulnerabilityConditions = true;\n\n    [Header(\"Feedback Básico (Pisca ao Tomar Dano)\")]\n    [Tooltip(\"Cor usada no pisca (ver stats.flashOnHit). Aplicada por cima da cor original do sprite, alternadamente.\")]\n    public Color flashColor = new Color(1f, 0.5f, 0.5f, 1f);\n\n    [Tooltip(\"Duração de cada alternância do pisca, em segundos.\")]\n    public float flashInterval = 0.06f;\n\n    [Tooltip(\"Duração total do pisca, em segundos, se 'invincibilityTimeAfterHit' for 0 (sem janela de invencibilidade definida).\")]\n    public float fallbackFlashDuration = 0.2f;\n\n    private EnemyController _controller;\n    private SpriteRenderer _sprite;\n    private Color _baseColor;\n\n    private int _currentHealth;\n    private float _invincibleUntil;\n    private EnemyState _stateBeforeStun;\n    private Coroutine _flashRoutine;\n    private Coroutine _stunRoutine;\n\n    /// <summary>Vida máxima (EnemyData.stats.maxHealth). 1 se \"data\" não estiver definido.</summary>\n    public int MaxHealth => _controller.Data != null ? Mathf.Max(1, _controller.Data.stats.maxHealth) : 1;\n\n    /// <summary>Vida actual (0..MaxHealth).</summary>\n    public int CurrentHealth => _currentHealth;\n\n    /// <summary>Vida actual / vida máxima (0..1).</summary>\n    public float HealthPercent => (float)_currentHealth / MaxHealth;\n\n    /// <summary>\n    /// True se \"stats.isInvincible\" estiver activo, se ainda estiver dentro da\n    /// janela de invencibilidade pós-hit, OU se a janela de vulnerabilidade\n    /// (Etapa 8.3 — \"vulnerável quando X\") não estiver aberta.\n    /// </summary>\n    public bool IsInvincible\n    {\n        get\n        {\n            var stats = _controller.Data != null ? _controller.Data.stats : null;\n            if (stats != null && stats.isInvincible) return true;\n            if (Time.time < _invincibleUntil) return true;\n            return !IsVulnerableByConditions();\n        }\n    }\n\n    /// <summary>Avalia a janela de vulnerabilidade (Etapa 8.3). Lista vazia = sempre vulnerável.</summary>\n    private bool IsVulnerableByConditions()\n    {\n        if (vulnerabilityConditions == null || vulnerabilityConditions.Count == 0) return true;\n\n        bool any = false;\n\n        for (int i = 0; i < vulnerabilityConditions.Count; i++)\n        {\n            var condition = vulnerabilityConditions[i];\n            if (condition == null) continue;\n\n            bool ok = condition.Evaluate(_controller);\n\n            if (requireAllVulnerabilityConditions && !ok) return false;\n            if (!requireAllVulnerabilityConditions && ok) any = true;\n        }\n\n        return requireAllVulnerabilityConditions || any;\n    }\n\n    /// <summary>Disparado quando o inimigo toma dano e sobrevive: (quantidade de dano, vida actual).</summary>\n    public event Action<int, int> OnDamaged;\n\n    /// <summary>Disparado quando a vida muda (vida actual, vida máxima) — inclui dano e cura.</summary>\n    public event Action<int, int> OnHealthChanged;\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n        _sprite = _controller.SpriteRenderer;\n        if (_sprite != null) _baseColor = _sprite.color;\n\n        ResetHealth();\n    }\n\n    private void OnDisable()\n    {\n        if (_flashRoutine != null) StopCoroutine(_flashRoutine);\n        if (_stunRoutine != null) StopCoroutine(_stunRoutine);\n\n        if (_sprite != null) _sprite.color = _baseColor;\n    }\n\n    /// <summary>\n    /// Repõe a vida ao máximo e limpa invencibilidade/estados de hit. Usado em\n    /// Awake e pela lógica de respawn (Etapa 7.3).\n    /// </summary>\n    public void ResetHealth()\n    {\n        _currentHealth = MaxHealth;\n        _invincibleUntil = 0f;\n        OnHealthChanged?.Invoke(_currentHealth, MaxHealth);\n    }\n\n    /// <summary>Cura o inimigo (sem exceder o máximo). Útil para itens/efeitos futuros.</summary>\n    public void Heal(int amount)\n    {\n        if (amount <= 0 || _currentHealth <= 0) return;\n        if (_controller.IsTerminal) return;\n\n        _currentHealth = Mathf.Min(MaxHealth, _currentHealth + amount);\n        OnHealthChanged?.Invoke(_currentHealth, MaxHealth);\n    }\n\n    /// <summary>Aplica dano sem origem nem knockback (ex: hazards de área).</summary>\n    public bool TakeDamage(int amount)\n    {\n        return TakeDamage(amount, transform.position, 0f);\n    }\n\n    /// <summary>\n    /// Aplica dano de um ataque feito numa forma \"attackerCategory\" do player\n    /// (GDD 12.1: \"dano não é fixo; depende da força do animal e da habilidade\n    /// usada\"). Se \"attackerCategory\" tiver alguma categoria em comum com\n    /// <see cref=\"EnemyData.weaknesses\"/>.weakAgainst, o dano é multiplicado por\n    /// \"weaknesses.weaknessDamageMultiplier\" (mínimo 1) antes de ser aplicado\n    /// normalmente — ver <see cref=\"TakeDamage(int, Vector2, float)\"/> para o\n    /// resto do comportamento (invencibilidade, knockback, etc).\n    /// </summary>\n    public bool TakeDamage(int amount, AnimalCategory attackerCategory, Vector2 hitOrigin, float knockbackForce = 0f)\n    {\n        var weaknesses = _controller.Data != null ? _controller.Data.weaknesses : null;\n\n        int effectiveAmount = amount;\n        if (weaknesses != null && attackerCategory != AnimalCategory.None && (weaknesses.weakAgainst & attackerCategory) != 0)\n            effectiveAmount = Mathf.Max(1, Mathf.RoundToInt(amount * weaknesses.weaknessDamageMultiplier));\n\n        return TakeDamage(effectiveAmount, hitOrigin, knockbackForce);\n    }\n\n    /// <summary>\n    /// Aplica dano vindo de \"hitOrigin\" (usado para calcular a direcção do\n    /// knockback) com força de knockback \"knockbackForce\". Devolve false sem\n    /// qualquer efeito se o inimigo for invencível (stats.isInvincible ou\n    /// dentro da janela pós-hit) ou já estiver num estado terminal\n    /// (Morto/Desactivado).\n    /// </summary>\n    public bool TakeDamage(int amount, Vector2 hitOrigin, float knockbackForce = 0f)\n    {\n        if (amount <= 0) return false;\n        if (_controller.IsTerminal) return false;\n        if (IsInvincible) return false;\n\n        var stats = _controller.Data != null ? _controller.Data.stats : null;\n\n        _currentHealth = Mathf.Max(0, _currentHealth - amount);\n        OnHealthChanged?.Invoke(_currentHealth, MaxHealth);\n        OnDamaged?.Invoke(amount, _currentHealth);\n\n        if (stats != null && stats.invincibilityTimeAfterHit > 0f)\n            _invincibleUntil = Time.time + stats.invincibilityTimeAfterHit;\n\n        bool flash = stats == null || stats.flashOnHit;\n        bool recoil = stats != null && stats.recoilOnHit;\n        bool freeze = stats != null && stats.freezeOnHit;\n\n        if (flash) StartFlash(stats != null ? stats.invincibilityTimeAfterHit : 0f);\n        if (recoil) ApplyKnockback(hitOrigin, knockbackForce, stats);\n\n        if (_currentHealth <= 0)\n        {\n            HandleDeath(stats);\n            return true;\n        }\n\n        if (freeze) StartStun(stats != null ? stats.invincibilityTimeAfterHit : 0f);\n\n        return true;\n    }\n\n    /// <summary>Força a destruição/desactivação imediata, ignorando dano e invencibilidade (ex: interacção de puzzle — Etapa 6).</summary>\n    public void Kill()\n    {\n        if (_controller.IsTerminal) return;\n\n        _currentHealth = 0;\n        OnHealthChanged?.Invoke(_currentHealth, MaxHealth);\n        HandleDeath(_controller.Data != null ? _controller.Data.stats : null);\n    }\n\n    private void HandleDeath(EnemyStats stats)\n    {\n        if (stats != null && stats.canOnlyBeDeactivated)\n        {\n            _controller.SetState(EnemyState.Desactivado);\n        }\n        else if (stats == null || stats.canBeDestroyed)\n        {\n            _controller.SetState(EnemyState.Morto);\n        }\n        else\n        {\n            // Nem destruível nem apenas-desactivável: a vida fica a 0 mas o\n            // inimigo continua activo (ex: configuração incompleta). Não muda\n            // de estado.\n            _currentHealth = 0;\n        }\n    }\n\n    /// <summary>\n    /// Aplica um impulso de empurrão a este inimigo sem causar dano nem\n    /// invencibilidade — usado por habilidades de empurrão sem ataque (ex:\n    /// RollAbility do Pangolim, \"rolar contra inimigos\").\n    /// </summary>\n    public void ApplyExternalKnockback(Vector2 hitOrigin, float knockbackForce)\n    {\n        ApplyKnockback(hitOrigin, knockbackForce, _controller.Data != null ? _controller.Data.stats : null);\n    }\n\n    private void ApplyKnockback(Vector2 hitOrigin, float knockbackForce, EnemyStats stats)\n    {\n        if (knockbackForce <= 0f) return;\n        if (_controller.Rb == null) return;\n\n        Vector2 direction = (Vector2)transform.position - hitOrigin;\n        if (direction.sqrMagnitude < 0.0001f) return;\n        direction.Normalize();\n\n        float resistance = stats != null ? Mathf.Clamp01(stats.knockbackResistance) : 0f;\n        float weight = stats != null && stats.weight > 0f ? stats.weight : 1f;\n\n        float effectiveForce = knockbackForce * (1f - resistance) / weight;\n        if (effectiveForce <= 0f) return;\n\n        _controller.Rb.AddForce(direction * effectiveForce, ForceMode2D.Impulse);\n    }\n\n    private void StartStun(float duration)\n    {\n        if (duration <= 0f) return;\n        if (_stunRoutine != null) StopCoroutine(_stunRoutine);\n\n        _stateBeforeStun = _controller.State;\n        _controller.SetState(EnemyState.Atordoado);\n        _stunRoutine = StartCoroutine(StunRoutine(duration));\n    }\n\n    private IEnumerator StunRoutine(float duration)\n    {\n        yield return new WaitForSeconds(duration);\n\n        if (_controller.State == EnemyState.Atordoado)\n            _controller.SetState(_stateBeforeStun);\n\n        _stunRoutine = null;\n    }\n\n    private void StartFlash(float duration)\n    {\n        if (_sprite == null) return;\n        if (duration <= 0f) duration = fallbackFlashDuration;\n        if (_flashRoutine != null) StopCoroutine(_flashRoutine);\n\n        _flashRoutine = StartCoroutine(FlashRoutine(duration));\n    }\n\n    private IEnumerator FlashRoutine(float duration)\n    {\n        float elapsed = 0f;\n        bool toggled = false;\n\n        while (elapsed < duration)\n        {\n            toggled = !toggled;\n            _sprite.color = toggled ? flashColor : _baseColor;\n\n            yield return new WaitForSeconds(flashInterval);\n            elapsed += flashInterval;\n        }\n\n        _sprite.color = _baseColor;\n        _flashRoutine = null;\n    }\n}\n",
+  "id": "script-enemy-enemyhealth-cs",
+  "dependencyIds": [
+    "script-enemy-enemyconditions-variables-cs",
+    "script-enemy-enemycondition-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyfeedback-cs",
+    "script-enemy-editor-enemyhealtheditor-cs",
+    "script-abilities-rollability-cs"
+  ],
+  "usedByIds": [
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-interactables-eggobject-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemyfeedback-cs",
+    "script-enemy-editor-enemyhealtheditor-cs",
+    "script-enemy-enemymovement-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-enemy-enemyrespawn-cs",
+    "script-enemy-enemystatuseffectreceiver-cs",
+    "script-enemy-enemyvoidtrigger-cs",
+    "script-enemy-enemywaterbehavior-cs",
+    "script-player-playerattack-cs",
+    "script-player-playerfeedback-cs",
+    "script-abilities-pounceability-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-enemy-projectiledata-cs",
+    "script-abilities-rollability-cs",
+    "script-abilities-spinattackability-cs",
+    "script-enemy-attacks-enemyattacks-water-cs"
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "path": "Interactables/BreakableObject.cs",
+  "filename": "BreakableObject.cs",
+  "category": "Interactables",
+  "primary": "BreakableObject",
+  "kind": "Componente",
+  "summary": "Material de um objeto destrutível (fichas do GDD). public enum BreakableMaterial { Madeira (troncos/barreiras) — Castor \"rói madeira\" (canBreakWood). Madeira, Pedra/objeto grande — Elefante/Urso Polar (canBreakBig). Grande, Gelo frágil — Urso Polar (canBreakIce). Gelo, Barreira rachada — Elefante \"quebra barreiras rachadas\" (canBreakBig). Rachada, Terra/rocha macia escavável (túneis) — Texugo/Wombat (canTunnel, P8). Abre por contato contínuo (\"escavar\" — ver digDuration) ou por uma pancada de quem tiver canTunnel. Terra } Objeto destrutível (P6): pedras, troncos, barreiras de madeira, gelo frágil, paredes rachadas, terra escavável. Pode ser quebrado por: - Ataques do player cuja forma te",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "BreakableMaterial",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "BreakableObject",
+      "kind": "class",
+      "bases": "MonoBehaviour, IProjectileDestructible",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "material",
+      "type": "BreakableMaterial",
+      "mods": "public",
+      "default": "BreakableMaterial.Madeira",
+      "section": "Material",
+      "attrs": "[Header(\"Material\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hitsToBreak",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Resistência",
+      "attrs": "[Header(\"Resistência\")] [Tooltip(\"Número de pancadas válidas até quebrar.\")] [Min(1)]",
+      "inspector": true,
+      "description": "Número de pancadas válidas até quebrar."
+    },
+    {
+      "name": "digDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Escavar (Terra — canTunnel, P8)",
+      "attrs": "[Header(\"Escavar (Terra — canTunnel, P8)\")] [Tooltip(\"Só para material Terra: tempo de CONTACTO CONTÍNUO (segundos) com um animal 'canTunnel' até abrir o túnel. Não usa 'hitsToBreak' (esse continua a valer para uma pancada de ataque de quem tiver canTunnel).\")] [Min(0.05f)]",
+      "inspector": true,
+      "description": "Só para material Terra: tempo de CONTATO CONTÍNUO (segundos) com um animal 'canTunnel' até abrir o túnel. Não usa 'hitsToBreak' (esse continua a valer para uma pancada de ataque de quem tiver canTunnel)."
+    },
+    {
+      "name": "breakableByProjectiles",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Quem pode quebrar",
+      "attrs": "[Header(\"Quem pode quebrar\")] [Tooltip(\"Projécteis de inimigos (canDestroyObjects) quebram este objecto.\")]",
+      "inspector": true,
+      "description": "Projécteis de inimigos (canDestroyObjects) quebram este objeto."
+    },
+    {
+      "name": "breakableByEnemies",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Quem pode quebrar",
+      "attrs": "[Tooltip(\"Ataques de inimigos (canDestroyObjectsOnAttack) quebram este objecto.\")]",
+      "inspector": true,
+      "description": "Ataques de inimigos (canDestroyObjectsOnAttack) quebram este objeto."
+    },
+    {
+      "name": "breakVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Ao Quebrar",
+      "attrs": "[Header(\"Ao Quebrar\")] [Tooltip(\"Prefab instanciado ao quebrar (estilhaços/VFX).\")]",
+      "inspector": true,
+      "description": "Prefab instanciado ao quebrar (estilhaços/VFX)."
+    },
+    {
+      "name": "breakSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Ao Quebrar",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "dropPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Ao Quebrar",
+      "attrs": "[Tooltip(\"Prefab opcional largado ao quebrar (ex: item).\")]",
+      "inspector": true,
+      "description": "Prefab opcional largado ao quebrar (ex: item)."
+    },
+    {
+      "name": "onBroken",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Ao Quebrar",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_hits",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "Ao Quebrar",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_broken",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Ao Quebrar",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_digProgress",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Ao Quebrar",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "DigProgress01",
+      "type": "float",
+      "mods": "public",
+      "default": "> digDuration > 0f ? Mathf.Clamp01(_digProgress / digDuration) : 0f",
+      "section": "Ao Quebrar",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "TryBreakByForm",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação TryBreakByForm."
+    },
+    {
+      "name": "HandleTunnelContact",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação HandleTunnelContact."
+    },
+    {
+      "name": "OnCollisionStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionStay2D."
+    },
+    {
+      "name": "OnTriggerStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerStay2D."
+    },
+    {
+      "name": "ResetDigProgress",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação ResetDigProgress."
+    },
+    {
+      "name": "OnCollisionExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionExit2D."
+    },
+    {
+      "name": "OnTriggerExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerExit2D."
+    },
+    {
+      "name": "DestroyByProjectile",
+      "ret": "void",
+      "mods": "public",
+      "params": "ProjectileController projectile",
+      "description": "Executa a operação DestroyByProjectile."
+    },
+    {
+      "name": "RegisterHit",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RegisterHit."
+    },
+    {
+      "name": "Break",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Break."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "EnemyPuzzleInteraction",
+    "FormSwitcher",
+    "HeavyStrikeAbility",
+    "IProjectileDestructible",
+    "PlayerAttack",
+    "ProjectileController"
+  ],
+  "used_by": [
+    "PlayerAttack"
+  ],
+  "source": "using UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>Material de um objecto destrutível (fichas do GDD).</summary>\npublic enum BreakableMaterial\n{\n    /// <summary>Madeira (troncos/barreiras) — Castor \"rói madeira\" (canBreakWood).</summary>\n    Madeira,\n\n    /// <summary>Pedra/objecto grande — Elefante/Urso Polar (canBreakBig).</summary>\n    Grande,\n\n    /// <summary>Gelo frágil — Urso Polar (canBreakIce).</summary>\n    Gelo,\n\n    /// <summary>Barreira rachada — Elefante \"quebra barreiras rachadas\" (canBreakBig).</summary>\n    Rachada,\n\n    /// <summary>Terra/rocha macia escavável (túneis) — Texugo/Wombat (canTunnel, P8). Abre por contacto contínuo (\"escavar\" — ver digDuration) ou por uma pancada de quem tiver canTunnel.</summary>\n    Terra\n}\n\n/// <summary>\n/// Objecto destrutível (P6): pedras, troncos, barreiras de madeira, gelo\n/// frágil, paredes rachadas, terra escavável. Pode ser quebrado por:\n///\n/// - Ataques do player cuja forma tem a flag certa (TryBreakByForm —\n///   canBreakWood/Big/Ice/Tunnel, chamado por PlayerAttack/HeavyStrikeAbility);\n/// - Projécteis de inimigos com \"canDestroyObjects\" (IProjectileDestructible —\n///   o ProjectileController já verifica a flag antes de chamar);\n/// - Ataques de inimigos com \"canDestroyObjectsOnAttack\"\n///   (EnemyPuzzleInteraction.ApplyAttackToObjects — chega aqui com projectile = null);\n/// - ESCAVAR (Terra, P8): contacto contínuo de um animal com 'canTunnel'\n///   (sem precisar de atacar) — ver HandleTunnelContact/digDuration.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class BreakableObject : MonoBehaviour, IProjectileDestructible\n{\n    [Header(\"Material\")]\n    public BreakableMaterial material = BreakableMaterial.Madeira;\n\n    [Header(\"Resistência\")]\n    [Tooltip(\"Número de pancadas válidas até quebrar.\")]\n    [Min(1)] public int hitsToBreak = 1;\n\n    [Header(\"Escavar (Terra — canTunnel, P8)\")]\n    [Tooltip(\"Só para material Terra: tempo de CONTACTO CONTÍNUO (segundos) com um animal 'canTunnel' até abrir o túnel. Não usa 'hitsToBreak' (esse continua a valer para uma pancada de ataque de quem tiver canTunnel).\")]\n    [Min(0.05f)] public float digDuration = 1f;\n\n    [Header(\"Quem pode quebrar\")]\n    [Tooltip(\"Projécteis de inimigos (canDestroyObjects) quebram este objecto.\")]\n    public bool breakableByProjectiles = true;\n\n    [Tooltip(\"Ataques de inimigos (canDestroyObjectsOnAttack) quebram este objecto.\")]\n    public bool breakableByEnemies = true;\n\n    [Header(\"Ao Quebrar\")]\n    [Tooltip(\"Prefab instanciado ao quebrar (estilhaços/VFX).\")]\n    public GameObject breakVfxPrefab;\n\n    public AudioClip breakSound;\n\n    [Tooltip(\"Prefab opcional largado ao quebrar (ex: item).\")]\n    public GameObject dropPrefab;\n\n    public UnityEvent onBroken;\n\n    private int _hits;\n    private bool _broken;\n    private float _digProgress;\n\n    /// <summary>Progresso de escavação (0-1), para VFX/UI (ex: poeira aumentando, barra de progresso).</summary>\n    public float DigProgress01 => digDuration > 0f ? Mathf.Clamp01(_digProgress / digDuration) : 0f;\n\n    /// <summary>\n    /// Tenta quebrar com a forma do player (PlayerAttack/HeavyStrike):\n    /// Madeira → canBreakWood; Gelo → canBreakIce; Terra → canTunnel (uma\n    /// pancada também conta, além de escavar por contacto — ver HandleTunnelContact);\n    /// Grande/Rachada → canBreakBig. Devolve true se a pancada contou (mesmo\n    /// que ainda falte vida).\n    /// </summary>\n    public bool TryBreakByForm(AnimalFormData form)\n    {\n        if (_broken || form == null) return false;\n\n        bool allowed;\n        switch (material)\n        {\n            case BreakableMaterial.Madeira: allowed = form.canBreakWood; break;\n            case BreakableMaterial.Gelo: allowed = form.canBreakIce; break;\n            case BreakableMaterial.Terra: allowed = form.canTunnel; break;\n            default: allowed = form.canBreakBig; break; // Grande/Rachada\n        }\n\n        if (!allowed) return false;\n\n        RegisterHit();\n        return true;\n    }\n\n    /// <summary>\n    /// Escavar (Terra, P8): contacto contínuo de um animal com 'canTunnel'\n    /// acumula progresso até 'digDuration', depois abre o túnel (Break).\n    /// Chamado pelos colisores/triggers (ver OnCollisionStay2D/OnTriggerStay2D).\n    /// Reseta o progresso se o animal sair ou não tiver canTunnel.\n    /// </summary>\n    private void HandleTunnelContact(Collider2D other)\n    {\n        if (_broken || material != BreakableMaterial.Terra) return;\n        if (!other.CompareTag(\"Player\")) return;\n\n        var switcher = other.GetComponent<FormSwitcher>();\n        var form = switcher != null ? switcher.CurrentForm : null;\n\n        if (form == null || !form.canTunnel)\n        {\n            _digProgress = 0f;\n            return;\n        }\n\n        _digProgress += Time.deltaTime;\n        if (_digProgress >= digDuration) Break();\n    }\n\n    private void OnCollisionStay2D(Collision2D collision) => HandleTunnelContact(collision.collider);\n    private void OnTriggerStay2D(Collider2D other) => HandleTunnelContact(other);\n\n    private void ResetDigProgress(Collider2D other)\n    {\n        if (other.CompareTag(\"Player\")) _digProgress = 0f;\n    }\n\n    private void OnCollisionExit2D(Collision2D collision) => ResetDigProgress(collision.collider);\n    private void OnTriggerExit2D(Collider2D other) => ResetDigProgress(other);\n\n    /// <summary>Quebra por projéctil de inimigo (IProjectileDestructible) ou por ataque de inimigo (projectile = null).</summary>\n    public void DestroyByProjectile(ProjectileController projectile)\n    {\n        if (_broken) return;\n\n        bool byEnemyMelee = projectile == null;\n        if (byEnemyMelee && !breakableByEnemies) return;\n        if (!byEnemyMelee && !breakableByProjectiles) return;\n\n        RegisterHit();\n    }\n\n    private void RegisterHit()\n    {\n        _hits++;\n        if (_hits < hitsToBreak) return;\n\n        Break();\n    }\n\n    /// <summary>Quebra imediatamente (também chamável por eventos/puzzles).</summary>\n    public void Break()\n    {\n        if (_broken) return;\n        _broken = true;\n\n        if (breakVfxPrefab != null)\n            Instantiate(breakVfxPrefab, transform.position, Quaternion.identity);\n\n        if (breakSound != null)\n            AudioSource.PlayClipAtPoint(breakSound, transform.position);\n\n        if (dropPrefab != null)\n            Instantiate(dropPrefab, transform.position, Quaternion.identity);\n\n        onBroken?.Invoke();\n        Destroy(gameObject);\n    }\n}\n",
+  "id": "script-interactables-breakableobject-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-forms-formswitcher-cs",
+    "script-abilities-heavystrikeability-cs",
+    "script-player-playerattack-cs",
+    "script-enemy-projectilecontroller-cs"
+  ],
+  "usedByIds": [
+    "script-player-playerattack-cs"
+  ]
+}

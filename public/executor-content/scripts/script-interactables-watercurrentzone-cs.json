@@ -1,0 +1,85 @@
+{
+  "path": "Interactables/WaterCurrentZone.cs",
+  "filename": "WaterCurrentZone.cs",
+  "category": "Interactables",
+  "primary": "WaterCurrentZone",
+  "kind": "Componente",
+  "summary": "Corrente subaquática (Tarefa #14 — GDD \"correntes\" / \"correnteza segura até checkpoint\"): zona de Collider2D (Trigger) que empurra players com WaterMotor2D ativo numa direção constante enquanto estiverem dentro. \"isSafeCurrent\" marca correntes que conduzem o jogador de volta a uma zona segura/junto a um checkpoint (SafeHaven) — apenas informativo (para design de nível e para outros sistemas, ex.: hazards que queiram ignorar o player numa corrente segura). Aplica a força mesmo que o movimento do player esteja bloqueado (ex.: ShellGuard) — ver WaterMotor2D.AddCurrentForce.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "WaterCurrentZone",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "forceDirection",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "Vector2.right",
+      "section": "Força da Corrente",
+      "attrs": "[Header(\"Força da Corrente\")] [Tooltip(\"Direcção da corrente (normalizada internamente).\")]",
+      "inspector": true,
+      "description": "Direção da corrente (normalizada internamente)."
+    },
+    {
+      "name": "forceStrength",
+      "type": "float",
+      "mods": "public",
+      "default": "6f",
+      "section": "Força da Corrente",
+      "attrs": "[Tooltip(\"Intensidade da força aplicada por segundo.\")]",
+      "inspector": true,
+      "description": "Intensidade da força aplicada por segundo."
+    },
+    {
+      "name": "isSafeCurrent",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Correnteza Segura (GDD)",
+      "attrs": "[Header(\"Correnteza Segura (GDD)\")] [Tooltip(\"Marca esta corrente como 'segura' (ex.: leva o jogador de volta a uma zona junto a um checkpoint/SafeHaven). Apenas informativo — não altera o comportamento da força em si.\")]",
+      "inspector": true,
+      "description": "Marca esta corrente como 'segura' (ex.: leva o jogador de volta a uma zona junto a um checkpoint/SafeHaven). Apenas informativo — não altera o comportamento da força em si."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnTriggerStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerStay2D."
+    },
+    {
+      "name": "OnDrawGizmos",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmos."
+    }
+  ],
+  "dependencies": [
+    "SafeHaven",
+    "WaterMotor2D"
+  ],
+  "used_by": [
+    "PlayerConsumableEffects",
+    "PlayerMotor2D",
+    "WaterMotor2D"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Corrente subaquática (Tarefa #14 — GDD \"correntes\" / \"correnteza segura\n/// até checkpoint\"): zona de Collider2D (Trigger) que empurra players com\n/// WaterMotor2D activo numa direcção constante enquanto estiverem dentro.\n///\n/// \"isSafeCurrent\" marca correntes que conduzem o jogador de volta a uma zona\n/// segura/junto a um checkpoint (SafeHaven) — apenas informativo (para design\n/// de nível e para outros sistemas, ex.: hazards que queiram ignorar o player\n/// numa corrente segura).\n///\n/// Aplica a força mesmo que o movimento do player esteja bloqueado (ex.:\n/// ShellGuard) — ver WaterMotor2D.AddCurrentForce.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class WaterCurrentZone : MonoBehaviour\n{\n    [Header(\"Força da Corrente\")]\n    [Tooltip(\"Direcção da corrente (normalizada internamente).\")]\n    public Vector2 forceDirection = Vector2.right;\n\n    [Tooltip(\"Intensidade da força aplicada por segundo.\")]\n    public float forceStrength = 6f;\n\n    [Header(\"Correnteza Segura (GDD)\")]\n    [Tooltip(\"Marca esta corrente como 'segura' (ex.: leva o jogador de volta a uma zona junto a um checkpoint/SafeHaven). Apenas informativo — não altera o comportamento da força em si.\")]\n    public bool isSafeCurrent = false;\n\n    private void OnTriggerStay2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        var waterMotor = other.GetComponent<WaterMotor2D>();\n        if (waterMotor == null || !waterMotor.IsActive) return;\n\n        waterMotor.AddCurrentForce(forceDirection.normalized * forceStrength);\n    }\n\n    private void OnDrawGizmos()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col == null) return;\n\n        Gizmos.color = isSafeCurrent\n            ? new Color(0.3f, 0.6f, 1f, 0.35f)\n            : new Color(0.2f, 0.85f, 1f, 0.35f);\n\n        Gizmos.DrawCube(col.bounds.center, col.bounds.size);\n\n        // Seta indicativa da direcção da corrente.\n        Gizmos.color = Color.white;\n        Vector3 center = col.bounds.center;\n        Vector3 dir = ((Vector2)forceDirection).normalized;\n        Gizmos.DrawLine(center, center + dir * 1.5f);\n    }\n}\n",
+  "id": "script-interactables-watercurrentzone-cs",
+  "dependencyIds": [
+    "script-interactables-safehaven-cs",
+    "script-player-watermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-player-playerconsumableeffects-cs",
+    "script-player-playermotor2d-cs",
+    "script-player-watermotor2d-cs"
+  ]
+}

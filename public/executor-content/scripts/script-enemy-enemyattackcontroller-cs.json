@@ -1,0 +1,364 @@
+{
+  "path": "Enemy/EnemyAttackController.cs",
+  "filename": "EnemyAttackController.cs",
+  "category": "Enemy",
+  "primary": "EnemyAttackController",
+  "kind": "Componente",
+  "summary": "Orquestra a lista de ataques de um inimigo (Enemy Creator — Etapa 2.1). Enquanto for Perseguindo, escolhe (a cada frame, em ) o ataque com maior entre os que estiverem disponíveis ( ) e corre o ciclo completo: PreparandoAtaque (telegraph) → Atacando (Execute) → Recuperando → volta a Perseguindo. Não interfere com Idle/Alerta/Perseguindo (geridos por EnemyDetection) nem com Patrulhando/VoltandoParaCasa (EnemyMovement). Durante Atacando, EnemyMovement não controla o Rigidbody2D — cada que precise de mover o inimigo (investida, salto, ataque cima-para-baixo) fá-lo diretamente via . Fornece um conjunto de helpers (DamagePlayer, PushPlayer, TrapPlayer, SpawnProjectile, etc) usados pelas subclass",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyAttackController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "attacks",
+      "type": "List<EnemyAttack>",
+      "mods": "public",
+      "default": "new List<EnemyAttack>()",
+      "section": "Ataques (Etapa 2.1)",
+      "attrs": "[Header(\"Ataques (Etapa 2.1)\")] [Tooltip(\"Lista de ataques deste inimigo. Em cada frame de Perseguindo, escolhe o disponível (CanUse) com maior 'priority'.\")] [SerializeReference]",
+      "inspector": true,
+      "description": "Lista de ataques deste inimigo. Em cada frame de Perseguindo, escolhe o disponível (CanUse) com maior 'priority'."
+    },
+    {
+      "name": "lineOfSightBlockers",
+      "type": "LayerMask",
+      "mods": "public",
+      "default": "",
+      "section": "Linha de Visão (Ataques)",
+      "attrs": "[Header(\"Linha de Visão (Ataques)\")] [Tooltip(\"Camadas que bloqueiam a linha de visão para ataques com 'requiresLineOfSight'. Vazio = vê sempre o alvo.\")]",
+      "inspector": true,
+      "description": "Camadas que bloqueiam a linha de visão para ataques com 'requiresLineOfSight'. Vazio = vê sempre o alvo."
+    },
+    {
+      "name": "waterDetector",
+      "type": "WaterDetector",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[Header(\"Referências (auto-detectadas se vazias)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "movement",
+      "type": "EnemyMovement",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Controller",
+      "type": "EnemyController",
+      "mods": "public",
+      "default": "> _controller",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Target",
+      "type": "Transform",
+      "mods": "public",
+      "default": "> _controller.Target",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Rb",
+      "type": "Rigidbody2D",
+      "mods": "public",
+      "default": "> _controller.Rb",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_controller",
+      "type": "EnemyController",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_routine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ChooseAttack",
+      "ret": "EnemyAttack",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ChooseAttack."
+    },
+    {
+      "name": "RunAttack",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "EnemyAttack attack",
+      "description": "Executa a operação RunAttack."
+    },
+    {
+      "name": "EnvironmentAllows",
+      "ret": "bool",
+      "mods": "public",
+      "params": "EnemyAttack attack",
+      "description": "Executa a operação EnvironmentAllows."
+    },
+    {
+      "name": "WaterPositionAllows",
+      "ret": "bool",
+      "mods": "public",
+      "params": "EnemyAttack attack",
+      "description": "Executa a operação WaterPositionAllows."
+    },
+    {
+      "name": "HasLineOfSight",
+      "ret": "bool",
+      "mods": "public",
+      "params": "Transform target",
+      "description": "Executa a operação HasLineOfSight."
+    },
+    {
+      "name": "DistanceToTarget",
+      "ret": "float",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação DistanceToTarget."
+    },
+    {
+      "name": "DirectionToTarget",
+      "ret": "Vector2",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação DirectionToTarget."
+    },
+    {
+      "name": "IsTargetWithin",
+      "ret": "bool",
+      "mods": "public",
+      "params": "Vector2 origin, float radius",
+      "description": "Executa a operação IsTargetWithin."
+    },
+    {
+      "name": "IsTargetInWater",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação IsTargetInWater."
+    },
+    {
+      "name": "IsTargetSubmerged",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação IsTargetSubmerged."
+    },
+    {
+      "name": "SwimTowardsTarget",
+      "ret": "void",
+      "mods": "public",
+      "params": "float speed",
+      "description": "Executa a operação SwimTowardsTarget."
+    },
+    {
+      "name": "DamagePlayer",
+      "ret": "void",
+      "mods": "public",
+      "params": "int amount, float knockback = 0f, Vector2? knockbackDir = null",
+      "description": "Executa a operação DamagePlayer."
+    },
+    {
+      "name": "PushPlayer",
+      "ret": "void",
+      "mods": "public",
+      "params": "float force, Vector2 dir",
+      "description": "Executa a operação PushPlayer."
+    },
+    {
+      "name": "PullPlayer",
+      "ret": "void",
+      "mods": "public",
+      "params": "float force, Vector2 dir",
+      "description": "Executa a operação PullPlayer."
+    },
+    {
+      "name": "TrapPlayer",
+      "ret": "void",
+      "mods": "public",
+      "params": "float duration",
+      "description": "Executa a operação TrapPlayer."
+    },
+    {
+      "name": "TrapRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "PlayerMotor2D motor, float duration",
+      "description": "Executa a operação TrapRoutine."
+    },
+    {
+      "name": "SpawnProjectile",
+      "ret": "Coroutine",
+      "mods": "public",
+      "params": "ProjectileData data, Vector2 spawnOffset, Vector2 velocity",
+      "description": "Executa a operação SpawnProjectile."
+    },
+    {
+      "name": "SpawnProjectileRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "ProjectileData data, Vector2 spawnOffset, Vector2 velocity",
+      "description": "Executa a operação SpawnProjectileRoutine."
+    },
+    {
+      "name": "FireVolley",
+      "ret": "void",
+      "mods": "private",
+      "params": "ProjectileData data, Vector2 spawnOffset, Vector2 velocity",
+      "description": "Executa a operação FireVolley."
+    },
+    {
+      "name": "SpawnSingleProjectile",
+      "ret": "void",
+      "mods": "private",
+      "params": "ProjectileData data, Vector2 spawnOffset, Vector2 velocity",
+      "description": "Executa a operação SpawnSingleProjectile."
+    },
+    {
+      "name": "RotateVector",
+      "ret": "Vector2",
+      "mods": "private static",
+      "params": "Vector2 v, float degrees",
+      "description": "Executa a operação RotateVector."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    },
+    {
+      "name": "DistanceToSegment",
+      "ret": "float",
+      "mods": "public static",
+      "params": "Vector2 a, Vector2 b, Vector2 p",
+      "description": "Executa a operação DistanceToSegment."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "Attack_Push",
+    "EnemyAttack",
+    "EnemyController",
+    "EnemyControllerEditor",
+    "EnemyDetection",
+    "EnemyMovement",
+    "EnemyMovementType",
+    "EnemyState",
+    "EnemyWaterBehavior",
+    "FormSwitcher",
+    "PlayerCombat",
+    "PlayerMotor2D",
+    "PlayerProgress",
+    "ProjectileData",
+    "ProjectilePool",
+    "State",
+    "WaterAttackPosition",
+    "WaterDetector"
+  ],
+  "used_by": [
+    "Attack_ClawShort",
+    "Attack_Net",
+    "Attack_ProjectileStraight",
+    "BossController",
+    "Boss_AMaoQueFere",
+    "Boss_GargantaDoFogo",
+    "Boss_MareDeRede",
+    "EnemyAttack",
+    "EnemyAttackControllerEditor",
+    "EnemyControllerEditor",
+    "EnemyWaterBehavior",
+    "PlayerCombat",
+    "PlayerMotor2D",
+    "ProjectileController",
+    "ProjectileData",
+    "ProjectilePool",
+    "WaterCurrentMode"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Orquestra a lista de ataques de um inimigo (Enemy Creator — Etapa 2.1).\n///\n/// Enquanto <see cref=\"EnemyController.State\"/> for Perseguindo, escolhe (a cada\n/// frame, em <see cref=\"Update\"/>) o ataque com maior <see cref=\"EnemyAttack.priority\"/>\n/// entre os que estiverem disponíveis (<see cref=\"EnemyAttack.CanUse\"/>) e corre o\n/// ciclo completo: PreparandoAtaque (telegraph) → Atacando (Execute) →\n/// Recuperando → volta a Perseguindo.\n///\n/// Não interfere com Idle/Alerta/Perseguindo (geridos por EnemyDetection) nem com\n/// Patrulhando/VoltandoParaCasa (EnemyMovement). Durante Atacando, EnemyMovement\n/// não controla o Rigidbody2D — cada <see cref=\"EnemyAttack.Execute\"/> que precise\n/// de mover o inimigo (investida, salto, ataque cima-para-baixo) fá-lo\n/// directamente via <see cref=\"Rb\"/>.\n///\n/// Fornece um conjunto de helpers (DamagePlayer, PushPlayer, TrapPlayer,\n/// SpawnProjectile, etc) usados pelas subclasses concretas em Enemy/Attacks/,\n/// reutilizando os mecanismos já existentes para o player: PlayerProgress\n/// (corações), PlayerMotor2D (movimento bloqueado/knockback) e WaterDetector\n/// (estado de água).\n/// </summary>\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyAttackController : MonoBehaviour\n{\n    [Header(\"Ataques (Etapa 2.1)\")]\n    [Tooltip(\"Lista de ataques deste inimigo. Em cada frame de Perseguindo, escolhe o disponível (CanUse) com maior 'priority'.\")]\n    [SerializeReference] public List<EnemyAttack> attacks = new List<EnemyAttack>();\n\n    [Header(\"Linha de Visão (Ataques)\")]\n    [Tooltip(\"Camadas que bloqueiam a linha de visão para ataques com 'requiresLineOfSight'. Vazio = vê sempre o alvo.\")]\n    public LayerMask lineOfSightBlockers;\n\n    [Header(\"Referências (auto-detectadas se vazias)\")]\n    [SerializeField] private WaterDetector waterDetector;\n    [SerializeField] private EnemyMovement movement;\n\n    /// <summary>Inimigo dono deste controller.</summary>\n    public EnemyController Controller => _controller;\n\n    /// <summary>Alvo actual (atalho para EnemyController.Target — normalmente o player).</summary>\n    public Transform Target => _controller.Target;\n\n    /// <summary>Rigidbody2D do inimigo. Pode ser null em inimigos estáticos.</summary>\n    public Rigidbody2D Rb => _controller.Rb;\n\n    /// <summary>Ataque actualmente em execução (PreparandoAtaque/Atacando/Recuperando), se algum.</summary>\n    public EnemyAttack CurrentAttack { get; private set; }\n\n    private EnemyController _controller;\n    private Coroutine _routine;\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n\n        if (waterDetector == null) waterDetector = GetComponent<WaterDetector>();\n        if (movement == null) movement = GetComponent<EnemyMovement>();\n    }\n\n    /// <summary>\n    /// WaterDetector resolvido de forma preguiçosa: o EnemyWaterBehavior\n    /// (Etapa 3.1) pode só adicionar o WaterDetector no seu próprio Awake,\n    /// depois do Awake deste controller.\n    /// </summary>\n    private WaterDetector WaterDetectorResolved\n    {\n        get\n        {\n            if (waterDetector == null) waterDetector = GetComponent<WaterDetector>();\n            return waterDetector;\n        }\n    }\n\n    private void Update()\n    {\n        if (_controller.IsTerminal) return;\n        if (_routine != null) return;\n        if (_controller.State != EnemyState.Perseguindo) return;\n        if (attacks == null || attacks.Count == 0) return;\n\n        var chosen = ChooseAttack();\n        if (chosen == null) return;\n\n        _routine = StartCoroutine(RunAttack(chosen));\n    }\n\n    private EnemyAttack ChooseAttack()\n    {\n        EnemyAttack best = null;\n\n        foreach (var attack in attacks)\n        {\n            if (attack == null || !attack.CanUse(this)) continue;\n            if (best == null || attack.priority > best.priority) best = attack;\n        }\n\n        return best;\n    }\n\n    private IEnumerator RunAttack(EnemyAttack attack)\n    {\n        CurrentAttack = attack;\n        _controller.SetState(EnemyState.PreparandoAtaque);\n\n        if (attack.prepTime > 0f)\n            yield return new WaitForSeconds(attack.prepTime);\n\n        if (_controller.IsTerminal)\n        {\n            CurrentAttack = null;\n            _routine = null;\n            yield break;\n        }\n\n        _controller.SetState(EnemyState.Atacando);\n        yield return attack.Execute(this);\n\n        attack.availableAt = Time.time + attack.cooldown;\n        CurrentAttack = null;\n\n        if (!_controller.IsTerminal)\n        {\n            _controller.SetState(EnemyState.Recuperando);\n\n            if (attack.recoveryTime > 0f)\n                yield return new WaitForSeconds(attack.recoveryTime);\n\n            // Só volta a Perseguindo se nada (stun, dano, etc) tiver mudado o\n            // estado entretanto.\n            if (!_controller.IsTerminal && _controller.State == EnemyState.Recuperando)\n                _controller.SetState(EnemyState.Perseguindo);\n        }\n\n        _routine = null;\n    }\n\n    // ==================== Ambiente / Selecção ====================\n\n    /// <summary>\n    /// True se o ambiente actual do inimigo (água — WaterDetector.IsInWater, ou\n    /// ar — EnemyMovement.movementType Voador/Flutuante, ou chão por omissão)\n    /// permitir usar \"attack\" (usableOnGround/InAir/InWater).\n    /// </summary>\n    public bool EnvironmentAllows(EnemyAttack attack)\n    {\n        var wd = WaterDetectorResolved;\n        if (wd != null && wd.IsInWater) return attack.usableInWater;\n\n        bool airborne = movement != null &&\n            (movement.movementType == EnemyMovementType.Voador || movement.movementType == EnemyMovementType.Flutuante);\n\n        return airborne ? attack.usableInAir : attack.usableOnGround;\n    }\n\n    /// <summary>\n    /// True se a restrição de posição na água do ataque (Etapa 3.2 —\n    /// SoSuperficie/SoSubmerso) for satisfeita. Ataques \"Qualquer\" passam\n    /// sempre; as restrições exigem que o inimigo esteja em água (com\n    /// WaterDetector) na profundidade certa.\n    /// </summary>\n    public bool WaterPositionAllows(EnemyAttack attack)\n    {\n        if (attack.waterPosition == WaterAttackPosition.Qualquer) return true;\n\n        var wd = WaterDetectorResolved;\n        if (wd == null || !wd.IsInWater) return false;\n\n        return attack.waterPosition == WaterAttackPosition.SoSuperficie ? wd.IsAtSurface : wd.IsSubmerged;\n    }\n\n    /// <summary>True se não houver \"lineOfSightBlockers\" entre este inimigo e \"target\".</summary>\n    public bool HasLineOfSight(Transform target)\n    {\n        if (target == null) return false;\n        if (lineOfSightBlockers.value == 0) return true;\n\n        var hit = Physics2D.Linecast(transform.position, target.position, lineOfSightBlockers);\n        return hit.collider == null;\n    }\n\n    // ==================== Helpers para EnemyAttack.Execute ====================\n\n    /// <summary>Distância actual ao alvo (Target). 999 se não houver alvo.</summary>\n    public float DistanceToTarget()\n    {\n        return Target != null ? Vector2.Distance(transform.position, Target.position) : 999f;\n    }\n\n    /// <summary>Direcção (normalizada) deste inimigo para o alvo. Vector2.right se não houver alvo.</summary>\n    public Vector2 DirectionToTarget()\n    {\n        if (Target == null) return Vector2.right;\n\n        Vector2 d = (Vector2)Target.position - (Vector2)transform.position;\n        return d.sqrMagnitude > 0.0001f ? d.normalized : Vector2.right;\n    }\n\n    /// <summary>True se o alvo (Target) estiver a \"radius\" ou menos de \"origin\".</summary>\n    public bool IsTargetWithin(Vector2 origin, float radius)\n    {\n        return Target != null && ((Vector2)Target.position - origin).sqrMagnitude <= radius * radius;\n    }\n\n    /// <summary>True se o alvo (Target) tiver WaterDetector e estiver em água (IsInWater).</summary>\n    public bool IsTargetInWater()\n    {\n        if (Target == null) return false;\n\n        var wd = Target.GetComponent<WaterDetector>();\n        return wd != null && wd.IsInWater;\n    }\n\n    /// <summary>True se o alvo (Target) tiver WaterDetector e estiver submerso (IsSubmerged).</summary>\n    public bool IsTargetSubmerged()\n    {\n        if (Target == null) return false;\n\n        var wd = Target.GetComponent<WaterDetector>();\n        return wd != null && wd.IsSubmerged;\n    }\n\n    /// <summary>\n    /// Move o inimigo na direcção do alvo a \"speed\" m/s (nado durante ataques\n    /// aquáticos — ver EnemyAttack.attackSwimSpeed). Chamar a cada frame dentro\n    /// de Execute. Não faz nada sem Rigidbody2D/alvo ou com speed &lt;= 0.\n    /// </summary>\n    public void SwimTowardsTarget(float speed)\n    {\n        if (Rb == null || Target == null || speed <= 0f) return;\n        Rb.velocity = DirectionToTarget() * speed;\n    }\n\n    /// <summary>\n    /// Causa \"amount\" de dano ao player via PlayerCombat.TryDamagePlayer (P2:\n    /// respeita i-frames, aplica Defesa da forma e dispara TakeHit com\n    /// invencibilidade + knockback). \"knockbackDir\" só é usado no fallback sem\n    /// PlayerCombat.\n    /// </summary>\n    public void DamagePlayer(int amount, float knockback = 0f, Vector2? knockbackDir = null)\n    {\n        if (amount <= 0)\n        {\n            // Só empurrão, sem dano (ex: Attack_Push).\n            if (knockback > 0f && Target != null)\n            {\n                Vector2 dir = knockbackDir ?? ((Vector2)Target.position - (Vector2)transform.position);\n                PushPlayer(knockback, dir);\n            }\n            return;\n        }\n\n        PlayerCombat.TryDamagePlayer(Target, amount, transform.position, knockback, knockbackDir);\n    }\n\n    /// <summary>Define a velocidade do Rigidbody2D do player como \"dir.normalized * force\" (empurrão/puxão instantâneo).</summary>\n    public void PushPlayer(float force, Vector2 dir)\n    {\n        if (Target == null || force <= 0f) return;\n\n        var rb = Target.GetComponent<Rigidbody2D>();\n        if (rb == null) return;\n\n        Vector2 d = dir.sqrMagnitude > 0.0001f ? dir.normalized : Vector2.right;\n        rb.velocity = d * force;\n    }\n\n    /// <summary>Alias semântico de <see cref=\"PushPlayer\"/> para ataques que \"puxam\" o player (ex: anzol — GDD 12.3.5).</summary>\n    public void PullPlayer(float force, Vector2 dir) => PushPlayer(force, dir);\n\n    /// <summary>\n    /// Imobiliza o player durante \"duration\" segundos\n    /// (PlayerMotor2D.SetMovementLocked — GDD 4.1: \"preso por armadilha\";\n    /// bloqueia também transformação, ver FormSwitcher.TrySwitchTo). Não faz\n    /// nada se o alvo não tiver PlayerMotor2D.\n    /// </summary>\n    public void TrapPlayer(float duration)\n    {\n        if (Target == null || duration <= 0f) return;\n\n        var motor = Target.GetComponent<PlayerMotor2D>();\n        if (motor == null) return;\n\n        StartCoroutine(TrapRoutine(motor, duration));\n    }\n\n    private IEnumerator TrapRoutine(PlayerMotor2D motor, float duration)\n    {\n        // Interrompe qualquer habilidade \"com estado\" activa (escalar, dash,\n        // balanço, língua, escudo, carregar objecto, ...) — item 8 da\n        // auditoria: ficar preso a meio de uma destas deixava-a \"pendurada\"\n        // (gravidade/locks não restaurados) durante a armadilha.\n        motor.GetComponent<AbilityRouter>()?.CancelAll(AbilityCancelReason.Trapped);\n\n        motor.SetMovementLocked(true, this);\n        yield return new WaitForSeconds(duration);\n        motor.SetMovementLocked(false, this);\n    }\n\n    /// <summary>\n    /// Dispara um projéctil configurado por \"data\" (Etapa 2.2 — ProjectileData),\n    /// a partir de transform.position + \"spawnOffset\", com velocidade inicial\n    /// \"velocity\" (direcção × magnitude — para \"Arco\", já calculada pelo\n    /// EnemyAttack a partir de arcHeight/flightTime).\n    ///\n    /// Trata \"chargeTime\" (telegraph com VFX/som), \"shotCount\"/\"fireInterval\"\n    /// (rajada) e \"extraAngles\" (leque) — ver ProjectileData. Devolve o\n    /// Coroutine correspondente; chamadores normalmente fazem\n    /// \"yield return ctx.SpawnProjectile(...)\" para que o ataque permaneça em\n    /// Atacando durante o carregamento + rajada completa. Não faz nada se\n    /// \"data\" for null.\n    /// </summary>\n    public Coroutine SpawnProjectile(ProjectileData data, Vector2 spawnOffset, Vector2 velocity)\n    {\n        if (data == null) return null;\n        return StartCoroutine(SpawnProjectileRoutine(data, spawnOffset, velocity));\n    }\n\n    private IEnumerator SpawnProjectileRoutine(ProjectileData data, Vector2 spawnOffset, Vector2 velocity)\n    {\n        GameObject chargeVfx = null;\n\n        if (data.chargeTime > 0f)\n        {\n            if (data.chargeVfxPrefab != null)\n                chargeVfx = Instantiate(data.chargeVfxPrefab, transform.position + (Vector3)spawnOffset, Quaternion.identity, transform);\n\n            if (data.chargeSound != null)\n                AudioSource.PlayClipAtPoint(data.chargeSound, transform.position);\n\n            yield return new WaitForSeconds(data.chargeTime);\n\n            if (chargeVfx != null) Destroy(chargeVfx);\n        }\n\n        if (_controller.IsTerminal) yield break;\n\n        int shots = Mathf.Max(1, data.shotCount);\n\n        for (int i = 0; i < shots; i++)\n        {\n            FireVolley(data, spawnOffset, velocity);\n\n            if (i < shots - 1 && data.fireInterval > 0f)\n                yield return new WaitForSeconds(data.fireInterval);\n        }\n    }\n\n    /// <summary>Dispara a direcção base + cada um dos \"extraAngles\" (rotações em graus à volta de \"velocity\"), num único tiro.</summary>\n    private void FireVolley(ProjectileData data, Vector2 spawnOffset, Vector2 velocity)\n    {\n        SpawnSingleProjectile(data, spawnOffset, velocity);\n\n        if (data.extraAngles != null)\n        {\n            foreach (float angle in data.extraAngles)\n                SpawnSingleProjectile(data, spawnOffset, RotateVector(velocity, angle));\n        }\n    }\n\n    /// <summary>\n    /// Obtém um projéctil de <see cref=\"ProjectilePool\"/> (Tarefa #22 —\n    /// reutiliza GameObjects em vez de Instantiate/Destroy) e activa-o em\n    /// transform.position + \"spawnOffset\" com velocidade inicial \"velocity\".\n    /// </summary>\n    private void SpawnSingleProjectile(ProjectileData data, Vector2 spawnOffset, Vector2 velocity)\n    {\n        Vector3 pos = transform.position + (Vector3)spawnOffset;\n\n        var proj = ProjectilePool.Instance.Get(data, pos, Quaternion.identity);\n        proj.Activate(data, velocity, Target, _controller);\n    }\n\n    /// <summary>Roda \"v\" por \"degrees\" graus (sentido anti-horário). Usado para o leque de \"extraAngles\".</summary>\n    private static Vector2 RotateVector(Vector2 v, float degrees)\n    {\n        float rad = degrees * Mathf.Deg2Rad;\n        float cos = Mathf.Cos(rad);\n        float sin = Mathf.Sin(rad);\n        return new Vector2(cos * v.x - sin * v.y, sin * v.x + cos * v.y);\n    }\n\n    /// <summary>\n    /// Gizmos de debug (Etapa 7.2): alcance (\"range\", vermelho) e alcance\n    /// mínimo (\"minRange\", laranja) de cada ataque da lista. Editáveis via\n    /// handles no EnemyControllerEditor.\n    /// </summary>\n    private void OnDrawGizmosSelected()\n    {\n        if (attacks == null) return;\n\n        foreach (var attack in attacks)\n        {\n            if (attack == null) continue;\n\n            Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.5f);\n            Gizmos.DrawWireSphere(transform.position, attack.range);\n\n            if (attack.minRange > 0f)\n            {\n                Gizmos.color = new Color(1f, 0.6f, 0.1f, 0.5f);\n                Gizmos.DrawWireSphere(transform.position, attack.minRange);\n            }\n        }\n    }\n\n    /// <summary>Distância (no plano XY) entre o ponto \"p\" e o segmento de recta \"a\"-\"b\". Usado por ataques em linha (laser).</summary>\n    public static float DistanceToSegment(Vector2 a, Vector2 b, Vector2 p)\n    {\n        Vector2 ab = b - a;\n        float lenSq = ab.sqrMagnitude;\n\n        if (lenSq < 0.0001f) return Vector2.Distance(a, p);\n\n        float t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / lenSq);\n        Vector2 projection = a + ab * t;\n\n        return Vector2.Distance(p, projection);\n    }\n}\n",
+  "id": "script-enemy-enemyattackcontroller-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-editor-enemycontrollereditor-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemymovement-cs",
+    "script-enemy-enemywaterbehavior-cs",
+    "script-forms-formswitcher-cs",
+    "script-player-playercombat-cs",
+    "script-player-playermotor2d-cs",
+    "script-data-playerprogress-cs",
+    "script-enemy-projectiledata-cs",
+    "script-enemy-projectilepool-cs",
+    "script-player-waterdetector-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-attacks-enemyattacks-melee-cs",
+    "script-enemy-attacks-enemyattacks-areacontrol-cs",
+    "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-enemy-bosses-boss-amaoquefere-cs",
+    "script-enemy-bosses-boss-gargantadofogo-cs",
+    "script-enemy-bosses-boss-marederede-cs",
+    "script-enemy-enemyattack-cs",
+    "script-enemy-editor-enemyattackcontrollereditor-cs",
+    "script-enemy-editor-enemycontrollereditor-cs",
+    "script-enemy-enemywaterbehavior-cs",
+    "script-player-playercombat-cs",
+    "script-player-playermotor2d-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-enemy-projectiledata-cs",
+    "script-enemy-projectilepool-cs",
+    "script-enemy-attacks-enemyattacks-water-cs"
+  ]
+}

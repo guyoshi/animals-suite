@@ -1,0 +1,159 @@
+{
+  "path": "Platforms/PlatformBlink.cs",
+  "filename": "PlatformBlink.cs",
+  "category": "Platforms",
+  "primary": "PlatformBlink",
+  "kind": "Componente",
+  "summary": "Plataforma que aparece/desaparece periodicamente (add-on opcional — combina com MovingPlatform ou usa-se sozinha numa plataforma estática). Enquanto \"desaparecida\": colisores e SpriteRenderers desligados (não pode ser pisada nem vista). \"tempoAviso\" faz a plataforma \"tremer\"/ficar semi-transparente um pouco antes de desaparecer, para dar tempo de reação.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PlatformBlink",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "tempoVisivel",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "Temporização",
+      "attrs": "[Header(\"Temporização\")] [Tooltip(\"Tempo (segundos) visível/sólida.\")] [Min(0.05f)]",
+      "inspector": true,
+      "description": "Tempo (segundos) visível/sólida."
+    },
+    {
+      "name": "tempoInvisivel",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Temporização",
+      "attrs": "[Tooltip(\"Tempo (segundos) invisível/sem colisão.\")] [Min(0.05f)]",
+      "inspector": true,
+      "description": "Tempo (segundos) invisível/sem colisão."
+    },
+    {
+      "name": "comecaVisivel",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Temporização",
+      "attrs": "[Tooltip(\"Começa visível (true) ou invisível (false)?\")]",
+      "inspector": true,
+      "description": "Começa visível (true) ou invisível (false)?"
+    },
+    {
+      "name": "tempoAviso",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Aviso antes de desaparecer",
+      "attrs": "[Header(\"Aviso antes de desaparecer\")] [Tooltip(\"Duração (segundos) do aviso semi-transparente antes de desaparecer. 0 = sem aviso (desaparece de repente).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Duração (segundos) do aviso semi-transparente antes de desaparecer. 0 = sem aviso (desaparece de repente)."
+    },
+    {
+      "name": "alphaDoAviso",
+      "type": "float",
+      "mods": "public",
+      "default": "0.35f",
+      "section": "Aviso antes de desaparecer",
+      "attrs": "[Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spriteRenderers",
+      "type": "SpriteRenderer[]",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Header(\"Visual\")] [Tooltip(\"Vazio = usa todos os SpriteRenderer em filhos.\")]",
+      "inspector": true,
+      "description": "Vazio = usa todos os SpriteRenderer em filhos."
+    },
+    {
+      "name": "onVisibilidadeAlterada",
+      "type": "UnityEvent<bool>",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_colliders",
+      "type": "Collider2D[]",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_timer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_visible",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "SetActive",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool active",
+      "description": "Executa a operação SetActive."
+    },
+    {
+      "name": "SetAlpha",
+      "ret": "void",
+      "mods": "private",
+      "params": "float alpha",
+      "description": "Executa a operação SetAlpha."
+    }
+  ],
+  "dependencies": [
+    "MovingPlatform"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Plataforma que aparece/desaparece periodicamente (add-on opcional —\n/// combina com MovingPlatform ou usa-se sozinha numa plataforma estática).\n///\n/// Enquanto \"desaparecida\": colisores e SpriteRenderers desligados (não pode\n/// ser pisada nem vista). \"tempoAviso\" faz a plataforma \"tremer\"/ficar\n/// semi-transparente um pouco antes de desaparecer, para dar tempo de reacção.\n/// </summary>\n[DisallowMultipleComponent]\npublic class PlatformBlink : MonoBehaviour\n{\n    [Header(\"Temporização\")]\n    [Tooltip(\"Tempo (segundos) visível/sólida.\")]\n    [Min(0.05f)] public float tempoVisivel = 2f;\n\n    [Tooltip(\"Tempo (segundos) invisível/sem colisão.\")]\n    [Min(0.05f)] public float tempoInvisivel = 1f;\n\n    [Tooltip(\"Começa visível (true) ou invisível (false)?\")]\n    public bool comecaVisivel = true;\n\n    [Header(\"Aviso antes de desaparecer\")]\n    [Tooltip(\"Duração (segundos) do aviso semi-transparente antes de desaparecer. 0 = sem aviso (desaparece de repente).\")]\n    [Min(0f)] public float tempoAviso = 0.5f;\n\n    [Range(0f, 1f)] public float alphaDoAviso = 0.35f;\n\n    [Header(\"Visual\")]\n    [Tooltip(\"Vazio = usa todos os SpriteRenderer em filhos.\")]\n    public SpriteRenderer[] spriteRenderers;\n\n    [Header(\"Eventos\")]\n    public UnityEvent<bool> onVisibilidadeAlterada;\n\n    private Collider2D[] _colliders;\n    private float _timer;\n    private bool _visible;\n\n    private void Awake()\n    {\n        _colliders = GetComponentsInChildren<Collider2D>();\n\n        if (spriteRenderers == null || spriteRenderers.Length == 0)\n            spriteRenderers = GetComponentsInChildren<SpriteRenderer>();\n\n        _visible = comecaVisivel;\n        _timer = _visible ? tempoVisivel : tempoInvisivel;\n\n        SetActive(_visible);\n        SetAlpha(1f);\n    }\n\n    private void Update()\n    {\n        _timer -= Time.deltaTime;\n\n        // Aviso: fica semi-transparente nos últimos \"tempoAviso\" segundos antes de desaparecer.\n        if (_visible && tempoAviso > 0f && _timer <= tempoAviso)\n        {\n            float t = Mathf.Clamp01(_timer / tempoAviso);\n            SetAlpha(Mathf.Lerp(alphaDoAviso, 1f, t));\n        }\n\n        if (_timer > 0f) return;\n\n        _visible = !_visible;\n        _timer = _visible ? tempoVisivel : tempoInvisivel;\n\n        SetActive(_visible);\n        SetAlpha(1f);\n\n        onVisibilidadeAlterada?.Invoke(_visible);\n    }\n\n    private void SetActive(bool active)\n    {\n        foreach (var col in _colliders)\n            if (col != null) col.enabled = active;\n\n        foreach (var sr in spriteRenderers)\n            if (sr != null) sr.enabled = active;\n    }\n\n    private void SetAlpha(float alpha)\n    {\n        foreach (var sr in spriteRenderers)\n        {\n            if (sr == null) continue;\n            var c = sr.color;\n            c.a = alpha;\n            sr.color = c;\n        }\n    }\n}\n",
+  "id": "script-platforms-platformblink-cs",
+  "dependencyIds": [
+    "script-platforms-movingplatform-cs"
+  ],
+  "usedByIds": []
+}

@@ -1,0 +1,219 @@
+{
+  "path": "UI/TutorialMessageManager.cs",
+  "filename": "TutorialMessageManager.cs",
+  "category": "UI",
+  "primary": "TutorialMessageManager",
+  "kind": "Componente",
+  "summary": "Tipo de mensagem de tutorial — determina posicionamento, confirmação e capacidades visuais.",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "TutorialMessageType",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "TutorialMessageRequest",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "TutorialMessageManager",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "type",
+      "type": "TutorialMessageType",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "image",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "anchorPosition",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onConfirmed",
+      "type": "System.Action",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ui",
+      "type": "TutorialMessageUI",
+      "mods": "private",
+      "default": "",
+      "section": "UI (ligar TutorialMessageUI na cena)",
+      "attrs": "[Header(\"UI (ligar TutorialMessageUI na cena)\")] [Tooltip(\"Componente de UI que renderiza as mensagens de tutorial.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Componente de UI que renderiza as mensagens de tutorial."
+    },
+    {
+      "name": "toastDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "2.5f",
+      "section": "Toast (Não Importante)",
+      "attrs": "[Header(\"Toast (Não Importante)\")] [Tooltip(\"Duração (s) que um toast fica visível antes de desaparecer.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração (s) que um toast fica visível antes de desaparecer."
+    },
+    {
+      "name": "defaultSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Toast (Não Importante)",
+      "attrs": "[Tooltip(\"Som tocado ao mostrar qualquer mensagem de tutorial.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Som tocado ao mostrar qualquer mensagem de tutorial."
+    },
+    {
+      "name": "_confirmQueue",
+      "type": "Queue<TutorialMessageRequest>",
+      "mods": "private readonly",
+      "default": "new Queue<TutorialMessageRequest>()",
+      "section": "Toast (Não Importante)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_showingConfirm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Toast (Não Importante)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Toast (Não Importante)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "Show",
+      "ret": "void",
+      "mods": "public",
+      "params": "TutorialMessageRequest request",
+      "description": "Executa a operação Show."
+    },
+    {
+      "name": "ShowToast",
+      "ret": "void",
+      "mods": "public",
+      "params": "string text",
+      "description": "Executa a operação ShowToast."
+    },
+    {
+      "name": "ShowImportant",
+      "ret": "void",
+      "mods": "public",
+      "params": "string text, Sprite image = null, System.Action onConfirmed = null",
+      "description": "Executa a operação ShowImportant."
+    },
+    {
+      "name": "ShowMedia",
+      "ret": "void",
+      "mods": "public",
+      "params": "string text, Vector2 anchorPosition = default, System.Action onConfirmed = null",
+      "description": "Executa a operação ShowMedia."
+    },
+    {
+      "name": "ProcessConfirmQueueRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ProcessConfirmQueueRoutine."
+    },
+    {
+      "name": "PlaySfx",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação PlaySfx."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "TutorialMessageUI"
+  ],
+  "used_by": [
+    "JukeboxShopHandler",
+    "TutorialMessageUI",
+    "WaterMotor2D"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Tipo de mensagem de tutorial — determina posicionamento, confirmação e\n/// capacidades visuais.\n/// </summary>\npublic enum TutorialMessageType\n{\n    /// <summary>\n    /// Aparece no centro da tela. Pausa o jogo. Suporta imagem acima do texto.\n    /// Texto longo rola ao pressionar \"Continuar\". Requer confirmação do player\n    /// para fechar.\n    /// </summary>\n    Importante,\n\n    /// <summary>\n    /// Aparece perto de um elemento da HUD (posição configurada em runtime).\n    /// Requer confirmação do player para fechar. Sem imagem.\n    /// </summary>\n    Media,\n\n    /// <summary>\n    /// Pop-up pequeno no topo da tela. Não exige confirmação — some\n    /// automaticamente após <see cref=\"TutorialMessageManager.toastDuration\"/> segundos.\n    /// Não bloqueia o jogo.\n    /// </summary>\n    NaoImportante,\n}\n\n/// <summary>\n/// Pedido de mensagem de tutorial enfileirado.\n/// </summary>\npublic class TutorialMessageRequest\n{\n    /// <summary>Tipo da mensagem (Importante / Media / NaoImportante).</summary>\n    public TutorialMessageType type;\n\n    /// <summary>Texto principal da mensagem.</summary>\n    public string text;\n\n    /// <summary>\n    /// Imagem exibida ACIMA do texto (só usada em Tipo Importante).\n    /// Ex: sprite com os movimentos do animal recém-desbloqueado.\n    /// </summary>\n    public Sprite image;\n\n    /// <summary>\n    /// Posição de ancoragem em viewport/canvas local (usado por Tipo Média\n    /// para posicionar perto de um elemento da HUD).\n    /// Ignorado em Importante e NaoImportante.\n    /// </summary>\n    public Vector2 anchorPosition;\n\n    /// <summary>\n    /// Callback disparado quando a mensagem é confirmada/fechada.\n    /// Útil para encadear lógica após o player confirmar um tutorial.\n    /// </summary>\n    public System.Action onConfirmed;\n}\n\n/// <summary>\n/// Gestor de Mensagens de Tutorial — exibe avisos contextuais ao player em\n/// três formatos distintos, com filas separadas para mensagens que requerem\n/// confirmação (Importante / Média) e mensagens não-bloqueantes (NaoImportante).\n///\n/// <b>Três tipos:</b>\n/// <list type=\"bullet\">\n///   <item><b>Importante</b>: centro do ecrã, pausa o jogo, suporta imagem\n///     acima do texto, texto longo rola ao pressionar \"Continuar\", requer\n///     confirmação. Usado para revelar movimentos de novos animais, avisos\n///     críticos do jogo, tutorial do Jukebox, etc.</item>\n///   <item><b>Média</b>: aparece perto de um elemento da HUD (posição\n///     configurada via anchorPosition), requer confirmação, sem imagem.</item>\n///   <item><b>Não Importante</b>: pop-up pequeno no topo do ecrã, sem\n///     confirmação, some automaticamente. Não bloqueia o jogo nem interrompe\n///     o fluxo. Nunca sobrepõe a HUD principal (posicionamento via UI).</item>\n/// </list>\n///\n/// <b>Uso:</b>\n/// <code>\n/// // Importante com imagem:\n/// TutorialMessageManager.Instance.Show(new TutorialMessageRequest {\n///     type    = TutorialMessageType.Importante,\n///     text    = \"Este animal pode nadar e mergulhar!\\n...\",\n///     image   = animalMovesSprite,\n///     onConfirmed = () => { /* continua fluxo */ }\n/// });\n///\n/// // Não importante (toast):\n/// TutorialMessageManager.Instance.ShowToast(\"Melodia selvagem encontrada!\");\n/// </code>\n///\n/// <b>Montagem no Editor:</b> ligar <see cref=\"TutorialMessageUI\"/> como\n/// referência — este manager apenas enfileira e coordena; a UI faz o render.\n/// </summary>\npublic class TutorialMessageManager : MonoBehaviour\n{\n    public static TutorialMessageManager Instance { get; private set; }\n\n    [Header(\"UI (ligar TutorialMessageUI na cena)\")]\n    [Tooltip(\"Componente de UI que renderiza as mensagens de tutorial.\")]\n    [SerializeField] private TutorialMessageUI ui;\n\n    [Header(\"Toast (Não Importante)\")]\n    [Tooltip(\"Duração (s) que um toast fica visível antes de desaparecer.\")]\n    [SerializeField] public float toastDuration = 2.5f;\n\n    [Tooltip(\"Som tocado ao mostrar qualquer mensagem de tutorial.\")]\n    [SerializeField] private AudioClip defaultSfx;\n\n    // Fila de mensagens que requerem confirmação (Importante / Média).\n    private readonly Queue<TutorialMessageRequest> _confirmQueue = new Queue<TutorialMessageRequest>();\n    private bool _showingConfirm;\n\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n                Destroy(Instance.gameObject);\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(TutorialMessageManager) + \" (Fallback)\");\n        var inst = go.AddComponent<TutorialMessageManager>();\n        inst.isAutoFallback = true;\n    }\n\n    // ==================== API Pública ====================\n\n    /// <summary>\n    /// Enfileira uma mensagem de tutorial. Mensagens Importantes e Médias são\n    /// exibidas em sequência (nunca sobrepostas). NaoImportante são exibidas\n    /// imediatamente como toast independente.\n    /// </summary>\n    public void Show(TutorialMessageRequest request)\n    {\n        if (request == null) return;\n\n        if (request.type == TutorialMessageType.NaoImportante)\n        {\n            PlaySfx();\n            if (ui != null)\n                StartCoroutine(ui.ShowToastRoutine(request.text, toastDuration));\n            return;\n        }\n\n        _confirmQueue.Enqueue(request);\n        if (!_showingConfirm)\n            StartCoroutine(ProcessConfirmQueueRoutine());\n    }\n\n    /// <summary>Atalho para mostrar um toast (Não Importante) só com texto.</summary>\n    public void ShowToast(string text)\n    {\n        Show(new TutorialMessageRequest\n        {\n            type = TutorialMessageType.NaoImportante,\n            text = text\n        });\n    }\n\n    /// <summary>\n    /// Atalho para mostrar uma mensagem Importante com imagem e callback.\n    /// O jogo é pausado até o player confirmar.\n    /// </summary>\n    public void ShowImportant(string text, Sprite image = null, System.Action onConfirmed = null)\n    {\n        Show(new TutorialMessageRequest\n        {\n            type        = TutorialMessageType.Importante,\n            text        = text,\n            image       = image,\n            onConfirmed = onConfirmed,\n        });\n    }\n\n    /// <summary>Atalho para mostrar uma mensagem Média (sem imagem, com confirmação).</summary>\n    public void ShowMedia(string text, Vector2 anchorPosition = default, System.Action onConfirmed = null)\n    {\n        Show(new TutorialMessageRequest\n        {\n            type           = TutorialMessageType.Media,\n            text           = text,\n            anchorPosition = anchorPosition,\n            onConfirmed    = onConfirmed,\n        });\n    }\n\n    // ==================== Fila de Confirmação ====================\n\n    private IEnumerator ProcessConfirmQueueRoutine()\n    {\n        _showingConfirm = true;\n\n        while (_confirmQueue.Count > 0)\n        {\n            var request = _confirmQueue.Dequeue();\n            PlaySfx();\n\n            bool confirmed = false;\n            System.Action onDone = () =>\n            {\n                confirmed = true;\n                request.onConfirmed?.Invoke();\n            };\n\n            if (ui != null)\n            {\n                yield return ui.ShowConfirmRoutine(request, onDone);\n            }\n            else\n            {\n                // Sem UI: aguarda um frame (não bloqueia indefinidamente).\n                yield return null;\n                onDone();\n            }\n\n            // Garante que confirmou antes de processar o próximo.\n            while (!confirmed)\n                yield return null;\n        }\n\n        _showingConfirm = false;\n    }\n\n    // ==================== Helpers ====================\n\n    private void PlaySfx()\n    {\n        if (defaultSfx != null)\n            AudioManager.Instance?.PlaySE(defaultSfx);\n    }\n}\n",
+  "id": "script-ui-tutorialmessagemanager-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-ui-tutorialmessageui-cs"
+  ],
+  "usedByIds": [
+    "script-ui-jukeboxshophandler-cs",
+    "script-ui-tutorialmessageui-cs",
+    "script-player-watermotor2d-cs"
+  ]
+}

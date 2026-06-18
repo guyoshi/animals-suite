@@ -1,0 +1,59 @@
+{
+  "path": "Data/Editor/GameVariableListDrawer.cs",
+  "filename": "GameVariableListDrawer.cs",
+  "category": "Data",
+  "primary": "GameVariableListDrawer",
+  "kind": "Editor",
+  "summary": "Desenha uma lista de GameVariable (variáveis globais em GameVariables, ou variáveis locais num NpcController) com nome, tipo e valor editáveis numa única linha, mais um campo para adicionar uma nova variável — verificando que o nome ainda não está em uso antes de a criar (Etapa 8). Usado por GameVariablesEditor e NpcControllerEditor.",
+  "attach": "Ferramenta do Unity Editor; não adicionar a GameObjects de gameplay.",
+  "types": [
+    {
+      "name": "GameVariableListDrawer",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "Draw",
+      "ret": "void",
+      "mods": "public static",
+      "params": "SerializedProperty listProp, string title",
+      "description": "Executa a operação Draw."
+    },
+    {
+      "name": "NameExists",
+      "ret": "bool",
+      "mods": "private static",
+      "params": "SerializedProperty listProp, string name",
+      "description": "Executa a operação NameExists."
+    }
+  ],
+  "dependencies": [
+    "GameVariable",
+    "GameVariables",
+    "GameVariablesEditor",
+    "NpcController",
+    "NpcControllerEditor",
+    "VariableType"
+  ],
+  "used_by": [
+    "GameVariablesEditor",
+    "NpcControllerEditor"
+  ],
+  "source": "#if UNITY_EDITOR\nusing System.Collections.Generic;\nusing UnityEditor;\nusing UnityEngine;\n\n/// <summary>\n/// Desenha uma lista de GameVariable (variáveis globais em GameVariables, ou\n/// variáveis locais num NpcController) com nome, tipo e valor editáveis numa\n/// única linha, mais um campo para adicionar uma nova variável — verificando\n/// que o nome ainda não está em uso antes de a criar (Etapa 8).\n///\n/// Usado por GameVariablesEditor e NpcControllerEditor.\n/// </summary>\npublic static class GameVariableListDrawer\n{\n    // Estado do campo \"nova variável\", indexado pelo propertyPath da lista\n    // (para suportar várias listas — globais + locais de vários NPCs — ao\n    // mesmo tempo sem misturar o texto introduzido).\n    private static readonly Dictionary<string, string> _pendingNames = new Dictionary<string, string>();\n    private static readonly Dictionary<string, VariableType> _pendingTypes = new Dictionary<string, VariableType>();\n    private static readonly Dictionary<string, string> _errors = new Dictionary<string, string>();\n\n    public static void Draw(SerializedProperty listProp, string title)\n    {\n        EditorGUILayout.LabelField(title, EditorStyles.boldLabel);\n\n        if (listProp.arraySize > 0)\n        {\n            EditorGUILayout.BeginHorizontal();\n            EditorGUILayout.LabelField(\"Nome\", GUILayout.MinWidth(60));\n            EditorGUILayout.LabelField(\"Tipo\", GUILayout.Width(70));\n            EditorGUILayout.LabelField(\"Valor\", GUILayout.MinWidth(60));\n            GUILayout.Space(24);\n            EditorGUILayout.EndHorizontal();\n        }\n\n        int removeIndex = -1;\n\n        for (int i = 0; i < listProp.arraySize; i++)\n        {\n            var element = listProp.GetArrayElementAtIndex(i);\n            var nameProp = element.FindPropertyRelative(\"variableName\");\n            var typeProp = element.FindPropertyRelative(\"type\");\n\n            EditorGUILayout.BeginHorizontal();\n\n            EditorGUILayout.PropertyField(nameProp, GUIContent.none, GUILayout.MinWidth(60));\n            EditorGUILayout.PropertyField(typeProp, GUIContent.none, GUILayout.Width(70));\n\n            switch ((VariableType)typeProp.enumValueIndex)\n            {\n                case VariableType.Bool:\n                    EditorGUILayout.PropertyField(element.FindPropertyRelative(\"boolValue\"), GUIContent.none, GUILayout.MinWidth(60));\n                    break;\n                case VariableType.Int:\n                    EditorGUILayout.PropertyField(element.FindPropertyRelative(\"intValue\"), GUIContent.none, GUILayout.MinWidth(60));\n                    break;\n                case VariableType.Float:\n                    EditorGUILayout.PropertyField(element.FindPropertyRelative(\"floatValue\"), GUIContent.none, GUILayout.MinWidth(60));\n                    break;\n                default:\n                    EditorGUILayout.PropertyField(element.FindPropertyRelative(\"stringValue\"), GUIContent.none, GUILayout.MinWidth(60));\n                    break;\n            }\n\n            if (GUILayout.Button(\"X\", GUILayout.Width(22)))\n                removeIndex = i;\n\n            EditorGUILayout.EndHorizontal();\n        }\n\n        if (removeIndex >= 0)\n            listProp.DeleteArrayElementAtIndex(removeIndex);\n\n        // ---- Adicionar nova variável ----\n\n        string key = listProp.propertyPath;\n        if (!_pendingNames.TryGetValue(key, out var pendingName)) pendingName = string.Empty;\n        if (!_pendingTypes.TryGetValue(key, out var pendingType)) pendingType = VariableType.Bool;\n\n        EditorGUILayout.BeginHorizontal();\n\n        GUI.SetNextControlName(\"GameVariableNewName_\" + key);\n        pendingName = EditorGUILayout.TextField(pendingName);\n        pendingType = (VariableType)EditorGUILayout.EnumPopup(pendingType, GUILayout.Width(70));\n\n        if (GUILayout.Button(\"+ Adicionar Variável\", GUILayout.Width(150)))\n        {\n            string trimmed = pendingName.Trim();\n\n            if (string.IsNullOrEmpty(trimmed))\n            {\n                _errors[key] = \"Define um nome para a variável.\";\n            }\n            else if (NameExists(listProp, trimmed))\n            {\n                _errors[key] = $\"Já existe uma variável chamada \\\"{trimmed}\\\". Escolhe outro nome.\";\n            }\n            else\n            {\n                int newIndex = listProp.arraySize;\n                listProp.arraySize++;\n\n                var element = listProp.GetArrayElementAtIndex(newIndex);\n                element.FindPropertyRelative(\"variableName\").stringValue = trimmed;\n                element.FindPropertyRelative(\"type\").enumValueIndex = (int)pendingType;\n                element.FindPropertyRelative(\"boolValue\").boolValue = false;\n                element.FindPropertyRelative(\"intValue\").intValue = 0;\n                element.FindPropertyRelative(\"floatValue\").floatValue = 0f;\n                element.FindPropertyRelative(\"stringValue\").stringValue = string.Empty;\n\n                _errors.Remove(key);\n                pendingName = string.Empty;\n                GUI.FocusControl(null);\n            }\n        }\n\n        EditorGUILayout.EndHorizontal();\n\n        _pendingNames[key] = pendingName;\n        _pendingTypes[key] = pendingType;\n\n        if (_errors.TryGetValue(key, out var error))\n            EditorGUILayout.HelpBox(error, MessageType.Warning);\n\n        EditorGUILayout.Space();\n    }\n\n    private static bool NameExists(SerializedProperty listProp, string name)\n    {\n        for (int i = 0; i < listProp.arraySize; i++)\n        {\n            var existing = listProp.GetArrayElementAtIndex(i).FindPropertyRelative(\"variableName\").stringValue;\n            if (existing == name) return true;\n        }\n\n        return false;\n    }\n}\n#endif\n",
+  "id": "script-data-editor-gamevariablelistdrawer-cs",
+  "dependencyIds": [
+    "script-data-gamevariable-cs",
+    "script-data-gamevariables-cs",
+    "script-data-editor-gamevariableseditor-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-editor-npccontrollereditor-cs"
+  ],
+  "usedByIds": [
+    "script-data-editor-gamevariableseditor-cs",
+    "script-npc-editor-npccontrollereditor-cs"
+  ]
+}

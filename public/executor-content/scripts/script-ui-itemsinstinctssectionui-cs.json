@@ -1,0 +1,502 @@
+{
+  "path": "UI/ItemsInstinctsSectionUI.cs",
+  "filename": "ItemsInstinctsSectionUI.cs",
+  "category": "UI",
+  "primary": "ItemsInstinctsSectionUI",
+  "kind": "Componente",
+  "summary": "Seção \"Itens e Instintos\" do Menu de Pausa (Tarefa #10) — duas listas menores, propositadamente separadas para não misturar consumíveis com melhorias permanentes/configuráveis: CONSUMÍVEIS ( ): - Cada linha mostra ícone, nome e quantidade (PlayerProgress.GetItemQuantity). - Itens com quantidade 0 aparecem cinzentos (ainda não encontrados/sem stock). - Ao selecionar, o painel central mostra nome, quantidade, descrição e \"A — Equipar\"/\"A — Desequipar\". - \"A\" equipa/desequipa diretamente (PlayerProgress.EquipItem) — só itens com quantidade > 0 podem ser equipados. INSTINTOS ( ): - Só mostra upgrades já desbloqueados (PlayerProgress.HasUpgrade). - Upgrades \"toggleable\" (UpgradeData.toggleable",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ItemsInstinctsSectionUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, IPauseMenuSection",
+      "attrs": ""
+    },
+    {
+      "name": "ConsumableRowUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, ISelectHandler",
+      "attrs": ""
+    },
+    {
+      "name": "InstinctRowUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Header(\"Framework\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "allConsumables",
+      "type": "List<ItemData>",
+      "mods": "private",
+      "default": "new List<ItemData>()",
+      "section": "Consumíveis",
+      "attrs": "[Header(\"Consumíveis\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "consumablesContainer",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Consumíveis",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "consumableRowPrefab",
+      "type": "ConsumableRowUI",
+      "mods": "private",
+      "default": "",
+      "section": "Consumíveis",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emptyConsumableColor",
+      "type": "Color",
+      "mods": "private",
+      "default": "new Color(1f, 1f, 1f, 0.4f)",
+      "section": "Consumíveis",
+      "attrs": "[Tooltip(\"Cor do ícone/nome quando a quantidade do item é 0 (ainda não encontrado).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Cor do ícone/nome quando a quantidade do item é 0 (ainda não encontrado)."
+    },
+    {
+      "name": "consumableDetailRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Detalhe do Consumível (centro)",
+      "attrs": "[Header(\"Detalhe do Consumível (centro)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "consumableNameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Detalhe do Consumível (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "consumableNameFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"{0}    {1}\"",
+      "section": "Detalhe do Consumível (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "consumableDescriptionText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Detalhe do Consumível (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "consumableActionHintText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Detalhe do Consumível (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equipHint",
+      "type": "string",
+      "mods": "private",
+      "default": "\"A — Equipar\"",
+      "section": "Detalhe do Consumível (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unequipHint",
+      "type": "string",
+      "mods": "private",
+      "default": "\"A — Desequipar\"",
+      "section": "Detalhe do Consumível (centro)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "allInstincts",
+      "type": "List<UpgradeData>",
+      "mods": "private",
+      "default": "new List<UpgradeData>()",
+      "section": "Instintos",
+      "attrs": "[Header(\"Instintos\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "instinctsContainer",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Instintos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "instinctRowPrefab",
+      "type": "InstinctRowUI",
+      "mods": "private",
+      "default": "",
+      "section": "Instintos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "seedClosedSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Instintos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "seedOpenSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Instintos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equipSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Header(\"Sons\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "toggleSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emptyState",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "[Header(\"Estado Vazio\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emptyText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Nada para mostrar ainda.\"",
+      "section": "Estado Vazio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spawnedConsumables",
+      "type": "List<GameObject>",
+      "mods": "private readonly",
+      "default": "new List<GameObject>()",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spawnedInstincts",
+      "type": "List<GameObject>",
+      "mods": "private readonly",
+      "default": "new List<GameObject>()",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SectionName",
+      "type": "string",
+      "mods": "public",
+      "default": "> \"ITENS\"",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Root",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "> root != null ? root : gameObject",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "iconImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "nameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "quantityText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equippedMarker",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "item",
+      "type": "ItemData",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onSelected",
+      "type": "Action<ItemData>",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onEquip",
+      "type": "Action<ItemData>",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "seedImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "upgrade",
+      "type": "UpgradeData",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "closedSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "openSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onToggle",
+      "type": "Action<UpgradeData>",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Vazio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Refresh",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Refresh."
+    },
+    {
+      "name": "OnHide",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação OnHide."
+    },
+    {
+      "name": "ShowConsumableDetails",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação ShowConsumableDetails."
+    },
+    {
+      "name": "ToggleEquip",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação ToggleEquip."
+    },
+    {
+      "name": "ToggleInstinct",
+      "ret": "void",
+      "mods": "private",
+      "params": "UpgradeData upgrade",
+      "description": "Executa a operação ToggleInstinct."
+    },
+    {
+      "name": "ClearSpawned",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ClearSpawned."
+    },
+    {
+      "name": "Setup",
+      "ret": "void",
+      "mods": "public",
+      "params": "ItemData item, int quantity, bool equipped, Color emptyColor, Action<ItemData> onSelected, Action<ItemData> onEquip",
+      "description": "Executa a operação Setup."
+    },
+    {
+      "name": "OnSelect",
+      "ret": "void",
+      "mods": "public",
+      "params": "BaseEventData eventData",
+      "description": "Executa a operação OnSelect."
+    },
+    {
+      "name": "Setup",
+      "ret": "void",
+      "mods": "public",
+      "params": "UpgradeData upgrade, bool enabled, Sprite closedSprite, Sprite openSprite, Action<UpgradeData> onToggle",
+      "description": "Executa a operação Setup."
+    },
+    {
+      "name": "HandleToggle",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleToggle."
+    },
+    {
+      "name": "UpdateSeed",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool open",
+      "description": "Executa a operação UpdateSeed."
+    }
+  ],
+  "dependencies": [
+    "IPauseMenuSection",
+    "ItemData",
+    "PauseMenuController",
+    "PlayerProgress",
+    "UpgradeData"
+  ],
+  "used_by": [
+    "SecondaryMenuController"
+  ],
+  "source": "using System;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Secção \"Itens e Instintos\" do Menu de Pausa (Tarefa #10) — duas listas\n/// menores, propositadamente separadas para não misturar consumíveis com\n/// melhorias permanentes/configuráveis:\n///\n/// CONSUMÍVEIS (<see cref=\"allConsumables\"/>):\n/// - Cada linha mostra ícone, nome e quantidade (PlayerProgress.GetItemQuantity).\n/// - Itens com quantidade 0 aparecem cinzentos (ainda não encontrados/sem stock).\n/// - Ao seleccionar, o painel central mostra nome, quantidade, descrição e\n///   \"A — Equipar\"/\"A — Desequipar\".\n/// - \"A\" equipa/desequipa directamente (PlayerProgress.EquipItem) — só itens\n///   com quantidade > 0 podem ser equipados.\n///\n/// INSTINTOS (<see cref=\"allInstincts\"/>):\n/// - Só mostra upgrades já desbloqueados (PlayerProgress.HasUpgrade).\n/// - Upgrades \"toggleable\" (UpgradeData.toggleable) têm um interruptor em\n///   forma de semente: fechada = desligado, aberta = ligado\n///   (<see cref=\"seedClosedSprite\"/>/<see cref=\"seedOpenSprite\"/>). \"A\" liga/\n///   desliga (PlayerProgress.SetUpgradeEnabled).\n/// - Upgrades permanentes (toggleable == false) mostram a semente sempre\n///   aberta, sem interacção — \"sempre activo depois de desbloqueado\".\n///\n/// Montagem no Editor:\n/// - \"allConsumables\"/\"allInstincts\": todos os ItemData/UpgradeData candidatos\n///   a aparecer aqui (a lista filtra automaticamente o que ainda não foi\n///   desbloqueado, no caso dos Instintos).\n/// - \"consumableRowPrefab\"/\"instinctRowPrefab\": prefabs com\n///   <see cref=\"ConsumableRowUI\"/>/<see cref=\"InstinctRowUI\"/> + Button, para\n///   navegação e selecção por D-pad/teclado.\n/// </summary>\npublic class ItemsInstinctsSectionUI : MonoBehaviour, IPauseMenuSection\n{\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject root;\n\n    [Header(\"Consumíveis\")]\n    [SerializeField] private List<ItemData> allConsumables = new List<ItemData>();\n    [SerializeField] private Transform consumablesContainer;\n    [SerializeField] private ConsumableRowUI consumableRowPrefab;\n\n    [Tooltip(\"Cor do ícone/nome quando a quantidade do item é 0 (ainda não encontrado).\")]\n    [SerializeField] private Color emptyConsumableColor = new Color(1f, 1f, 1f, 0.4f);\n\n    [Header(\"Detalhe do Consumível (centro)\")]\n    [SerializeField] private GameObject consumableDetailRoot;\n    [SerializeField] private TMP_Text consumableNameText;\n    [SerializeField] private string consumableNameFormat = \"{0}    {1}\";\n    [SerializeField] private TMP_Text consumableDescriptionText;\n    [SerializeField] private TMP_Text consumableActionHintText;\n    [SerializeField] private string equipHint = \"A — Equipar\";\n    [SerializeField] private string unequipHint = \"A — Desequipar\";\n\n    [Header(\"Instintos\")]\n    [SerializeField] private List<UpgradeData> allInstincts = new List<UpgradeData>();\n    [SerializeField] private Transform instinctsContainer;\n    [SerializeField] private InstinctRowUI instinctRowPrefab;\n    [SerializeField] private Sprite seedClosedSprite;\n    [SerializeField] private Sprite seedOpenSprite;\n\n    [Header(\"Sons\")]\n    [SerializeField] private AudioClip equipSfx;\n    [SerializeField] private AudioClip toggleSfx;\n\n    [Header(\"Estado Vazio\")]\n    [SerializeField] private GameObject emptyState;\n    [SerializeField] private string emptyText = \"Nada para mostrar ainda.\";\n\n    private readonly List<GameObject> spawnedConsumables = new List<GameObject>();\n    private readonly List<GameObject> spawnedInstincts = new List<GameObject>();\n\n    public string SectionName => \"ITENS\";\n    public GameObject Root => root != null ? root : gameObject;\n\n    public void Refresh()\n    {\n        ClearSpawned();\n\n        var progress = PlayerProgress.Instance;\n\n        ConsumableRowUI firstConsumableRow = null;\n        ItemData firstConsumable = null;\n\n        foreach (var item in allConsumables)\n        {\n            if (item == null || consumableRowPrefab == null || consumablesContainer == null) continue;\n\n            int quantity = progress != null ? progress.GetItemQuantity(item) : 0;\n            bool equipped = progress != null && progress.HasItemEquipped(item);\n\n            var row = Instantiate(consumableRowPrefab, consumablesContainer);\n            row.gameObject.SetActive(true);\n            row.Setup(item, quantity, equipped, emptyConsumableColor, ShowConsumableDetails, ToggleEquip);\n\n            spawnedConsumables.Add(row.gameObject);\n\n            if (firstConsumableRow == null)\n            {\n                firstConsumableRow = row;\n                firstConsumable = item;\n            }\n        }\n\n        foreach (var upgrade in allInstincts)\n        {\n            if (upgrade == null || instinctRowPrefab == null || instinctsContainer == null) continue;\n            if (progress == null || !progress.HasUpgrade(upgrade)) continue; // só upgrades já desbloqueados.\n\n            bool enabled = progress.IsUpgradeEnabled(upgrade);\n\n            var row = Instantiate(instinctRowPrefab, instinctsContainer);\n            row.gameObject.SetActive(true);\n            row.Setup(upgrade, enabled, seedClosedSprite, seedOpenSprite, ToggleInstinct);\n\n            spawnedInstincts.Add(row.gameObject);\n        }\n\n        bool anyContent = spawnedConsumables.Count > 0 || spawnedInstincts.Count > 0;\n\n        if (emptyState != null)\n        {\n            emptyState.SetActive(!anyContent);\n\n            if (!anyContent)\n            {\n                var emptyTextComponent = emptyState.GetComponentInChildren<TMP_Text>();\n                if (emptyTextComponent != null) emptyTextComponent.text = emptyText;\n            }\n        }\n\n        if (firstConsumable != null)\n        {\n            ShowConsumableDetails(firstConsumable);\n            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(firstConsumableRow.gameObject);\n        }\n        else if (consumableDetailRoot != null)\n        {\n            consumableDetailRoot.SetActive(false);\n        }\n    }\n\n    public void OnHide()\n    {\n        // Sem estado próprio a limpar — Refresh() reconstrói as listas na próxima vez.\n    }\n\n    // ---------------- Consumíveis ----------------\n\n    private void ShowConsumableDetails(ItemData item)\n    {\n        if (item == null) return;\n\n        var progress = PlayerProgress.Instance;\n        int quantity = progress != null ? progress.GetItemQuantity(item) : 0;\n        bool equipped = progress != null && progress.HasItemEquipped(item);\n\n        if (consumableDetailRoot != null) consumableDetailRoot.SetActive(true);\n\n        if (consumableNameText != null)\n            consumableNameText.text = string.Format(consumableNameFormat, item.displayName.ToUpperInvariant(), quantity);\n\n        if (consumableDescriptionText != null) consumableDescriptionText.text = item.description;\n\n        if (consumableActionHintText != null)\n            consumableActionHintText.text = equipped ? unequipHint : equipHint;\n    }\n\n    private void ToggleEquip(ItemData item)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || item == null) return;\n\n        // Só é possível equipar itens que o jogador já possui.\n        if (!progress.HasItemEquipped(item) && progress.GetItemQuantity(item) <= 0) return;\n\n        if (progress.HasItemEquipped(item)) progress.EquipItem(null);\n        else progress.EquipItem(item);\n\n        PauseMenuController.Instance?.PlaySfx(equipSfx);\n        ShowConsumableDetails(item);\n    }\n\n    // ---------------- Instintos ----------------\n\n    private void ToggleInstinct(UpgradeData upgrade)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || upgrade == null || !upgrade.toggleable) return;\n\n        bool newValue = !progress.IsUpgradeEnabled(upgrade);\n        progress.SetUpgradeEnabled(upgrade, newValue);\n\n        PauseMenuController.Instance?.PlaySfx(toggleSfx);\n    }\n\n    // ---------------- Limpeza ----------------\n\n    private void ClearSpawned()\n    {\n        foreach (var go in spawnedConsumables)\n            if (go != null) Destroy(go);\n        spawnedConsumables.Clear();\n\n        foreach (var go in spawnedInstincts)\n            if (go != null) Destroy(go);\n        spawnedInstincts.Clear();\n    }\n}\n\n/// <summary>\n/// Linha de um consumível na lista \"Itens e Instintos\" (ItemsInstinctsSectionUI).\n/// Mostra ícone, nome e quantidade; \"A\" equipa/desequipa directamente.\n/// </summary>\npublic class ConsumableRowUI : MonoBehaviour, ISelectHandler\n{\n    [SerializeField] private Image iconImage;\n    [SerializeField] private TMP_Text nameText;\n    [SerializeField] private TMP_Text quantityText;\n    [SerializeField] private GameObject equippedMarker;\n\n    private ItemData item;\n    private Action<ItemData> onSelected;\n    private Action<ItemData> onEquip;\n\n    public void Setup(ItemData item, int quantity, bool equipped, Color emptyColor, Action<ItemData> onSelected, Action<ItemData> onEquip)\n    {\n        this.item = item;\n        this.onSelected = onSelected;\n        this.onEquip = onEquip;\n\n        if (nameText != null) nameText.text = item.displayName;\n        if (quantityText != null) quantityText.text = quantity.ToString();\n\n        if (iconImage != null)\n        {\n            iconImage.sprite = item.icon;\n            iconImage.enabled = item.icon != null;\n        }\n\n        bool empty = quantity <= 0;\n        var color = empty ? emptyColor : Color.white;\n        if (nameText != null) nameText.color = color;\n        if (quantityText != null) quantityText.color = color;\n        if (iconImage != null) iconImage.color = color;\n\n        if (equippedMarker != null) equippedMarker.SetActive(equipped);\n\n        var button = GetComponent<Button>();\n        if (button != null)\n        {\n            button.onClick.RemoveAllListeners();\n            button.onClick.AddListener(() => this.onEquip?.Invoke(this.item));\n        }\n    }\n\n    public void OnSelect(BaseEventData eventData)\n    {\n        onSelected?.Invoke(item);\n    }\n}\n\n/// <summary>\n/// Linha de um Instinto na lista \"Itens e Instintos\" (ItemsInstinctsSectionUI).\n/// Mostra ícone, nome e o interruptor em forma de semente (fechada/aberta).\n/// Upgrades não-\"toggleable\" mostram a semente sempre aberta, sem interacção.\n/// </summary>\npublic class InstinctRowUI : MonoBehaviour\n{\n    [SerializeField] private Image iconImage;\n    [SerializeField] private TMP_Text nameText;\n    [SerializeField] private Image seedImage;\n\n    private UpgradeData upgrade;\n    private Sprite closedSprite;\n    private Sprite openSprite;\n    private Action<UpgradeData> onToggle;\n\n    public void Setup(UpgradeData upgrade, bool enabled, Sprite closedSprite, Sprite openSprite, Action<UpgradeData> onToggle)\n    {\n        this.upgrade = upgrade;\n        this.closedSprite = closedSprite;\n        this.openSprite = openSprite;\n        this.onToggle = onToggle;\n\n        if (nameText != null) nameText.text = upgrade.displayName;\n\n        if (iconImage != null)\n        {\n            iconImage.sprite = upgrade.icon;\n            iconImage.enabled = upgrade.icon != null;\n        }\n\n        // Upgrades permanentes (não-toggleable) mostram a semente sempre aberta.\n        bool open = !upgrade.toggleable || enabled;\n        UpdateSeed(open);\n\n        var button = GetComponent<Button>();\n        if (button != null)\n        {\n            button.onClick.RemoveAllListeners();\n            if (upgrade.toggleable) button.onClick.AddListener(HandleToggle);\n\n            button.interactable = upgrade.toggleable;\n        }\n    }\n\n    private void HandleToggle()\n    {\n        onToggle?.Invoke(upgrade);\n\n        var progress = PlayerProgress.Instance;\n        bool open = progress != null && progress.IsUpgradeEnabled(upgrade);\n        UpdateSeed(open);\n    }\n\n    private void UpdateSeed(bool open)\n    {\n        if (seedImage == null) return;\n\n        seedImage.sprite = open ? openSprite : closedSprite;\n        seedImage.enabled = seedImage.sprite != null;\n    }\n}\n",
+  "id": "script-ui-itemsinstinctssectionui-cs",
+  "dependencyIds": [
+    "script-ui-ipausemenusection-cs",
+    "script-data-itemdata-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-data-playerprogress-cs",
+    "script-data-upgradedata-cs"
+  ],
+  "usedByIds": [
+    "script-ui-secondarymenucontroller-cs"
+  ]
+}

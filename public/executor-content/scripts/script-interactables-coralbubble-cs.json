@@ -1,0 +1,138 @@
+{
+  "path": "Interactables/CoralBubble.cs",
+  "filename": "CoralBubble.cs",
+  "category": "Interactables",
+  "primary": "CoralBubble",
+  "kind": "Componente",
+  "summary": "\"Bolha de Coral\" (Tarefa #14): bolha de ar interativa encontrada em zonas de coral/recifes. Ao ser tocada por um player com WaterMotor2D ativo, dá um impulso vertical (ajuda a alcançar zonas altas debaixo de água ou a voltar rapidamente à superfície) e entra em recarga (ou desactiva-se, se \"respawnTime\" for 0 — uso único).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "CoralBubble",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "launchForce",
+      "type": "float",
+      "mods": "public",
+      "default": "14f",
+      "section": "Impulso",
+      "attrs": "[Header(\"Impulso\")] [Tooltip(\"Velocidade vertical (m/s) aplicada ao player ao tocar a bolha.\")]",
+      "inspector": true,
+      "description": "Velocidade vertical (m/s) aplicada ao player ao tocar a bolha."
+    },
+    {
+      "name": "respawnTime",
+      "type": "float",
+      "mods": "public",
+      "default": "4f",
+      "section": "Impulso",
+      "attrs": "[Tooltip(\"Tempo (s) até a bolha reaparecer depois de usada. 0 = uso único (fica desactivada).\")]",
+      "inspector": true,
+      "description": "Tempo (s) até a bolha reaparecer depois de usada. 0 = uso único (fica desativada)."
+    },
+    {
+      "name": "visual",
+      "type": "SpriteRenderer",
+      "mods": "public",
+      "default": "",
+      "section": "Visual / Som",
+      "attrs": "[Header(\"Visual / Som\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "popVfx",
+      "type": "ParticleSystem",
+      "mods": "public",
+      "default": "",
+      "section": "Visual / Som",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "popSfx",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Visual / Som",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_col",
+      "type": "Collider2D",
+      "mods": "private",
+      "default": "",
+      "section": "Visual / Som",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_available",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Visual / Som",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "Respawn",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Respawn."
+    },
+    {
+      "name": "SetAvailable",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool available",
+      "description": "Executa a operação SetAvailable."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "WaterMotor2D"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// \"Bolha de Coral\" (Tarefa #14): bolha de ar interactiva encontrada em zonas\n/// de coral/recifes. Ao ser tocada por um player com WaterMotor2D activo, dá\n/// um impulso vertical (ajuda a alcançar zonas altas debaixo de água ou a\n/// voltar rapidamente à superfície) e entra em recarga (ou desactiva-se, se\n/// \"respawnTime\" for 0 — uso único).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class CoralBubble : MonoBehaviour\n{\n    [Header(\"Impulso\")]\n    [Tooltip(\"Velocidade vertical (m/s) aplicada ao player ao tocar a bolha.\")]\n    public float launchForce = 14f;\n\n    [Tooltip(\"Tempo (s) até a bolha reaparecer depois de usada. 0 = uso único (fica desactivada).\")]\n    public float respawnTime = 4f;\n\n    [Header(\"Visual / Som\")]\n    public SpriteRenderer visual;\n    public ParticleSystem popVfx;\n    public AudioClip popSfx;\n\n    private Collider2D _col;\n    private bool _available = true;\n\n    private void Awake()\n    {\n        _col = GetComponent<Collider2D>();\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!_available || !other.CompareTag(\"Player\")) return;\n\n        var waterMotor = other.GetComponent<WaterMotor2D>();\n        if (waterMotor == null || !waterMotor.IsActive) return;\n\n        var rb = other.GetComponent<Rigidbody2D>();\n        if (rb != null)\n            rb.velocity = new Vector2(rb.velocity.x, launchForce);\n\n        if (popVfx != null) popVfx.Play();\n        AudioManager.Instance?.PlaySE(popSfx);\n\n        SetAvailable(false);\n\n        if (respawnTime > 0f)\n            Invoke(nameof(Respawn), respawnTime);\n    }\n\n    private void Respawn() => SetAvailable(true);\n\n    private void SetAvailable(bool available)\n    {\n        _available = available;\n\n        if (_col != null) _col.enabled = available;\n        if (visual != null) visual.enabled = available;\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(0.6f, 0.95f, 1f, 0.6f);\n        Gizmos.DrawWireSphere(transform.position, 0.4f);\n        Gizmos.DrawLine(transform.position, transform.position + Vector3.up * 1f);\n    }\n}\n",
+  "id": "script-interactables-coralbubble-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-player-watermotor2d-cs"
+  ],
+  "usedByIds": []
+}

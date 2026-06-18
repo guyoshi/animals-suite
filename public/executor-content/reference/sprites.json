@@ -1,0 +1,6084 @@
+{
+  "version": "16-06",
+  "characters": [
+    {
+      "name": "Íris Base",
+      "category": "Protagonista",
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4",
+          "final": "6",
+          "notes": "Respiração/energia suave.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Subida",
+          "minimum": "1",
+          "final": "2",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1",
+          "final": "2",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Interagir/tocar",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Ouvir/falar",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Morte/desfazer",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Absorver essência",
+          "minimum": "8",
+          "final": "12–16",
+          "notes": "Momento único do prólogo.",
+          "when": ""
+        },
+        {
+          "name": "Transformar em Cavalo",
+          "minimum": "8",
+          "final": "12–16",
+          "notes": "Pode compartilhar VFX com transformação geral.",
+          "when": ""
+        }
+      ],
+      "notes": "Forma narrativa usada no início; não precisa de todas as habilidades animais. Produzir mínimo na Missão 29 e final antes de concluir o prólogo."
+    },
+    {
+      "name": "Cavalo moribundo",
+      "category": "NPC narrativo",
+      "animations": [
+        {
+          "name": "Respiração fraca",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "Loop deitado.",
+          "when": ""
+        },
+        {
+          "name": "Abrir olhos/reagir",
+          "minimum": "2",
+          "final": "4",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Falar",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Fechar olhos",
+          "minimum": "2",
+          "final": "4",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Oferecer essência",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Dissolver",
+          "minimum": "8",
+          "final": "12–16",
+          "notes": "Pode ser VFX/partículas.",
+          "when": ""
+        }
+      ],
+      "notes": "Produzir após validar o primeiro diálogo."
+    },
+    {
+      "name": "Gaia",
+      "category": "Manifestação",
+      "animations": [
+        {
+          "name": "Aparecer",
+          "minimum": "8",
+          "final": "12–16",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Idle/pulso",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Falar",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Entregar Runa",
+          "minimum": "6",
+          "final": "10–14",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Desaparecer",
+          "minimum": "8",
+          "final": "12–16",
+          "notes": "",
+          "when": ""
+        }
+      ],
+      "notes": "Pode ser sprite, partículas ou composição híbrida."
+    }
+  ],
+  "animals": [
+    {
+      "name": "Cavalo",
+      "world": "Coração de Gaia",
+      "abilities": [
+        "Sprint",
+        "Coice/Investida"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Correr rápido",
+          "minimum": "4–6",
+          "final": "10–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Sprint",
+          "minimum": "4–6",
+          "final": "10–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Coice",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Investida",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Raposa",
+      "world": "Bosque de Bruma",
+      "abilities": [
+        "Dash",
+        "Passos silenciosos"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Dash",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Furtivo/andar baixo",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Coruja",
+      "world": "Bosque de Bruma",
+      "abilities": [
+        "Planar",
+        "Visão nocturna"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Bater asas",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Planar",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Pousar",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Visão nocturna",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Texugo",
+      "world": "Bosque de Bruma",
+      "abilities": [
+        "Escavar",
+        "Empurrar"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Escavar",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Empurrar/esforço",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Sair da terra",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Castor",
+      "world": "Bosque de Bruma",
+      "abilities": [
+        "Roer",
+        "Escalar/puxar"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Roer",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Nadar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Cauda/empurrar",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Cervo",
+      "world": "Bosque de Bruma",
+      "abilities": [
+        "Salto alto",
+        "Investida"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto alto",
+          "minimum": "4–6",
+          "final": "3–4",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Salto alto",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Investida",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Chifres/empurrão",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Guepardo",
+      "world": "Planícies do Sol Alto",
+      "abilities": [
+        "Sprint extremo"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Correr rápido",
+          "minimum": "4–6",
+          "final": "12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Sprint extremo",
+          "minimum": "4–6",
+          "final": "12–14",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Travagem",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Elefante",
+      "world": "Planícies do Sol Alto",
+      "abilities": [
+        "Empurrar",
+        "Quebrar"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar pesado",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Empurrar",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Quebrar/investida",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Tromba",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Babuíno",
+      "world": "Planícies do Sol Alto",
+      "abilities": [
+        "Escalar",
+        "Puxar/arremessar"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Escalar",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Balançar",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Agarrar",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Arremessar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Avestruz",
+      "world": "Planícies do Sol Alto",
+      "abilities": [
+        "Corrida",
+        "Salto longo"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Correr rápido",
+          "minimum": "4–6",
+          "final": "10–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Salto longo",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Coice/bicada",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Suricata",
+      "world": "Planícies do Sol Alto",
+      "abilities": [
+        "Tocas",
+        "Camuflagem"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Agachar/furtivo",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Entrar em toca",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Sair de toca",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Observar",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Leão",
+      "world": "Planícies do Sol Alto",
+      "abilities": [
+        "Golpe pesado",
+        "Rugido"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Ataque garra",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Golpe pesado",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Rugido",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Pounce opcional",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Sapo",
+      "world": "Verde Infinito",
+      "abilities": [
+        "Salto alto",
+        "Língua"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Salto alto",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Língua lançar",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Língua puxar",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Nadar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Arara",
+      "world": "Verde Infinito",
+      "abilities": [
+        "Planar",
+        "Subir em corrente quente"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Bater asas",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Planar",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Ganhar altura",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Pousar",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Cobra",
+      "world": "Verde Infinito",
+      "abilities": [
+        "Rastejar",
+        "Subir postes"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Rastejar",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Escalar",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Mordida",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Entrar em fenda",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Onça-pintada",
+      "world": "Verde Infinito",
+      "abilities": [
+        "Corrida",
+        "Salto ofensivo"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Pounce",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Garra/mordida",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem ofensiva",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Preguiça",
+      "world": "Verde Infinito",
+      "abilities": [
+        "Agarrar paredes",
+        "Resistir"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar lento",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Escalar",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Agarrada idle",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Impacto pesado",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Pinguim",
+      "world": "Terras da Aurora",
+      "abilities": [
+        "Deslizar",
+        "Travagem no gelo"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Deslizar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Travagem IceBrake",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Nadar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Urso Polar",
+      "world": "Terras da Aurora",
+      "abilities": [
+        "Quebrar gelo",
+        "Golpe pesado"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar pesado",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Golpe",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Quebrar gelo",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Rugido",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Raposa-do-ártico",
+      "world": "Terras da Aurora",
+      "abilities": [
+        "Camuflagem",
+        "Passos silenciosos"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Camuflar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Furtivo",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Sacudir neve",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Alce",
+      "world": "Terras da Aurora",
+      "abilities": [
+        "Salto pesado",
+        "Empurrão"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar pesado",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Salto pesado",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Investida",
+          "minimum": "4–6",
+          "final": "7–9",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Chifres",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Orca",
+      "world": "Terras da Aurora",
+      "abilities": [
+        "Nado rápido",
+        "Investida subaquática"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Nadar",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Idle água",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Investida",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Virar",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Saltar da água opcional",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Canguru",
+      "world": "Reino do Eucalipto e Coral",
+      "abilities": [
+        "Salto alto",
+        "Pancada"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Salto alto",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Salto carregado",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Chute/pancada",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Coala",
+      "world": "Reino do Eucalipto e Coral",
+      "abilities": [
+        "Escalar",
+        "Resistir agarrado"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar lento",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Escalar",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Agarrado idle",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Soltar/pousar",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Diabo-da-tasmânia",
+      "world": "Reino do Eucalipto e Coral",
+      "abilities": [
+        "Ataque rápido",
+        "Rodopio"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Ataque rápido",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "SpinAttack",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Parar rodopio",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Polvo",
+      "world": "Reino do Eucalipto e Coral",
+      "abilities": [
+        "Agarrar/puxar",
+        "Aderir"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Nadar",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Mover em terra",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Tentáculo agarrar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Puxar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Aderir",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Tartaruga Marinha",
+      "world": "Reino do Eucalipto e Coral",
+      "abilities": [
+        "Escudo",
+        "Resistir correntes"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Nadar",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Andar terra opcional",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Entrar no casco",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Escudo/impacto",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Wombat",
+      "world": "Reino do Eucalipto e Coral",
+      "abilities": [
+        "Empurrar",
+        "Abrir túneis"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar pesado",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Escavar",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Empurrar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Sair do túnel",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Panda-vermelho",
+      "world": "Montanhas do Bambu e Lanternas",
+      "abilities": [
+        "Escalar",
+        "Passos silenciosos"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar furtivo",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Escalar",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Saltar entre bambus",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Camuflar/ocultar",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Gibão",
+      "world": "Montanhas do Bambu e Lanternas",
+      "abilities": [
+        "Balançar",
+        "Puxar"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Escalar",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Balançar",
+          "minimum": "4–6",
+          "final": "10–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Agarrar/soltar",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Puxar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Garça",
+      "world": "Montanhas do Bambu e Lanternas",
+      "abilities": [
+        "Planar preciso",
+        "Pouso"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Bater asas",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Planar",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Pousar preciso",
+          "minimum": "4–6",
+          "final": "5–7",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Pangolim",
+      "world": "Montanhas do Bambu e Lanternas",
+      "abilities": [
+        "Enrolar",
+        "Rolar"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "4–6",
+          "final": "8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Enrolar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Roll",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Desenrolar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Impacto",
+          "minimum": "4–6",
+          "final": "4–6",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Urso Panda",
+      "world": "Montanhas do Bambu e Lanternas",
+      "abilities": [
+        "Empurrar",
+        "Camuflar em bambu"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Andar pesado",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Empurrar",
+          "minimum": "4–6",
+          "final": "7–9",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Camuflar",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Ataque",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    },
+    {
+      "name": "Tigre",
+      "world": "Montanhas do Bambu e Lanternas",
+      "abilities": [
+        "Golpe pesado",
+        "Investida/rugido"
+      ],
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Loop respiratório; evitar movimento exagerado.",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "Ciclo completo com contacto de patas/pés.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "Usar 10–12 apenas nos animais muito rápidos.",
+          "when": ""
+        },
+        {
+          "name": "Preparar salto",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Antecipação curta.",
+          "when": ""
+        },
+        {
+          "name": "Subida do salto",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pode ser pose sustentada.",
+          "when": ""
+        },
+        {
+          "name": "Queda",
+          "minimum": "1–2",
+          "final": "2",
+          "notes": "Pose distinta da subida.",
+          "when": ""
+        },
+        {
+          "name": "Aterragem",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "Mais frames nos animais pesados.",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "3",
+          "notes": "Leitura rápida.",
+          "when": ""
+        },
+        {
+          "name": "Morte/desmaterialização",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "Pode usar VFX sobre menos frames.",
+          "when": ""
+        },
+        {
+          "name": "Interagir",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "Genérico; habilidade específica tem animação própria.",
+          "when": ""
+        },
+        {
+          "name": "Transformação entrada",
+          "minimum": "8",
+          "final": "10–14",
+          "notes": "Sincronizar com VFX e collider.",
+          "when": ""
+        },
+        {
+          "name": "Correr",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Golpe pesado",
+          "minimum": "4–6",
+          "final": "8–10",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Pounce",
+          "minimum": "4–6",
+          "final": "6–8",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        },
+        {
+          "name": "Rugido",
+          "minimum": "4–6",
+          "final": "8–12",
+          "notes": "Habilidade específica; ajustar ao timing validado no Laboratório.",
+          "when": ""
+        }
+      ],
+      "notes": "Cria primeiro o conjunto mínimo funcional. Só desenha o conjunto final depois de collider, velocidade, hitbox e duração da habilidade serem aprovados."
+    }
+  ],
+  "other": [
+    {
+      "name": "NPC terrestre genérico",
+      "category": "NPCs",
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Falar",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Andar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Reagir feliz",
+          "minimum": "3",
+          "final": "5–7",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Reagir triste/medo",
+          "minimum": "3",
+          "final": "5–7",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Interagir/trabalhar",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Resgate/teleporte",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        }
+      ],
+      "notes": "Criar variações por espécie e função; não repetir a mesma silhueta para todos."
+    },
+    {
+      "name": "Inimigo drone genérico",
+      "category": "Inimigos",
+      "animations": [
+        {
+          "name": "Idle/hover",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Patrulha",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Detectar/alerta",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Telegraph",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Ataque",
+          "minimum": "4",
+          "final": "4–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "2–3",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Desactivar/morte",
+          "minimum": "6",
+          "final": "8–10",
+          "notes": "",
+          "when": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Inimigo terrestre/máquina",
+      "category": "Inimigos",
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "4",
+          "final": "6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Mover",
+          "minimum": "6",
+          "final": "8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Telegraph",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Ataque",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Dano",
+          "minimum": "2",
+          "final": "2–3",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Morte",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Boss regional — base",
+      "category": "Bosses",
+      "animations": [
+        {
+          "name": "Idle",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Entrada",
+          "minimum": "8",
+          "final": "12–16",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Telegraph por ataque",
+          "minimum": "4",
+          "final": "6–10",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Cada ataque",
+          "minimum": "6",
+          "final": "8–16",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Dano/atordoado",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Transição de fase",
+          "minimum": "8",
+          "final": "12–20",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Derrota",
+          "minimum": "12",
+          "final": "18–30",
+          "notes": "",
+          "when": ""
+        }
+      ],
+      "notes": "Não definir frames finais antes de prototipar o moveset. Cada boss precisa de lista própria."
+    },
+    {
+      "name": "Objectos interactivos",
+      "category": "Props",
+      "animations": [
+        {
+          "name": "Alavanca activar",
+          "minimum": "3",
+          "final": "4–6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Placa pressionar",
+          "minimum": "2",
+          "final": "3–4",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Baú abrir",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Porta abrir",
+          "minimum": "4",
+          "final": "6–10",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Barreira quebrar",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Checkpoint activar",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "AnimalSpiritRescue",
+          "minimum": "8",
+          "final": "12–16",
+          "notes": "",
+          "when": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Coleccionáveis e VFX",
+      "category": "VFX/UI",
+      "animations": [
+        {
+          "name": "Runa idle",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Runa recolha",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Semente idle",
+          "minimum": "4",
+          "final": "6",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Sussurro idle",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Fragmento Vital pulsar",
+          "minimum": "6",
+          "final": "8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Item brilho",
+          "minimum": "4",
+          "final": "6–8",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Transformação",
+          "minimum": "8",
+          "final": "12–16",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Raiz acender",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        },
+        {
+          "name": "Nó desbloquear",
+          "minimum": "6",
+          "final": "8–12",
+          "notes": "",
+          "when": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Emblemas e auras pós-game",
+      "category": "UI / VFX",
+      "animations": [
+        {
+          "name": "Emblema desconhecido/revelado/obtido",
+          "minimum": "3 estados",
+          "final": "3 estados + brilho 8–12f",
+          "notes": "Gaia, Apolo, Zeus e seis mundos.",
+          "when": "Missão 17 e polimento"
+        },
+        {
+          "name": "Aura de Gaia",
+          "minimum": "Loop 8",
+          "final": "Loop 12–16",
+          "notes": "Orgânica, viva, não metálica.",
+          "when": "Endgame"
+        },
+        {
+          "name": "Aura de Apolo",
+          "minimum": "Loop 8",
+          "final": "Loop 12–16",
+          "notes": "Fogo sereno.",
+          "when": "Endgame"
+        },
+        {
+          "name": "Aura de Zeus",
+          "minimum": "Loop 8",
+          "final": "Loop 16–24",
+          "notes": "Prioridade visual; substitui Gaia/Apolo.",
+          "when": "Endgame"
+        }
+      ],
+      "notes": "Usar placeholders no Laboratório; arte final só após as regras de 100/101% estarem validadas."
+    },
+    {
+      "name": "Galeria, Créditos e Menu Secundário",
+      "category": "UI",
+      "animations": [
+        {
+          "name": "Ícones das 7 abas",
+          "minimum": "1 por aba",
+          "final": "normal/seleccionado/bloqueado",
+          "notes": "Área, Diário, Formas, Itens/Instintos, Progresso, Upgrades, Emblemas.",
+          "when": "Missão 17"
+        },
+        {
+          "name": "Thumbnail de Galeria",
+          "minimum": "placeholder",
+          "final": "miniatura + silhueta bloqueada",
+          "notes": "Uma por ilustração desbloqueável.",
+          "when": "Polimento"
+        },
+        {
+          "name": "Fundo de Créditos",
+          "minimum": "estático",
+          "final": "loop ambiental 8–16f",
+          "notes": "Pode reutilizar Coração de Gaia.",
+          "when": "Polimento"
+        }
+      ],
+      "notes": "A estrutura pode ser concluída com arte provisória; não atrasar o Laboratório por decoração final."
+    }
+  ],
+  "tilesets": [
+    {
+      "world": "W0 — Coração de Gaia",
+      "area": "Coração de Gaia — Prólogo",
+      "name": "TILESET_CoraçãoDeGaiaPrólogo",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Bosque de Bruma",
+      "area": "Trilho do Musgo",
+      "name": "TILESET_TrilhoDoMusgo",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Bosque de Bruma",
+      "area": "Ruínas da Herança",
+      "name": "TILESET_RuínasDaHerança",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Bosque de Bruma",
+      "area": "Riacho dos Castores",
+      "name": "TILESET_RiachoDosCastores",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Bosque de Bruma",
+      "area": "Copas Nebulosas",
+      "name": "TILESET_CopasNebulosas",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Bosque de Bruma",
+      "area": "Fendas do Texugo",
+      "name": "TILESET_FendasDoTexugo",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Bosque de Bruma",
+      "area": "Pedreira Antiga",
+      "name": "TILESET_PedreiraAntiga",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Bosque de Bruma",
+      "area": "Pântano do Arame",
+      "name": "TILESET_PântanoDoArame",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Planícies do Sol Alto",
+      "area": "Capim do Primeiro Vento",
+      "name": "TILESET_CapimDoPrimeiroVento",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Planícies do Sol Alto",
+      "area": "Pedras do Suricata",
+      "name": "TILESET_PedrasDoSuricata",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Planícies do Sol Alto",
+      "area": "Ravina do Baobá",
+      "name": "TILESET_RavinaDoBaobá",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Planícies do Sol Alto",
+      "area": "Rota das Sombras",
+      "name": "TILESET_RotaDasSombras",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Planícies do Sol Alto",
+      "area": "Rio da Passagem Lenta",
+      "name": "TILESET_RioDaPassagemLenta",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Planícies do Sol Alto",
+      "area": "Tempestade de Poeira",
+      "name": "TILESET_TempestadeDePoeira",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Planícies do Sol Alto",
+      "area": "Círculo da Caçada",
+      "name": "TILESET_CírculoDaCaçada",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Verde Infinito",
+      "area": "Várzea do Sussurro",
+      "name": "TILESET_VárzeaDoSussurro",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Verde Infinito",
+      "area": "Pontes das Copas",
+      "name": "TILESET_PontesDasCopas",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Verde Infinito",
+      "area": "Caverna Biolume",
+      "name": "TILESET_CavernaBiolume",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Verde Infinito",
+      "area": "Queda das Águas",
+      "name": "TILESET_QuedaDasÁguas",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Verde Infinito",
+      "area": "Labirinto de Cipós",
+      "name": "TILESET_LabirintoDeCipós",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Verde Infinito",
+      "area": "Ninho da Arara",
+      "name": "TILESET_NinhoDaArara",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Verde Infinito",
+      "area": "Trilha das Armadilhas",
+      "name": "TILESET_TrilhaDasArmadilhas",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Terras da Aurora",
+      "area": "Margem da Aurora",
+      "name": "TILESET_MargemDaAurora",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Terras da Aurora",
+      "area": "Lago do Espelho",
+      "name": "TILESET_LagoDoEspelho",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Terras da Aurora",
+      "area": "Bosque Boreal",
+      "name": "TILESET_BosqueBoreal",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Terras da Aurora",
+      "area": "Caverna de Geada",
+      "name": "TILESET_CavernaDeGeada",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Terras da Aurora",
+      "area": "Mar de Banquisas",
+      "name": "TILESET_MarDeBanquisas",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Terras da Aurora",
+      "area": "Cordilheira do Alce",
+      "name": "TILESET_CordilheiraDoAlce",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Terras da Aurora",
+      "area": "Poço de Óleo",
+      "name": "TILESET_PoçoDeÓleo",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W5 — Reino do Eucalipto e Coral",
+      "area": "Trilha do Eucalipto",
+      "name": "TILESET_TrilhaDoEucalipto",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W5 — Reino do Eucalipto e Coral",
+      "area": "Rochedos Vermelhos",
+      "name": "TILESET_RochedosVermelhos",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W5 — Reino do Eucalipto e Coral",
+      "area": "Toca do Wombat",
+      "name": "TILESET_TocaDoWombat",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W5 — Reino do Eucalipto e Coral",
+      "area": "Noite do Diabo",
+      "name": "TILESET_NoiteDoDiabo",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W5 — Reino do Eucalipto e Coral",
+      "area": "Lagoa das Correntes",
+      "name": "TILESET_LagoaDasCorrentes",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W5 — Reino do Eucalipto e Coral",
+      "area": "Jardim do Coral Vivo",
+      "name": "TILESET_JardimDoCoralVivo",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W6 — Montanhas do Bambu e Lanternas",
+      "area": "Bambu do Alvorecer",
+      "name": "TILESET_BambuDoAlvorecer",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W6 — Montanhas do Bambu e Lanternas",
+      "area": "Arrozais de Vidro",
+      "name": "TILESET_ArrozaisDeVidro",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W6 — Montanhas do Bambu e Lanternas",
+      "area": "Telhados do Santuário",
+      "name": "TILESET_TelhadosDoSantuário",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W6 — Montanhas do Bambu e Lanternas",
+      "area": "Escadarias do Dragão",
+      "name": "TILESET_EscadariasDoDragão",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W6 — Montanhas do Bambu e Lanternas",
+      "area": "Mercado Abandonado",
+      "name": "TILESET_MercadoAbandonado",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W6 — Montanhas do Bambu e Lanternas",
+      "area": "Vale do Eco",
+      "name": "TILESET_ValeDoEco",
+      "kind": "Área",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Vila",
+      "area": "Clareira dos Contos",
+      "name": "TILESET_ClareiraDosContos",
+      "kind": "Vila",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Vila",
+      "area": "Oásis do Tambor",
+      "name": "TILESET_OásisDoTambor",
+      "kind": "Vila",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Vila",
+      "area": "Aldeia das Copas",
+      "name": "TILESET_AldeiaDasCopas",
+      "kind": "Vila",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Vila",
+      "area": "Refúgio do Pinheiro Branco",
+      "name": "TILESET_RefúgioDoPinheiroBranco",
+      "kind": "Vila",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W5 — Vila",
+      "area": "Baía do Eucalipto",
+      "name": "TILESET_BaíaDoEucalipto",
+      "kind": "Vila",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W6 — Vila",
+      "area": "Pátio das Lanternas",
+      "name": "TILESET_PátioDasLanternas",
+      "kind": "Vila",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W1 — Boss",
+      "area": "Coroa do Arame",
+      "name": "TILESET_CoroaDoArame",
+      "kind": "Arena de Boss",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W2 — Boss",
+      "area": "Zénite Quebrado",
+      "name": "TILESET_ZéniteQuebrado",
+      "kind": "Arena de Boss",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W3 — Boss",
+      "area": "Boca da Cinza",
+      "name": "TILESET_BocaDaCinza",
+      "kind": "Arena de Boss",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W4 — Boss",
+      "area": "Fenda do Degelo",
+      "name": "TILESET_FendaDoDegelo",
+      "kind": "Arena de Boss",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W5 — Boss",
+      "area": "Anzol Abissal",
+      "name": "TILESET_AnzolAbissal",
+      "kind": "Arena de Boss",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "W6 — Boss",
+      "area": "Torre do Eco",
+      "name": "TILESET_TorreDoEco",
+      "kind": "Arena de Boss",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "O Caminho do Ferimento",
+      "area": "Secção da Bruma",
+      "name": "TILESET_SecçãoDaBruma",
+      "kind": "Dungeon final",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "O Caminho do Ferimento",
+      "area": "Secção do Sol",
+      "name": "TILESET_SecçãoDoSol",
+      "kind": "Dungeon final",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "O Caminho do Ferimento",
+      "area": "Secção do Rio Verde",
+      "name": "TILESET_SecçãoDoRioVerde",
+      "kind": "Dungeon final",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "O Caminho do Ferimento",
+      "area": "Secção da Aurora",
+      "name": "TILESET_SecçãoDaAurora",
+      "kind": "Dungeon final",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "O Caminho do Ferimento",
+      "area": "Secção do Coral",
+      "name": "TILESET_SecçãoDoCoral",
+      "kind": "Dungeon final",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "O Caminho do Ferimento",
+      "area": "Secção das Lanternas",
+      "name": "TILESET_SecçãoDasLanternas",
+      "kind": "Dungeon final",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "Endgame",
+      "area": "Arena de A Mão que Fere",
+      "name": "TILESET_ArenaDeAMãoQueFere",
+      "kind": "Boss final",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    },
+    {
+      "world": "Endgame",
+      "area": "Arena da Mente que Mata",
+      "name": "TILESET_ArenaDaMenteQueMata",
+      "kind": "Boss alternativo",
+      "required": [
+        "Chão modular: centro, bordas, cantos internos/externos",
+        "Plataformas one-way e bordas",
+        "Paredes e tectos",
+        "Rampas/declives compatíveis com a grelha",
+        "Tiles de colisão/variações sem repetição visível",
+        "Camadas de fundo: perto, meio e longe",
+        "Props modulares e decals",
+        "Superfícies especiais da área",
+        "Tiles de entrada/saída e transições"
+      ],
+      "animated": [
+        "Água/onda: 6–8f quando existir",
+        "Cascata/corrente: 8–12f quando existir",
+        "Vegetação/folhas: 6–8f",
+        "Fogo/luz/runa: 6–10f",
+        "Efeito assinatura da área: 8–12f"
+      ],
+      "rule": "Só começar depois do documento da área e do greybox congelado. Não usar um tileset genérico para áreas diferentes."
+    }
+  ],
+  "mapAssets": {
+    "name": "Terra de Gaia — composição própria (não é TILESET de área)",
+    "sprites": [
+      "Bola de luz: loop 8f, movimento/trail por VFX",
+      "Nó Normal: hidden/locked/unlocked/current/completed",
+      "Nó Vila: hidden/available/current/completed",
+      "Nó Boss: hidden/revealed/unlocked/defeated",
+      "Raiz: apagada/acesa/pós-boss + animação 8–12f",
+      "Logos dos 6 mundos + silhueta não visitada",
+      "Emblemas dos 6 mundos: apagado/obtido",
+      "Ícones de Runa, cadeado, casa, boss, voltar e visão",
+      "Background central de Gaia e silhuetas dos mundos",
+      "Partículas assinatura por mundo"
+    ],
+    "rule": "Produzir arte final somente depois do grafo completo ser aprovado e as posições congeladas na Missão 43."
+  },
+  "framePrinciples": [
+    "Frames são recomendações, não obrigação. O timing em segundos e a leitura importam mais que aumentar frames.",
+    "Começa pelo mínimo funcional; testa collider, velocidade, hitbox e cancelamento; só então termina os frames finais.",
+    "Animações de ataque precisam de antecipação, contacto e recuperação claramente separados.",
+    "Loops devem fechar sem salto visível. A frame de contacto com o chão deve coincidir com SFX/partículas.",
+    "Animais aquáticos e voadores podem substituir andar/correr por nado/bater asas, mas devem ter poses de entrada, movimento, travagem e dano.",
+    "Cada área tem TILESET próprio. Props únicos ficam fora do tileset quando não forem peças modulares."
+  ]
+}

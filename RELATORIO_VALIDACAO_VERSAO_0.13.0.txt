@@ -1,0 +1,36 @@
+ANIMALS SUITE 0.13.0 — RELATÓRIO DE VALIDAÇÃO
+Data: 18/06/2026
+
+VALIDAÇÕES EXECUTADAS
+- Manifesto e versões sincronizados: OK
+- Schema do Executor 4: OK
+- Schema de banco 4 declarado: OK
+- ESLint: OK
+- TypeScript: OK
+- Vite build de produção: OK
+- Modo Foco: OK
+- Favoritos e recentes: OK
+- Exportação seletiva: OK
+- Filtros de produção: OK
+- Rotas carregadas com React.lazy: OK
+- Chunks separados para Foco, Exportação e Atualizações: OK
+- Centro de atualizações: OK
+- Workflow GitHub Actions: OK
+- Guia de configuração GitHub: OK
+- Preview HTTP e fallback de rotas: OK
+- Conteúdo técnico anterior preservado: 96 missões, 277 tarefas, 1.099 Steps, 26 guias e 278 scripts
+
+RESULTADO DO BUNDLE
+- Bundle inicial principal: aproximadamente 388 kB sem compressão
+- Páginas técnicas separadas em chunks próprios
+- O aviso anterior de bundle principal acima de 500 kB foi eliminado
+
+LIMITAÇÃO DO AMBIENTE
+- Rust/Cargo não está instalado neste ambiente.
+- O código Rust do updater e o instalador NSIS não puderam ser compilados aqui.
+- A compilação nativa deve ser validada no Windows ou pelo workflow GitHub Actions incluído.
+
+ATUALIZADOR
+- Em builds sem ANIMALS_UPDATE_ENDPOINT e ANIMALS_UPDATE_PUBKEY, o recurso permanece desativado de forma segura.
+- No workflow oficial, o endpoint GitHub e a chave pública são injetados durante a compilação.
+- As assinaturas são geradas com TAURI_SIGNING_PRIVATE_KEY.

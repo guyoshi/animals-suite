@@ -1,0 +1,124 @@
+{
+  "path": "NPC/Dialogue/DialogueLine.cs",
+  "filename": "DialogueLine.cs",
+  "category": "NPC",
+  "primary": "DialogueLine",
+  "kind": "Definição",
+  "summary": "Quem está a falar numa DialogueLine. public enum DialogueSpeaker { O próprio NPC que está a correr o evento. Self, O player. Player, Outro NPC presente na cena (ver campo \"otherNpc\"). OtherNpc } Uma linha de diálogo com um falante configurável e o texto a mostrar. O nome mostrado no balão é, por defeito, o \"Display Name\" do falante (NpcController.DisplayName ou PlayerIdentity.DisplayName). Para falas sem nome (ex: \"???\") ou com um nome diferente do habitual, preenche \"customName\" — esse nome substitui o nome por defeito, seja qual for o Speaker escolhido. O texto suporta tags nativas do TMP (&lt;b&gt;, &lt;i&gt;, &lt;u&gt;, &lt;size=...&gt;, &lt;color=...&gt;) e tags próprias processadas pel",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "DialogueSpeaker",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "DialogueLine",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "speaker",
+      "type": "DialogueSpeaker",
+      "mods": "public",
+      "default": "DialogueSpeaker.Self",
+      "section": "",
+      "attrs": "[Tooltip(\"Quem está a falar nesta linha.\")]",
+      "inspector": true,
+      "description": "Quem está a falar nesta linha."
+    },
+    {
+      "name": "otherNpc",
+      "type": "NpcController",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Necessário apenas quando Speaker = Outro NPC.\")]",
+      "inspector": true,
+      "description": "Necessário apenas quando Speaker = Outro NPC."
+    },
+    {
+      "name": "otherNpcId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"ID de outro NPC (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC), usado apenas quando Speaker = Outro NPC. Se definido e encontrado, tem prioridade sobre \\\"otherNpc\\\".\")]",
+      "inspector": true,
+      "description": "ID de outro NPC (Etapa 8 — ver \"Npc Id\" no NpcController desse NPC), usado apenas quando Speaker = Outro NPC. Se definido e encontrado, tem prioridade sobre \"otherNpc\"."
+    },
+    {
+      "name": "customName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se preenchido, substitui o nome por defeito do falante (ex: \\\"???\\\", \\\"Voz Misteriosa\\\"). Deixa vazio para usar o nome configurado no falante.\")]",
+      "inspector": true,
+      "description": "Se preenchido, substitui o nome por defeito do falante (ex: \"???\", \"Voz Misteriosa\\"
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[TextArea(2, 5)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "ResolveOtherNpc",
+      "ret": "NpcController",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResolveOtherNpc."
+    },
+    {
+      "name": "ResolveSpeakerName",
+      "ret": "string",
+      "mods": "public",
+      "params": "NpcController npc",
+      "description": "Executa a operação ResolveSpeakerName."
+    },
+    {
+      "name": "ResolveSpeakerTransform",
+      "ret": "Transform",
+      "mods": "public",
+      "params": "NpcController npc",
+      "description": "Executa a operação ResolveSpeakerTransform."
+    }
+  ],
+  "dependencies": [
+    "DialogueMarkupParser",
+    "NpcController",
+    "PlayerIdentity"
+  ],
+  "used_by": [
+    "Action_Dialogue",
+    "DialogueMarkupParser",
+    "INpcDialogueDisplay",
+    "NpcDialogueBalloon",
+    "PlayerIdentity"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>Quem está a falar numa DialogueLine.</summary>\npublic enum DialogueSpeaker\n{\n    /// <summary>O próprio NPC que está a correr o evento.</summary>\n    Self,\n\n    /// <summary>O player.</summary>\n    Player,\n\n    /// <summary>Outro NPC presente na cena (ver campo \"otherNpc\").</summary>\n    OtherNpc\n}\n\n/// <summary>\n/// Uma linha de diálogo com um falante configurável e o texto a mostrar.\n///\n/// O nome mostrado no balão é, por defeito, o \"Display Name\" do falante\n/// (NpcController.DisplayName ou PlayerIdentity.DisplayName). Para falas sem\n/// nome (ex: \"???\") ou com um nome diferente do habitual, preenche\n/// \"customName\" — esse nome substitui o nome por defeito, seja qual for o\n/// Speaker escolhido.\n///\n/// O texto suporta tags nativas do TMP (&lt;b&gt;, &lt;i&gt;, &lt;u&gt;,\n/// &lt;size=...&gt;, &lt;color=...&gt;) e tags próprias processadas pelo\n/// DialogueMarkupParser: [wait=0.5], [shake]...[/shake],\n/// [highlight]...[/highlight] e [page].\n/// </summary>\n[System.Serializable]\npublic class DialogueLine\n{\n    [Tooltip(\"Quem está a falar nesta linha.\")]\n    public DialogueSpeaker speaker = DialogueSpeaker.Self;\n\n    [Tooltip(\"Necessário apenas quando Speaker = Outro NPC.\")]\n    public NpcController otherNpc;\n\n    [Tooltip(\"ID de outro NPC (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC), usado apenas quando Speaker = Outro NPC. Se definido e encontrado, tem prioridade sobre \\\"otherNpc\\\".\")]\n    public string otherNpcId;\n\n    [Tooltip(\"Se preenchido, substitui o nome por defeito do falante (ex: \\\"???\\\", \\\"Voz Misteriosa\\\"). Deixa vazio para usar o nome configurado no falante.\")]\n    public string customName;\n\n    [Tooltip(\"Texto da fala. Suporta tags TMP (<b>, <i>, <u>, <size=...>, <color=...>) e tags próprias: [wait=0.5], [shake]...[/shake], [highlight]...[/highlight], [page].\")]\n    [TextArea(2, 5)]\n    public string text;\n\n    /// <summary>Resolve o NPC referenciado em \"otherNpcId\" (Etapa 8) ou, em alternativa, \"otherNpc\".</summary>\n    public NpcController ResolveOtherNpc()\n    {\n        var byId = NpcController.FindById(otherNpcId);\n        return byId != null ? byId : otherNpc;\n    }\n\n    /// <summary>Resolve o nome a mostrar no balão para esta linha.</summary>\n    public string ResolveSpeakerName(NpcController npc)\n    {\n        if (!string.IsNullOrEmpty(customName)) return customName;\n\n        switch (speaker)\n        {\n            case DialogueSpeaker.Self:\n                return npc != null ? npc.DisplayName : string.Empty;\n\n            case DialogueSpeaker.Player:\n                if (npc != null && npc.Player != null)\n                {\n                    var identity = npc.Player.GetComponent<PlayerIdentity>();\n                    if (identity != null) return identity.DisplayName;\n                }\n                return \"Jogador\";\n\n            case DialogueSpeaker.OtherNpc:\n                var other = ResolveOtherNpc();\n                return other != null ? other.DisplayName : string.Empty;\n\n            default:\n                return string.Empty;\n        }\n    }\n\n    /// <summary>Resolve o Transform do falante desta linha (usado pela calda do balão — Etapa 8).</summary>\n    public Transform ResolveSpeakerTransform(NpcController npc)\n    {\n        switch (speaker)\n        {\n            case DialogueSpeaker.Self:\n                return npc != null ? npc.transform : null;\n\n            case DialogueSpeaker.Player:\n                return npc != null ? npc.Player : null;\n\n            case DialogueSpeaker.OtherNpc:\n                var other = ResolveOtherNpc();\n                return other != null ? other.transform : null;\n\n            default:\n                return null;\n        }\n    }\n}\n",
+  "id": "script-npc-dialogue-dialogueline-cs",
+  "dependencyIds": [
+    "script-npc-dialogue-dialoguemarkupparser-cs",
+    "script-npc-npccontroller-cs",
+    "script-player-playeridentity-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-coreactions-cs",
+    "script-npc-dialogue-dialoguemarkupparser-cs",
+    "script-npc-npcinterfaces-cs",
+    "script-npc-dialogue-npcdialogueballoon-cs",
+    "script-player-playeridentity-cs"
+  ]
+}

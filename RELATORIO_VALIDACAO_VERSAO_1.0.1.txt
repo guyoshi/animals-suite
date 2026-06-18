@@ -1,0 +1,24 @@
+ANIMALS SUITE 1.0.1 — VALIDAÇÃO
+Data: 18/06/2026
+
+OK — suite.manifest.json em 1.0.1
+OK — schema do projeto em 11
+OK — package.json e package-lock.json sincronizados
+OK — Cargo.toml e tauri.conf.json sincronizados
+OK — 96 Missões de Produção
+OK — 277 Tarefas
+OK — 1.099 Steps
+OK — 26 guias/tutoriais
+OK — 278 scripts
+OK — Jornada gamificada
+OK — controles musicais por ícones
+OK — modo aleatório por missão
+OK — reprodução limitada a anexos do Planejador
+OK — migração dos anexos musicais anteriores
+OK — validação das músicas de vila por anexo
+OK — atualizador GitHub preparado
+OK — ESLint
+OK — TypeScript
+OK — build Vite de produção
+
+LIMITAÇÃO — Rust/Cargo e instalador NSIS não foram compilados neste ambiente.

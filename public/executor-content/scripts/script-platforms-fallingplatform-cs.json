@@ -1,0 +1,282 @@
+{
+  "path": "Platforms/FallingPlatform.cs",
+  "filename": "FallingPlatform.cs",
+  "category": "Platforms",
+  "primary": "FallingPlatform",
+  "kind": "Componente",
+  "summary": "Plataforma que cai quando o player pousar nela. Fluxo: 1. Idle — plataforma quieta. O player pode pousar e ficar em cima. 2. Ao detectar o player em cima (OnCollisionEnter2D), começa a contar segundos (sacudindo, se > 0 e > 0). 3. Ao fim do delay, cai a m/s (Rigidbody2D cinemático — gravidade ignorada, velocidade constante). 4. Ao atingir o (ou o máximo), pára. 5. Se > 0: volta à posição original após esse tempo. Se == 0: só volta ao recarregar a área (o designer pode chamar manualmente, ex.: via UnityEvent de uma porta).",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "FallingPlatform",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "State",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "fallDelay",
+      "type": "float",
+      "mods": "public",
+      "default": "0.6f",
+      "section": "Temporização da Queda",
+      "attrs": "[Header(\"Temporização da Queda\")] [Tooltip(\"Segundos entre o player pousar e a plataforma começar a cair. Durante este tempo a plataforma vibra (se shakeAmount > 0). Padrão: 0.6 s.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Segundos entre o player pousar e a plataforma começar a cair. Durante este tempo a plataforma vibra (se shakeAmount > 0). Padrão: 0.6 s."
+    },
+    {
+      "name": "fallSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "8f",
+      "section": "Temporização da Queda",
+      "attrs": "[Tooltip(\"Velocidade de queda (m/s). A plataforma cai a esta velocidade constante (sem aceleração por gravidade). Padrão: 8 m/s.\")] [Min(0.5f)]",
+      "inspector": true,
+      "description": "Velocidade de queda (m/s). A plataforma cai a esta velocidade constante (sem aceleração por gravidade). Padrão: 8 m/s."
+    },
+    {
+      "name": "fallDistance",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Temporização da Queda",
+      "attrs": "[Tooltip(\"Distância máxima de queda (m). Se 0, só para ao colidir com 'groundLayer'.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Distância máxima de queda (m). Se 0, só para ao colidir com 'groundLayer'."
+    },
+    {
+      "name": "groundLayer",
+      "type": "LayerMask",
+      "mods": "public",
+      "default": "",
+      "section": "Temporização da Queda",
+      "attrs": "[Tooltip(\"Layer(s) do chão/blocos que param a queda. Se vazio, a plataforma pára apenas ao atingir 'fallDistance' (ou nunca, se fallDistance == 0).\")]",
+      "inspector": true,
+      "description": "Layer(s) do chão/blocos que param a queda. Se vazio, a plataforma pára apenas ao atingir 'fallDistance' (ou nunca, se fallDistance == 0)."
+    },
+    {
+      "name": "shakeDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.4f",
+      "section": "Sacudidela (feedback visual)",
+      "attrs": "[Header(\"Sacudidela (feedback visual)\")] [Tooltip(\"Duração (segundos) da sacudidela. Deve ser <= fallDelay.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Duração (segundos) da sacudidela. Deve ser <= fallDelay."
+    },
+    {
+      "name": "shakeAmount",
+      "type": "float",
+      "mods": "public",
+      "default": "0.04f",
+      "section": "Sacudidela (feedback visual)",
+      "attrs": "[Tooltip(\"Amplitude (m) da sacudidela horizontal antes de cair. 0 = sem sacudidela.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Amplitude (m) da sacudidela horizontal antes de cair. 0 = sem sacudidela."
+    },
+    {
+      "name": "respawnDelay",
+      "type": "float",
+      "mods": "public",
+      "default": "3f",
+      "section": "Respawn",
+      "attrs": "[Header(\"Respawn\")] [Tooltip(\"Segundos após parar até a plataforma voltar à posição original e ficar Idle novamente. Padrão: 3 s.\\n\\n0 = NÃO volta automaticamente — permanece caída até ser reactivada externamente (ex.: entrar novamente na área ou chamar Respawn() via UnityEvent).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Segundos após parar até a plataforma voltar à posição original e ficar Idle novamente. Padrão: 3 s.\\n\\n0 = NÃO volta automaticamente — permanece caída até ser reactivada externamente (ex.: entrar novamente na área ou chamar Respawn() via UnityEvent)."
+    },
+    {
+      "name": "crushDamage",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "Dano de Esmagar (opcional)",
+      "attrs": "[Header(\"Dano de Esmagar (opcional)\")] [Tooltip(\"Dano causado ao player SE ele ficar entre a plataforma e o chão (esmagar). 0 = sem dano de esmagar.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Dano causado ao player SE ele ficar entre a plataforma e o chão (esmagar). 0 = sem dano de esmagar."
+    },
+    {
+      "name": "shakeSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Áudio / Eventos",
+      "attrs": "[Header(\"Áudio / Eventos\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "impactSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Áudio / Eventos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onFallStart",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio / Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onLand",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio / Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onRespawn",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio / Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "Áudio / Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "originPosition",
+      "type": "Vector3",
+      "mods": "private",
+      "default": "",
+      "section": "Áudio / Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "state",
+      "type": "State",
+      "mods": "private",
+      "default": "State.Idle",
+      "section": "Áudio / Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playerOnPlatform",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Áudio / Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "FixedUpdate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FixedUpdate."
+    },
+    {
+      "name": "OnCollisionEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D col",
+      "description": "Executa a operação OnCollisionEnter2D."
+    },
+    {
+      "name": "OnCollisionExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D col",
+      "description": "Executa a operação OnCollisionExit2D."
+    },
+    {
+      "name": "FallSequence",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FallSequence."
+    },
+    {
+      "name": "Land",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Land."
+    },
+    {
+      "name": "RespawnAfterDelay",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RespawnAfterDelay."
+    },
+    {
+      "name": "Respawn",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Respawn."
+    },
+    {
+      "name": "GetColliderSize",
+      "ret": "Vector2",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação GetColliderSize."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "DamageInfo",
+    "DamageType",
+    "PlayerCombat"
+  ],
+  "used_by": [],
+  "source": "using System.Collections;\nusing UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Plataforma que cai quando o player pousar nela.\n///\n/// Fluxo:\n/// 1. Idle — plataforma quieta. O player pode pousar e ficar em cima.\n/// 2. Ao detectar o player em cima (OnCollisionEnter2D), começa a contar\n///    <see cref=\"fallDelay\"/> segundos (sacudindo, se <see cref=\"shakeDuration\"/>\n///    > 0 e <see cref=\"shakeAmount\"/> > 0).\n/// 3. Ao fim do delay, cai a <see cref=\"fallSpeed\"/> m/s (Rigidbody2D\n///    cinemático — gravidade ignorada, velocidade constante).\n/// 4. Ao atingir o <see cref=\"groundLayer\"/> (ou o <see cref=\"fallDistance\"/>\n///    máximo), pára.\n/// 5. Se <see cref=\"respawnDelay\"/> > 0: volta à posição original após esse\n///    tempo. Se == 0: só volta ao recarregar a área (o designer pode chamar\n///    <see cref=\"Respawn\"/> manualmente, ex.: via UnityEvent de uma porta).\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]\n[DisallowMultipleComponent]\npublic class FallingPlatform : MonoBehaviour\n{\n    // ── Queda ─────────────────────────────────────────────────────────────────\n\n    [Header(\"Temporização da Queda\")]\n    [Tooltip(\"Segundos entre o player pousar e a plataforma começar a cair. Durante este tempo a plataforma vibra (se shakeAmount > 0). Padrão: 0.6 s.\")]\n    [Min(0f)] public float fallDelay = 0.6f;\n\n    [Tooltip(\"Velocidade de queda (m/s). A plataforma cai a esta velocidade constante (sem aceleração por gravidade). Padrão: 8 m/s.\")]\n    [Min(0.5f)] public float fallSpeed = 8f;\n\n    [Tooltip(\"Distância máxima de queda (m). Se 0, só para ao colidir com 'groundLayer'.\")]\n    [Min(0f)] public float fallDistance = 0f;\n\n    [Tooltip(\"Layer(s) do chão/blocos que param a queda. Se vazio, a plataforma pára apenas ao atingir 'fallDistance' (ou nunca, se fallDistance == 0).\")]\n    public LayerMask groundLayer;\n\n    // ── Sacudidela (feedback antes da queda) ──────────────────────────────────\n\n    [Header(\"Sacudidela (feedback visual)\")]\n    [Tooltip(\"Duração (segundos) da sacudidela. Deve ser <= fallDelay.\")]\n    [Min(0f)] public float shakeDuration = 0.4f;\n\n    [Tooltip(\"Amplitude (m) da sacudidela horizontal antes de cair. 0 = sem sacudidela.\")]\n    [Min(0f)] public float shakeAmount = 0.04f;\n\n    // ── Respawn ────────────────────────────────────────────────────────────────\n\n    [Header(\"Respawn\")]\n    [Tooltip(\"Segundos após parar até a plataforma voltar à posição original e ficar Idle novamente. Padrão: 3 s.\\n\\n0 = NÃO volta automaticamente — permanece caída até ser reactivada externamente (ex.: entrar novamente na área ou chamar Respawn() via UnityEvent).\")]\n    [Min(0f)] public float respawnDelay = 3f;\n\n    // ── Dano ──────────────────────────────────────────────────────────────────\n\n    [Header(\"Dano de Esmagar (opcional)\")]\n    [Tooltip(\"Dano causado ao player SE ele ficar entre a plataforma e o chão (esmagar). 0 = sem dano de esmagar.\")]\n    [Min(0)] public int crushDamage = 0;\n\n    // ── Áudio / Eventos ───────────────────────────────────────────────────────\n\n    [Header(\"Áudio / Eventos\")]\n    [SerializeField] private AudioClip shakeSfx;\n    [SerializeField] private AudioClip impactSfx;\n    public UnityEvent onFallStart;\n    public UnityEvent onLand;\n    public UnityEvent onRespawn;\n\n    // ── Internos ───────────────────────────────────────────────────────────────\n\n    private Rigidbody2D rb;\n    private Vector3 originPosition;\n\n    private enum State { Idle, Counting, Falling, Resting }\n    private State state = State.Idle;\n\n    private bool playerOnPlatform;\n\n    private void Awake()\n    {\n        rb = GetComponent<Rigidbody2D>();\n        rb.bodyType = RigidbodyType2D.Kinematic;\n        rb.gravityScale = 0f;\n\n        originPosition = transform.position;\n    }\n\n    private void FixedUpdate()\n    {\n        if (state != State.Falling) return;\n\n        rb.MovePosition(rb.position + Vector2.down * fallSpeed * Time.fixedDeltaTime);\n\n        // Verifica colisão com chão.\n        if (groundLayer.value != 0)\n        {\n            float checkDist = fallSpeed * Time.fixedDeltaTime + 0.05f;\n            var hit = Physics2D.BoxCast(rb.position, GetColliderSize() * 0.9f, 0f, Vector2.down, checkDist, groundLayer);\n            if (hit.collider != null)\n            {\n                Land();\n                return;\n            }\n        }\n\n        // Distância máxima de queda.\n        if (fallDistance > 0f && Vector3.Distance(transform.position, originPosition) >= fallDistance)\n            Land();\n    }\n\n    private void OnCollisionEnter2D(Collision2D col)\n    {\n        if (state != State.Idle) return;\n        if (!col.gameObject.CompareTag(\"Player\")) return;\n\n        // Apenas conta se o player chegou de cima.\n        foreach (var contact in col.contacts)\n        {\n            if (contact.normal.y < -0.5f) // normal aponta para cima = player aterrou\n            {\n                playerOnPlatform = true;\n                StartCoroutine(FallSequence());\n                return;\n            }\n        }\n    }\n\n    private void OnCollisionExit2D(Collision2D col)\n    {\n        if (col.gameObject.CompareTag(\"Player\"))\n            playerOnPlatform = false;\n    }\n\n    private IEnumerator FallSequence()\n    {\n        state = State.Counting;\n        onFallStart?.Invoke();\n        AudioManager.Instance?.PlaySE(shakeSfx);\n\n        // Sacudidela.\n        if (shakeAmount > 0f && shakeDuration > 0f)\n        {\n            float elapsed = 0f;\n            Vector3 basePos = transform.position;\n            while (elapsed < Mathf.Min(shakeDuration, fallDelay))\n            {\n                float offsetX = Mathf.Sin(elapsed * 60f) * shakeAmount;\n                transform.position = basePos + new Vector3(offsetX, 0f, 0f);\n                elapsed += Time.deltaTime;\n                yield return null;\n            }\n            transform.position = basePos;\n        }\n\n        // Aguarda o restante delay.\n        float remaining = fallDelay - Mathf.Min(shakeDuration, fallDelay);\n        if (remaining > 0f) yield return new WaitForSeconds(remaining);\n\n        if (state != State.Counting) yield break; // cancelado (ex.: player saiu, reset externo)\n\n        state = State.Falling;\n    }\n\n    private void Land()\n    {\n        state = State.Resting;\n        rb.velocity = Vector2.zero;\n\n        // Crush damage: se player ainda estiver em cima (esmagado).\n        if (crushDamage > 0 && playerOnPlatform)\n        {\n            var playerObj = GameObject.FindGameObjectWithTag(\"Player\");\n            if (playerObj != null)\n            {\n                var info = new DamageInfo(crushDamage, DamageType.Hazard, transform.position, 0f, null, ignoreDefense: true);\n                PlayerCombat.TryDamagePlayer(playerObj.transform, info);\n            }\n        }\n\n        AudioManager.Instance?.PlaySE(impactSfx);\n        onLand?.Invoke();\n\n        if (respawnDelay > 0f)\n            StartCoroutine(RespawnAfterDelay());\n    }\n\n    private IEnumerator RespawnAfterDelay()\n    {\n        yield return new WaitForSeconds(respawnDelay);\n        Respawn();\n    }\n\n    /// <summary>\n    /// Volta à posição original e fica Idle. Pode ser chamado externamente\n    /// (ex.: trigger de entrada na sala) quando <see cref=\"respawnDelay\"/> == 0.\n    /// </summary>\n    public void Respawn()\n    {\n        StopAllCoroutines();\n        state = State.Idle;\n        playerOnPlatform = false;\n        transform.position = originPosition;\n        rb.velocity = Vector2.zero;\n        onRespawn?.Invoke();\n    }\n\n    private Vector2 GetColliderSize()\n    {\n        var c = GetComponent<Collider2D>();\n        if (c is BoxCollider2D box) return box.size;\n        if (c is CapsuleCollider2D cap) return cap.size;\n        return new Vector2(1f, 0.2f);\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        if (fallDistance <= 0f) return;\n\n        Gizmos.color = new Color(1f, 0.5f, 0f, 0.5f);\n        Vector3 dest = (Application.isPlaying ? transform.position : (Vector3)((Vector2)transform.position)) + Vector3.down * fallDistance;\n        Gizmos.DrawLine(transform.position, dest);\n        Gizmos.DrawWireSphere(dest, 0.15f);\n    }\n}\n",
+  "id": "script-platforms-fallingplatform-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-player-damageinfo-cs",
+    "script-player-playercombat-cs"
+  ],
+  "usedByIds": []
+}

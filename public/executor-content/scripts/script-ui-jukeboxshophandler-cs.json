@@ -1,0 +1,93 @@
+{
+  "path": "UI/JukeboxShopHandler.cs",
+  "filename": "JukeboxShopHandler.cs",
+  "category": "UI",
+  "primary": "JukeboxShopHandler",
+  "kind": "Componente",
+  "summary": "Reage à compra do Jukebox na loja (ShopUI.OnItemPurchased) e executa o fluxo de primeira vez: 1. Abre o menu do Jukebox automaticamente. 2. Exibe uma mensagem de tutorial (TutorialMessageType.Importante) explicando o que é o Jukebox. 3. Após o player confirmar o tutorial, fecha o menu e o fluxo de compra continua normalmente. Montagem no Editor: - Colocar este componente na cena de gameplay (ou num GameObject persistente). - \"jukeboxItem\": o mesmo ItemData configurado em JukeboxSectionUI. - \"jukeboxSectionUI\": referência ao painel do Jukebox no menu. - \"tutorialText\": texto exibido na mensagem de tutorial da 1ª compra. - \"tutorialImage\" (opcional): imagem exibida acima do texto (tipo Importa",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "JukeboxShopHandler",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "jukeboxItem",
+      "type": "ItemData",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[Header(\"Referências\")] [Tooltip(\"ItemData do Jukebox (mesmo que JukeboxSectionUI.jukeboxItem).\")] [SerializeField]",
+      "inspector": true,
+      "description": "ItemData do Jukebox (mesmo que JukeboxSectionUI.jukeboxItem)."
+    },
+    {
+      "name": "jukeboxSectionUI",
+      "type": "JukeboxSectionUI",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[Tooltip(\"Painel/secção do Jukebox no menu de pausa (JukeboxSectionUI).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Painel/seção do Jukebox no menu de pausa (JukeboxSectionUI)."
+    },
+    {
+      "name": "tutorialImage",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Tutorial da Primeira Compra",
+      "attrs": "[Tooltip(\"Imagem exibida acima do texto do tutorial (opcional).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Imagem exibida acima do texto do tutorial (opcional)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "HandleItemPurchased",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação HandleItemPurchased."
+    }
+  ],
+  "dependencies": [
+    "ItemData",
+    "JukeboxSectionUI",
+    "ShopUI",
+    "TutorialMessageManager",
+    "TutorialMessageType"
+  ],
+  "used_by": [
+    "ShopUI"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Reage à compra do Jukebox na loja (ShopUI.OnItemPurchased) e executa o\n/// fluxo de primeira vez:\n/// 1. Abre o menu do Jukebox automaticamente.\n/// 2. Exibe uma mensagem de tutorial (TutorialMessageType.Importante) explicando\n///    o que é o Jukebox.\n/// 3. Após o player confirmar o tutorial, fecha o menu e o fluxo de compra\n///    continua normalmente.\n///\n/// Montagem no Editor:\n/// - Colocar este componente na cena de gameplay (ou num GameObject persistente).\n/// - \"jukeboxItem\": o mesmo ItemData configurado em JukeboxSectionUI.\n/// - \"jukeboxSectionUI\": referência ao painel do Jukebox no menu.\n/// - \"tutorialText\": texto exibido na mensagem de tutorial da 1ª compra.\n/// - \"tutorialImage\" (opcional): imagem exibida acima do texto (tipo Importante).\n/// </summary>\npublic class JukeboxShopHandler : MonoBehaviour\n{\n    [Header(\"Referências\")]\n    [Tooltip(\"ItemData do Jukebox (mesmo que JukeboxSectionUI.jukeboxItem).\")]\n    [SerializeField] private ItemData jukeboxItem;\n\n    [Tooltip(\"Painel/secção do Jukebox no menu de pausa (JukeboxSectionUI).\")]\n    [SerializeField] private JukeboxSectionUI jukeboxSectionUI;\n\n    [Header(\"Tutorial da Primeira Compra\")]\n    [TextArea(3, 8)]\n    [Tooltip(\"Texto da mensagem de tutorial exibida ao comprar o Jukebox pela primeira vez.\")]\n    [SerializeField] private string tutorialText =\n        \"Jukebox desbloqueado!\\n\\nAqui podes ouvir as músicas do jogo a qualquer momento.\\n\" +\n        \"Encontra Melodias Selvagens pelo mundo para adicionar novas faixas!\";\n\n    [Tooltip(\"Imagem exibida acima do texto do tutorial (opcional).\")]\n    [SerializeField] private Sprite tutorialImage;\n\n    private void OnEnable()\n    {\n        ShopUI.OnItemPurchased += HandleItemPurchased;\n    }\n\n    private void OnDisable()\n    {\n        ShopUI.OnItemPurchased -= HandleItemPurchased;\n    }\n\n    private void HandleItemPurchased(ItemData item)\n    {\n        if (jukeboxItem == null || item == null) return;\n        if (item.itemId != jukeboxItem.itemId) return;\n\n        // Só actua na PRIMEIRA compra (onlyBuyOnce + savedAsCollected garantem\n        // que só dispara uma vez — mas verificamos por segurança).\n        // O ShopUI já marcou o item como collectedSpecialItem antes de disparar\n        // este evento, portanto HasCollectedSpecialItem já devolve true aqui.\n\n        // Abre o menu do Jukebox automaticamente.\n        if (jukeboxSectionUI != null)\n            jukeboxSectionUI.Open();\n\n        // Exibe a mensagem de tutorial (tipo Importante, pausa o jogo).\n        TutorialMessageManager.Instance?.ShowImportant(\n            tutorialText,\n            tutorialImage,\n            onConfirmed: () =>\n            {\n                // Fecha o menu do Jukebox após o player confirmar o tutorial.\n                if (jukeboxSectionUI != null)\n                    jukeboxSectionUI.Close();\n            }\n        );\n    }\n}\n",
+  "id": "script-ui-jukeboxshophandler-cs",
+  "dependencyIds": [
+    "script-data-itemdata-cs",
+    "script-ui-jukeboxsectionui-cs",
+    "script-ui-shopui-cs",
+    "script-ui-tutorialmessagemanager-cs"
+  ],
+  "usedByIds": [
+    "script-ui-shopui-cs"
+  ]
+}

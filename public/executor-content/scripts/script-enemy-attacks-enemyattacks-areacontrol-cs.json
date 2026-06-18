@@ -1,0 +1,122 @@
+{
+  "path": "Enemy/Attacks/EnemyAttacks_AreaControl.cs",
+  "filename": "EnemyAttacks_AreaControl.cs",
+  "category": "Enemy",
+  "primary": "Attack_Net",
+  "kind": "Definição",
+  "summary": "Ataques de controlo (imobilização, telegraph em linha) — Etapa 2.1.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Attack_Net",
+      "kind": "class",
+      "bases": "EnemyAttack",
+      "attrs": ""
+    },
+    {
+      "name": "Attack_LaserTelegraph",
+      "kind": "class",
+      "bases": "EnemyAttack",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "hitRadius",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "Rede",
+      "attrs": "[Header(\"Rede\")] [Tooltip(\"Distância ao alvo considerada 'acertou'.\")]",
+      "inspector": true,
+      "description": "Distância ao alvo considerada 'acertou'."
+    },
+    {
+      "name": "trapDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "Rede",
+      "attrs": "[Tooltip(\"Duração da imobilização do player, em segundos.\")]",
+      "inspector": true,
+      "description": "Duração da imobilização do player, em segundos."
+    },
+    {
+      "name": "direction",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "Vector2.down",
+      "section": "Raio/Laser",
+      "attrs": "[Header(\"Raio/Laser\")] [Tooltip(\"Direcção do raio a partir do inimigo (ex: (0,-1) para baixo, (1,0) para a frente).\")]",
+      "inspector": true,
+      "description": "Direção do raio a partir do inimigo (ex: (0,-1) para baixo, (1,0) para a frente)."
+    },
+    {
+      "name": "laserLength",
+      "type": "float",
+      "mods": "public",
+      "default": "8f",
+      "section": "Raio/Laser",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "laserWidth",
+      "type": "float",
+      "mods": "public",
+      "default": "0.4f",
+      "section": "Raio/Laser",
+      "attrs": "[Tooltip(\"Distância máxima do alvo à linha do laser para ser atingido.\")]",
+      "inspector": true,
+      "description": "Distância máxima do alvo à linha do laser para ser atingido."
+    },
+    {
+      "name": "activeDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Raio/Laser",
+      "attrs": "[Tooltip(\"Duração em que o laser fica activo e pode causar dano (após o telegraph/prep).\")]",
+      "inspector": true,
+      "description": "Duração em que o laser fica ativo e pode causar dano (após o telegraph/prep)."
+    },
+    {
+      "name": "tickInterval",
+      "type": "float",
+      "mods": "public",
+      "default": "0.25f",
+      "section": "Raio/Laser",
+      "attrs": "[Tooltip(\"Intervalo entre verificações de dano enquanto o laser está activo.\")]",
+      "inspector": true,
+      "description": "Intervalo entre verificações de dano enquanto o laser está ativo."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "EnemyAttackController ctx",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "EnemyAttack",
+    "EnemyAttackController",
+    "PlayerMotor2D"
+  ],
+  "used_by": [
+    "WaterCurrentMode"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n// Ataques de controlo (imobilização, telegraph em linha) — Etapa 2.1.\n\n/// <summary>Rede que prende: se o alvo estiver perto, imobiliza-o (PlayerMotor2D.SetMovementLocked) durante \"trapDuration\" segundos.</summary>\n[System.Serializable]\npublic class Attack_Net : EnemyAttack\n{\n    [Header(\"Rede\")]\n    [Tooltip(\"Distância ao alvo considerada 'acertou'.\")]\n    public float hitRadius = 2f;\n\n    [Tooltip(\"Duração da imobilização do player, em segundos.\")]\n    public float trapDuration = 1.5f;\n\n    public Attack_Net()\n    {\n        attackName = \"Rede\";\n        range = 4f;\n        damage = 0;\n        requiresLineOfSight = true;\n        prepTime = 0.5f;\n        recoveryTime = 0.6f;\n        cooldown = 4f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n        {\n            if (damage > 0) ctx.DamagePlayer(damage);\n            ctx.TrapPlayer(trapDuration);\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>Raio/laser telegráfico: após o aviso (prepTime), fica activo durante \"activeDuration\", causando dano periódico a quem estiver dentro de \"laserWidth\" da linha.</summary>\n[System.Serializable]\npublic class Attack_LaserTelegraph : EnemyAttack\n{\n    [Header(\"Raio/Laser\")]\n    [Tooltip(\"Direcção do raio a partir do inimigo (ex: (0,-1) para baixo, (1,0) para a frente).\")]\n    public Vector2 direction = Vector2.down;\n\n    public float laserLength = 8f;\n\n    [Tooltip(\"Distância máxima do alvo à linha do laser para ser atingido.\")]\n    public float laserWidth = 0.4f;\n\n    [Tooltip(\"Duração em que o laser fica activo e pode causar dano (após o telegraph/prep).\")]\n    public float activeDuration = 0.5f;\n\n    [Tooltip(\"Intervalo entre verificações de dano enquanto o laser está activo.\")]\n    public float tickInterval = 0.25f;\n\n    public Attack_LaserTelegraph()\n    {\n        attackName = \"Laser\";\n        range = 8f;\n        prepTime = 0.6f;\n        recoveryTime = 0.4f;\n        cooldown = 3f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        Vector2 origin = ctx.transform.position;\n        Vector2 dir = direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector2.down;\n        Vector2 end = origin + dir * laserLength;\n\n        float elapsed = 0f;\n\n        while (elapsed < activeDuration)\n        {\n            if (ctx.Target != null && EnemyAttackController.DistanceToSegment(origin, end, ctx.Target.position) <= laserWidth)\n                ctx.DamagePlayer(damage, knockbackForce);\n\n            yield return new WaitForSeconds(tickInterval);\n            elapsed += tickInterval;\n        }\n    }\n}\n",
+  "id": "script-enemy-attacks-enemyattacks-areacontrol-cs",
+  "dependencyIds": [
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-player-playermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-attacks-enemyattacks-water-cs"
+  ]
+}

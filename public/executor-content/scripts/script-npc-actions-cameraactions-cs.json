@@ -1,0 +1,132 @@
+{
+  "path": "NPC/Actions/CameraActions.cs",
+  "filename": "CameraActions.cs",
+  "category": "NPC",
+  "primary": "CameraFocusMode",
+  "kind": "Acção de NPC",
+  "summary": "Para onde Action_FocusCamera direciona a câmera. public enum CameraFocusMode { Foca neste NPC (a câmera segue-o, se ele se mover — ex: durante uma fala com movimento). Npc, Segue \"target\" (acompanha se \"target\" se mover — ex: um boss, outro NPC). Target, Fixa a câmera na posição atual de \"target\" (snapshot — não acompanha movimento posterior). Point } Direciona a câmera (via CameraManager) para um ponto de interesse durante uma cutscene — ex: focar no NPC que está a falar, seguir um boss, ou olhar para um marco fixo da cena. Usar Action_ReleaseCamera no fim para devolver o controlo à câmera automática do player.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "CameraFocusMode",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "Action_FocusCamera",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_ReleaseCamera",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_ShakeCamera",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "mode",
+      "type": "CameraFocusMode",
+      "mods": "public",
+      "default": "CameraFocusMode.Npc",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "target",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Usado quando Mode = Target ou Point.\")]",
+      "inspector": true,
+      "description": "Usado quando Mode = Target ou Point."
+    },
+    {
+      "name": "waitTime",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "",
+      "attrs": "[Tooltip(\"Tempo de espera (segundos) após mudar o foco, para dar tempo ao blend da câmara antes da próxima ação (ex: antes de uma fala). 0 = não espera.\")]",
+      "inspector": true,
+      "description": "Tempo de espera (segundos) após mudar o foco, para dar tempo ao blend da câmera antes da próxima ação (ex: antes de uma fala). 0 = não espera."
+    },
+    {
+      "name": "amplitude",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "",
+      "attrs": "[Tooltip(\"Intensidade do abanão.\")]",
+      "inspector": true,
+      "description": "Intensidade do abanão."
+    },
+    {
+      "name": "frequency",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "",
+      "attrs": "[Tooltip(\"Velocidade de oscilação do abanão.\")]",
+      "inspector": true,
+      "description": "Velocidade de oscilação do abanão."
+    },
+    {
+      "name": "duration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.3f",
+      "section": "",
+      "attrs": "[Tooltip(\"Duração do abanão, em segundos.\")]",
+      "inspector": true,
+      "description": "Duração do abanão, em segundos."
+    },
+    {
+      "name": "waitForShake",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, espera a duração do abanão terminar antes de avançar para a próxima ação.\")]",
+      "inspector": true,
+      "description": "Se ativo, espera a duração do abanão terminar antes de avançar para a próxima ação."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "CameraManager",
+    "NpcAction",
+    "NpcActionUtil",
+    "NpcController"
+  ],
+  "used_by": [],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>Para onde Action_FocusCamera direciona a câmara.</summary>\npublic enum CameraFocusMode\n{\n    /// <summary>Foca neste NPC (a câmara segue-o, se ele se mover — ex: durante uma fala com movimento).</summary>\n    Npc,\n\n    /// <summary>Segue \"target\" (acompanha se \"target\" se mover — ex: um boss, outro NPC).</summary>\n    Target,\n\n    /// <summary>Fixa a câmara na posição actual de \"target\" (snapshot — não acompanha movimento posterior).</summary>\n    Point\n}\n\n/// <summary>\n/// Direciona a câmara (via CameraManager) para um ponto de interesse durante\n/// uma cutscene — ex: focar no NPC que está a falar, seguir um boss, ou olhar\n/// para um marco fixo da cena. Usar Action_ReleaseCamera no fim para devolver\n/// o controlo à câmara automática do player.\n/// </summary>\n[System.Serializable]\npublic class Action_FocusCamera : NpcAction\n{\n    public CameraFocusMode mode = CameraFocusMode.Npc;\n\n    [Tooltip(\"Usado quando Mode = Target ou Point.\")]\n    public Transform target;\n\n    [Tooltip(\"Tempo de espera (segundos) após mudar o foco, para dar tempo ao blend da câmara antes da próxima ação (ex: antes de uma fala). 0 = não espera.\")]\n    public float waitTime = 0f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var cam = CameraManager.Instance;\n        if (cam == null) yield break;\n\n        switch (mode)\n        {\n            case CameraFocusMode.Npc:\n                cam.EnterManualFollow(npc.transform);\n                break;\n\n            case CameraFocusMode.Target:\n                if (target != null) cam.EnterManualFollow(target);\n                break;\n\n            case CameraFocusMode.Point:\n                if (target != null) cam.EnterManualLock(target.position);\n                break;\n        }\n\n        if (waitTime > 0f) yield return NpcActionUtil.Wait(waitTime);\n    }\n}\n\n/// <summary>\n/// Devolve o controlo da câmara ao modo automático (segue o player, zoom\n/// dinâmico, etc.) — usar no fim de uma cutscene iniciada com Action_FocusCamera.\n/// </summary>\n[System.Serializable]\npublic class Action_ReleaseCamera : NpcAction\n{\n    [Tooltip(\"Tempo de espera (segundos) após devolver a câmara ao player, para dar tempo ao blend. 0 = não espera.\")]\n    public float waitTime = 0f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        CameraManager.Instance?.ExitManual();\n        if (waitTime > 0f) yield return NpcActionUtil.Wait(waitTime);\n    }\n}\n\n/// <summary>\n/// Aplica um abanão (shake) de câmara — útil para impactos, explosões, a\n/// chegada de um boss, etc. Aplica-se à vcam realmente activa no momento\n/// (incluindo durante um Action_FocusCamera).\n/// </summary>\n[System.Serializable]\npublic class Action_ShakeCamera : NpcAction\n{\n    [Tooltip(\"Intensidade do abanão.\")]\n    public float amplitude = 1.5f;\n\n    [Tooltip(\"Velocidade de oscilação do abanão.\")]\n    public float frequency = 2f;\n\n    [Tooltip(\"Duração do abanão, em segundos.\")]\n    public float duration = 0.3f;\n\n    [Tooltip(\"Se activo, espera a duração do abanão terminar antes de avançar para a próxima ação.\")]\n    public bool waitForShake;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        CameraManager.Instance?.Shake(amplitude, frequency, duration);\n        if (waitForShake && duration > 0f) yield return NpcActionUtil.Wait(duration);\n    }\n}\n",
+  "id": "script-npc-actions-cameraactions-cs",
+  "dependencyIds": [
+    "script-camera-cameramanager-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-actions-npcactionutil-cs",
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": []
+}

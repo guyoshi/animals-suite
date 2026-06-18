@@ -1,0 +1,148 @@
+{
+  "path": "UI/SaveSlotButtonUI.cs",
+  "filename": "SaveSlotButtonUI.cs",
+  "category": "UI",
+  "primary": "SaveSlotButtonUI",
+  "kind": "Componente",
+  "summary": "Botão de um slot do Menu de Save (Etapa de Menu de Save): mostra a pré-visualização de um save (área/mundo, data/hora, corações) ou, se vazio, um estado \"Sem dados\"/\"Criar novo save\". Instanciado e configurado por . Prefab esperado (montar no Editor): Button + filhos com TMP_Text para \"titleText\" (nome da área/mundo ou \"Criar Novo Save\"/\"Salvamento automático\") e \"infoText\" (data/hora + corações, ou texto vazio).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SaveSlotButtonUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "SlotKind",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "button",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[Header(\"Referências\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "titleText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "infoText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deleteButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Apagar (opcional — só slots manuais usados)",
+      "attrs": "[Header(\"Apagar (opcional — só slots manuais usados)\")] [Tooltip(\"Botão 'Apagar' opcional, mostrado apenas para slots manuais já usados (SlotKind.Manual com dados). Deixar vazio se o menu não suportar apagar saves.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Botão 'Apagar' opcional, mostrado apenas para slots manuais já usados (SlotKind.Manual com dados). Deixar vazio se o menu não suportar apagar saves."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "SetupAuto",
+      "ret": "void",
+      "mods": "public",
+      "params": "SaveData data, bool interactable",
+      "description": "Executa a operação SetupAuto."
+    },
+    {
+      "name": "SetupManual",
+      "ret": "void",
+      "mods": "public",
+      "params": "int slotIndex, SaveData data",
+      "description": "Executa a operação SetupManual."
+    },
+    {
+      "name": "SetupCreateNew",
+      "ret": "void",
+      "mods": "public",
+      "params": "int nextFreeSlotIndex",
+      "description": "Executa a operação SetupCreateNew."
+    },
+    {
+      "name": "SetDeleteVisible",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool visible",
+      "description": "Executa a operação SetDeleteVisible."
+    },
+    {
+      "name": "SetTexts",
+      "ret": "void",
+      "mods": "private",
+      "params": "string title, string info",
+      "description": "Executa a operação SetTexts."
+    },
+    {
+      "name": "BuildInfoLine",
+      "ret": "string",
+      "mods": "private static",
+      "params": "SaveData data",
+      "description": "Executa a operação BuildInfoLine."
+    },
+    {
+      "name": "ResolvePlaceName",
+      "ret": "string",
+      "mods": "private static",
+      "params": "SaveData data",
+      "description": "Executa a operação ResolvePlaceName."
+    },
+    {
+      "name": "FormatTimestamp",
+      "ret": "string",
+      "mods": "private static",
+      "params": "string isoTimestamp",
+      "description": "Executa a operação FormatTimestamp."
+    }
+  ],
+  "dependencies": [
+    "GameDatabase",
+    "SaveData",
+    "SaveMenuController"
+  ],
+  "used_by": [
+    "SaveMenuController"
+  ],
+  "source": "using System;\nusing System.Globalization;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Botão de um slot do Menu de Save (Etapa de Menu de Save): mostra a\n/// pré-visualização de um save (área/mundo, data/hora, corações) ou, se\n/// vazio, um estado \"Sem dados\"/\"Criar novo save\". Instanciado e configurado\n/// por <see cref=\"SaveMenuController\"/>.\n///\n/// Prefab esperado (montar no Editor): Button + filhos com TMP_Text para\n/// \"titleText\" (nome da área/mundo ou \"Criar Novo Save\"/\"Autoguardar\") e\n/// \"infoText\" (data/hora + corações, ou texto vazio).\n/// </summary>\npublic class SaveSlotButtonUI : MonoBehaviour\n{\n    /// <summary>Tipo de slot representado por este botão.</summary>\n    public enum SlotKind\n    {\n        /// <summary>Slot de autoguardar (topo do menu, único).</summary>\n        Auto,\n\n        /// <summary>Slot manual já usado (0-29) — overwrite (Guardar) ou carregar (Carregar).</summary>\n        Manual,\n\n        /// <summary>Botão \"Criar Novo Save\" — cria o próximo slot manual livre. Só aparece em modo Guardar e enquanto houver slots livres.</summary>\n        CreateNew\n    }\n\n    [Header(\"Referências\")]\n    [SerializeField] private Button button;\n    [SerializeField] private TMP_Text titleText;\n    [SerializeField] private TMP_Text infoText;\n\n    [Header(\"Apagar (opcional — só slots manuais usados)\")]\n    [Tooltip(\"Botão 'Apagar' opcional, mostrado apenas para slots manuais já usados (SlotKind.Manual com dados). Deixar vazio se o menu não suportar apagar saves.\")]\n    [SerializeField] private Button deleteButton;\n\n    /// <summary>Disparado quando este botão é clicado, com a própria instância (controller lê Kind/SlotIndex).</summary>\n    public event Action<SaveSlotButtonUI> Clicked;\n\n    /// <summary>Disparado quando o botão \"Apagar\" deste slot é clicado, com a própria instância (controller lê SlotIndex).</summary>\n    public event Action<SaveSlotButtonUI> DeleteClicked;\n\n    public SlotKind Kind { get; private set; }\n\n    /// <summary>-1 para o slot de autoguardar; 0-29 para slots manuais (incluindo \"Criar Novo Save\", que usa o próximo slot livre).</summary>\n    public int SlotIndex { get; private set; }\n\n    private void Awake()\n    {\n        if (button == null) button = GetComponent<Button>();\n        button.onClick.AddListener(() => Clicked?.Invoke(this));\n\n        if (deleteButton != null) deleteButton.onClick.AddListener(() => DeleteClicked?.Invoke(this));\n    }\n\n    /// <summary>\n    /// Configura o botão para o slot de autoguardar.\n    /// \"data\" é null se ainda não existir nenhum autoguardar.\n    /// </summary>\n    public void SetupAuto(SaveData data, bool interactable)\n    {\n        Kind = SlotKind.Auto;\n        SlotIndex = -1;\n\n        if (data == null)\n        {\n            SetTexts(\"Autoguardar\", \"— vazio —\");\n        }\n        else\n        {\n            SetTexts(\"Autoguardar\", BuildInfoLine(data));\n        }\n\n        button.interactable = interactable;\n        SetDeleteVisible(false);\n    }\n\n    /// <summary>Configura o botão para um slot manual já usado (0-29).</summary>\n    public void SetupManual(int slotIndex, SaveData data)\n    {\n        Kind = SlotKind.Manual;\n        SlotIndex = slotIndex;\n\n        string title = $\"Save {slotIndex + 1:00}\";\n        SetTexts(title, data != null ? BuildInfoLine(data) : \"— vazio —\");\n\n        button.interactable = true;\n        SetDeleteVisible(data != null);\n    }\n\n    /// <summary>Configura o botão \"Criar Novo Save\" (próximo slot manual livre).</summary>\n    public void SetupCreateNew(int nextFreeSlotIndex)\n    {\n        Kind = SlotKind.CreateNew;\n        SlotIndex = nextFreeSlotIndex;\n\n        SetTexts(\"+ Criar Novo Save\", \"\");\n        button.interactable = nextFreeSlotIndex >= 0;\n        SetDeleteVisible(false);\n    }\n\n    private void SetDeleteVisible(bool visible)\n    {\n        if (deleteButton != null) deleteButton.gameObject.SetActive(visible);\n    }\n\n    private void SetTexts(string title, string info)\n    {\n        if (titleText != null) titleText.text = title;\n        if (infoText != null) infoText.text = info;\n    }\n\n    /// <summary>Linha de pré-visualização: área/mundo actual + data/hora + corações.</summary>\n    private static string BuildInfoLine(SaveData data)\n    {\n        string place = ResolvePlaceName(data);\n        string when = FormatTimestamp(data.timestamp);\n        return $\"{place}\\n{when}  •  {data.currentHearts}/{data.maxHearts} ♥\";\n    }\n\n    private static string ResolvePlaceName(SaveData data)\n    {\n        var db = GameDatabase.Instance;\n\n        if (db != null)\n        {\n            var area = db.FindArea(data.currentAreaId);\n            if (area != null && !string.IsNullOrEmpty(area.displayName)) return area.displayName;\n\n            var world = db.FindWorld(data.currentWorldId);\n            if (world != null && !string.IsNullOrEmpty(world.displayName)) return world.displayName;\n        }\n\n        return !string.IsNullOrEmpty(data.currentAreaId) ? data.currentAreaId : \"?\";\n    }\n\n    private static string FormatTimestamp(string isoTimestamp)\n    {\n        if (string.IsNullOrEmpty(isoTimestamp)) return \"\";\n\n        if (DateTime.TryParse(isoTimestamp, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dt))\n            return dt.ToLocalTime().ToString(\"dd/MM/yyyy HH:mm\");\n\n        return isoTimestamp;\n    }\n}\n",
+  "id": "script-ui-saveslotbuttonui-cs",
+  "dependencyIds": [
+    "script-data-gamedatabase-cs",
+    "script-data-savedata-cs",
+    "script-ui-savemenucontroller-cs"
+  ],
+  "usedByIds": [
+    "script-ui-savemenucontroller-cs"
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "slug": "localizacao",
+  "title": "HUD e Localização",
+  "category": "Localização",
+  "source": "Guia_HUD_Localizacao.md",
+  "summary": " Guia: Localização Multi Idioma (HUDs e Scripts) Idiomas actuais: Português ✅ | English ⏳ | Español ⏳ | Français ⏳ | 日本語 ⏳ 1. Arquitectura Arquivos principais | Arquivo | Responsabilidade | | | | | GameSettings.cs | Enum GameLanguage , IsLanguageAvailable() ",
+  "html": "<div class=\"warning\"><b>Backup 17/06:</b> este guia foi importado do pacote mais recente. Onde houver conflito, prevalecem os scripts de 17/06 e as decisões aprovadas pelo diretor nesta atualização.</div><div class=\"success\"><h2 id=\"politica-aprovada\">Política aprovada</h2><p>Ordem: English, Português, Español, Français, 日本語. Apenas Português habilitado agora. Detecção automática no primeira inicialização; idioma não suportado usa Inglês como fallback final. Durante o protótipo sem tradução inglesa, o conteúdo inicial pode ser configurado em Português. A escolha fica persistida e aparece no menu inicial e no Menu +.</p></div><h1 id=\"guia-localizacao-multi-idioma-huds-e-scripts\">Guia: Localização Multi-Idioma (HUDs e Scripts)</h1>\n<p><strong>Idiomas actuais:</strong> Português ✅ | English ⏳ | Español ⏳ | Français ⏳ | 日本語 ⏳</p>\n<hr />\n<h2 id=\"1-arquitectura\">1. Arquitectura</h2>\n<h3 id=\"ficheiros-principais\">Arquivos principais</h3>\n<table>\n<thead>\n<tr>\n<th>Arquivo</th>\n<th>Responsabilidade</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>GameSettings.cs</code></td>\n<td>Enum <code>GameLanguage</code>, <code>IsLanguageAvailable()</code>, <code>CycleLanguage()</code>, <code>LanguageDisplayName()</code>, auto-detect, persistência via PlayerPrefs</td>\n</tr>\n<tr>\n<td><code>LocalizationManager.cs</code></td>\n<td>Dicionários de chave→texto por idioma; método <code>Get(key)</code>; evento <code>LanguageChanged</code></td>\n</tr>\n<tr>\n<td><code>OptionsSectionUI.cs</code></td>\n<td>Seletor de idioma no Menu de Pausa (botão ciclável <code>languageButton</code>)</td>\n</tr>\n<tr>\n<td><code>MainMenuOptionsUI.cs</code></td>\n<td>Seletor de idioma no Menu Principal (botão ciclável <code>languageButton</code>)</td>\n</tr>\n</tbody>\n</table>\n<h3 id=\"fluxo-de-um-texto-localizado\">Fluxo de um texto localizado</h3>\n<pre><code>Script → LocalizationManager.Get(&quot;MinhaChave&quot;)\n             ↓ idioma activo (GameSettings.Language)\n             → dicionário do idioma → texto\n             → fallback: Português\n             → fallback: &quot;[MinhaChave]&quot; (debug)\n</code></pre>\n<hr />\n<h2 id=\"2-como-adicionar-um-texto-localizado\">2. Como adicionar um texto localizado</h2>\n<h3 id=\"passo-1-registar-a-chave-em-localizationmanagercs\">Passo 1 — Registrar a chave em <code>LocalizationManager.cs</code></h3>\n<p>No dicionário <code>_pt</code> (sempre obrigatório primeiro), adicionar:</p>\n<pre><code class=\"language-csharp\">{ &quot;UI_MinhaMensagem&quot;, &quot;O meu texto em português&quot; },\n</code></pre>\n<p>Nos dicionários dos outros idiomas (<code>_en</code>, <code>_es</code>, <code>_fr</code>, <code>_ja</code>), adicionar as traduções quando disponíveis:</p>\n<pre><code class=\"language-csharp\">// em _en:\n{ &quot;UI_MinhaMensagem&quot;, &quot;My text in English&quot; },\n</code></pre>\n<h3 id=\"passo-2-usar-o-texto-em-script\">Passo 2 — Usar o texto em script</h3>\n<pre><code class=\"language-csharp\">using UnityEngine;\nusing TMPro;\n\npublic class MeuComponenteUI : MonoBehaviour\n{\n    [SerializeField] private TMP_Text label;\n\n    private void OnEnable()\n    {\n        LocalizationManager.LanguageChanged += RefreshTexts;\n        RefreshTexts(); // aplica o idioma actual ao activar\n    }\n\n    private void OnDisable()\n    {\n        LocalizationManager.LanguageChanged -= RefreshTexts;\n    }\n\n    private void RefreshTexts()\n    {\n        if (label != null)\n            label.text = LocalizationManager.Get(&quot;UI_MinhaMensagem&quot;);\n    }\n}\n</code></pre>\n<blockquote>\n<p><strong>Regra:</strong> qualquer componente com texto localizado <strong>deve subscrever <code>LocalizationManager.LanguageChanged</code></strong> para se atualizar em tempo real quando o jogador troca de idioma no menu.</p>\n</blockquote>\n<hr />\n<h2 id=\"3-como-activar-um-novo-idioma\">3. Como ativar um novo idioma</h2>\n<ol>\n<li>Certificar que a entrada existe em <code>GameLanguage</code> (enum em <code>GameSettings.cs</code>).</li>\n<li>Em <code>GameSettings.IsLanguageAvailable()</code>, adicionar o case:\n   <code>csharp\n   GameLanguage.English =&gt; true,</code></li>\n<li>Preencher <strong>todas</strong> as chaves do dicionário <code>_en</code> (ou <code>_es</code>/<code>_fr</code>/<code>_ja</code>) em <code>LocalizationManager.cs</code>.</li>\n<li>Configurar fonte TMP (ver seção 5).</li>\n<li>Testar com <code>GameSettings.Instance.SetLanguage(GameLanguage.English)</code> no Inspector em Play Mode.</li>\n</ol>\n<hr />\n<h2 id=\"4-seletor-de-idioma-ui\">4. Seletor de Idioma (UI)</h2>\n<p>Existem <strong>dois</strong> selectores — Menu Principal e Menu de Pausa (Opções):</p>\n<h3 id=\"no-editor\">No Editor</h3>\n<p>Tanto <code>OptionsSectionUI</code> como <code>MainMenuOptionsUI</code> têm os campos:\n- <code>languageButton</code> (Button) — botão que cicla pelo próximo idioma disponível\n- <code>languageValueText</code> (TMP_Text) — exibe o nome nativo do idioma ativo (ex: \"Português\", \"English\")</p>\n<p><strong>Montagem no Inspector:</strong>\n1. Criar um botão na seção Idioma do painel.\n2. Arrastar o botão para <code>languageButton</code>.\n3. Criar um TMP_Text filho do botão (ou ao lado) e arrastar para <code>languageValueText</code>.\n4. O texto atualiza-se automaticamente ao pressionar (cicla pelos idiomas disponíveis).</p>\n<h3 id=\"comportamento-actual-so-pt-disponivel\">Comportamento atual (só PT disponível)</h3>\n<p>Como só Português está em <code>IsLanguageAvailable</code>, <code>CycleLanguage()</code> não avança — o botão parece \"sem efeito\" (fica em Português). Quando Inglês for ativado, o botão passará a ciclar em: <strong>EN → PT → ES → FR → JP</strong>.</p>\n<hr />\n<h2 id=\"5-fontes-tmp-para-idiomas-com-charset-especial\">5. Fontes TMP para idiomas com charset especial</h2>\n<h3 id=\"japones\">Japonês (<code>日本語</code>)</h3>\n<p>O Japonês requer uma fonte TMP com suporte CJK (Chinese-Japanese-Korean).</p>\n<p><strong>Passos:</strong>\n1. Importar a fonte (ex: <strong>Noto Sans JP</strong> — gratuita, Google Fonts).\n2. Em Unity: <code>Window → TextMeshPro → Font Asset Creator</code>.\n3. Source Font: <code>NotoSansJP-Regular.ttf</code>.\n4. Character Set: <strong>Custom Range</strong> → Range: <code>0020-00FF,3000-9FFF,FF00-FFEF</code> (cobre Hiragana, Katakana, Kanji comuns).\n5. Render Mode: <strong>SDF</strong> (recomendado para escalas variadas).\n6. Gerar o Asset e guardar em <code>Assets/Fonts/</code>.\n7. No TMP_Text de cada HUD que precisa de JP: definir o Font Asset para o NotoSansJP gerado — <strong>ou</strong> configurar como Fallback Font no TMP Settings global.</p>\n<p><strong>Configuração global (recomendada):</strong>\n<code>Edit → Project Settings → TextMeshPro → Default Font Asset</code> — adicionar NotoSansJP como fallback. Assim todos os campos TMP usam automaticamente a fonte japonesa quando necessário.</p>\n<h3 id=\"outros-idiomas-en-es-fr\">Outros idiomas (EN, ES, FR)</h3>\n<p>O charset base (Latin estendido) é suportado pela maioria das fontes TMP existentes. Verificar apenas caracteres especiais como <code>é</code>, <code>ñ</code>, <code>ç</code>, <code>œ</code> — presentes no range <code>0020-00FF</code> (Latin Extended), que já deve estar incluído na fonte do projeto.</p>\n<hr />\n<h2 id=\"6-auto-deteccao-de-idioma-primeira-execucao\">6. Auto-detecção de idioma (primeira execução)</h2>\n<p>Na inicialização do jogo (GameSettings.LoadSettings), se não existir preferência guardada:\n- Unity lê <code>Application.systemLanguage</code> (cross-platform: Windows, Switch, iOS, Android).\n- Mapeamento:\n  - <code>SystemLanguage.Portuguese</code> → <code>GameLanguage.Portugues</code>\n  - <code>SystemLanguage.English</code> → <code>English</code> (quando disponível) ou <code>Portugues</code>\n  - <code>SystemLanguage.Spanish</code> → <code>Espanhol</code> (quando disponível) ou <code>Portugues</code>\n  - <code>SystemLanguage.French</code> → <code>Frances</code> (quando disponível) ou <code>Portugues</code>\n  - <code>SystemLanguage.Japanese</code> → <code>Japones</code> (quando disponível) ou <code>Portugues</code>\n  - Outros → <code>Portugues</code>\n- O idioma detectado é guardado em <code>PlayerPrefs</code> imediatamente.\n- Em execuções seguintes, o pref guardado tem prioridade sobre a detecção automática.</p>\n<p><strong>Cadeia de fallback (sistema → jogo):</strong>\n1. Idioma exato do sistema (ex: Japanese → Japonês).\n2. Se não disponível → <strong>Inglês</strong> (fallback global).\n3. Se Inglês não disponível (fase atual) → <strong>Português</strong>.</p>\n<p><strong>Ou seja:</strong> quando Inglês estiver ativado, qualquer jogador cujo sistema não tenha um idioma suportado (ex: Coreano, Árabe) verá o jogo em Inglês automaticamente.</p>\n<p><strong>Nintendo Switch:</strong> Unity mapeia o idioma do sistema Switch para <code>Application.systemLanguage</code> sem necessidade de código específico de plataforma.</p>\n<hr />\n<h2 id=\"7-persistencia-do-idioma\">7. Persistência do idioma</h2>\n<p>O idioma é guardado em <code>PlayerPrefs</code> (chave: <code>settings_language</code>) via <code>GameSettings.SetLanguage()</code>.</p>\n<ul>\n<li><strong>Persiste entre sessões:</strong> sim — ao reiniciar o jogo, o pref é lido em <code>LoadSettings</code>.</li>\n<li><strong>Reset:</strong> limpar PlayerPrefs via <code>PlayerPrefs.DeleteAll()</code> ou menu Debug apaga o idioma e a próxima execução volta à detecção automática.</li>\n<li><strong>Independente do Save:</strong> o idioma é uma preferência de dispositivo/perfil, não de save file — muda para todos os saves, como os volumes de áudio.</li>\n</ul>\n<hr />\n<h2 id=\"8-checklist-ao-adicionar-novo-idioma\">8. Checklist ao adicionar novo idioma</h2>\n<ul>\n<li>[ ] Adicionar entrada em <code>GameLanguage</code> enum (<code>GameSettings.cs</code>)</li>\n<li>[ ] Marcar <code>IsLanguageAvailable(GameLanguage.X) =&gt; true</code></li>\n<li>[ ] Preencher dicionário <code>_xx</code> em <code>LocalizationManager.cs</code> (todas as chaves)</li>\n<li>[ ] Verificar font TMP (charset, fallbacks)</li>\n<li>[ ] Testar auto-detect (<code>Application.systemLanguage</code> corresponde ao idioma)</li>\n<li>[ ] Testar seletor no Menu Principal e no Menu de Pausa</li>\n<li>[ ] Verificar que <code>LanguageChanged</code> propaga correctamente em todos os HUDs</li>\n</ul>",
+  "toc": [
+    {
+      "id": "politica-aprovada",
+      "level": 2,
+      "label": "Política aprovada"
+    },
+    {
+      "id": "guia-localizacao-multi-idioma-huds-e-scripts",
+      "level": 1,
+      "label": "Guia: Localização Multi-Idioma (HUDs e Scripts)"
+    },
+    {
+      "id": "1-arquitectura",
+      "level": 2,
+      "label": "1. Arquitectura"
+    },
+    {
+      "id": "ficheiros-principais",
+      "level": 3,
+      "label": "Arquivos principais"
+    },
+    {
+      "id": "fluxo-de-um-texto-localizado",
+      "level": 3,
+      "label": "Fluxo de um texto localizado"
+    },
+    {
+      "id": "2-como-adicionar-um-texto-localizado",
+      "level": 2,
+      "label": "2. Como adicionar um texto localizado"
+    },
+    {
+      "id": "passo-1-registar-a-chave-em-localizationmanagercs",
+      "level": 3,
+      "label": "Passo 1 — Registrar a chave em LocalizationManager.cs"
+    },
+    {
+      "id": "passo-2-usar-o-texto-em-script",
+      "level": 3,
+      "label": "Passo 2 — Usar o texto em script"
+    },
+    {
+      "id": "3-como-activar-um-novo-idioma",
+      "level": 2,
+      "label": "3. Como ativar um novo idioma"
+    },
+    {
+      "id": "4-seletor-de-idioma-ui",
+      "level": 2,
+      "label": "4. Seletor de Idioma (UI)"
+    },
+    {
+      "id": "no-editor",
+      "level": 3,
+      "label": "No Editor"
+    },
+    {
+      "id": "comportamento-actual-so-pt-disponivel",
+      "level": 3,
+      "label": "Comportamento atual (só PT disponível)"
+    },
+    {
+      "id": "5-fontes-tmp-para-idiomas-com-charset-especial",
+      "level": 2,
+      "label": "5. Fontes TMP para idiomas com charset especial"
+    },
+    {
+      "id": "japones",
+      "level": 3,
+      "label": "Japonês ( 日本語 )"
+    },
+    {
+      "id": "outros-idiomas-en-es-fr",
+      "level": 3,
+      "label": "Outros idiomas (EN, ES, FR)"
+    },
+    {
+      "id": "6-auto-deteccao-de-idioma-primeira-execucao",
+      "level": 2,
+      "label": "6. Auto-detecção de idioma (primeira execução)"
+    },
+    {
+      "id": "7-persistencia-do-idioma",
+      "level": 2,
+      "label": "7. Persistência do idioma"
+    },
+    {
+      "id": "8-checklist-ao-adicionar-novo-idioma",
+      "level": 2,
+      "label": "8. Checklist ao adicionar novo idioma"
+    }
+  ],
+  "searchText": "Backup 17/06: este guia foi importado do pacote mais recente. Onde houver conflito, prevalecem os scripts de 17/06 e as decisões aprovadas pelo diretor nesta atualização. Política aprovada Ordem: English, Português, Español, Français, 日本語. Apenas Português habilitado agora. Detecção automática no primeira inicialização; idioma não suportado usa Inglês como fallback final. Durante o protótipo sem tradução inglesa, o conteúdo inicial pode ser configurado em Português. A escolha fica persistida e aparece no menu inicial e no Menu +. Guia: Localização Multi-Idioma (HUDs e Scripts) Idiomas actuais: Português ✅ | English ⏳ | Español ⏳ | Français ⏳ | 日本語 ⏳ 1. Arquitectura Arquivos principais Arquivo Responsabilidade GameSettings.cs Enum GameLanguage , IsLanguageAvailable() , CycleLanguage() , LanguageDisplayName() , auto-detect, persistência via PlayerPrefs LocalizationManager.cs Dicionários de chave→texto por idioma; método Get(key) ; evento LanguageChanged OptionsSectionUI.cs Seletor de idioma no Menu de Pausa (botão ciclável languageButton ) MainMenuOptionsUI.cs Seletor de idioma no Menu Principal (botão ciclável languageButton ) Fluxo de um texto localizado Script → LocalizationManager.Get(\"MinhaChave\") ↓ idioma activo (GameSettings.Language) → dicionário do idioma → texto → fallback: Português → fallback: \"[MinhaChave]\" (debug) 2. Como adicionar um texto localizado Passo 1 — Registrar a chave em LocalizationManager.cs No dicionário _pt (sempre obrigatório primeiro), adicionar: { \"UI_MinhaMensagem\", \"O meu texto em português\" }, Nos dicionários dos outros idiomas ( _en , _es , _fr , _ja ), adicionar as traduções quando disponíveis: // em _en: { \"UI_MinhaMensagem\", \"My text in English\" }, Passo 2 — Usar o texto em script using UnityEngine; using TMPro; public class MeuComponenteUI : MonoBehaviour { [SerializeField] private TMP_Text label; private void OnEnable() { LocalizationManager.LanguageChanged += RefreshTexts; RefreshTexts(); // aplica o idioma actual ao activar } private void OnDisable() { LocalizationManager.LanguageChanged -= RefreshTexts; } private void RefreshTexts() { if (label != null) label.text = LocalizationManager.Get(\"UI_MinhaMensagem\"); } } Regra: qualquer componente com texto localizado deve subscrever LocalizationManager.LanguageChanged para se atualizar em tempo real quando o jogador troca de idioma no menu. 3. Como ativar um novo idioma Certificar que a entrada existe em GameLanguage (enum em GameSettings.cs ). Em GameSettings.IsLanguageAvailable() , adicionar o case: csharp GameLanguage.English => true, Preencher todas as chaves do dicionário _en (ou _es / _fr / _ja ) em LocalizationManager.cs . Configurar fonte TMP (ver seção 5). Testar com GameSettings.Instance.SetLanguage(GameLanguage.English) no Inspector em Play Mode. 4. Seletor de Idioma (UI) Existem dois selectores — Menu Principal e Menu de Pausa (Opções): No Editor Tanto OptionsSectionUI como MainMenuOptionsUI têm os campos: - languageButton (Button) — botão que cicla pelo próximo idioma disponível - languageValueText (TMP_Text) — exibe o nome nativo do idioma ativo (ex: \"Português\", \"English\") Montagem no Inspector: 1. Criar um botão na seção Idioma do painel. 2. Arrastar o botão para languageButton . 3. Criar um TMP_Text filho do botão (ou ao lado) e arrastar para languageValueText . 4. O texto atualiza-se automaticamente ao pressionar (cicla pelos idiomas disponíveis). Comportamento atual (só PT disponível) Como só Português está em IsLanguageAvailable , CycleLanguage() não avança — o botão parece \"sem efeito\" (fica em Português). Quando Inglês for ativado, o botão passará a ciclar em: EN → PT → ES → FR → JP . 5. Fontes TMP para idiomas com charset especial Japonês ( 日本語 ) O Japonês requer uma fonte TMP com suporte CJK (Chinese-Japanese-Korean). Passos: 1. Importar a fonte (ex: Noto Sans JP — gratuita, Google Fonts). 2. Em Unity: Window → TextMeshPro → Font Asset Creator . 3. Source Font: NotoSansJP-Regular.ttf . 4. Character Set: Custom Range → Range: 0020-00FF,3000-9FFF,FF00-FFEF (cobre Hiragana, Katakana, Kanji comuns). 5. Render Mode: SDF (recomendado para escalas variadas). 6. Gerar o Asset e guardar em Assets/Fonts/ . 7. No TMP_Text de cada HUD que precisa de JP: definir o Font Asset para o NotoSansJP gerado — ou configurar como Fallback Font no TMP Settings global. Configuração global (recomendada): Edit → Project Settings → TextMeshPro → Default Font Asset — adicionar NotoSansJP como fallback. Assim todos os campos TMP usam automaticamente a fonte japonesa quando necessário. Outros idiomas (EN, ES, FR) O charset base (Latin estendido) é suportado pela maioria das fontes TMP existentes. Verificar apenas caracteres especiais como é , ñ , ç , œ — presentes no range 0020-00FF (Latin Extended), que já deve estar incluído na fonte do projeto. 6. Auto-detecção de idioma (primeira execução) Na inicialização do jogo (GameSettings.LoadSettings), se não existir preferência guardada: - Unity lê Application.systemLanguage (cross-platform: Windows, Switch, iOS, Android). - Mapeamento: - SystemLanguage.Portuguese → GameLanguage.Portugues - SystemLanguage.English → English (quando disponível) ou Portugues - SystemLanguage.Spanish → Espanhol (quando disponível) ou Portugues - SystemLanguage.French → Frances (quando disponível) ou Portugues - SystemLanguage.Japanese → Japones (quando disponível) ou Portugues - Outros → Portugues - O idioma detectado é guardado em PlayerPrefs imediatamente. - Em execuções seguintes, o pref guardado tem prioridade sobre a detecção automática. Cadeia de fallback (sistema → jogo): 1. Idioma exato do sistema (ex: Japanese → Japonês). 2. Se não disponível → Inglês (fallback global). 3. Se Inglês não disponível (fase atual) → Português . Ou seja: quando Inglês estiver ativado, qualquer jogador cujo sistema não tenha um idioma suportado (ex: Coreano, Árabe) verá o jogo em Inglês automaticamente. Nintendo Switch: Unity mapeia o idioma do sistema Switch para Application.systemLanguage sem necessidade de código específico de plataforma. 7. Persistência do idioma O idioma é guardado em PlayerPrefs (chave: settings_language ) via GameSettings.SetLanguage() . Persiste entre sessões: sim — ao reiniciar o jogo, o pref é lido em LoadSettings . Reset: limpar PlayerPrefs via PlayerPrefs.DeleteAll() ou menu Debug apaga o idioma e a próxima execução volta à detecção automática. Independente do Save: o idioma é uma preferência de dispositivo/perfil, não de save file — muda para todos os saves, como os volumes de áudio. 8. Checklist ao adicionar novo idioma [ ] Adicionar entrada em GameLanguage enum ( GameSettings.cs ) [ ] Marcar IsLanguageAvailable(GameLanguage.X) => true [ ] Preencher dicionário _xx em LocalizationManager.cs (todas as chaves) [ ] Verificar font TMP (charset, fallbacks) [ ] Testar auto-detect ( Application.systemLanguage corresponde ao idioma) [ ] Testar seletor no Menu Principal e no Menu de Pausa [ ] Verificar que LanguageChanged propaga correctamente em todos os HUDs",
+  "historical": false
+}

@@ -1,0 +1,74 @@
+{
+  "path": "Enemy/Bosses/Boss_GiganteDoDegelo.cs",
+  "filename": "Boss_GiganteDoDegelo.cs",
+  "category": "Enemy",
+  "primary": "Boss_GiganteDoDegelo",
+  "kind": "Definição",
+  "summary": "Boss 4/8 (GDD 12.3.4, a confirmar) — \"Gigante do Degelo\". Preparação/scaffolding apenas (sem moveset implementado): liga-se a BossController (vida, BossHealthBarUI, EnemyMultiPartBoss). A mecânica própria fica para uma tarefa futura — ver TODOs nos hooks abaixo. Ideias a confirmar com o GDD (pelo nome): gigante de gelo/glaciar — possivelmente partes de gelo que \"derretem\" (ficam vulneráveis) com ataques de fogo (EnemyData.weakAgainst da parte = categoria de fogo, se existir) e voltam a congelar (re-tornam invencíveis) ao fim de algum tempo se não forem atacadas a tempo.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Boss_GiganteDoDegelo",
+      "kind": "class",
+      "bases": "BossController",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnIntroStart",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnIntroStart."
+    },
+    {
+      "name": "OnPhaseChanged",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "int defeatedParts, int aliveParts",
+      "description": "Executa a operação OnPhaseChanged."
+    },
+    {
+      "name": "OnAllPartsDefeated",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnAllPartsDefeated."
+    },
+    {
+      "name": "OnDefeated",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnDefeated."
+    }
+  ],
+  "dependencies": [
+    "Action_SetBossDefeated",
+    "BossController",
+    "BossHealthBarUI",
+    "EnemyData",
+    "EnemyMultiPartBoss",
+    "NpcAction"
+  ],
+  "used_by": [],
+  "source": "/// <summary>\n/// Boss 4/8 (GDD 12.3.4, a confirmar) — \"Gigante do Degelo\".\n///\n/// Preparação/scaffolding apenas (sem moveset implementado): liga-se a\n/// BossController (vida, BossHealthBarUI, EnemyMultiPartBoss). A mecânica\n/// própria fica para uma tarefa futura — ver TODOs nos hooks abaixo.\n///\n/// Ideias a confirmar com o GDD (pelo nome): gigante de gelo/glaciar —\n/// possivelmente partes de gelo que \"derretem\" (ficam vulneráveis) com\n/// ataques de fogo (EnemyData.weakAgainst da parte = categoria de fogo, se\n/// existir) e voltam a congelar (re-tornam invencíveis) ao fim de algum\n/// tempo se não forem atacadas a tempo.\n/// </summary>\npublic class Boss_GiganteDoDegelo : BossController\n{\n    protected override void Awake()\n    {\n        base.Awake();\n        if (string.IsNullOrEmpty(bossId)) bossId = \"gigante_do_degelo\";\n        if (string.IsNullOrEmpty(displayName)) displayName = \"Gigante do Degelo\";\n    }\n\n    protected override void OnIntroStart()\n    {\n        // TODO (moveset): activar ataques iniciais / animação de despertar.\n    }\n\n    protected override void OnPhaseChanged(int defeatedParts, int aliveParts)\n    {\n        // TODO (moveset): trocar de fase ao \"derreter\"/destruir cada parte de gelo.\n    }\n\n    protected override void OnAllPartsDefeated()\n    {\n        // TODO (moveset): núcleo totalmente exposto/vulnerável.\n    }\n\n    protected override void OnDefeated()\n    {\n        // TODO (moveset): sequência de derrota (drops, Action_SetBossDefeated\n        // via NpcAction/UnityEvent, animação final).\n    }\n}\n",
+  "id": "script-enemy-bosses-boss-gigantedodegelo-cs",
+  "dependencyIds": [
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-ui-bosshealthbarui-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-npc-npcaction-cs"
+  ],
+  "usedByIds": []
+}

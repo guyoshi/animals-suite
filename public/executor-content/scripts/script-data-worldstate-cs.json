@@ -1,0 +1,518 @@
+{
+  "path": "Data/WorldState.cs",
+  "filename": "WorldState.cs",
+  "category": "Data",
+  "primary": "WorldState",
+  "kind": "Componente",
+  "summary": "\"Banco de dados\" do estado do mundo: hora do dia, clima, mundo/área atual e população das vilas. As condições de eventos de NPC (Etapa 1) leem este estado através de WorldState.Instance. A hora do dia é atualizada pelo DayNightCycle2D, o clima por um futuro WeatherController, e o mundo/área atual por triggers como CameraAreaBounds.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "TimeOfDay",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "WeatherType",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "WorldState",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "VillagePopulation",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "timeOfDay",
+      "type": "TimeOfDay",
+      "mods": "private",
+      "default": "TimeOfDay.Manha",
+      "section": "Tempo",
+      "attrs": "[Header(\"Tempo\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "weather",
+      "type": "WeatherType",
+      "mods": "private",
+      "default": "WeatherType.Limpo",
+      "section": "Clima",
+      "attrs": "[Header(\"Clima\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "manualTimeActive",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Clima/Hora Manual (Etapa 8)",
+      "attrs": "[Header(\"Clima/Hora Manual (Etapa 8)\")] [Tooltip(\"Enquanto activo, SetTimeOfDay (chamado todos os frames pelo DayNightCycle2D) é ignorado — a hora fica fixa no valor definido manualmente. Ao desactivar, a hora real volta a ser aplicada no frame seguinte.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Enquanto ativo, SetTimeOfDay (chamado todos os frames pelo DayNightCycle2D) é ignorado — a hora fica fixa no valor definido manualmente. Ao desativar, a hora real volta a ser aplicada no frame seguinte."
+    },
+    {
+      "name": "manualTimeSaved",
+      "type": "TimeOfDay",
+      "mods": "private",
+      "default": "",
+      "section": "Clima/Hora Manual (Etapa 8)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "manualWeatherActive",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Clima/Hora Manual (Etapa 8)",
+      "attrs": "[Tooltip(\"Enquanto activo, SetWeather é ignorado — o clima fica fixo no valor definido manualmente. Ao desactivar, o clima de antes de activar é restaurado.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Enquanto ativo, SetWeather é ignorado — o clima fica fixo no valor definido manualmente. Ao desativar, o clima de antes de ativar é restaurado."
+    },
+    {
+      "name": "manualWeatherSaved",
+      "type": "WeatherType",
+      "mods": "private",
+      "default": "",
+      "section": "Clima/Hora Manual (Etapa 8)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "currentWorld",
+      "type": "WorldData",
+      "mods": "private",
+      "default": "",
+      "section": "Localização Actual",
+      "attrs": "[Header(\"Localização Actual\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "currentArea",
+      "type": "AreaData",
+      "mods": "private",
+      "default": "",
+      "section": "Localização Actual",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "villagePopulations",
+      "type": "List<VillagePopulation>",
+      "mods": "private",
+      "default": "new List<VillagePopulation>()",
+      "section": "População das Vilas",
+      "attrs": "[Header(\"População das Vilas\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CurrentTimeOfDay",
+      "type": "TimeOfDay",
+      "mods": "public",
+      "default": "> timeOfDay",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CurrentWeather",
+      "type": "WeatherType",
+      "mods": "public",
+      "default": "> weather",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CurrentWorld",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "> currentWorld",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CurrentArea",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "> currentArea",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ManualTimeActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> manualTimeActive",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ManualWeatherActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> manualWeatherActive",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_initialSnapshotJson",
+      "type": "string",
+      "mods": "private",
+      "default": "",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "villageId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "current",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "max",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rescuedCount",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "additionalPopulation",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "População das Vilas",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "ResetForNewGame",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetForNewGame."
+    },
+    {
+      "name": "SetTimeOfDay",
+      "ret": "void",
+      "mods": "public",
+      "params": "TimeOfDay value",
+      "description": "Executa a operação SetTimeOfDay."
+    },
+    {
+      "name": "IsTimeOfDay",
+      "ret": "bool",
+      "mods": "public",
+      "params": "TimeOfDay value",
+      "description": "Executa a operação IsTimeOfDay."
+    },
+    {
+      "name": "SetWeather",
+      "ret": "void",
+      "mods": "public",
+      "params": "WeatherType value",
+      "description": "Executa a operação SetWeather."
+    },
+    {
+      "name": "IsWeather",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WeatherType value",
+      "description": "Executa a operação IsWeather."
+    },
+    {
+      "name": "SetManualTimeOfDay",
+      "ret": "void",
+      "mods": "public",
+      "params": "TimeOfDay value",
+      "description": "Executa a operação SetManualTimeOfDay."
+    },
+    {
+      "name": "DisableManualTimeOfDay",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação DisableManualTimeOfDay."
+    },
+    {
+      "name": "SetManualWeather",
+      "ret": "void",
+      "mods": "public",
+      "params": "WeatherType value",
+      "description": "Executa a operação SetManualWeather."
+    },
+    {
+      "name": "DisableManualWeather",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação DisableManualWeather."
+    },
+    {
+      "name": "SetCurrentArea",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação SetCurrentArea."
+    },
+    {
+      "name": "SetCurrentWorld",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação SetCurrentWorld."
+    },
+    {
+      "name": "IsCurrentWorld",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação IsCurrentWorld."
+    },
+    {
+      "name": "IsCurrentArea",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsCurrentArea."
+    },
+    {
+      "name": "GetVillagePopulation",
+      "ret": "VillagePopulation",
+      "mods": "public",
+      "params": "string villageId",
+      "description": "Executa a operação GetVillagePopulation."
+    },
+    {
+      "name": "GetOrCreateVillagePopulation",
+      "ret": "VillagePopulation",
+      "mods": "private",
+      "params": "string villageId",
+      "description": "Executa a operação GetOrCreateVillagePopulation."
+    },
+    {
+      "name": "SetVillagePopulation",
+      "ret": "void",
+      "mods": "public",
+      "params": "string villageId, int current, int max",
+      "description": "Executa a operação SetVillagePopulation."
+    },
+    {
+      "name": "SyncRescuedPopulation",
+      "ret": "void",
+      "mods": "internal",
+      "params": "string villageId, int rescued, int max",
+      "description": "Executa a operação SyncRescuedPopulation."
+    },
+    {
+      "name": "AddVillagePopulation",
+      "ret": "void",
+      "mods": "public",
+      "params": "string villageId",
+      "description": "Executa a operação AddVillagePopulation."
+    },
+    {
+      "name": "GetVillagePopulationLevel",
+      "ret": "int",
+      "mods": "public",
+      "params": "string villageId, int numLevels = 4",
+      "description": "Executa a operação GetVillagePopulationLevel."
+    },
+    {
+      "name": "GetVillageRestorationLevel",
+      "ret": "int",
+      "mods": "public",
+      "params": "string villageId, bool bossDefeated = false, int firstRescueThreshold = 2",
+      "description": "Executa a operação GetVillageRestorationLevel."
+    },
+    {
+      "name": "CaptureTo",
+      "ret": "void",
+      "mods": "public",
+      "params": "SaveData data",
+      "description": "Executa a operação CaptureTo."
+    },
+    {
+      "name": "RestoreFrom",
+      "ret": "void",
+      "mods": "public",
+      "params": "SaveData data",
+      "description": "Executa a operação RestoreFrom."
+    }
+  ],
+  "dependencies": [
+    "Action_DisableManualTimeOfDay",
+    "Action_DisableManualWeather",
+    "Action_SetManualTimeOfDay",
+    "Action_SetManualWeather",
+    "Action_SetVillagePopulation",
+    "AreaData",
+    "AreaProgress",
+    "CameraAreaBounds",
+    "DayNightCycle2D",
+    "GameDatabase",
+    "PlayerProgress",
+    "SaveData",
+    "SaveManager",
+    "VillageEvolutionController",
+    "WorldData"
+  ],
+  "used_by": [
+    "Action_RescueNpc",
+    "Action_SetManualWeather",
+    "AnimalsDebugPanel",
+    "AreaManager",
+    "AreaSectionUI",
+    "AudioManager",
+    "CameraAreaBounds",
+    "Checkpoint",
+    "Condition_TimeOfDay",
+    "DayNightCycle2D",
+    "HUDController",
+    "IPauseMenuSection",
+    "InteractionPromptUI",
+    "MainMenuController",
+    "NpcConditionUtil",
+    "PauseMenuController",
+    "PickupBase",
+    "PlayerConsumableEffects",
+    "PlayerDeathHandler",
+    "PlayerProgress",
+    "SaveData",
+    "SaveManager",
+    "SceneLoader",
+    "ShopData",
+    "VillageEvolutionController",
+    "WorldData",
+    "WorldMapController",
+    "WorldMapEntryPoint"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\npublic enum TimeOfDay\n{\n    Manha,\n    Tarde,\n    Noite,\n    Madrugada\n}\n\npublic enum WeatherType\n{\n    Limpo,\n    Chuva,\n    Neve,\n    Tempestade,\n    Neblina,\n    VentoForte\n}\n\n/// <summary>\n/// \"Banco de dados\" do estado do mundo: hora do dia, clima, mundo/área actual\n/// e população das vilas. As condições de eventos de NPC (Etapa 1) leem este\n/// estado através de WorldState.Instance.\n///\n/// A hora do dia é actualizada pelo DayNightCycle2D, o clima por um futuro\n/// WeatherController, e o mundo/área actual por triggers como CameraAreaBounds.\n/// </summary>\npublic class WorldState : MonoBehaviour\n{\n    public static WorldState Instance { get; private set; }\n\n    [Header(\"Tempo\")]\n    [SerializeField] private TimeOfDay timeOfDay = TimeOfDay.Manha;\n\n    [Header(\"Clima\")]\n    [SerializeField] private WeatherType weather = WeatherType.Limpo;\n\n    [Header(\"Clima/Hora Manual (Etapa 8)\")]\n    [Tooltip(\"Enquanto activo, SetTimeOfDay (chamado todos os frames pelo DayNightCycle2D) é ignorado — a hora fica fixa no valor definido manualmente. Ao desactivar, a hora real volta a ser aplicada no frame seguinte.\")]\n    [SerializeField] private bool manualTimeActive;\n    [SerializeField] private TimeOfDay manualTimeSaved;\n\n    [Tooltip(\"Enquanto activo, SetWeather é ignorado — o clima fica fixo no valor definido manualmente. Ao desactivar, o clima de antes de activar é restaurado.\")]\n    [SerializeField] private bool manualWeatherActive;\n    [SerializeField] private WeatherType manualWeatherSaved;\n\n    [Header(\"Localização Actual\")]\n    [SerializeField] private WorldData currentWorld;\n    [SerializeField] private AreaData currentArea;\n\n    [Header(\"População das Vilas\")]\n    [SerializeField] private List<VillagePopulation> villagePopulations = new List<VillagePopulation>();\n\n    public TimeOfDay CurrentTimeOfDay => timeOfDay;\n    public WeatherType CurrentWeather => weather;\n    public WorldData CurrentWorld => currentWorld;\n    public AreaData CurrentArea => currentArea;\n\n    public bool ManualTimeActive => manualTimeActive;\n    public bool ManualWeatherActive => manualWeatherActive;\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\"). Sem isto, um\n    /// WorldState configurado numa cena (currentWorld/currentArea/clima\n    /// iniciais) seria destruído ao encontrar a versão vazia auto-criada como\n    /// Instance.\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        // Tarefa #22 (Menu Inicial — \"Novo Jogo\"): ver PlayerProgress.cs para a\n        // explicação completa do mecanismo de fotografia/restauro.\n        _initialSnapshotJson = JsonUtility.ToJson(this);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(WorldState) + \" (Fallback)\");\n        var instance = go.AddComponent<WorldState>();\n        instance.isAutoFallback = true;\n    }\n\n    // ---------------- Novo Jogo (Tarefa #22) ----------------\n\n    private string _initialSnapshotJson;\n\n    /// <summary>Repõe hora/clima/área/população das vilas para os valores configurados no Inspector no arranque — ver PlayerProgress.ResetForNewGame.</summary>\n    public void ResetForNewGame()\n    {\n        if (!string.IsNullOrEmpty(_initialSnapshotJson))\n            JsonUtility.FromJsonOverwrite(_initialSnapshotJson, this);\n\n        CurrentAreaChanged?.Invoke(currentArea);\n    }\n\n    // ---------------- Tempo / Clima ----------------\n\n    /// <summary>Chamado todos os frames pelo DayNightCycle2D. Ignorado enquanto a hora manual estiver activa.</summary>\n    public void SetTimeOfDay(TimeOfDay value)\n    {\n        if (manualTimeActive) return;\n        timeOfDay = value;\n    }\n\n    public bool IsTimeOfDay(TimeOfDay value) => timeOfDay == value;\n\n    /// <summary>Ignorado enquanto o clima manual estiver activo.</summary>\n    public void SetWeather(WeatherType value)\n    {\n        if (manualWeatherActive) return;\n        weather = value;\n    }\n\n    public bool IsWeather(WeatherType value) => weather == value;\n\n    // ---------------- Clima/Hora Manual (Etapa 8) ----------------\n\n    /// <summary>\n    /// Activa a hora manual com \"value\" (guardando a hora actual para restaurar\n    /// depois, se ainda não estiver activa) — o DayNightCycle2D deixa de a alterar.\n    /// Usado por Action_SetManualTimeOfDay.\n    /// </summary>\n    public void SetManualTimeOfDay(TimeOfDay value)\n    {\n        if (!manualTimeActive)\n        {\n            manualTimeSaved = timeOfDay;\n            manualTimeActive = true;\n        }\n\n        timeOfDay = value;\n    }\n\n    /// <summary>\n    /// Desactiva a hora manual. A hora real (calculada pelo DayNightCycle2D) volta\n    /// a ser aplicada no frame seguinte; entretanto, restaura a hora guardada antes\n    /// de activar o modo manual. Usado por Action_DisableManualTimeOfDay.\n    /// </summary>\n    public void DisableManualTimeOfDay()\n    {\n        if (!manualTimeActive) return;\n\n        manualTimeActive = false;\n        timeOfDay = manualTimeSaved;\n    }\n\n    /// <summary>\n    /// Activa o clima manual com \"value\" (guardando o clima actual para restaurar\n    /// depois, se ainda não estiver activo). Usado por Action_SetManualWeather.\n    /// </summary>\n    public void SetManualWeather(WeatherType value)\n    {\n        if (!manualWeatherActive)\n        {\n            manualWeatherSaved = weather;\n            manualWeatherActive = true;\n        }\n\n        weather = value;\n    }\n\n    /// <summary>Desactiva o clima manual e restaura o clima de antes de o activar. Usado por Action_DisableManualWeather.</summary>\n    public void DisableManualWeather()\n    {\n        if (!manualWeatherActive) return;\n\n        manualWeatherActive = false;\n        weather = manualWeatherSaved;\n    }\n\n    // ---------------- Mundo / Área ----------------\n\n    /// <summary>\n    /// Define a área actual. Devolve true se a área mudou de facto (usado por\n    /// CameraAreaBounds para disparar o autosave apenas em mudanças reais de\n    /// área/cidade, não em cada OnTriggerStay2D).\n    /// </summary>\n    /// <summary>Disparado quando a área actual muda (via SetCurrentArea) — HUD (banner de nome de área) e outros sistemas podem ligar-se aqui.</summary>\n    public event System.Action<AreaData> CurrentAreaChanged;\n\n    public bool SetCurrentArea(AreaData area)\n    {\n        if (area == null || currentArea == area) return false;\n\n        currentArea = area;\n        if (area.world != null) currentWorld = area.world;\n        CurrentAreaChanged?.Invoke(currentArea);\n        return true;\n    }\n\n    public void SetCurrentWorld(WorldData world) => currentWorld = world;\n\n    public bool IsCurrentWorld(WorldData world) => world != null && currentWorld == world;\n    public bool IsCurrentArea(AreaData area) => area != null && currentArea == area;\n\n    // ---------------- População das Vilas ----------------\n\n    /// <summary>\n    /// Disparado sempre que a população de uma vila muda (via SetVillagePopulation ou\n    /// AddVillagePopulation). Parâmetros: (villageId, current, max).\n    ///\n    /// Subscreve aqui para reagir automaticamente a mudanças de população:\n    ///   • Música da vila: mudar o clip/versão do BGM conforme o nível.\n    ///   • Lojas: activar/desactivar NPCs lojistas conforme a população.\n    ///   • Decoração: activar GameObjects de ambiente (tendas, lanternas, etc.).\n    ///   • Nível de evolução: calcular com GetVillagePopulationLevel(villageId, numLevels).\n    /// </summary>\n    public static event System.Action<string, int, int> VillagePopulationChanged;\n\n    public VillagePopulation GetVillagePopulation(string villageId)\n    {\n        for (int i = 0; i < villagePopulations.Count; i++)\n            if (villagePopulations[i].villageId == villageId) return villagePopulations[i];\n\n        return null;\n    }\n\n    private VillagePopulation GetOrCreateVillagePopulation(string villageId)\n    {\n        var pop = GetVillagePopulation(villageId);\n        if (pop != null) return pop;\n\n        pop = new VillagePopulation { villageId = villageId };\n        villagePopulations.Add(pop);\n        return pop;\n    }\n\n    /// <summary>\n    /// Define directamente \"current\" e \"max\" da população de uma vila (override\n    /// manual — Action_SetVillagePopulation). Reseta rescuedCount e\n    /// additionalPopulation para zero, tratando \"current\" como o total combinado.\n    /// Usar apenas para overrides de design (cutscenes, reduções, forçar valor).\n    /// Para sincronizar a partir dos resgates registados, usar\n    /// <see cref=\"SyncRescuedPopulation\"/>.\n    /// </summary>\n    public void SetVillagePopulation(string villageId, int current, int max)\n    {\n        var pop = GetOrCreateVillagePopulation(villageId);\n        pop.current = current;\n        pop.rescuedCount = current;\n        pop.additionalPopulation = 0;\n        pop.max = max;\n        VillagePopulationChanged?.Invoke(villageId, pop.current, pop.max);\n    }\n\n    /// <summary>\n    /// Actualiza o número de NPCs resgatados para esta vila (fonte:\n    /// PlayerProgress.SyncVillagePopulationForWorld). Preserva\n    /// additionalPopulation — ao contrário de SetVillagePopulation, não apaga\n    /// a população extra (lojistas, visitantes). \"current\" = rescued + additional.\n    /// </summary>\n    internal void SyncRescuedPopulation(string villageId, int rescued, int max)\n    {\n        var pop = GetOrCreateVillagePopulation(villageId);\n        pop.rescuedCount = rescued;\n        pop.max = max;\n        pop.current = rescued + pop.additionalPopulation;\n        VillagePopulationChanged?.Invoke(villageId, pop.current, pop.max);\n    }\n\n    /// <summary>\n    /// Adiciona 1 NPC adicional (lojista, visitante, NPC de evento) à vila,\n    /// sem passar por PlayerProgress.AddNpcRescued. Não conta para a percentagem\n    /// de restauração — apenas para a contagem visual. Preservado durante\n    /// SyncAllVillagePopulations (não é sobrescrito pelo sistema de resgates).\n    /// </summary>\n    public void AddVillagePopulation(string villageId)\n    {\n        var pop = GetOrCreateVillagePopulation(villageId);\n\n        // Respeita o máximo total (rescued + additional <= max, se max > 0).\n        if (pop.max <= 0 || pop.current < pop.max)\n        {\n            pop.additionalPopulation++;\n            pop.current = pop.rescuedCount + pop.additionalPopulation;\n        }\n\n        VillagePopulationChanged?.Invoke(villageId, pop.current, pop.max);\n    }\n\n    /// <summary>\n    /// Devolve o nível de evolução da vila (0 a numLevels-1) baseado na razão\n    /// rescuedCount/max (apenas NPCs resgatados — exclui população adicional).\n    /// Útil para indexar um array de música, lojas ou decorações.\n    ///\n    /// Exemplo: GetVillagePopulationLevel(\"VilaMundo1\", 4)\n    ///   → 0..3 consoante 0–24%, 25–49%, 50–74%, 75–100% de NPCs resgatados.\n    /// </summary>\n    public int GetVillagePopulationLevel(string villageId, int numLevels = 4)\n    {\n        if (numLevels <= 1) return 0;\n        var pop = GetVillagePopulation(villageId);\n        if (pop == null || pop.max <= 0) return 0;\n\n        float ratio = Mathf.Clamp01((float)pop.rescuedCount / pop.max);\n        return Mathf.Min(Mathf.FloorToInt(ratio * numLevels), numLevels - 1);\n    }\n\n    /// <summary>\n    /// Devolve o nível de restauração da vila (0–4) com base em regras de design\n    /// explícitas (em vez de divisão igual de current/max).\n    ///\n    ///   Nível 0 — Vila Vazia:   nenhum NPC resgatado.\n    ///   Nível 1 — Primeiros:    pelo menos \"firstRescueThreshold\" NPCs resgatados (padrão 2).\n    ///   Nível 2 — Vila Viva:    ≥ 50% resgatados E pelo menos 1 NPC adicional presente\n    ///                            (ex: lojista que chegou por missão).\n    ///   Nível 3 — Restaurada:   todos os NPCs obrigatórios resgatados (rescuedCount == max).\n    ///   Nível 4 — Pós-Boss:     nível 3 + boss do mundo derrotado (\"bossDefeated\" = true).\n    ///\n    /// Parâmetros opcionais permitem ajustar os limiares por vila sem alterar este\n    /// método (configurados em <see cref=\"VillageEvolutionController\"/>).\n    /// </summary>\n    public int GetVillageRestorationLevel(string villageId, bool bossDefeated = false, int firstRescueThreshold = 2)\n    {\n        var pop = GetVillagePopulation(villageId);\n        if (pop == null || pop.rescuedCount == 0) return 0;\n\n        bool allRescued = pop.max > 0 && pop.rescuedCount >= pop.max;\n        bool halfRescued = pop.max > 0 && (float)pop.rescuedCount / pop.max >= 0.5f;\n        bool hasShopNpc  = pop.additionalPopulation > 0;\n\n        if (allRescued && bossDefeated) return 4;\n        if (allRescued)                 return 3;\n        if (halfRescued && hasShopNpc)  return 2;\n        if (pop.rescuedCount >= firstRescueThreshold) return 1;\n        return 0;\n    }\n\n    // ---------------- Save / Load ----------------\n\n    /// <summary>Copia o estado actual para \"data\" (usado por SaveManager ao gravar).</summary>\n    public void CaptureTo(SaveData data)\n    {\n        data.timeOfDay = timeOfDay;\n        data.weather = weather;\n\n        data.manualTimeActive = manualTimeActive;\n        data.manualTimeSaved = manualTimeSaved;\n\n        data.manualWeatherActive = manualWeatherActive;\n        data.manualWeatherSaved = manualWeatherSaved;\n\n        data.currentWorldId = currentWorld != null ? currentWorld.worldId : null;\n        data.currentAreaId = currentArea != null ? currentArea.areaId : null;\n\n        data.villagePopulations = new List<VillagePopulation>();\n        foreach (var pop in villagePopulations)\n            data.villagePopulations.Add(new VillagePopulation\n            {\n                villageId = pop.villageId,\n                current = pop.current,\n                max = pop.max,\n                rescuedCount = pop.rescuedCount,\n                additionalPopulation = pop.additionalPopulation\n            });\n    }\n\n    /// <summary>\n    /// Restaura o estado a partir de \"data\" (usado por SaveManager ao carregar).\n    /// currentWorldId/currentAreaId são resolvidos via GameDatabase — se este\n    /// não existir ou o ID não for encontrado, currentWorld/currentArea ficam null.\n    /// </summary>\n    public void RestoreFrom(SaveData data)\n    {\n        if (data == null) return;\n\n        timeOfDay = data.timeOfDay;\n        weather = data.weather;\n\n        manualTimeActive = data.manualTimeActive;\n        manualTimeSaved = data.manualTimeSaved;\n\n        manualWeatherActive = data.manualWeatherActive;\n        manualWeatherSaved = data.manualWeatherSaved;\n\n        var db = GameDatabase.Instance;\n        currentWorld = db != null ? db.FindWorld(data.currentWorldId) : null;\n        currentArea = db != null ? db.FindArea(data.currentAreaId) : null;\n\n        villagePopulations.Clear();\n        if (data.villagePopulations != null)\n            foreach (var pop in data.villagePopulations)\n                villagePopulations.Add(new VillagePopulation\n                {\n                    villageId = pop.villageId,\n                    current = pop.current,\n                    max = pop.max,\n                    rescuedCount = pop.rescuedCount,\n                    // Migração v0→v1: additionalPopulation não existia — começa a zero.\n                    additionalPopulation = pop.additionalPopulation\n                });\n\n        // Re-deriva a população de cada vila a partir dos resgates guardados em\n        // PlayerProgress (corrige saves antigos onde villagePopulations era sempre 0,\n        // e garante consistência mesmo que AddNpcRescued seja chamado antes deste restore).\n        PlayerProgress.Instance?.SyncAllVillagePopulations();\n\n        // Dispara CurrentAreaChanged mesmo que \"currentArea\" tenha o mesmo\n        // valor de antes (SetCurrentArea só dispara em mudanças reais) — um\n        // load (mesmo na mesma cena/área) precisa de actualizar banner de\n        // área, HUD e outros sistemas ligados a este evento, que de outra\n        // forma continuariam a mostrar o estado anterior ao load.\n        if (currentArea != null) CurrentAreaChanged?.Invoke(currentArea);\n    }\n}\n\n[System.Serializable]\npublic class VillagePopulation\n{\n    public string villageId;\n\n    /// <summary>\n    /// Total de habitantes visíveis (rescuedCount + additionalPopulation).\n    /// Valor de exibição — não modificar directamente; usar\n    /// <see cref=\"WorldState.SetVillagePopulation\"/> ou\n    /// <see cref=\"WorldState.AddVillagePopulation\"/>.\n    /// </summary>\n    public int current;\n\n    /// <summary>Total de NPCs obrigatórios a resgatar (fonte: AreaData.totalNpcsToRescue).</summary>\n    public int max;\n\n    /// <summary>\n    /// Número de NPCs oficialmente resgatados (fonte: PlayerProgress.AreaProgress.rescuedNpcIds).\n    /// Derivado via <see cref=\"PlayerProgress.SyncVillagePopulationForWorld\"/> —\n    /// não alterar directamente.\n    /// </summary>\n    public int rescuedCount;\n\n    /// <summary>\n    /// NPCs adicionais na vila que NÃO foram \"resgatados\" (lojistas desbloqueados\n    /// por missão, visitantes, NPCs de evento). Incrementado por\n    /// <see cref=\"WorldState.AddVillagePopulation\"/> e preservado durante\n    /// <see cref=\"PlayerProgress.SyncAllVillagePopulations\"/>.\n    /// </summary>\n    public int additionalPopulation;\n}\n",
+  "id": "script-data-worldstate-cs",
+  "dependencyIds": [
+    "script-npc-actions-worldstateactions-cs",
+    "script-data-areadata-cs",
+    "script-camera-cameraareabounds-cs",
+    "script-environment-daynightcycle2d-cs",
+    "script-data-gamedatabase-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savedata-cs",
+    "script-data-savemanager-cs",
+    "script-npc-villageevolutioncontroller-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-villageactions-cs",
+    "script-npc-actions-worldstateactions-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-world-areamanager-cs",
+    "script-ui-areasectionui-cs",
+    "script-audio-audiomanager-cs",
+    "script-camera-cameraareabounds-cs",
+    "script-interactables-checkpoint-cs",
+    "script-npc-conditions-worldconditions-cs",
+    "script-environment-daynightcycle2d-cs",
+    "script-ui-hudcontroller-cs",
+    "script-ui-ipausemenusection-cs",
+    "script-ui-interactionpromptui-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-npc-npcconditionutil-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savedata-cs",
+    "script-data-savemanager-cs",
+    "script-world-sceneloader-cs",
+    "script-data-shopdata-cs",
+    "script-npc-villageevolutioncontroller-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapentrypoint-cs"
+  ]
+}

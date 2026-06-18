@@ -1,0 +1,281 @@
+{
+  "path": "Platforms/FloatingPlatform.cs",
+  "filename": "FloatingPlatform.cs",
+  "category": "Platforms",
+  "primary": "FloatingPlatform",
+  "kind": "Componente",
+  "summary": "Plataforma que flutua na água (posição inicial = nível da superfície). Soma o peso de quem está em cima (GameWeightUtil — mesma lógica da WeightPlate/SeesawPlatform): enquanto o peso total não passar \"capacidadeMaxima\", flutua normalmente (com balanço opcional). Acima disso, afunda gradualmente — quem estiver em cima afunda com ela. Pode combinar-se com MovingPlatform (ex: tronco que flutua E se desloca), mas tem o seu próprio Rigidbody2D/posição vertical — não usar \"tipoMovimento = Vertical\" ao mesmo tempo (conflito de eixo Y).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "FloatingPlatform",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "capacidadeMaxima",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "Flutuação",
+      "attrs": "[Header(\"Flutuação\")] [Tooltip(\"Peso total suportado antes de começar a afundar (ver GameWeightUtil — peso da forma do player, ObjectWeight, etc).\")] [Min(0.1f)]",
+      "inspector": true,
+      "description": "Peso total suportado antes de começar a afundar (ver GameWeightUtil — peso da forma do player, ObjectWeight, etc)."
+    },
+    {
+      "name": "velocidadeAfundarPorPeso",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Flutuação",
+      "attrs": "[Tooltip(\"Velocidade de afundamento por cada unidade de peso acima da capacidade.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Velocidade de afundamento por cada unidade de peso acima da capacidade."
+    },
+    {
+      "name": "profundidadeMaxima",
+      "type": "float",
+      "mods": "public",
+      "default": "3f",
+      "section": "Flutuação",
+      "attrs": "[Tooltip(\"Profundidade máxima a partir da posição de flutuação (depois disso fica parada no fundo).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Profundidade máxima a partir da posição de flutuação (depois disso fica parada no fundo)."
+    },
+    {
+      "name": "velocidadeSubida",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Flutuação",
+      "attrs": "[Tooltip(\"Velocidade com que volta a subir à superfície quando o peso é removido.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Velocidade com que volta a subir à superfície quando o peso é removido."
+    },
+    {
+      "name": "amplitudeBalanco",
+      "type": "float",
+      "mods": "public",
+      "default": "0.1f",
+      "section": "Balanço (opcional)",
+      "attrs": "[Header(\"Balanço (opcional)\")] [Tooltip(\"Amplitude do balanço suave vertical enquanto flutua sem peso extra (0 = sem balanço).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Amplitude do balanço suave vertical enquanto flutua sem peso extra (0 = sem balanço)."
+    },
+    {
+      "name": "velocidadeBalanco",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Balanço (opcional)",
+      "attrs": "[Min(0f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "transportaPlayer",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Transporta o Player",
+      "attrs": "[Header(\"Transporta o Player\")] [Tooltip(\"Quem estiver em cima sobe/desce/balança junto com a plataforma.\")]",
+      "inspector": true,
+      "description": "Quem estiver em cima sobe/desce/balança junto com a plataforma."
+    },
+    {
+      "name": "onComecouAAfundar",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onAfundouCompletamente",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onVoltouASuperficie",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_col",
+      "type": "Collider2D",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_floatPos",
+      "type": "Vector2",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_currentDepth",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_isSinking",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_isFullySunk",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_isAtSurface",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_occupants",
+      "type": "HashSet<Collider2D>",
+      "mods": "private readonly",
+      "default": "new HashSet<Collider2D>()",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "FixedUpdate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FixedUpdate."
+    },
+    {
+      "name": "OnCollisionEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionEnter2D."
+    },
+    {
+      "name": "OnCollisionStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionStay2D."
+    },
+    {
+      "name": "OnCollisionExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionExit2D."
+    },
+    {
+      "name": "UpdateOccupant",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision, bool entering",
+      "description": "Executa a operação UpdateOccupant."
+    },
+    {
+      "name": "IsOnTop",
+      "ret": "bool",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação IsOnTop."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "GameWeightUtil",
+    "MovingPlatform",
+    "ObjectWeight",
+    "SeesawPlatform",
+    "WeightPlate"
+  ],
+  "used_by": [
+    "GameWeightUtil",
+    "WeightPlate"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Plataforma que flutua na água (posição inicial = nível da superfície).\n/// Soma o peso de quem está em cima (GameWeightUtil — mesma lógica da\n/// WeightPlate/SeesawPlatform): enquanto o peso total não passar\n/// \"capacidadeMaxima\", flutua normalmente (com balanço opcional). Acima\n/// disso, afunda gradualmente — quem estiver em cima afunda com ela.\n///\n/// Pode combinar-se com MovingPlatform (ex: tronco que flutua E se desloca),\n/// mas tem o seu próprio Rigidbody2D/posição vertical — não usar\n/// \"tipoMovimento = Vertical\" ao mesmo tempo (conflito de eixo Y).\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D))]\n[DisallowMultipleComponent]\npublic class FloatingPlatform : MonoBehaviour\n{\n    [Header(\"Flutuação\")]\n    [Tooltip(\"Peso total suportado antes de começar a afundar (ver GameWeightUtil — peso da forma do player, ObjectWeight, etc).\")]\n    [Min(0.1f)] public float capacidadeMaxima = 2f;\n\n    [Tooltip(\"Velocidade de afundamento por cada unidade de peso acima da capacidade.\")]\n    [Min(0f)] public float velocidadeAfundarPorPeso = 0.5f;\n\n    [Tooltip(\"Profundidade máxima a partir da posição de flutuação (depois disso fica parada no fundo).\")]\n    [Min(0f)] public float profundidadeMaxima = 3f;\n\n    [Tooltip(\"Velocidade com que volta a subir à superfície quando o peso é removido.\")]\n    [Min(0f)] public float velocidadeSubida = 1f;\n\n    [Header(\"Balanço (opcional)\")]\n    [Tooltip(\"Amplitude do balanço suave vertical enquanto flutua sem peso extra (0 = sem balanço).\")]\n    [Min(0f)] public float amplitudeBalanco = 0.1f;\n\n    [Min(0f)] public float velocidadeBalanco = 1f;\n\n    [Header(\"Transporta o Player\")]\n    [Tooltip(\"Quem estiver em cima sobe/desce/balança junto com a plataforma.\")]\n    public bool transportaPlayer = true;\n\n    [Header(\"Eventos\")]\n    public UnityEvent onComecouAAfundar;\n    public UnityEvent onAfundouCompletamente;\n    public UnityEvent onVoltouASuperficie;\n\n    private Rigidbody2D _rb;\n    private Collider2D _col;\n    private Vector2 _floatPos;\n    private float _currentDepth;\n    private bool _isSinking;\n    private bool _isFullySunk;\n    private bool _isAtSurface = true;\n\n    private readonly HashSet<Collider2D> _occupants = new HashSet<Collider2D>();\n\n    private void Awake()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n        _col = GetComponent<Collider2D>();\n        _rb.bodyType = RigidbodyType2D.Kinematic;\n        _floatPos = _rb.position;\n    }\n\n    private void FixedUpdate()\n    {\n        float totalWeight = 0f;\n        foreach (var occ in _occupants)\n        {\n            if (occ == null) continue;\n            totalWeight += GameWeightUtil.GetWeightOf(occ);\n        }\n\n        float excesso = Mathf.Max(0f, totalWeight - capacidadeMaxima);\n\n        Vector2 oldPos = _rb.position;\n        Vector2 newPos;\n\n        bool sinkingNow = excesso > 0f;\n        if (sinkingNow && !_isSinking) onComecouAAfundar?.Invoke();\n        _isSinking = sinkingNow;\n\n        if (sinkingNow)\n        {\n            _currentDepth = Mathf.Min(profundidadeMaxima, _currentDepth + velocidadeAfundarPorPeso * excesso * Time.fixedDeltaTime);\n            newPos = _floatPos + Vector2.down * _currentDepth;\n        }\n        else\n        {\n            if (_currentDepth > 0f)\n                _currentDepth = Mathf.Max(0f, _currentDepth - velocidadeSubida * Time.fixedDeltaTime);\n\n            float bob = amplitudeBalanco > 0f ? Mathf.Sin(Time.time * velocidadeBalanco) * amplitudeBalanco : 0f;\n            newPos = _floatPos + Vector2.down * _currentDepth + Vector2.up * bob;\n        }\n\n        bool fullySunkNow = profundidadeMaxima > 0f && _currentDepth >= profundidadeMaxima - 0.001f;\n        if (fullySunkNow && !_isFullySunk) onAfundouCompletamente?.Invoke();\n        _isFullySunk = fullySunkNow;\n\n        bool atSurfaceNow = _currentDepth <= 0.001f;\n        if (atSurfaceNow && !_isAtSurface) onVoltouASuperficie?.Invoke();\n        _isAtSurface = atSurfaceNow;\n\n        _rb.MovePosition(newPos);\n\n        Vector2 delta = newPos - oldPos;\n        if (transportaPlayer && delta.sqrMagnitude > 0f)\n        {\n            foreach (var occ in _occupants)\n            {\n                if (occ == null) continue;\n                var occRb = occ.attachedRigidbody;\n                if (occRb != null) occRb.position += delta;\n            }\n        }\n    }\n\n    private void OnCollisionEnter2D(Collision2D collision) => UpdateOccupant(collision, true);\n    private void OnCollisionStay2D(Collision2D collision) => UpdateOccupant(collision, true);\n    private void OnCollisionExit2D(Collision2D collision) => UpdateOccupant(collision, false);\n\n    private void UpdateOccupant(Collision2D collision, bool entering)\n    {\n        if (!entering)\n        {\n            _occupants.Remove(collision.collider);\n            return;\n        }\n\n        if (!IsOnTop(collision.collider)) return;\n        _occupants.Add(collision.collider);\n    }\n\n    /// <summary>true se a base de \"other\" estiver acima do topo da plataforma (pisando-a, não a tocar de lado).</summary>\n    private bool IsOnTop(Collider2D other)\n    {\n        if (_col == null) return true;\n        return other.bounds.min.y >= _col.bounds.max.y - 0.15f;\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = Color.cyan;\n        Vector2 pos = Application.isPlaying ? _floatPos : (Vector2)transform.position;\n        Gizmos.DrawLine(pos + Vector2.left * 0.5f, pos + Vector2.right * 0.5f);\n\n        if (profundidadeMaxima > 0f)\n        {\n            Gizmos.color = new Color(0f, 0.3f, 0.6f);\n            Vector2 bottom = pos + Vector2.down * profundidadeMaxima;\n            Gizmos.DrawLine(bottom + Vector2.left * 0.5f, bottom + Vector2.right * 0.5f);\n            Gizmos.DrawLine(pos, bottom);\n        }\n    }\n}\n",
+  "id": "script-platforms-floatingplatform-cs",
+  "dependencyIds": [
+    "script-interactables-gameweightutil-cs",
+    "script-platforms-movingplatform-cs",
+    "script-interactables-objectweight-cs",
+    "script-platforms-seesawplatform-cs",
+    "script-interactables-weightplate-cs"
+  ],
+  "usedByIds": [
+    "script-interactables-gameweightutil-cs",
+    "script-interactables-weightplate-cs"
+  ]
+}

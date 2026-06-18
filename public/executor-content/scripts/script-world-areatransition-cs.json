@@ -1,0 +1,79 @@
+{
+  "path": "World/AreaTransition.cs",
+  "filename": "AreaTransition.cs",
+  "category": "World",
+  "primary": "AreaTransition",
+  "kind": "Componente",
+  "summary": "Tarefa #31 — trigger 2D colocado nas bordas/portas da cena de uma área: quando o player entra, pede a para carregar a cena de (AreaData.sceneName) e reaparecer no \"targetSpawnPointId\" dessa cena. Ignorado enquanto já houver uma transição em curso (AreaManager.TransitionPending) — evita pedidos duplicados se o player permanecer no trigger durante o fade/carregamento.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "AreaTransition",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "targetArea",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "Destino",
+      "attrs": "[Header(\"Destino\")] [Tooltip(\"Área/cena de destino (AreaData.sceneName).\")]",
+      "inspector": true,
+      "description": "Área/cena de destino (AreaData.sceneName)."
+    },
+    {
+      "name": "targetSpawnPointId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Destino",
+      "attrs": "[Tooltip(\"ID do AreaSpawnPoint na cena de destino onde o player deve reaparecer (ex: \\\"EntradaOeste\\\"). Deve corresponder a um AreaSpawnPoint.spawnId existente nessa cena — idealmente também listado em targetArea.spawnPointIds.\")]",
+      "inspector": true,
+      "description": "ID do AreaSpawnPoint na cena de destino onde o player deve reaparecer (ex: \"EntradaOeste\\"
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AreaManager",
+    "AreaSpawnPoint"
+  ],
+  "used_by": [
+    "AreaData",
+    "AreaManager",
+    "AreaSpawnPoint",
+    "SceneLoader"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Tarefa #31 — trigger 2D colocado nas bordas/portas da cena de uma área:\n/// quando o player entra, pede a <see cref=\"AreaManager\"/> para carregar a\n/// cena de <see cref=\"targetArea\"/> (AreaData.sceneName) e reaparecer no\n/// <see cref=\"AreaSpawnPoint\"/> \"targetSpawnPointId\" dessa cena.\n///\n/// Ignorado enquanto já houver uma transição em curso\n/// (AreaManager.TransitionPending) — evita pedidos duplicados se o player\n/// permanecer no trigger durante o fade/carregamento.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class AreaTransition : MonoBehaviour\n{\n    [Header(\"Destino\")]\n    [Tooltip(\"Área/cena de destino (AreaData.sceneName).\")]\n    public AreaData targetArea;\n\n    [Tooltip(\"ID do AreaSpawnPoint na cena de destino onde o player deve reaparecer (ex: \\\"EntradaOeste\\\"). Deve corresponder a um AreaSpawnPoint.spawnId existente nessa cena — idealmente também listado em targetArea.spawnPointIds.\")]\n    public string targetSpawnPointId;\n\n    private void Awake()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col != null) col.isTrigger = true;\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (AreaManager.Instance == null) return;\n        if (AreaManager.Instance.TransitionPending) return;\n\n        AreaManager.Instance.RequestTransition(targetArea, targetSpawnPointId);\n    }\n}\n",
+  "id": "script-world-areatransition-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-world-areamanager-cs",
+    "script-world-areaspawnpoint-cs"
+  ],
+  "usedByIds": [
+    "script-data-areadata-cs",
+    "script-world-areamanager-cs",
+    "script-world-areaspawnpoint-cs",
+    "script-world-sceneloader-cs"
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "path": "NPC/Actions/RewardActions.cs",
+  "filename": "RewardActions.cs",
+  "category": "NPC",
+  "primary": "PlayerResourceType",
+  "kind": "Acção de NPC",
+  "summary": "Recurso de PlayerProgress que Action_GiveResource pode dar (ou tirar, com amount negativo). public enum PlayerResourceType { Sementes, RunasDeGaia, BrotosDeVida, FragmentosVitais, Ecos Perdidos — moeda para comprar Sussurros da Terra no Contador de Histórias. EcosPerdidos, } Dá (ou tira, com \"amount\" negativo) uma quantidade de um recurso de PlayerProgress. PlayerProgress já garante que o total nunca fica negativo.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "PlayerResourceType",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "Action_GiveResource",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_GiveItem",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_UnlockUpgrade",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_BuyUpgrade",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_FreeAnimal",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_MarkAreaVisited",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_DeliverWhisper",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_Autosave",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_SetBossDefeated",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_ClearReturningAfterBoss",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_SetHardMode",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_SetPostGameRewardActive",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "resource",
+      "type": "PlayerResourceType",
+      "mods": "public",
+      "default": "PlayerResourceType.Sementes",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "",
+      "attrs": "[Tooltip(\"Quantidade a dar. Usa um valor negativo para tirar recursos.\")]",
+      "inspector": true,
+      "description": "Quantidade a dar. Usa um valor negativo para tirar recursos."
+    },
+    {
+      "name": "item",
+      "type": "ItemData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equip",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, o item passa também a ser o item equipado (equippedItemId).\")]",
+      "inspector": true,
+      "description": "Se ativo, o item passa também a ser o item equipado (equippedItemId)."
+    },
+    {
+      "name": "upgrade",
+      "type": "UpgradeData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "form",
+      "type": "AnimalFormData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unlockForSwitching",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, também adiciona a forma a FormSwitcher.unlockedForms (necessário para o player conseguir transformar-se nela). Desactiva apenas se quiseres registar o animal como \\\"libertado\\\" sem o tornar jogável de imediato.\")]",
+      "inspector": true,
+      "description": "Se ativo, também adiciona a forma a FormSwitcher.unlockedForms (necessário para o player conseguir transformar-se nela). Desactiva apenas se quiseres registrar o animal como \"libertado\" sem o tornar jogável de imediato."
+    },
+    {
+      "name": "area",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "world",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hardMode",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "active",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "AreaData",
+    "CameraAreaBounds",
+    "Condition_CanAffordUpgrade",
+    "FormSwitcher",
+    "ItemData",
+    "NpcAction",
+    "NpcController",
+    "PlayerCombat",
+    "PlayerHealthRegen",
+    "PlayerProgress",
+    "SaveManager",
+    "SussurroDaTerraPickup",
+    "UpgradeData",
+    "WorldData"
+  ],
+  "used_by": [
+    "PlayerProgress",
+    "UpgradeData",
+    "WorldMapUI"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>Recurso de PlayerProgress que Action_GiveResource pode dar (ou tirar, com amount negativo).</summary>\npublic enum PlayerResourceType\n{\n    Sementes,\n    RunasDeGaia,\n    BrotosDeVida,\n    FragmentosVitais,\n\n    /// <summary>Ecos Perdidos — moeda para comprar Sussurros da Terra no Contador de Histórias.</summary>\n    EcosPerdidos,\n}\n\n/// <summary>\n/// Dá (ou tira, com \"amount\" negativo) uma quantidade de um recurso de\n/// PlayerProgress. PlayerProgress já garante que o total nunca fica negativo.\n/// </summary>\n[System.Serializable]\npublic class Action_GiveResource : NpcAction\n{\n    public PlayerResourceType resource = PlayerResourceType.Sementes;\n\n    [Tooltip(\"Quantidade a dar. Usa um valor negativo para tirar recursos.\")]\n    public int amount = 1;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) yield break;\n\n        switch (resource)\n        {\n            case PlayerResourceType.Sementes:\n                progress.GiveSementes(amount);\n                break;\n\n            case PlayerResourceType.RunasDeGaia:\n                progress.GiveRunasDeGaia(amount);\n                break;\n\n            case PlayerResourceType.BrotosDeVida:\n                progress.GiveBrotosDeVida(amount);\n                break;\n\n            case PlayerResourceType.FragmentosVitais:\n                progress.GiveFragmentosVitais(amount);\n                break;\n\n            case PlayerResourceType.EcosPerdidos:\n                progress.GiveEcosPerdidos(amount);\n                break;\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>Dá um item ao inventário do player e, opcionalmente, equipa-o de imediato.</summary>\n[System.Serializable]\npublic class Action_GiveItem : NpcAction\n{\n    public ItemData item;\n\n    [Tooltip(\"Se activo, o item passa também a ser o item equipado (equippedItemId).\")]\n    public bool equip;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || item == null) yield break;\n\n        progress.GiveItem(item);\n        if (equip) progress.EquipItem(item);\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Desbloqueia um upgrade permanente (ex: dash extra, mais corações). Se for\n/// um Instinto (UpgradeData.toggleable), usa UnlockUpgradeEnabled para que\n/// fique LIGADO por defeito ao ser desbloqueado — consistente com\n/// Action_BuyUpgrade e com o comentário do próprio sistema em\n/// PlayerProgress.UnlockUpgradeEnabled (Instintos desbloqueados começam ON).\n/// </summary>\n[System.Serializable]\npublic class Action_UnlockUpgrade : NpcAction\n{\n    public UpgradeData upgrade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || upgrade == null) yield break;\n\n        progress.UnlockUpgradeEnabled(upgrade);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Compra um upgrade (Tarefa #20 — Economia): gasta\n/// <see cref=\"UpgradeData.unlockCost\"/> de <see cref=\"UpgradeData.unlockCurrency\"/>\n/// e desbloqueia o upgrade (se for um Instinto, já fica ligado por defeito —\n/// ver PlayerProgress.UnlockUpgradeEnabled). Se o jogador já tiver o upgrade\n/// ou não tiver saldo suficiente, não faz nada — usar\n/// <see cref=\"Condition_CanAffordUpgrade\"/> num \"+ Adicionar Condição\" antes\n/// desta acção para mostrar um ramo de diálogo \"sem sementes suficientes\" /\n/// \"já tens este upgrade\".\n/// </summary>\n[System.Serializable]\npublic class Action_BuyUpgrade : NpcAction\n{\n    public UpgradeData upgrade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || upgrade == null) yield break;\n        if (progress.HasUpgrade(upgrade)) yield break;\n\n        if (progress.TrySpendResource(upgrade.unlockCurrency, upgrade.unlockCost))\n            progress.UnlockUpgradeEnabled(upgrade);\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Liberta um animal (regista em PlayerProgress.freedAnimalIds) e, por\n/// omissão, desbloqueia a forma no FormSwitcher do player para que ela passe\n/// a estar disponível na roda de transformação.\n/// </summary>\n[System.Serializable]\npublic class Action_FreeAnimal : NpcAction\n{\n    public AnimalFormData form;\n\n    [Tooltip(\"Se activo, também adiciona a forma a FormSwitcher.unlockedForms (necessário para o player conseguir transformar-se nela). Desactiva apenas se quiseres registar o animal como \\\"libertado\\\" sem o tornar jogável de imediato.\")]\n    public bool unlockForSwitching = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (form == null) yield break;\n\n        PlayerProgress.Instance?.FreeAnimal(form);\n\n        if (unlockForSwitching && npc.Player != null)\n        {\n            var switcher = npc.Player.GetComponent<FormSwitcher>();\n            switcher?.UnlockForm(form);\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>Marca uma área como visitada (PlayerProgress.MarkVisited).</summary>\n[System.Serializable]\npublic class Action_MarkAreaVisited : NpcAction\n{\n    public AreaData area;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (area != null) PlayerProgress.Instance?.MarkVisited(area);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Regista a entrega de um Sussurro da Terra a este NPC\n/// (PlayerProgress.AddWhisperDelivered) — usar num evento de diálogo onde o\n/// jogador entrega/conta um Sussurro previamente recolhido\n/// (SussurroDaTerraPickup só regista \"encontrado\"; a entrega é um passo\n/// separado feito aqui).\n/// </summary>\n[System.Serializable]\npublic class Action_DeliverWhisper : NpcAction\n{\n    public AreaData area;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (area != null) PlayerProgress.Instance?.AddWhisperDelivered(area);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Força um autosave imediato (SaveManager.SaveAutosave) — usar no fim de\n/// eventos de NPC que alteram progresso de forma irreversível (libertar um\n/// animal, resgatar um NPC, desbloquear uma forma/upgrade importante, etc.).\n/// Sem isto, esse progresso só fica gravado na próxima mudança de área,\n/// checkpoint ou save manual — alguns \"pickups importantes\" já chamam\n/// SaveAutosave directamente (ex: CameraAreaBounds ao mudar de área), mas as\n/// acções de NPC não tinham forma equivalente.\n/// </summary>\n[System.Serializable]\npublic class Action_Autosave : NpcAction\n{\n    public override IEnumerator Execute(NpcController npc)\n    {\n        SaveManager.Instance?.SaveAutosave();\n        yield break;\n    }\n}\n\n/// <summary>\n/// Marca o boss de um mundo como derrotado. Isto também activa\n/// \"IsReturningAfterBoss\" para esse mundo, até Action_ClearReturningAfterBoss\n/// ser chamada (normalmente no evento de \"regresso pós-boss\" desse NPC).\n/// </summary>\n[System.Serializable]\npublic class Action_SetBossDefeated : NpcAction\n{\n    public WorldData world;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (world != null) PlayerProgress.Instance?.SetBossDefeated(world);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Limpa a flag \"regresso pós-boss\" de um mundo — usar no fim do evento de\n/// \"regresso\" que reage à derrota do boss, para não disparar de novo.\n/// </summary>\n[System.Serializable]\npublic class Action_ClearReturningAfterBoss : NpcAction\n{\n    public WorldData world;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (world != null) PlayerProgress.Instance?.ClearReturningAfterBoss(world);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Activa ou desactiva o Modo Difícil (\"Juramento Difícil\") ligando/desligando\n/// directamente o Instinto correspondente em enabledUpgradeIds — a mesma fonte\n/// de verdade usada por <see cref=\"PlayerProgress.IsHardModeActive\"/>,\n/// PlayerCombat e PlayerHealthRegen.\n/// </summary>\n[System.Serializable]\npublic class Action_SetHardMode : NpcAction\n{\n    public bool hardMode = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress != null) progress.SetUpgradeEnabled(PlayerProgress.JuramentoDificilUpgradeId, hardMode);\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Activa (ou desactiva) a Recompensa de Pós-Jogo (GDD): a partir daqui o\n/// FormSwitcher passa a ter cooldown de transformação zero e permite\n/// transformar em qualquer lugar, incluindo no ar — mantendo as regras de\n/// formas aquáticas/terrestres (ver FormSwitcher.CanSwitchTo). Persistido via\n/// enabledUpgradeIds, mesmo mecanismo de Action_SetHardMode. Usar numa\n/// cutscene/evento de fim de jogo.\n/// </summary>\n[System.Serializable]\npublic class Action_SetPostGameRewardActive : NpcAction\n{\n    public bool active = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress != null) progress.SetUpgradeEnabled(PlayerProgress.RecompensaPosJogoUpgradeId, active);\n\n        yield break;\n    }\n}\n",
+  "id": "script-npc-actions-rewardactions-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-camera-cameraareabounds-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-itemdata-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs",
+    "script-player-playercombat-cs",
+    "script-player-playerhealthregen-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savemanager-cs",
+    "script-collectibles-sussurrodaterrapickup-cs",
+    "script-data-upgradedata-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": [
+    "script-data-playerprogress-cs",
+    "script-data-upgradedata-cs",
+    "script-world-worldmapui-cs"
+  ]
+}

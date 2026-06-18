@@ -1,0 +1,75 @@
+{
+  "path": "Enemy/Bosses/Boss_SolDePlastico.cs",
+  "filename": "Boss_SolDePlastico.cs",
+  "category": "Enemy",
+  "primary": "Boss_SolDePlastico",
+  "kind": "Definição",
+  "summary": "Boss 2/8 (GDD 12.3.2, a confirmar) — \"Sol de Plástico\". Preparação/scaffolding apenas (sem moveset implementado): liga-se a BossController (vida, BossHealthBarUI, EnemyMultiPartBoss). A mecânica própria fica para uma tarefa futura — ver TODOs nos hooks abaixo. Ideias a confirmar com o GDD (pelo nome): \"sol\" artificial/poluição — possivelmente ataques de luz/calor com janelas de vulnerabilidade ligadas a apagar/cobrir essa fonte de luz (Condition_BossPartsDestroyed ou uma EnemyCondition própria para \"luz apagada\").",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Boss_SolDePlastico",
+      "kind": "class",
+      "bases": "BossController",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnIntroStart",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnIntroStart."
+    },
+    {
+      "name": "OnPhaseChanged",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "int defeatedParts, int aliveParts",
+      "description": "Executa a operação OnPhaseChanged."
+    },
+    {
+      "name": "OnAllPartsDefeated",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnAllPartsDefeated."
+    },
+    {
+      "name": "OnDefeated",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnDefeated."
+    }
+  ],
+  "dependencies": [
+    "Action_SetBossDefeated",
+    "BossController",
+    "BossHealthBarUI",
+    "Condition_BossPartsDestroyed",
+    "EnemyCondition",
+    "EnemyMultiPartBoss",
+    "NpcAction"
+  ],
+  "used_by": [],
+  "source": "/// <summary>\n/// Boss 2/8 (GDD 12.3.2, a confirmar) — \"Sol de Plástico\".\n///\n/// Preparação/scaffolding apenas (sem moveset implementado): liga-se a\n/// BossController (vida, BossHealthBarUI, EnemyMultiPartBoss). A mecânica\n/// própria fica para uma tarefa futura — ver TODOs nos hooks abaixo.\n///\n/// Ideias a confirmar com o GDD (pelo nome): \"sol\" artificial/poluição —\n/// possivelmente ataques de luz/calor com janelas de vulnerabilidade ligadas a\n/// apagar/cobrir essa fonte de luz (Condition_BossPartsDestroyed ou uma\n/// EnemyCondition própria para \"luz apagada\").\n/// </summary>\npublic class Boss_SolDePlastico : BossController\n{\n    protected override void Awake()\n    {\n        base.Awake();\n        if (string.IsNullOrEmpty(bossId)) bossId = \"sol_de_plastico\";\n        if (string.IsNullOrEmpty(displayName)) displayName = \"Sol de Plástico\";\n    }\n\n    protected override void OnIntroStart()\n    {\n        // TODO (moveset): activar ataques iniciais / animação de despertar.\n    }\n\n    protected override void OnPhaseChanged(int defeatedParts, int aliveParts)\n    {\n        // TODO (moveset): trocar de fase ao destruir cada \"raio\"/parte.\n    }\n\n    protected override void OnAllPartsDefeated()\n    {\n        // TODO (moveset): \"sol\" totalmente exposto/vulnerável.\n    }\n\n    protected override void OnDefeated()\n    {\n        // TODO (moveset): sequência de derrota (drops, Action_SetBossDefeated\n        // via NpcAction/UnityEvent, animação final).\n    }\n}\n",
+  "id": "script-enemy-bosses-boss-soldeplastico-cs",
+  "dependencyIds": [
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-ui-bosshealthbarui-cs",
+    "script-enemy-enemycondition-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-npc-npcaction-cs"
+  ],
+  "usedByIds": []
+}

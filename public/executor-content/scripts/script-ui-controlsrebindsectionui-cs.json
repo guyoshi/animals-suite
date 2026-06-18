@@ -1,0 +1,183 @@
+{
+  "path": "UI/ControlsRebindSectionUI.cs",
+  "filename": "ControlsRebindSectionUI.cs",
+  "category": "UI",
+  "primary": "ControlsRebindSectionUI",
+  "kind": "Componente",
+  "summary": "Sub-painel \"Mudar controles\" da seção Opções (Menu de Pausa, Tarefa #12). Lista uma por ação/binding rebinding-ável (Mover, Saltar, Atacar, Interagir, Habilidade, Pausa, etc. — configurado no Editor). \"Restaurar predefinições\" remove todos os overrides. Os overrides são persistidos em PlayerPrefs (JSON via Input System), separado de SaveData — tal como GameSettings, é uma preferência do dispositivo/perfil. Fecha com o botão \"Voltar\" (UI) OU com \"B\"/Escape/gamepad-East, via — o Input System UI Module invoca automaticamente \"OnCancel\" no GameObject selecionado quando a ação \"Cancel\" dispara, cumprindo \"o menu precisa funcionar perfeitamente por comando e teclado\". Montagem no Editor: - \"ac",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ControlsRebindSectionUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, ICancelHandler",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "actionsAsset",
+      "type": "InputActionAsset",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rows",
+      "type": "List<RebindRowUI>",
+      "mods": "private",
+      "default": "new List<RebindRowUI>()",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "backButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "resetButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "firstSelectable",
+      "type": "Selectable",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Primeiro elemento a seleccionar ao abrir este sub-painel.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Primeiro elemento a selecionar ao abrir este sub-painel."
+    },
+    {
+      "name": "PrefKey",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"input_binding_overrides\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Root",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "> root != null ? root : gameObject",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Open",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Open."
+    },
+    {
+      "name": "Close",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Close."
+    },
+    {
+      "name": "OnCancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "BaseEventData eventData",
+      "description": "Executa a operação OnCancel."
+    },
+    {
+      "name": "OnRowRebound",
+      "ret": "void",
+      "mods": "private",
+      "params": "RebindRowUI row",
+      "description": "Executa a operação OnRowRebound."
+    },
+    {
+      "name": "ResetAll",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ResetAll."
+    },
+    {
+      "name": "SaveOverrides",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SaveOverrides."
+    },
+    {
+      "name": "LoadOverrides",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação LoadOverrides."
+    }
+  ],
+  "dependencies": [
+    "GameSettings",
+    "OptionsSectionUI",
+    "PlayerInputRouter",
+    "RebindRowUI",
+    "SaveData"
+  ],
+  "used_by": [
+    "MainMenuOptionsUI",
+    "OptionsSectionUI",
+    "RebindRowUI"
+  ],
+  "source": "using System;\nusing System.Collections.Generic;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.InputSystem;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Sub-painel \"Mudar controles\" da secção Opções (Menu de Pausa, Tarefa #12).\n///\n/// Lista uma <see cref=\"RebindRowUI\"/> por acção/binding rebinding-ável (Mover,\n/// Saltar, Atacar, Interagir, Habilidade, Pausa, etc. — configurado no\n/// Editor). \"Restaurar predefinições\" remove todos os overrides. Os overrides\n/// são persistidos em PlayerPrefs (JSON via Input System), separado de\n/// SaveData — tal como GameSettings, é uma preferência do dispositivo/perfil.\n///\n/// Fecha com o botão \"Voltar\" (UI) OU com \"B\"/Escape/gamepad-East, via\n/// <see cref=\"ICancelHandler\"/> — o Input System UI Module invoca\n/// automaticamente \"OnCancel\" no GameObject seleccionado quando a acção\n/// \"Cancel\" dispara, cumprindo \"o menu precisa funcionar perfeitamente por\n/// comando e teclado\".\n///\n/// Montagem no Editor:\n/// - \"actionsAsset\": o InputActionAsset usado pelo PlayerInputRouter.\n/// - \"rows\": uma RebindRowUI por binding que o jogador pode alterar.\n/// - \"backButton\"/\"resetButton\": botões \"Voltar\"/\"Restaurar predefinições\".\n/// </summary>\npublic class ControlsRebindSectionUI : MonoBehaviour, ICancelHandler\n{\n    [SerializeField] private GameObject root;\n    [SerializeField] private InputActionAsset actionsAsset;\n    [SerializeField] private List<RebindRowUI> rows = new List<RebindRowUI>();\n\n    [SerializeField] private Button backButton;\n    [SerializeField] private Button resetButton;\n\n    [Tooltip(\"Primeiro elemento a seleccionar ao abrir este sub-painel.\")]\n    [SerializeField] private Selectable firstSelectable;\n\n    private const string PrefKey = \"input_binding_overrides\";\n\n    public GameObject Root => root != null ? root : gameObject;\n\n    /// <summary>Disparado quando este sub-painel fecha (botão \"Voltar\" ou Cancel) — OptionsSectionUI usa isto para devolver a selecção à página principal.</summary>\n    public event Action Closed;\n\n    private void Awake()\n    {\n        if (backButton != null) backButton.onClick.AddListener(Close);\n        if (resetButton != null) resetButton.onClick.AddListener(ResetAll);\n\n        foreach (var row in rows)\n            if (row != null) row.RebindCompleted += OnRowRebound;\n\n        LoadOverrides();\n\n        if (root != null) root.SetActive(false);\n    }\n\n    public void Open()\n    {\n        if (root != null) root.SetActive(true);\n\n        foreach (var row in rows)\n            row?.RefreshDisplay();\n\n        if (EventSystem.current != null && firstSelectable != null)\n            EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);\n    }\n\n    public void Close()\n    {\n        if (root != null) root.SetActive(false);\n        Closed?.Invoke();\n    }\n\n    /// <summary>Chamado automaticamente pelo Input System UI Module quando \"Cancel\" (B/Escape) dispara com este painel seleccionado.</summary>\n    public void OnCancel(BaseEventData eventData) => Close();\n\n    private void OnRowRebound(RebindRowUI row) => SaveOverrides();\n\n    private void ResetAll()\n    {\n        if (actionsAsset != null) actionsAsset.RemoveAllBindingOverrides();\n        PlayerPrefs.DeleteKey(PrefKey);\n        PlayerPrefs.Save();\n\n        foreach (var row in rows)\n            row?.RefreshDisplay();\n    }\n\n    private void SaveOverrides()\n    {\n        if (actionsAsset == null) return;\n\n        string json = actionsAsset.SaveBindingOverridesAsJson();\n        PlayerPrefs.SetString(PrefKey, json);\n        PlayerPrefs.Save();\n    }\n\n    private void LoadOverrides()\n    {\n        if (actionsAsset == null) return;\n\n        string json = PlayerPrefs.GetString(PrefKey, string.Empty);\n        if (!string.IsNullOrEmpty(json)) actionsAsset.LoadBindingOverridesFromJson(json);\n    }\n}\n",
+  "id": "script-ui-controlsrebindsectionui-cs",
+  "dependencyIds": [
+    "script-data-gamesettings-cs",
+    "script-ui-optionssectionui-cs",
+    "script-input-playerinputrouter-cs",
+    "script-ui-rebindrowui-cs",
+    "script-data-savedata-cs"
+  ],
+  "usedByIds": [
+    "script-ui-mainmenuoptionsui-cs",
+    "script-ui-optionssectionui-cs",
+    "script-ui-rebindrowui-cs"
+  ]
+}

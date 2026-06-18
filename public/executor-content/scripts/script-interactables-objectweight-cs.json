@@ -1,0 +1,66 @@
+{
+  "path": "Interactables/ObjectWeight.cs",
+  "filename": "ObjectWeight.cs",
+  "category": "Interactables",
+  "primary": "ObjectWeight",
+  "kind": "Componente",
+  "summary": "Peso de jogo explícito de um objeto (Etapa 6.1 — caixas, pedras, etc), usado por WeightPlate. Separado de Rigidbody2D.mass de propósito: a massa do Unity afecta a física toda (knockback, colisões), enquanto este peso é só \"de jogo\" (placas de peso, e futuros usos como empurrar/queda). Prioridade na WeightPlate: ObjectWeight (se presente, vence sempre) > player (peso da forma atual — AnimalFormData.weightMultiplier) > inimigo (EnemyData.stats.weight) > Rigidbody2D.mass (fallback).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ObjectWeight",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "weight",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "",
+      "attrs": "[Tooltip(\"Peso de jogo deste objecto (1 = normal).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Peso de jogo deste objeto (1 = normal)."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "AnimalFormData",
+    "EnemyData",
+    "WeightPlate"
+  ],
+  "used_by": [
+    "AnimalFormData",
+    "Carryable",
+    "EggAbility",
+    "EggObject",
+    "FloatingPlatform",
+    "GameWeightUtil",
+    "GrabThrowAbility",
+    "TonguePullAbility",
+    "WeightPlate",
+    "WindAffectable"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Peso de jogo explícito de um objecto (Etapa 6.1 — caixas, pedras, etc),\n/// usado por WeightPlate. Separado de Rigidbody2D.mass de propósito: a massa\n/// do Unity afecta a física toda (knockback, colisões), enquanto este peso é\n/// só \"de jogo\" (placas de peso, e futuros usos como empurrar/queda).\n///\n/// Prioridade na WeightPlate: ObjectWeight (se presente, vence sempre) >\n/// player (peso da forma actual — AnimalFormData.weightMultiplier) > inimigo\n/// (EnemyData.stats.weight) > Rigidbody2D.mass (fallback).\n/// </summary>\n[DisallowMultipleComponent]\npublic class ObjectWeight : MonoBehaviour\n{\n    [Tooltip(\"Peso de jogo deste objecto (1 = normal).\")]\n    [Min(0f)] public float weight = 1f;\n}\n",
+  "id": "script-interactables-objectweight-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-enemy-enemydata-cs",
+    "script-interactables-weightplate-cs"
+  ],
+  "usedByIds": [
+    "script-forms-animalformdata-cs",
+    "script-interactables-carryable-cs",
+    "script-abilities-eggability-cs",
+    "script-interactables-eggobject-cs",
+    "script-platforms-floatingplatform-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-abilities-grabthrowability-cs",
+    "script-abilities-tonguepullability-cs",
+    "script-interactables-weightplate-cs",
+    "script-interactables-windaffectable-cs"
+  ]
+}

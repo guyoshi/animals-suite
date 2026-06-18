@@ -1,0 +1,247 @@
+{
+  "path": "Abilities/DashAbility.cs",
+  "filename": "DashAbility.cs",
+  "category": "Abilities",
+  "primary": "DashAbility",
+  "kind": "Componente",
+  "summary": "Chamado pelo AbilityRouter quando o bot�o de habilidade for pressionado",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "DashAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "dashSpeed",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "dashDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "dashCooldown",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "dashGravityScale",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldownTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "gravityBeforeDash",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "dashRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> Mathf.Max(0f, cooldownTimer)",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> dashCooldown",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm && cooldownTimer <= 0f && dashRoutine == null && !motor.MovementLocked",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "TryDash",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação TryDash."
+    },
+    {
+      "name": "DashRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação DashRoutine."
+    },
+    {
+      "name": "EndDash",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação EndDash."
+    },
+    {
+      "name": "StopDashIfRunning",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação StopDashIfRunning."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "PlayerMotor2D"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "FormSwitcher",
+    "PlayerCombat",
+    "RollAbility"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class DashAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    private bool enabledForForm;\n\n    private float dashSpeed;\n    private float dashDuration;\n    private float dashCooldown;\n    private float dashGravityScale;\n\n    private float cooldownTimer;\n    private float gravityBeforeDash;\n\n    private Coroutine dashRoutine;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.canDash;\n\n        if (!enabledForForm)\n        {\n            StopDashIfRunning();\n            return;\n        }\n\n        dashSpeed = form.dashSpeed;\n        dashDuration = form.dashDuration;\n        dashCooldown = form.dashCooldown;\n        dashGravityScale = form.dashGravityScale;\n    }\n\n    // Chamado pelo AbilityRouter quando o bot�o de habilidade for pressionado\n    public void TryDash()\n    {\n        if (!enabledForForm) return;\n        if (cooldownTimer > 0f) return;\n        if (motor.MovementLocked) return;\n\n        if (dashRoutine != null) StopCoroutine(dashRoutine);\n        dashRoutine = StartCoroutine(DashRoutine());\n    }\n\n    private IEnumerator DashRoutine()\n    {\n        cooldownTimer = dashCooldown;\n        gravityBeforeDash = rb.gravityScale;\n\n        motor.SetMovementLocked(true, this);\n        motor.SetDashing(true);\n        rb.gravityScale = dashGravityScale;\n\n        int dir = motor.FacingSign != 0 ? motor.FacingSign : 1;\n\n        float elapsed = 0f;\n        while (elapsed < dashDuration)\n        {\n            rb.velocity = new Vector2(dir * dashSpeed, rb.velocity.y);\n            elapsed += Time.fixedDeltaTime;\n            yield return new WaitForFixedUpdate();\n        }\n\n        EndDash();\n    }\n\n    private void EndDash()\n    {\n        rb.gravityScale = gravityBeforeDash;\n        motor.SetDashing(false);\n        motor.SetMovementLocked(false, this);\n        dashRoutine = null;\n    }\n\n    private void StopDashIfRunning()\n    {\n        if (dashRoutine == null) return;\n\n        StopCoroutine(dashRoutine);\n        EndDash();\n    }\n\n    // ---- IAbility (item 8) ----\n    void IAbility.Activate() => TryDash();\n    void IAbility.Release() { } // dash não tem \"soltar\"\n    public void Cancel(AbilityCancelReason reason) => StopDashIfRunning();\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => dashRoutine != null;\n\n    // ---- IActiveAbility (Tarefa #34 — HUD) ----\n    public float CooldownDuration => dashCooldown;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && dashRoutine == null && !motor.MovementLocked;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do dash.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "id": "script-abilities-dashability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-player-playermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-formswitcher-cs",
+    "script-player-playercombat-cs",
+    "script-abilities-rollability-cs"
+  ]
+}

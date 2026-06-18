@@ -1,0 +1,192 @@
+{
+  "path": "UI/LoadingScreenController.cs",
+  "filename": "LoadingScreenController.cs",
+  "category": "UI",
+  "primary": "LoadingScreenController",
+  "kind": "Componente",
+  "summary": "Tela de loading (Tarefa #16 — \"verificação final: tela de morte, loading e save 100%/101%\"): overlay full-screen (CanvasGroup, Screen Space - Overlay) usado em qualquer mudança de cena (Opções → \"Regressar ao Coração de Gaia\"/título, SaveMenuController ao carregar um slot, e PlayerDeathHandler ao reaparecer, se a cena precisar de recarregar). Singleton com auto-fallback (mesmo padrão de PlayerProgress/GameVariables — ver Tarefa #15): cria-se automaticamente antes da primeira cena se não existir uma instância configurada num \"GameBootstrap\". Montagem no Editor: - Canvas (Screen Space - Overlay, sortingOrder alto) com um \"panelRoot\" (Image full-screen preta) + \"canvasGroup\" no mesmo GameObject",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "LoadingScreenController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "panelRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[Header(\"Painel\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "loadingText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fadeDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.25f",
+      "section": "Transição",
+      "attrs": "[Header(\"Transição\")] [Tooltip(\"Duração do fade in/out do overlay, em segundos.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração do fade in/out do overlay, em segundos."
+    },
+    {
+      "name": "minDisplayTime",
+      "type": "float",
+      "mods": "private",
+      "default": "0.4f",
+      "section": "Transição",
+      "attrs": "[Tooltip(\"Tempo mínimo (s) com o overlay totalmente visível, mesmo que a cena carregue mais rápido.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Tempo mínimo (s) com o overlay totalmente visível, mesmo que a cena carregue mais rápido."
+    },
+    {
+      "name": "loadingMessage",
+      "type": "string",
+      "mods": "private",
+      "default": "\"A carregar...\"",
+      "section": "Transição",
+      "attrs": "[Tooltip(\"Texto mostrado durante o carregamento (ex: 'A carregar...').\")] [SerializeField]",
+      "inspector": true,
+      "description": "Texto mostrado durante o carregamento (ex: 'A carregar...')."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isLoading",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsLoading",
+      "type": "bool",
+      "mods": "public",
+      "default": "> isLoading",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "LoadScene",
+      "ret": "void",
+      "mods": "public",
+      "params": "string sceneName, Action onLoaded = null",
+      "description": "Executa a operação LoadScene."
+    },
+    {
+      "name": "LoadSceneRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "string sceneName, Action onLoaded",
+      "description": "Executa a operação LoadSceneRoutine."
+    },
+    {
+      "name": "ShowDuring",
+      "ret": "void",
+      "mods": "public",
+      "params": "Action duringOverlay",
+      "description": "Executa a operação ShowDuring."
+    },
+    {
+      "name": "ShowDuringRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "Action duringOverlay",
+      "description": "Executa a operação ShowDuringRoutine."
+    },
+    {
+      "name": "FadeRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float from, float to",
+      "description": "Executa a operação FadeRoutine."
+    }
+  ],
+  "dependencies": [
+    "GameVariables",
+    "PlayerDeathHandler",
+    "PlayerProgress",
+    "SaveMenuController"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "AreaManager",
+    "MainMenuController",
+    "OptionsSectionUI",
+    "SaveMenuController",
+    "SceneLoader",
+    "WorldMapEntryPoint"
+  ],
+  "source": "using System;\nusing System.Collections;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.SceneManagement;\n\n/// <summary>\n/// Tela de loading (Tarefa #16 — \"verificação final: tela de morte, loading e\n/// save 100%/101%\"): overlay full-screen (CanvasGroup, Screen Space - Overlay)\n/// usado em qualquer mudança de cena (Opções → \"Regressar ao Coração de\n/// Gaia\"/título, SaveMenuController ao carregar um slot, e\n/// PlayerDeathHandler ao reaparecer, se a cena precisar de recarregar).\n///\n/// Singleton com auto-fallback (mesmo padrão de PlayerProgress/GameVariables —\n/// ver Tarefa #15): cria-se automaticamente antes da primeira cena se não\n/// existir uma instância configurada num \"GameBootstrap\".\n///\n/// Montagem no Editor:\n/// - Canvas (Screen Space - Overlay, sortingOrder alto) com um \"panelRoot\"\n///   (Image full-screen preta) + \"canvasGroup\" no mesmo GameObject.\n/// - \"loadingText\" (TMP_Text, opcional): ex. \"A carregar...\".\n/// - \"minDisplayTime\": tempo mínimo (s) com o overlay visível, mesmo que a\n///   cena carregue mais rápido — evita \"flashes\" do overlay.\n/// </summary>\npublic class LoadingScreenController : MonoBehaviour\n{\n    public static LoadingScreenController Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private TMP_Text loadingText;\n\n    [Header(\"Transição\")]\n    [Tooltip(\"Duração do fade in/out do overlay, em segundos.\")]\n    [SerializeField] private float fadeDuration = 0.25f;\n\n    [Tooltip(\"Tempo mínimo (s) com o overlay totalmente visível, mesmo que a cena carregue mais rápido.\")]\n    [SerializeField] private float minDisplayTime = 0.4f;\n\n    [Tooltip(\"Texto mostrado durante o carregamento (ex: 'A carregar...').\")]\n    [SerializeField] private string loadingMessage = \"A carregar...\";\n\n    private bool isAutoFallback;\n    private bool isLoading;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (canvasGroup != null)\n        {\n            canvasGroup.alpha = 0f;\n            canvasGroup.blocksRaycasts = false;\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n        if (loadingText != null) loadingText.text = loadingMessage;\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(LoadingScreenController) + \" (Fallback)\");\n        var instance = go.AddComponent<LoadingScreenController>();\n        instance.isAutoFallback = true;\n    }\n\n    /// <summary>true enquanto uma cena está a ser carregada através deste controlador.</summary>\n    public bool IsLoading => isLoading;\n\n    /// <summary>\n    /// Carrega \"sceneName\" com fade in/out do overlay. \"onLoaded\" é chamado\n    /// depois da cena activar mas ANTES do fade out — útil para reposicionar o\n    /// player (ex: PlayerDeathHandler) antes do jogador voltar a ver o ecrã.\n    /// </summary>\n    public void LoadScene(string sceneName, Action onLoaded = null)\n    {\n        if (string.IsNullOrEmpty(sceneName))\n        {\n            Debug.LogWarning(\"[LoadingScreenController] Nome de cena vazio — não é possível carregar.\");\n            return;\n        }\n\n        if (isLoading) return;\n\n        StartCoroutine(LoadSceneRoutine(sceneName, onLoaded));\n    }\n\n    private IEnumerator LoadSceneRoutine(string sceneName, Action onLoaded)\n    {\n        isLoading = true;\n\n        yield return FadeRoutine(0f, 1f);\n\n        float startTime = Time.unscaledTime;\n\n        var op = SceneManager.LoadSceneAsync(sceneName);\n        if (op != null)\n        {\n            op.allowSceneActivation = false;\n\n            // Espera o carregamento chegar a 90% (Unity fica aqui até activar a cena).\n            while (op.progress < 0.9f) yield return null;\n\n            // Garante o tempo mínimo de overlay visível.\n            while (Time.unscaledTime - startTime < minDisplayTime) yield return null;\n\n            op.allowSceneActivation = true;\n            while (!op.isDone) yield return null;\n        }\n\n        onLoaded?.Invoke();\n\n        yield return FadeRoutine(1f, 0f);\n\n        isLoading = false;\n    }\n\n    /// <summary>\n    /// Mostra o overlay (fade in), executa \"duringOverlay\" enquanto totalmente\n    /// visível e depois esconde (fade out) — sem mudar de cena. Usado pelo\n    /// PlayerDeathHandler quando o reaparecimento acontece na MESMA cena (basta\n    /// reposicionar o player, sem SceneManager).\n    /// </summary>\n    public void ShowDuring(Action duringOverlay)\n    {\n        if (isLoading) return;\n        StartCoroutine(ShowDuringRoutine(duringOverlay));\n    }\n\n    private IEnumerator ShowDuringRoutine(Action duringOverlay)\n    {\n        isLoading = true;\n\n        yield return FadeRoutine(0f, 1f);\n\n        float startTime = Time.unscaledTime;\n        duringOverlay?.Invoke();\n\n        while (Time.unscaledTime - startTime < minDisplayTime) yield return null;\n\n        yield return FadeRoutine(1f, 0f);\n\n        isLoading = false;\n    }\n\n    private IEnumerator FadeRoutine(float from, float to)\n    {\n        if (canvasGroup == null) yield break;\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n        canvasGroup.blocksRaycasts = true;\n        canvasGroup.alpha = from;\n\n        if (fadeDuration <= 0f)\n        {\n            canvasGroup.alpha = to;\n        }\n        else\n        {\n            float t = 0f;\n            while (t < fadeDuration)\n            {\n                t += Time.unscaledDeltaTime;\n                canvasGroup.alpha = Mathf.Lerp(from, to, t / fadeDuration);\n                yield return null;\n            }\n            canvasGroup.alpha = to;\n        }\n\n        if (Mathf.Approximately(to, 0f))\n        {\n            canvasGroup.blocksRaycasts = false;\n            if (panelRoot != null) panelRoot.SetActive(false);\n        }\n    }\n}\n",
+  "id": "script-ui-loadingscreencontroller-cs",
+  "dependencyIds": [
+    "script-data-gamevariables-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-data-playerprogress-cs",
+    "script-ui-savemenucontroller-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-world-areamanager-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-ui-optionssectionui-cs",
+    "script-ui-savemenucontroller-cs",
+    "script-world-sceneloader-cs",
+    "script-world-worldmapentrypoint-cs"
+  ]
+}

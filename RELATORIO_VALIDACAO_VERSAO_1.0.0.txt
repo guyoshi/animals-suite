@@ -1,0 +1,50 @@
+ANIMALS SUITE 1.0.0 — RELATÓRIO DE VALIDAÇÃO FINAL
+Data: 18/06/2026
+
+RESULTADO GERAL
+APROVADO PARA PUBLICAÇÃO DO CÓDIGO-FONTE E BUILD PELO GITHUB ACTIONS.
+
+VALIDAÇÕES CONCLUÍDAS
+[OK] Manifesto com versão semântica 1.0.0.
+[OK] package.json, Cargo.toml e tauri.conf.json sincronizados.
+[OK] 96 Missões de Produção.
+[OK] 277 Tarefas.
+[OK] 1.099 Steps.
+[OK] 26 guias, tutoriais e documentos internos.
+[OK] 278 scripts na biblioteca técnica.
+[OK] Jornada gamificada registrada na rota /executor/journey.
+[OK] Oito regiões, névoa, nós, orbe e janela de progresso.
+[OK] Seis conquistas calculadas pelo progresso e pelos testes.
+[OK] Player musical global ligado à base project.music.
+[OK] Ícones de anterior, pausa, stop, play, próxima, repetir, aleatório e por missão.
+[OK] Associação persistente de faixa aleatória por Mission ID.
+[OK] Migração segura das novas preferências musicais.
+[OK] Atualizador Tauri com endpoint e chave pública injetados no build oficial.
+[OK] Workflow GitHub Actions com tauri-action, NSIS, assinatura e latest.json.
+[OK] Guia passo a passo para primeira configuração e atualizações futuras.
+[OK] Assistentes BAT/PowerShell para GitHub, chaves e publicação.
+[OK] Chaves privadas e artefatos locais ignorados pelo Git.
+[OK] ESLint sem erros ou avisos.
+[OK] TypeScript compilado sem erros.
+[OK] Vite build de produção concluído.
+[OK] Bundle principal de aproximadamente 405 kB; Jornada em chunk próprio de aproximadamente 9 kB.
+[OK] Aviso anterior de importação dinâmica ineficaz do WhatsNewPage removido.
+
+ARQUIVOS OPERACIONAIS
+- CONFIGURAR_GITHUB_PRIMEIRA_VEZ.bat
+- GERAR_CHAVES_ATUALIZADOR.bat
+- PUBLICAR_ATUALIZACAO_GITHUB.bat
+- GUIA_GITHUB_ATUALIZACOES_PASSO_A_PASSO.md
+- .github/workflows/release.yml
+
+COMPATIBILIDADE
+- Identificador Tauri preservado: com.gui.animals.planejador
+- Banco preservado: animals-planner.db
+- Conteúdo do Planejador e Executor preservado.
+- Configurações novas recebem valores padrão durante a migração.
+
+LIMITAÇÃO DO AMBIENTE DE VALIDAÇÃO
+Rust/Cargo não está instalado neste ambiente. Por isso, cargo check, compilação nativa Tauri e geração real do instalador NSIS não foram executados localmente. O workflow incluído instala Rust numa máquina Windows do GitHub e realiza o build oficial após a configuração das chaves e Secrets.
+
+CONCLUSÃO
+O frontend, os dados, o player musical, a Jornada, o workflow e os assistentes de publicação estão estruturalmente prontos. A primeira validação nativa ocorrerá ao publicar app-v1.0.0 no repositório configurado.

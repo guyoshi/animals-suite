@@ -1,0 +1,48 @@
+ANIMALS SUITE 0.11.0 — RELATÓRIO DE VALIDAÇÃO
+Data: 18/06/2026
+Etapa: 2 — Migração do guia para o Executor
+Plataforma: desktop somente
+
+VALIDAÇÕES CONCLUÍDAS
+[OK] Versão da suite: 0.11.0
+[OK] Manifesto do conteúdo: 2026.06.18-stage2
+[OK] Desktop-only: true
+[OK] 8 Etapas
+[OK] 96 Missões de Produção
+[OK] 49 missões detalhadas
+[OK] 47 missões planejadas
+[OK] 277 Tarefas
+[OK] 1.099 Steps
+[OK] 26 guias/tutoriais/documentos internos
+[OK] 278 scripts internos
+[OK] Nenhuma referência de guia ausente
+[OK] IDs de Missão únicos
+[OK] IDs de Step únicos
+[OK] Rotas de Roteiro e Missão
+[OK] Rotas de Guias e leitura individual
+[OK] Rotas de Scripts e detalhe individual
+[OK] Pesquisa global Ctrl+K
+[OK] ESLint
+[OK] TypeScript
+[OK] Build de produção Vite
+[OK] Carregamento do manifesto por servidor local
+[OK] Carregamento de guia completo por servidor local
+[OK] Carregamento de script completo por servidor local
+
+ACESSO TÉCNICO CONFIRMADO
+- Guias e tutoriais permanecem internos e offline.
+- Biblioteca contém campos, métodos, dependências, usado por e código-fonte.
+- Detalhes de scripts são carregados sob demanda.
+- O app.js monolítico do guia antigo não é usado pela nova interface.
+
+AVISO DE COMPILAÇÃO NATIVA
+Não foi possível executar cargo check ou npm run tauri:build neste ambiente porque Rust/Cargo não está instalado.
+O instalador NSIS deve ser gerado num Windows preparado executando ATUALIZAR_E_COMPILAR.bat.
+
+NORMALIZAÇÃO DE IDIOMA
+[OK] Interface nova do Executor em PT-BR.
+[OK] Conteúdo textual importado normalizado para PT-BR.
+[OK] Classes, métodos, caminhos, IDs e blocos de código preservados sem tradução.
+
+AVISO NÃO BLOQUEANTE
+O bundle JavaScript principal continua acima de 500 kB. O Vite recomenda divisão futura por chunks; isto não impediu a compilação. Guias e códigos de scripts permanecem em arquivos JSON separados e são carregados sob demanda.

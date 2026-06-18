@@ -1,0 +1,927 @@
+{
+  "path": "Enemy/EnemyData.cs",
+  "filename": "EnemyData.cs",
+  "category": "Enemy",
+  "primary": "EnemyData",
+  "kind": "Asset de dados",
+  "summary": "Categoria de inimigo (Enemy Creator — Etapa 1.1). Define o \"tipo\" do inimigo para organização, gizmos/editor e futura lógica específica (ex: Torretas não se movem, Armadilhas são estáticas por definição). Em \"Animals\" quase todos os inimigos são máquinas humanas, drones, armadilhas ou mecanismos industriais. \"OrganicoCorrompido\" cobre os raros inimigos orgânicos corrompidos.",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "EnemyCategory",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyStatusEffect",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyStats",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyWeaknessConfig",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyWaterReaction",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyWaterConfig",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyDropConfig",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ItemEffectEntry",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyItemInteractionConfig",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyData",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "maxHealth",
+      "type": "int",
+      "mods": "public",
+      "default": "10",
+      "section": "Vida",
+      "attrs": "[Header(\"Vida\")] [Tooltip(\"Vida máxima do inimigo.\")]",
+      "inspector": true,
+      "description": "Vida máxima do inimigo."
+    },
+    {
+      "name": "contactDamage",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Dano",
+      "attrs": "[Header(\"Dano\")] [Tooltip(\"Dano causado ao player apenas por tocar no inimigo (sem ser um ataque).\")]",
+      "inspector": true,
+      "description": "Dano causado ao player apenas por tocar no inimigo (sem ser um ataque)."
+    },
+    {
+      "name": "primaryAttackDamage",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Dano",
+      "attrs": "[Tooltip(\"Dano do ataque principal (ver lista de ataques — Etapa 2).\")]",
+      "inspector": true,
+      "description": "Dano do ataque principal (ver lista de ataques — Etapa 2)."
+    },
+    {
+      "name": "secondaryAttackDamage",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "Dano",
+      "attrs": "[Tooltip(\"Dano do ataque secundário, se existir (ver lista de ataques — Etapa 2). Deixa 0 se o inimigo só tiver um ataque.\")]",
+      "inspector": true,
+      "description": "Dano do ataque secundário, se existir (ver lista de ataques — Etapa 2). Deixa 0 se o inimigo só tiver um ataque."
+    },
+    {
+      "name": "moveSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "Movimento",
+      "attrs": "[Header(\"Movimento\")] [Tooltip(\"Velocidade base de movimento (usada como referência por EnemyMovement — Etapa 1.5).\")]",
+      "inspector": true,
+      "description": "Velocidade base de movimento (usada como referência por EnemyMovement — Etapa 1.5)."
+    },
+    {
+      "name": "acceleration",
+      "type": "float",
+      "mods": "public",
+      "default": "10f",
+      "section": "Movimento",
+      "attrs": "[Tooltip(\"Aceleração até à velocidade alvo.\")]",
+      "inspector": true,
+      "description": "Aceleração até à velocidade alvo."
+    },
+    {
+      "name": "weight",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Física",
+      "attrs": "[Header(\"Física\")] [Tooltip(\"Peso do inimigo. Usado em empurrões, placas de peso (Etapa 6) e queda na água (Etapa 3).\")]",
+      "inspector": true,
+      "description": "Peso do inimigo. Usado em empurrões, placas de peso (Etapa 6) e queda na água (Etapa 3)."
+    },
+    {
+      "name": "knockbackResistance",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Física",
+      "attrs": "[Tooltip(\"0 = sem resistência (knockback aplicado com força total). 1 = ignora knockback por completo.\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "0 = sem resistência (knockback aplicado com força total). 1 = ignora knockback por completo."
+    },
+    {
+      "name": "invincibilityTimeAfterHit",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Combate",
+      "attrs": "[Header(\"Combate\")] [Tooltip(\"Tempo (segundos) em que o inimigo fica invencível depois de tomar um hit.\")]",
+      "inspector": true,
+      "description": "Tempo (segundos) em que o inimigo fica invencível depois de tomar um hit."
+    },
+    {
+      "name": "canBeDestroyed",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Destruição / Invencibilidade",
+      "attrs": "[Header(\"Destruição / Invencibilidade\")] [Tooltip(\"Se activo, ao chegar a 0 de vida o inimigo é destruído (Estado: Morto).\")]",
+      "inspector": true,
+      "description": "Se ativo, ao chegar a 0 de vida o inimigo é destruído (Estado: Morto)."
+    },
+    {
+      "name": "canOnlyBeDeactivated",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Destruição / Invencibilidade",
+      "attrs": "[Tooltip(\"Se activo, ao chegar a 0 de vida o inimigo fica apenas Desactivado em vez de destruído (ex: máquinas que só desligam). Tem prioridade sobre 'canBeDestroyed' quando ambos estão activos.\")]",
+      "inspector": true,
+      "description": "Se ativo, ao chegar a 0 de vida o inimigo fica apenas Desativado em vez de destruído (ex: máquinas que só desligam). Tem prioridade sobre 'canBeDestroyed' quando ambos estão ativos."
+    },
+    {
+      "name": "isInvincible",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Destruição / Invencibilidade",
+      "attrs": "[Tooltip(\"Se activo, o inimigo nunca toma dano nem muda de estado por dano (ignora toda a lógica de vida/destruição).\")]",
+      "inspector": true,
+      "description": "Se ativo, o inimigo nunca toma dano nem muda de estado por dano (ignora toda a lógica de vida/destruição)."
+    },
+    {
+      "name": "recoilOnHit",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Reacção ao Tomar Dano",
+      "attrs": "[Header(\"Reacção ao Tomar Dano\")] [Tooltip(\"Ao tomar dano, o inimigo recua (recebe knockback).\")]",
+      "inspector": true,
+      "description": "Ao tomar dano, o inimigo recua (recebe knockback)."
+    },
+    {
+      "name": "freezeOnHit",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Reacção ao Tomar Dano",
+      "attrs": "[Tooltip(\"Ao tomar dano, o inimigo fica parado (interrompe movimento/ataque por um curto período).\")]",
+      "inspector": true,
+      "description": "Ao tomar dano, o inimigo fica parado (interrompe movimento/ataque por um curto período)."
+    },
+    {
+      "name": "flashOnHit",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Reacção ao Tomar Dano",
+      "attrs": "[Tooltip(\"Ao tomar dano, o inimigo pisca. Padrão: ligado — pode ser desligado por inimigo.\")]",
+      "inspector": true,
+      "description": "Ao tomar dano, o inimigo pisca. Padrão: ligado — pode ser desligado por inimigo."
+    },
+    {
+      "name": "isFlying",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Locomoção",
+      "attrs": "[Header(\"Locomoção\")] [Tooltip(\"Inimigo voador (ex: drones, aves). Usado por efeitos ambientais como a Resina Antiga: inimigos voadores não-imunes são puxados para baixo em vez de apenas imobilizados.\")]",
+      "inspector": true,
+      "description": "Inimigo voador (ex: drones, aves). Usado por efeitos ambientais como a Resina Antiga: inimigos voadores não-imunes são puxados para baixo em vez de apenas imobilizados."
+    },
+    {
+      "name": "weakAgainst",
+      "type": "AnimalCategory",
+      "mods": "public",
+      "default": "AnimalCategory.None",
+      "section": "Fraco Contra (Categorias do Player)",
+      "attrs": "[Header(\"Fraco Contra (Categorias do Player)\")] [Tooltip(\"Categorias do AnimalCategory (formas do player) contra as quais este inimigo é fraco. Pode combinar mais que uma. Ex: Torreta = Forte; Drone = Voador | Predador.\")]",
+      "inspector": true,
+      "description": "Categorias do AnimalCategory (formas do player) contra as quais este inimigo é fraco. Pode combinar mais que uma. Ex: Torreta = Forte; Drone = Voador | Predador."
+    },
+    {
+      "name": "weaknessDamageMultiplier",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "Fraco Contra (Categorias do Player)",
+      "attrs": "[Tooltip(\"Multiplicador aplicado ao dano recebido quando o atacante tem uma categoria em 'weakAgainst' (GDD 12.1: \\\"dano não é fixo; depende da força do animal e da habilidade usada\\\"). Ex: 2 = dano dobrado. Consumido por EnemyHealth.TakeDamage(int, AnimalCategory, Vector2, float).\")] [Min(1f)]",
+      "inspector": true,
+      "description": "Multiplicador aplicado ao dano recebido quando o atacante tem uma categoria em 'weakAgainst' (GDD 12.1: \"dano não é fixo; depende da força do animal e da habilidade usada\\"
+    },
+    {
+      "name": "canBePushed",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Controlo / Status",
+      "attrs": "[Header(\"Controlo / Status\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canBePulled",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Controlo / Status",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canBeFrozen",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Controlo / Status",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canBeGroundPinned",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Controlo / Status",
+      "attrs": "[Tooltip(\"Pode ser preso/imobilizado no chão (ex: por uma rede ou armadilha).\")]",
+      "inspector": true,
+      "description": "Pode ser preso/imobilizado no chão (ex: por uma rede ou armadilha)."
+    },
+    {
+      "name": "canBePutToSleep",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Controlo / Status",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canBeIgnoredByStealth",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Controlo / Status",
+      "attrs": "[Tooltip(\"Pode ser completamente ignorado por um player furtivo (não dispara a detecção deste inimigo). FONTE DE VERDADE da detecção de furtivos (Etapa 8.1): EnemyDetection deriva daqui por omissão (stealthDetection = Auto), com override manual opcional. Default ligado = furtividade funciona contra este inimigo.\")]",
+      "inspector": true,
+      "description": "Pode ser completamente ignorado por um player furtivo (não dispara a detecção deste inimigo). FONTE DE VERDADE da detecção de furtivos (Etapa 8.1): EnemyDetection deriva daqui por omissão (stealthDetection = Auto), com override manual opcional. Default ligado = furtividade funciona contra este inimigo."
+    },
+    {
+      "name": "canBeStunned",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Controlo / Status",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canBeFlipped",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Controlo / Status",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canBeUsedAsPlatform",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Puzzle / Ambiente",
+      "attrs": "[Header(\"Puzzle / Ambiente\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canPressWeightPlate",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Puzzle / Ambiente",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canActivateButton",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Puzzle / Ambiente",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canBlockLaser",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Puzzle / Ambiente",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canBeUsedToSolvePuzzle",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Puzzle / Ambiente",
+      "attrs": "[Tooltip(\"Este inimigo pode ser parte da solução de um puzzle (ver EnemyPuzzleInteraction — Etapa 6).\")]",
+      "inspector": true,
+      "description": "Este inimigo pode ser parte da solução de um puzzle (ver EnemyPuzzleInteraction — Etapa 6)."
+    },
+    {
+      "name": "canDestroyObjectsOnAttack",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Puzzle / Ambiente",
+      "attrs": "[Tooltip(\"Os ataques deste inimigo destroem objectos destrutíveis (IProjectileDestructible) e activam switches (IProjectileActivatable) apanhados na área — ver EnemyPuzzleInteraction.ApplyAttackToObjects (Etapa 6.2). Projécteis têm as suas próprias flags em ProjectileData.\")]",
+      "inspector": true,
+      "description": "Os ataques deste inimigo destroem objetos destrutíveis (IProjectileDestructible) e activam switches (IProjectileActivatable) apanhados na área — ver EnemyPuzzleInteraction.ApplyAttackToObjects (Etapa 6.2). Projécteis têm as suas próprias flags em ProjectileData."
+    },
+    {
+      "name": "canHurtOtherEnemies",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Interacção Entre Inimigos",
+      "attrs": "[Header(\"Interacção Entre Inimigos\")] [Tooltip(\"Os ataques/projécteis/explosões deste inimigo podem ferir outros inimigos.\")]",
+      "inspector": true,
+      "description": "Os ataques/projécteis/explosões deste inimigo podem ferir outros inimigos."
+    },
+    {
+      "name": "canTakeDamageFromHazards",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Interacção Entre Inimigos",
+      "attrs": "[Tooltip(\"Este inimigo recebe dano de hazards do ambiente (espinhos, lava, etc).\")]",
+      "inspector": true,
+      "description": "Este inimigo recebe dano de hazards do ambiente (espinhos, lava, etc)."
+    },
+    {
+      "name": "canTakeDamageFromOtherEnemyProjectiles",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Interacção Entre Inimigos",
+      "attrs": "[Tooltip(\"Este inimigo recebe dano de projécteis disparados por outros inimigos.\")]",
+      "inspector": true,
+      "description": "Este inimigo recebe dano de projécteis disparados por outros inimigos."
+    },
+    {
+      "name": "canSwim",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Conceitos",
+      "attrs": "[Header(\"Conceitos\")] [Tooltip(\"Nada: o inimigo consegue mover-se na água (na superfície). Desligado + 'canDive' desligado = Terrestre (default).\")]",
+      "inspector": true,
+      "description": "Nada: o inimigo consegue mover-se na água (na superfície). Desligado + 'canDive' desligado = Terrestre (default)."
+    },
+    {
+      "name": "canDive",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Conceitos",
+      "attrs": "[Tooltip(\"Mergulha: o inimigo move-se livremente debaixo de água. Implica 'Nada' (forçado automaticamente).\")]",
+      "inspector": true,
+      "description": "Mergulha: o inimigo move-se livremente debaixo de água. Implica 'Nada' (forçado automaticamente)."
+    },
+    {
+      "name": "fallInWaterReaction",
+      "type": "EnemyWaterReaction",
+      "mods": "public",
+      "default": "EnemyWaterReaction.Morre",
+      "section": "Não Sabe Nadar e Cai na Água",
+      "attrs": "[Header(\"Não Sabe Nadar e Cai na Água\")] [Tooltip(\"O que acontece a um inimigo SEM 'Nada' que cai na água (GDD: \\\"morre ao cair na água caso não saiba nadar?\\\").\")]",
+      "inspector": true,
+      "description": "O que acontece a um inimigo SEM 'Nada' que cai na água (GDD: \"morre ao cair na água caso não saiba nadar?\\"
+    },
+    {
+      "name": "fallInWaterDelay",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Não Sabe Nadar e Cai na Água",
+      "attrs": "[Tooltip(\"Tempo (segundos) dentro de água antes da reacção acima ser aplicada (0 = imediato).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Tempo (segundos) dentro de água antes da reação acima ser aplicada (0 = imediato)."
+    },
+    {
+      "name": "diesOutOfWater",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Aquático Fora de Água",
+      "attrs": "[Header(\"Aquático Fora de Água\")] [Tooltip(\"Este inimigo morre/desactiva se ficar fora de água (GDD: \\\"morre fora da água?\\\"). Só faz sentido com 'Nada' ligado.\")]",
+      "inspector": true,
+      "description": "Este inimigo morre/desactiva se ficar fora de água (GDD: \"morre fora da água?\\"
+    },
+    {
+      "name": "outOfWaterReaction",
+      "type": "EnemyWaterReaction",
+      "mods": "public",
+      "default": "EnemyWaterReaction.Morre",
+      "section": "Aquático Fora de Água",
+      "attrs": "[Tooltip(\"Reacção aplicada quando 'diesOutOfWater' está ligado e o tempo fora de água esgota.\")]",
+      "inspector": true,
+      "description": "Reação aplicada quando 'diesOutOfWater' está ligado e o tempo fora de água esgota."
+    },
+    {
+      "name": "outOfWaterDelay",
+      "type": "float",
+      "mods": "public",
+      "default": "3f",
+      "section": "Aquático Fora de Água",
+      "attrs": "[Tooltip(\"Tempo (segundos) que o inimigo aguenta fora de água antes da reacção.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Tempo (segundos) que o inimigo aguenta fora de água antes da reação."
+    },
+    {
+      "name": "swimSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Movimento na Água",
+      "attrs": "[Header(\"Movimento na Água\")] [Tooltip(\"Velocidade máxima dentro de água (limita a velocidade do Rigidbody2D enquanto em água). 0 = sem limite (usa as velocidades normais de EnemyMovement).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Velocidade máxima dentro de água (limita a velocidade do Rigidbody2D enquanto em água). 0 = sem limite (usa as velocidades normais de EnemyMovement)."
+    },
+    {
+      "name": "floatToSurfaceSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "Movimento na Água",
+      "attrs": "[Tooltip(\"Velocidade vertical com que um nadador SEM 'Mergulha' é empurrado de volta para a superfície quando submerge.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Velocidade vertical com que um nadador SEM 'Mergulha' é empurrado de volta para a superfície quando submerge."
+    },
+    {
+      "name": "canLeaveWater",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Movimento na Água",
+      "attrs": "[Tooltip(\"O inimigo aquático pode sair da água (ex: saltar para apanhar o player)? Desligado = fica travado à superfície. Só relevante com 'Nada' ligado (Etapa 3.2).\")]",
+      "inspector": true,
+      "description": "O inimigo aquático pode sair da água (ex: saltar para coletar o player)? Desligado = fica travado à superfície. Só relevante com 'Nada' ligado (Etapa 3.2)."
+    },
+    {
+      "name": "IsTerrestrial",
+      "type": "bool",
+      "mods": "public",
+      "default": "> !canSwim && !canDive",
+      "section": "Movimento na Água",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "seedsMin",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "Sementes",
+      "attrs": "[Header(\"Sementes\")] [Tooltip(\"Quantidade mínima de Sementes dropadas (0-0 = não dropa Sementes).\")] [Min(0)]",
+      "inspector": true,
+      "description": "Quantidade mínima de Sementes dropadas (0-0 = não dropa Sementes)."
+    },
+    {
+      "name": "seedsMax",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "Sementes",
+      "attrs": "[Tooltip(\"Quantidade máxima de Sementes dropadas.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Quantidade máxima de Sementes dropadas."
+    },
+    {
+      "name": "lifeSproutChance",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Broto de Vida",
+      "attrs": "[Header(\"Broto de Vida\")] [Tooltip(\"Probabilidade (0..1) de dropar 1 Broto de Vida.\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Probabilidade (0..1) de dropar 1 Broto de Vida."
+    },
+    {
+      "name": "specialItem",
+      "type": "ItemData",
+      "mods": "public",
+      "default": "",
+      "section": "Item Especial",
+      "attrs": "[Header(\"Item Especial\")] [Tooltip(\"Item especial dropado por este inimigo (vazio = nenhum). Se for um item de missão, marca 'isMissionItem' no próprio ItemData.\")]",
+      "inspector": true,
+      "description": "Item especial dropado por este inimigo (vazio = nenhum). Se for um item de missão, marca 'isMissionItem' no próprio ItemData."
+    },
+    {
+      "name": "specialItemQuantity",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Item Especial",
+      "attrs": "[Min(1)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "specialDropOnlyOnce",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Item Especial",
+      "attrs": "[Tooltip(\"O drop especial acontece só UMA vez e fica salvo como recolhido (PlayerProgress.collectedSpecialItemIds) — não repete após reentrar na área. Também respeita 'dropsOnlyOnce' do próprio ItemData.\")]",
+      "inspector": true,
+      "description": "O drop especial acontece só UMA vez e fica salvo como coletado (PlayerProgress.collectedSpecialItemIds) — não repete após reentrar na área. Também respeita 'dropsOnlyOnce' do próprio ItemData."
+    },
+    {
+      "name": "requiredBoolVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Condição do Drop Especial (GameVariables)",
+      "attrs": "[Header(\"Condição do Drop Especial (GameVariables)\")] [Tooltip(\"Nome de uma variável global bool que tem de ter o valor esperado para o item especial dropar (ex: variável de missão activa — Etapa 5.1). Vazio = sem condição.\")]",
+      "inspector": true,
+      "description": "Nome de uma variável global bool que tem de ter o valor esperado para o item especial dropar (ex: variável de missão ativa — Etapa 5.1). Vazio = sem condição."
+    },
+    {
+      "name": "requiredBoolValue",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Condição do Drop Especial (GameVariables)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "dropOnDeactivated",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Quando Dropa",
+      "attrs": "[Header(\"Quando Dropa\")] [Tooltip(\"Também dropa quando o inimigo é Desactivado (e não só quando Morre).\")]",
+      "inspector": true,
+      "description": "Também dropa quando o inimigo é Desativado (e não só quando Morre)."
+    },
+    {
+      "name": "item",
+      "type": "ItemData",
+      "mods": "public",
+      "default": "",
+      "section": "Quando Dropa",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "effect",
+      "type": "EnemyStatusEffect",
+      "mods": "public",
+      "default": "",
+      "section": "Quando Dropa",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canSleepFromSilenceFlower",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Itens do GDD",
+      "attrs": "[Header(\"Itens do GDD\")] [Tooltip(\"Flor do Silêncio: o inimigo pode adormecer com este item.\")]",
+      "inspector": true,
+      "description": "Flor do Silêncio: o inimigo pode adormecer com este item."
+    },
+    {
+      "name": "canBeTrappedByAncientResin",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Itens do GDD",
+      "attrs": "[Tooltip(\"Resina Antiga: o inimigo pode ficar preso/imobilizado com este item.\")]",
+      "inspector": true,
+      "description": "Resina Antiga: o inimigo pode ficar preso/imobilizado com este item."
+    },
+    {
+      "name": "losesTargetFromGoldenDust",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Itens do GDD",
+      "attrs": "[Tooltip(\"Pó Dourado: o inimigo perde o alvo (deixa de perseguir o player) ao ser afectado por este item.\")]",
+      "inspector": true,
+      "description": "Pó Dourado: o inimigo perde o alvo (deixa de perseguir o player) ao ser afectado por este item."
+    },
+    {
+      "name": "canBeFrozenByIceCrystal",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Itens do GDD",
+      "attrs": "[Tooltip(\"Cristal de Gelo: o inimigo pode ser congelado por este item.\")]",
+      "inspector": true,
+      "description": "Cristal de Gelo: o inimigo pode ser congelado por este item."
+    },
+    {
+      "name": "affectedByCoralBubble",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Itens do GDD",
+      "attrs": "[Tooltip(\"OBSOLETO (Tarefa \\\"Itens Consumíveis\\\"): Bolha de Coral passou a ser um buff exclusivo do player (imunidade a correntes de água) e já não afecta inimigos. Este campo é ignorado — mantido apenas para não invalidar assets antigos.\")]",
+      "inspector": true,
+      "description": "OBSOLETO (Tarefa \"Itens Consumíveis\\"
+    },
+    {
+      "name": "affectedByKnockbackItems",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Geral",
+      "attrs": "[Header(\"Geral\")] [Tooltip(\"O inimigo é afectado por knockback causado por itens (ex: empurrões/explosões de itens do player).\")]",
+      "inspector": true,
+      "description": "O inimigo é afectado por knockback causado por itens (ex: empurrões/explosões de itens do player)."
+    },
+    {
+      "name": "otherItemEffects",
+      "type": "List<ItemEffectEntry>",
+      "mods": "public",
+      "default": "new List<ItemEffectEntry>()",
+      "section": "Outros Itens Globais/Regionais",
+      "attrs": "[Header(\"Outros Itens Globais/Regionais\")] [Tooltip(\"Liga quaisquer outros ItemData (globais/regionais, actuais ou futuros) a um efeito de status neste inimigo.\")]",
+      "inspector": true,
+      "description": "Liga quaisquer outros ItemData (globais/regionais, actuais ou futuros) a um efeito de status neste inimigo."
+    },
+    {
+      "name": "immuneEffects",
+      "type": "List<EnemyStatusEffect>",
+      "mods": "public",
+      "default": "new List<EnemyStatusEffect>()",
+      "section": "Imunidades",
+      "attrs": "[Header(\"Imunidades\")] [Tooltip(\"Efeitos de status aos quais este inimigo é totalmente imune (ex: Mini-boss imune a Sleep).\")]",
+      "inspector": true,
+      "description": "Efeitos de status aos quais este inimigo é totalmente imune (ex: Mini-boss imune a Sleep)."
+    },
+    {
+      "name": "immuneItems",
+      "type": "List<ItemData>",
+      "mods": "public",
+      "default": "new List<ItemData>()",
+      "section": "Imunidades",
+      "attrs": "[Tooltip(\"Itens específicos aos quais este inimigo é totalmente imune, independentemente do efeito configurado para esse item.\")]",
+      "inspector": true,
+      "description": "Itens específicos aos quais este inimigo é totalmente imune, independentemente do efeito configurado para esse item."
+    },
+    {
+      "name": "enemyId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Identificador único deste inimigo (usado por condições, registos de derrota, drops, etc).\")]",
+      "inspector": true,
+      "description": "Identificador único deste inimigo (usado por condições, registros de derrota, drops, etc)."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "category",
+      "type": "EnemyCategory",
+      "mods": "public",
+      "default": "EnemyCategory.RoboTerrestre",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Categoria do inimigo. Quase todos são robóticos/mecânicos (Drone, Torreta, Armadilha, Robô Terrestre, Máquina Aquática, Hazard Móvel, Mini-boss). 'OrganicoCorrompido' é só para os raros inimigos orgânicos corrompidos.\")]",
+      "inspector": true,
+      "description": "Categoria do inimigo. Quase todos são robóticos/mecânicos (Drone, Torreta, Armadilha, Robô Terrestre, Máquina Aquática, Hazard Móvel, Mini-boss). 'OrganicoCorrompido' é só para os raros inimigos orgânicos corrompidos."
+    },
+    {
+      "name": "sprite",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Header(\"Visual\")] [Tooltip(\"Sprite estático (opcional — usar se o inimigo não tiver Animator).\")]",
+      "inspector": true,
+      "description": "Sprite estático (opcional — usar se o inimigo não tiver Animator)."
+    },
+    {
+      "name": "animatorController",
+      "type": "RuntimeAnimatorController",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"Animator Controller do inimigo (opcional — usar se o inimigo tiver animações).\")]",
+      "inspector": true,
+      "description": "Animator Controller do inimigo (opcional — usar se o inimigo tiver animações)."
+    },
+    {
+      "name": "prefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Prefab",
+      "attrs": "[Header(\"Prefab\")] [Tooltip(\"Prefab base deste inimigo, com EnemyController e os componentes necessários já configurados.\")]",
+      "inspector": true,
+      "description": "Prefab base deste inimigo, com EnemyController e os componentes necessários já configurados."
+    },
+    {
+      "name": "stats",
+      "type": "EnemyStats",
+      "mods": "public",
+      "default": "new EnemyStats()",
+      "section": "Estatísticas",
+      "attrs": "[Header(\"Estatísticas\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "weaknesses",
+      "type": "EnemyWeaknessConfig",
+      "mods": "public",
+      "default": "new EnemyWeaknessConfig()",
+      "section": "Fraquezas e Resistências",
+      "attrs": "[Header(\"Fraquezas e Resistências\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "water",
+      "type": "EnemyWaterConfig",
+      "mods": "public",
+      "default": "new EnemyWaterConfig()",
+      "section": "Água (Etapa 3)",
+      "attrs": "[Header(\"Água (Etapa 3)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "drops",
+      "type": "EnemyDropConfig",
+      "mods": "public",
+      "default": "new EnemyDropConfig()",
+      "section": "Drops (Etapa 4.3)",
+      "attrs": "[Header(\"Drops (Etapa 4.3)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "itemInteractions",
+      "type": "EnemyItemInteractionConfig",
+      "mods": "public",
+      "default": "new EnemyItemInteractionConfig()",
+      "section": "Interacção com Itens",
+      "attrs": "[Header(\"Interacção com Itens\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnValidate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnValidate."
+    }
+  ],
+  "dependencies": [
+    "AnimalCategory",
+    "EnemyController",
+    "EnemyDetection",
+    "EnemyDropTable",
+    "EnemyHealth",
+    "EnemyMovement",
+    "EnemyPuzzleInteraction",
+    "EnemyWaterBehavior",
+    "GameVariables",
+    "IProjectileActivatable",
+    "IProjectileDestructible",
+    "ItemData",
+    "PlayerProgress",
+    "ProjectileData",
+    "WaterDetector"
+  ],
+  "used_by": [
+    "Boss_GiganteDoDegelo",
+    "EnemyContactDamage",
+    "EnemyController",
+    "EnemyDetection",
+    "EnemyDropTable",
+    "EnemyHealth",
+    "EnemyMovement",
+    "EnemyMultiPartBoss",
+    "EnemyPuzzleInteraction",
+    "EnemyStatusEffectReceiver",
+    "EnemyWaterBehavior",
+    "GameWeightUtil",
+    "ItemDataEditor",
+    "ObjectWeight",
+    "Objective_DefeatSpecificEnemy",
+    "RoarAbility",
+    "Switch",
+    "WeightPlate",
+    "WindAffectable"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Categoria de inimigo (Enemy Creator — Etapa 1.1). Define o \"tipo\" do inimigo\n/// para organização, gizmos/editor e futura lógica específica (ex: Torretas não\n/// se movem, Armadilhas são estáticas por definição).\n///\n/// Em \"Animals\" quase todos os inimigos são máquinas humanas, drones, armadilhas\n/// ou mecanismos industriais. \"OrganicoCorrompido\" cobre os raros inimigos\n/// orgânicos corrompidos.\n/// </summary>\npublic enum EnemyCategory\n{\n    Drone,\n    Torreta,\n    Armadilha,\n    RoboTerrestre,\n    MaquinaAquatica,\n    HazardMovel,\n    OrganicoCorrompido,\n    MiniBoss\n}\n\n/// <summary>\n/// Efeito de status que um item (ou outra fonte) pode causar num inimigo. Usado\n/// por EnemyItemInteractionConfig para ligar itens específicos a efeitos, e para\n/// listar imunidades (ex: um Mini-boss imune a \"Sleep\").\n/// </summary>\npublic enum EnemyStatusEffect\n{\n    Sleep,\n    Freeze,\n    Trap,\n    LoseTarget,\n    Knockback,\n    Stun,\n    Other\n}\n\n/// <summary>\n/// Estatísticas básicas de combate, movimento e reacção a dano de um inimigo\n/// (Enemy Creator — Etapa 1.1). Configs de detecção, movimento, água, ataques e\n/// drops são adicionadas a EnemyData nas etapas seguintes.\n/// </summary>\n[System.Serializable]\npublic class EnemyStats\n{\n    [Header(\"Vida\")]\n    [Tooltip(\"Vida máxima do inimigo.\")]\n    public int maxHealth = 10;\n\n    [Header(\"Dano\")]\n    [Tooltip(\"Dano causado ao player apenas por tocar no inimigo (sem ser um ataque).\")]\n    public int contactDamage = 1;\n\n    [Tooltip(\"Dano do ataque principal (ver lista de ataques — Etapa 2).\")]\n    public int primaryAttackDamage = 1;\n\n    [Tooltip(\"Dano do ataque secundário, se existir (ver lista de ataques — Etapa 2). Deixa 0 se o inimigo só tiver um ataque.\")]\n    public int secondaryAttackDamage = 0;\n\n    [Header(\"Movimento\")]\n    [Tooltip(\"Velocidade base de movimento (usada como referência por EnemyMovement — Etapa 1.5).\")]\n    public float moveSpeed = 2f;\n\n    [Tooltip(\"Aceleração até à velocidade alvo.\")]\n    public float acceleration = 10f;\n\n    [Header(\"Física\")]\n    [Tooltip(\"Peso do inimigo. Usado em empurrões, placas de peso (Etapa 6) e queda na água (Etapa 3).\")]\n    public float weight = 1f;\n\n    [Tooltip(\"0 = sem resistência (knockback aplicado com força total). 1 = ignora knockback por completo.\")]\n    [Range(0f, 1f)]\n    public float knockbackResistance = 0f;\n\n    [Header(\"Combate\")]\n    [Tooltip(\"Tempo (segundos) em que o inimigo fica invencível depois de tomar um hit.\")]\n    public float invincibilityTimeAfterHit = 0.5f;\n\n    [Header(\"Destruição / Invencibilidade\")]\n    [Tooltip(\"Se activo, ao chegar a 0 de vida o inimigo é destruído (Estado: Morto).\")]\n    public bool canBeDestroyed = true;\n\n    [Tooltip(\"Se activo, ao chegar a 0 de vida o inimigo fica apenas Desactivado em vez de destruído (ex: máquinas que só desligam). Tem prioridade sobre 'canBeDestroyed' quando ambos estão activos.\")]\n    public bool canOnlyBeDeactivated = false;\n\n    [Tooltip(\"Se activo, o inimigo nunca toma dano nem muda de estado por dano (ignora toda a lógica de vida/destruição).\")]\n    public bool isInvincible = false;\n\n    [Header(\"Reacção ao Tomar Dano\")]\n    [Tooltip(\"Ao tomar dano, o inimigo recua (recebe knockback).\")]\n    public bool recoilOnHit = true;\n\n    [Tooltip(\"Ao tomar dano, o inimigo fica parado (interrompe movimento/ataque por um curto período).\")]\n    public bool freezeOnHit = false;\n\n    [Tooltip(\"Ao tomar dano, o inimigo pisca. Padrão: ligado — pode ser desligado por inimigo.\")]\n    public bool flashOnHit = true;\n\n    [Header(\"Locomoção\")]\n    [Tooltip(\"Inimigo voador (ex: drones, aves). Usado por efeitos ambientais como a Resina Antiga: inimigos voadores não-imunes são puxados para baixo em vez de apenas imobilizados.\")]\n    public bool isFlying = false;\n}\n\n/// <summary>\n/// Fraquezas e resistências de um inimigo (Enemy Creator — Etapa 1.1).\n///\n/// \"weakAgainst\" reutiliza o enum AnimalCategory (já usado para classificar as\n/// formas do player no GDD — Rapido/Saltador/Escalador/Forte/Predador/Voador/\n/// Aquatico/Furtivo/Resistente): ex. uma Torreta marcada como fraca contra\n/// \"Forte\" pode ser destruída/empurrada por um player nessa forma; um Drone\n/// fraco contra \"Voador\" ou \"Predador\" toma dano extra dessas formas.\n/// </summary>\n[System.Serializable]\npublic class EnemyWeaknessConfig\n{\n    [Header(\"Fraco Contra (Categorias do Player)\")]\n    [Tooltip(\"Categorias do AnimalCategory (formas do player) contra as quais este inimigo é fraco. Pode combinar mais que uma. Ex: Torreta = Forte; Drone = Voador | Predador.\")]\n    public AnimalCategory weakAgainst = AnimalCategory.None;\n\n    [Tooltip(\"Multiplicador aplicado ao dano recebido quando o atacante tem uma categoria em 'weakAgainst' (GDD 12.1: \\\"dano não é fixo; depende da força do animal e da habilidade usada\\\"). Ex: 2 = dano dobrado. Consumido por EnemyHealth.TakeDamage(int, AnimalCategory, Vector2, float).\")]\n    [Min(1f)]\n    public float weaknessDamageMultiplier = 2f;\n\n    [Header(\"Controlo / Status\")]\n    public bool canBePushed = true;\n    public bool canBePulled = false;\n    public bool canBeFrozen = false;\n\n    [Tooltip(\"Pode ser preso/imobilizado no chão (ex: por uma rede ou armadilha).\")]\n    public bool canBeGroundPinned = false;\n\n    public bool canBePutToSleep = false;\n\n    [Tooltip(\"Pode ser completamente ignorado por um player furtivo (não dispara a detecção deste inimigo). FONTE DE VERDADE da detecção de furtivos (Etapa 8.1): EnemyDetection deriva daqui por omissão (stealthDetection = Auto), com override manual opcional. Default ligado = furtividade funciona contra este inimigo.\")]\n    public bool canBeIgnoredByStealth = true;\n\n    public bool canBeStunned = true;\n    public bool canBeFlipped = false;\n\n    [Header(\"Puzzle / Ambiente\")]\n    public bool canBeUsedAsPlatform = false;\n    public bool canPressWeightPlate = false;\n    public bool canActivateButton = false;\n    public bool canBlockLaser = false;\n\n    [Tooltip(\"Este inimigo pode ser parte da solução de um puzzle (ver EnemyPuzzleInteraction — Etapa 6).\")]\n    public bool canBeUsedToSolvePuzzle = false;\n\n    [Tooltip(\"Os ataques deste inimigo destroem objectos destrutíveis (IProjectileDestructible) e activam switches (IProjectileActivatable) apanhados na área — ver EnemyPuzzleInteraction.ApplyAttackToObjects (Etapa 6.2). Projécteis têm as suas próprias flags em ProjectileData.\")]\n    public bool canDestroyObjectsOnAttack = false;\n\n    [Header(\"Interacção Entre Inimigos\")]\n    [Tooltip(\"Os ataques/projécteis/explosões deste inimigo podem ferir outros inimigos.\")]\n    public bool canHurtOtherEnemies = false;\n\n    [Tooltip(\"Este inimigo recebe dano de hazards do ambiente (espinhos, lava, etc).\")]\n    public bool canTakeDamageFromHazards = true;\n\n    [Tooltip(\"Este inimigo recebe dano de projécteis disparados por outros inimigos.\")]\n    public bool canTakeDamageFromOtherEnemyProjectiles = false;\n}\n\n/// <summary>\n/// Reacção de um inimigo a uma situação de água \"errada\" (Enemy Creator —\n/// Etapa 3.1): não-nadador que cai na água, ou aquático que sai da água.\n/// </summary>\npublic enum EnemyWaterReaction\n{\n    /// <summary>Não acontece nada (ex: robô à prova de água que apenas se afunda).</summary>\n    Nenhuma,\n\n    /// <summary>O inimigo passa a Desactivado (ex: máquina que entra em curto-circuito e desliga).</summary>\n    Desactiva,\n\n    /// <summary>O inimigo morre (passa por EnemyHealth.Kill — respeita \"canOnlyBeDeactivated\").</summary>\n    Morre\n}\n\n/// <summary>\n/// Configuração de água de um inimigo (Enemy Creator — Etapa 3.1), com os 3\n/// conceitos do GDD:\n///\n/// - Terrestre (default): \"canSwim\" e \"canDive\" desligados. Se cair na água,\n///   reage conforme \"fallInWaterReaction\" (morre/desactiva/nada acontece).\n/// - Nada (\"canSwim\"): move-se na água mas fica na superfície — se submergir,\n///   é empurrado de volta para cima (\"floatToSurfaceSpeed\").\n/// - Mergulha (\"canDive\"): implica Nada (forçado em EnemyData.OnValidate).\n///   Move-se livremente debaixo de água.\n///\n/// Consumida por EnemyWaterBehavior (componente no inimigo, que reutiliza o\n/// WaterDetector partilhado com o player) e pelos ataques aquáticos (Etapa 3.2).\n/// </summary>\n[System.Serializable]\npublic class EnemyWaterConfig\n{\n    [Header(\"Conceitos\")]\n    [Tooltip(\"Nada: o inimigo consegue mover-se na água (na superfície). Desligado + 'canDive' desligado = Terrestre (default).\")]\n    public bool canSwim = false;\n\n    [Tooltip(\"Mergulha: o inimigo move-se livremente debaixo de água. Implica 'Nada' (forçado automaticamente).\")]\n    public bool canDive = false;\n\n    [Header(\"Não Sabe Nadar e Cai na Água\")]\n    [Tooltip(\"O que acontece a um inimigo SEM 'Nada' que cai na água (GDD: \\\"morre ao cair na água caso não saiba nadar?\\\").\")]\n    public EnemyWaterReaction fallInWaterReaction = EnemyWaterReaction.Morre;\n\n    [Tooltip(\"Tempo (segundos) dentro de água antes da reacção acima ser aplicada (0 = imediato).\")]\n    [Min(0f)]\n    public float fallInWaterDelay = 0.5f;\n\n    [Header(\"Aquático Fora de Água\")]\n    [Tooltip(\"Este inimigo morre/desactiva se ficar fora de água (GDD: \\\"morre fora da água?\\\"). Só faz sentido com 'Nada' ligado.\")]\n    public bool diesOutOfWater = false;\n\n    [Tooltip(\"Reacção aplicada quando 'diesOutOfWater' está ligado e o tempo fora de água esgota.\")]\n    public EnemyWaterReaction outOfWaterReaction = EnemyWaterReaction.Morre;\n\n    [Tooltip(\"Tempo (segundos) que o inimigo aguenta fora de água antes da reacção.\")]\n    [Min(0f)]\n    public float outOfWaterDelay = 3f;\n\n    [Header(\"Movimento na Água\")]\n    [Tooltip(\"Velocidade máxima dentro de água (limita a velocidade do Rigidbody2D enquanto em água). 0 = sem limite (usa as velocidades normais de EnemyMovement).\")]\n    [Min(0f)]\n    public float swimSpeed = 0f;\n\n    [Tooltip(\"Velocidade vertical com que um nadador SEM 'Mergulha' é empurrado de volta para a superfície quando submerge.\")]\n    [Min(0f)]\n    public float floatToSurfaceSpeed = 2f;\n\n    [Tooltip(\"O inimigo aquático pode sair da água (ex: saltar para apanhar o player)? Desligado = fica travado à superfície. Só relevante com 'Nada' ligado (Etapa 3.2).\")]\n    public bool canLeaveWater = false;\n\n    /// <summary>True se o inimigo é Terrestre (não nada nem mergulha) — o conceito default.</summary>\n    public bool IsTerrestrial => !canSwim && !canDive;\n}\n\n/// <summary>\n/// Drops de um inimigo (Enemy Creator — Etapa 4.3). Consumida pelo componente\n/// EnemyDropTable, que escuta EnemyController.OnStateChanged e entrega os\n/// drops via PlayerProgress quando o inimigo morre (e, opcionalmente, quando\n/// é desactivado).\n/// </summary>\n[System.Serializable]\npublic class EnemyDropConfig\n{\n    [Header(\"Sementes\")]\n    [Tooltip(\"Quantidade mínima de Sementes dropadas (0-0 = não dropa Sementes).\")]\n    [Min(0)] public int seedsMin = 0;\n\n    [Tooltip(\"Quantidade máxima de Sementes dropadas.\")]\n    [Min(0)] public int seedsMax = 0;\n\n    [Header(\"Broto de Vida\")]\n    [Tooltip(\"Probabilidade (0..1) de dropar 1 Broto de Vida.\")]\n    [Range(0f, 1f)] public float lifeSproutChance = 0f;\n\n    [Header(\"Item Especial\")]\n    [Tooltip(\"Item especial dropado por este inimigo (vazio = nenhum). Se for um item de missão, marca 'isMissionItem' no próprio ItemData.\")]\n    public ItemData specialItem;\n\n    [Min(1)] public int specialItemQuantity = 1;\n\n    [Tooltip(\"O drop especial acontece só UMA vez e fica salvo como recolhido (PlayerProgress.collectedSpecialItemIds) — não repete após reentrar na área. Também respeita 'dropsOnlyOnce' do próprio ItemData.\")]\n    public bool specialDropOnlyOnce = true;\n\n    [Header(\"Condição do Drop Especial (GameVariables)\")]\n    [Tooltip(\"Nome de uma variável global bool que tem de ter o valor esperado para o item especial dropar (ex: variável de missão activa — Etapa 5.1). Vazio = sem condição.\")]\n    public string requiredBoolVariable = \"\";\n\n    public bool requiredBoolValue = true;\n\n    [Header(\"Quando Dropa\")]\n    [Tooltip(\"Também dropa quando o inimigo é Desactivado (e não só quando Morre).\")]\n    public bool dropOnDeactivated = false;\n}\n\n/// <summary>\n/// Liga um ItemData a um efeito de status (ver\n/// EnemyItemInteractionConfig.otherItemEffects).\n/// </summary>\n[System.Serializable]\npublic class ItemEffectEntry\n{\n    public ItemData item;\n    public EnemyStatusEffect effect;\n}\n\n/// <summary>\n/// Interacção do inimigo com itens do jogo (Enemy Creator — Etapa 1.1). Os\n/// campos específicos cobrem os itens já previstos no GDD (Flor do Silêncio,\n/// Resina Antiga, Pó Dourado, Cristal de Gelo, Bolha de Coral). \"otherItemEffects\"\n/// e \"immuneItems\"/\"immuneEffects\" deixam o sistema preparado para novos itens\n/// globais/regionais e para imunidades de Mini-boss (ex: imune a sono) sem\n/// precisar de novos campos.\n/// </summary>\n[System.Serializable]\npublic class EnemyItemInteractionConfig\n{\n    [Header(\"Itens do GDD\")]\n    [Tooltip(\"Flor do Silêncio: o inimigo pode adormecer com este item.\")]\n    public bool canSleepFromSilenceFlower = false;\n\n    [Tooltip(\"Resina Antiga: o inimigo pode ficar preso/imobilizado com este item.\")]\n    public bool canBeTrappedByAncientResin = false;\n\n    [Tooltip(\"Pó Dourado: o inimigo perde o alvo (deixa de perseguir o player) ao ser afectado por este item.\")]\n    public bool losesTargetFromGoldenDust = false;\n\n    [Tooltip(\"Cristal de Gelo: o inimigo pode ser congelado por este item.\")]\n    public bool canBeFrozenByIceCrystal = false;\n\n    [Tooltip(\"OBSOLETO (Tarefa \\\"Itens Consumíveis\\\"): Bolha de Coral passou a ser um buff exclusivo do player (imunidade a correntes de água) e já não afecta inimigos. Este campo é ignorado — mantido apenas para não invalidar assets antigos.\")]\n    public bool affectedByCoralBubble = false;\n\n    [Header(\"Geral\")]\n    [Tooltip(\"O inimigo é afectado por knockback causado por itens (ex: empurrões/explosões de itens do player).\")]\n    public bool affectedByKnockbackItems = true;\n\n    [Header(\"Outros Itens Globais/Regionais\")]\n    [Tooltip(\"Liga quaisquer outros ItemData (globais/regionais, actuais ou futuros) a um efeito de status neste inimigo.\")]\n    public List<ItemEffectEntry> otherItemEffects = new List<ItemEffectEntry>();\n\n    [Header(\"Imunidades\")]\n    [Tooltip(\"Efeitos de status aos quais este inimigo é totalmente imune (ex: Mini-boss imune a Sleep).\")]\n    public List<EnemyStatusEffect> immuneEffects = new List<EnemyStatusEffect>();\n\n    [Tooltip(\"Itens específicos aos quais este inimigo é totalmente imune, independentemente do efeito configurado para esse item.\")]\n    public List<ItemData> immuneItems = new List<ItemData>();\n}\n\n/// <summary>\n/// Define os dados de um inimigo (Enemy Creator — Etapa 1.1): identidade, visual,\n/// prefab, categoria, estatísticas, fraquezas/resistências e interacção com\n/// itens. Um EnemyController referencia um EnemyData e pode ser colocado várias\n/// vezes na cena, todos partilhando a mesma configuração base.\n///\n/// As próximas etapas adicionam a este ScriptableObject: detecção (1.4),\n/// movimento/patrulha (1.5), água (Etapa 3), ataques/projécteis (Etapa 2) e\n/// drops (Etapa 4).\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Enemy/Enemy Data\", fileName = \"NewEnemyData\")]\npublic class EnemyData : ScriptableObject\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Identificador único deste inimigo (usado por condições, registos de derrota, drops, etc).\")]\n    public string enemyId;\n\n    public string displayName;\n\n    [Tooltip(\"Categoria do inimigo. Quase todos são robóticos/mecânicos (Drone, Torreta, Armadilha, Robô Terrestre, Máquina Aquática, Hazard Móvel, Mini-boss). 'OrganicoCorrompido' é só para os raros inimigos orgânicos corrompidos.\")]\n    public EnemyCategory category = EnemyCategory.RoboTerrestre;\n\n    [Header(\"Visual\")]\n    [Tooltip(\"Sprite estático (opcional — usar se o inimigo não tiver Animator).\")]\n    public Sprite sprite;\n\n    [Tooltip(\"Animator Controller do inimigo (opcional — usar se o inimigo tiver animações).\")]\n    public RuntimeAnimatorController animatorController;\n\n    [Header(\"Prefab\")]\n    [Tooltip(\"Prefab base deste inimigo, com EnemyController e os componentes necessários já configurados.\")]\n    public GameObject prefab;\n\n    [Header(\"Estatísticas\")]\n    public EnemyStats stats = new EnemyStats();\n\n    [Header(\"Fraquezas e Resistências\")]\n    public EnemyWeaknessConfig weaknesses = new EnemyWeaknessConfig();\n\n    [Header(\"Água (Etapa 3)\")]\n    public EnemyWaterConfig water = new EnemyWaterConfig();\n\n    [Header(\"Drops (Etapa 4.3)\")]\n    public EnemyDropConfig drops = new EnemyDropConfig();\n\n    [Header(\"Interacção com Itens\")]\n    public EnemyItemInteractionConfig itemInteractions = new EnemyItemInteractionConfig();\n\n    private void OnValidate()\n    {\n        // Mergulha implica Nada (Etapa 3.1).\n        if (water != null && water.canDive)\n            water.canSwim = true;\n    }\n}\n",
+  "id": "script-enemy-enemydata-cs",
+  "dependencyIds": [
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-enemymovement-cs",
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-enemy-enemywaterbehavior-cs",
+    "script-data-gamevariables-cs",
+    "script-data-itemdata-cs",
+    "script-data-playerprogress-cs",
+    "script-enemy-projectiledata-cs",
+    "script-player-waterdetector-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-bosses-boss-gigantedodegelo-cs",
+    "script-enemy-enemycontactdamage-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-enemymovement-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-enemy-enemystatuseffectreceiver-cs",
+    "script-enemy-enemywaterbehavior-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-data-editor-itemdataeditor-cs",
+    "script-interactables-objectweight-cs",
+    "script-data-objectives-challengeobjectives-enemy-cs",
+    "script-abilities-roarability-cs",
+    "script-interactables-switch-cs",
+    "script-interactables-weightplate-cs",
+    "script-interactables-windaffectable-cs"
+  ]
+}

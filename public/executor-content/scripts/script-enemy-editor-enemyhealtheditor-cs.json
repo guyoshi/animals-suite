@@ -1,0 +1,65 @@
+{
+  "path": "Enemy/Editor/EnemyHealthEditor.cs",
+  "filename": "EnemyHealthEditor.cs",
+  "category": "Enemy",
+  "primary": "EnemyHealthEditor",
+  "kind": "Editor",
+  "summary": "Editor customizado do EnemyHealth (Etapa 8.3): desenha a lista [SerializeReference] \"vulnerabilityConditions\" (janela de vulnerabilidade) com o PolymorphicListDrawer — mesmo padrão das condições de desactivação no EnemyControllerEditor.",
+  "attach": "Ferramenta do Unity Editor; não adicionar a GameObjects de gameplay.",
+  "types": [
+    {
+      "name": "EnemyHealthEditor",
+      "kind": "class",
+      "bases": "Editor",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "_vulnerabilityConditionsProp",
+      "type": "SerializedProperty",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnInspectorGUI",
+      "ret": "void",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação OnInspectorGUI."
+    }
+  ],
+  "dependencies": [
+    "EnemyCondition",
+    "EnemyControllerEditor",
+    "EnemyHealth",
+    "PolymorphicListDrawer"
+  ],
+  "used_by": [
+    "EnemyHealth"
+  ],
+  "source": "#if UNITY_EDITOR\nusing UnityEditor;\nusing UnityEngine;\n\n/// <summary>\n/// Editor customizado do EnemyHealth (Etapa 8.3): desenha a lista\n/// [SerializeReference] \"vulnerabilityConditions\" (janela de vulnerabilidade)\n/// com o PolymorphicListDrawer — mesmo padrão das condições de desactivação\n/// no EnemyControllerEditor.\n/// </summary>\n[CustomEditor(typeof(EnemyHealth))]\npublic class EnemyHealthEditor : Editor\n{\n    private SerializedProperty _vulnerabilityConditionsProp;\n\n    private void OnEnable()\n    {\n        _vulnerabilityConditionsProp = serializedObject.FindProperty(\"vulnerabilityConditions\");\n    }\n\n    public override void OnInspectorGUI()\n    {\n        serializedObject.Update();\n\n        DrawPropertiesExcluding(serializedObject, \"m_Script\", \"vulnerabilityConditions\");\n\n        EditorGUILayout.Space();\n        PolymorphicListDrawer.Draw(serializedObject, _vulnerabilityConditionsProp, \"Janela de Vulnerabilidade (Etapa 8.3)\", typeof(EnemyCondition), \"Adicionar Condição de Vulnerabilidade\");\n\n        serializedObject.ApplyModifiedProperties();\n    }\n}\n#endif\n",
+  "id": "script-enemy-editor-enemyhealtheditor-cs",
+  "dependencyIds": [
+    "script-enemy-enemycondition-cs",
+    "script-enemy-editor-enemycontrollereditor-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemyhealth-cs"
+  ]
+}

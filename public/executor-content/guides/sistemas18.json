@@ -1,0 +1,42 @@
+{
+  "slug": "sistemas18",
+  "title": "Sistemas e decisões — 18/06 att",
+  "category": "Atualização 18/06",
+  "source": "Diferenças do backup 18/06 att",
+  "summary": "Backup 18/06 att: comparação direta com a primeira versão de 18/06. Não houve alteração na quantidade de scripts; apenas dois arquivos do Jukebox mudaram. Sistemas e decisões — 18/06 att 1. Diferenças exatas 278 scripts : nenhum novo, removido ou renomeado. Alterados: UI/JukeboxSectionUI.cs e UI/JukeboxTrackButtonUI.cs . Alterados no pacote de documentaçã…",
+  "html": "<div class=\"warning\"><b>Backup 18/06 att:</b> comparação direta com a primeira versão de 18/06. Não houve alteração na quantidade de scripts; apenas dois arquivos do Jukebox mudaram.</div>\n<h1 id=\"sistemas-e-decisoes-18-06-att\">Sistemas e decisões — 18/06 att</h1>\n<h2 id=\"1-diferencas-exatas\">1. Diferenças exatas</h2><ul><li><b>278 scripts</b>: nenhum novo, removido ou renomeado.</li><li>Alterados: <code>UI/JukeboxSectionUI.cs</code> e <code>UI/JukeboxTrackButtonUI.cs</code>.</li><li>Alterados no pacote de documentação: <code>Guia_Coleccionaveis_Itens_Upgrades.md</code> e <code>Guia_Menus_e_HUD.md</code>.</li></ul>\n<h2 id=\"2-jukebox-atual\">2. Jukebox atual</h2><ul><li>Desbloqueio por compra única do <code>ItemData</code>; não depende do pós-game.</li><li><code>tracks</code> aceita faixas base sempre visíveis ou faixas condicionadas por <code>melodyId</code>.</li><li><code>knownMelodies</code> contém os <code>WildMelodyData</code>; apenas IDs presentes em <code>collectedMelodyIds</code> entram na lista.</li><li>Entradas são agrupadas por <code>WorldData</code>.</li><li>L/R alterna Normal e Favoritos; B fecha.</li><li>Favoritos usam <code>GameVariables</code> com <code>jukebox_fav_&lt;id&gt;</code>.</li><li>A faixa ativa mostra disco giratório, possui Play/Stop e avança automaticamente ao terminar.</li><li><code>OnWildMelodyCollected</code> reconstrói a lista aberta sem interromper a música atual.</li><li>O AudioSource próprio respeita <code>MasterVolume × BgmVolume</code>.</li></ul>\n<h2 id=\"3-regras-de-configuracao\">3. Regras de configuração</h2><ol><li>Preenche <code>melodyId</code> único, <code>AreaData</code>, <code>AreaData.world</code> e <code>AudioClip</code> em cada WildMelodyData.</li><li>Usa <code>knownMelodies</code> para Melodias Selvagens e <code>tracks</code> para a trilha base.</li><li>Não repitas deliberadamente a mesma música nas duas listas, porque o código atual não faz deduplicação.</li><li>Não deixes uma WildMelodyData sem mundo; o agrupamento “Outras Melodias” não é alcançado de forma fiável pela lógica atual.</li></ol>\n<h2 id=\"4-gdd-18-06\">4. GDD 18/06</h2><ul><li>Ecos Perdidos, snapshots e população estão reconhecidos como persistentes no schema v1.</li><li>Os cinco níveis de vila e a separação entre NPCs obrigatórios e população adicional são canónicos.</li><li>O estado do Jukebox passou de “ligação pendente” para “implementado em scripts”.</li><li>O trabalho restante é montagem de prefabs, referências, assets e conteúdo musical final.</li></ul>\n<h2 id=\"5-testes-obrigatorios\">5. Testes obrigatórios</h2><ol><li>Abrir bloqueado antes da compra e desbloqueado depois.</li><li>Confirmar faixa base, faixa estática condicionada e Wild Melody.</li><li>Coletar melodia com painel aberto.</li><li>Guardar/carregar favoritos e collectedMelodyIds.</li><li>Alternar Normal/Favoritos com L/R e fechar com B.</li><li>Deixar faixa terminar e confirmar avanço automático.</li><li>Alterar volumes durante reprodução.</li><li>Procurar entradas duplicadas por configuração repetida.</li></ol>",
+  "toc": [
+    {
+      "id": "sistemas-e-decisoes-18-06-att",
+      "level": 1,
+      "label": "Sistemas e decisões — 18/06 att"
+    },
+    {
+      "id": "1-diferencas-exatas",
+      "level": 2,
+      "label": "1. Diferenças exatas"
+    },
+    {
+      "id": "2-jukebox-atual",
+      "level": 2,
+      "label": "2. Jukebox atual"
+    },
+    {
+      "id": "3-regras-de-configuracao",
+      "level": 2,
+      "label": "3. Regras de configuração"
+    },
+    {
+      "id": "4-gdd-18-06",
+      "level": 2,
+      "label": "4. GDD 18/06"
+    },
+    {
+      "id": "5-testes-obrigatorios",
+      "level": 2,
+      "label": "5. Testes obrigatórios"
+    }
+  ],
+  "searchText": "Backup 18/06 att: comparação direta com a primeira versão de 18/06. Não houve alteração na quantidade de scripts; apenas dois arquivos do Jukebox mudaram. Sistemas e decisões — 18/06 att 1. Diferenças exatas 278 scripts : nenhum novo, removido ou renomeado. Alterados: UI/JukeboxSectionUI.cs e UI/JukeboxTrackButtonUI.cs . Alterados no pacote de documentação: Guia_Coleccionaveis_Itens_Upgrades.md e Guia_Menus_e_HUD.md . 2. Jukebox atual Desbloqueio por compra única do ItemData ; não depende do pós-game. tracks aceita faixas base sempre visíveis ou faixas condicionadas por melodyId . knownMelodies contém os WildMelodyData ; apenas IDs presentes em collectedMelodyIds entram na lista. Entradas são agrupadas por WorldData . L/R alterna Normal e Favoritos; B fecha. Favoritos usam GameVariables com jukebox_fav_<id> . A faixa ativa mostra disco giratório, possui Play/Stop e avança automaticamente ao terminar. OnWildMelodyCollected reconstrói a lista aberta sem interromper a música atual. O AudioSource próprio respeita MasterVolume × BgmVolume . 3. Regras de configuração Preenche melodyId único, AreaData , AreaData.world e AudioClip em cada WildMelodyData. Usa knownMelodies para Melodias Selvagens e tracks para a trilha base. Não repitas deliberadamente a mesma música nas duas listas, porque o código atual não faz deduplicação. Não deixes uma WildMelodyData sem mundo; o agrupamento “Outras Melodias” não é alcançado de forma fiável pela lógica atual. 4. GDD 18/06 Ecos Perdidos, snapshots e população estão reconhecidos como persistentes no schema v1. Os cinco níveis de vila e a separação entre NPCs obrigatórios e população adicional são canónicos. O estado do Jukebox passou de “ligação pendente” para “implementado em scripts”. O trabalho restante é montagem de prefabs, referências, assets e conteúdo musical final. 5. Testes obrigatórios Abrir bloqueado antes da compra e desbloqueado depois. Confirmar faixa base, faixa estática condicionada e Wild Melody. Coletar melodia com painel aberto. Guardar/carregar favoritos e collectedMelodyIds. Alternar Normal/Favoritos com L/R e fechar com B. Deixar faixa terminar e confirmar avanço automático. Alterar volumes durante reprodução. Procurar entradas duplicadas por configuração repetida.",
+  "historical": false
+}

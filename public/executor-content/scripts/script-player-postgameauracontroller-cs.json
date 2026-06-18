@@ -1,0 +1,136 @@
+{
+  "path": "Player/PostGameAuraController.cs",
+  "filename": "PostGameAuraController.cs",
+  "category": "Player",
+  "primary": "PostGameAuraController",
+  "kind": "Componente",
+  "summary": "Auras visuais pós-game (Tarefa #34) — ativa/desactiva efeitos visuais no player de acordo com os Emblemas globais obtidos (Gaia, Apolo, Zeus): - Aura de Gaia : ativa quando o Emblema de Gaia está obtido. - Aura de Apolo : ativa quando o Emblema de Apolo está obtido. - Aura de Zeus : ativa quando o Emblema de Zeus está obtido. Cada aura é um (tipicamente um sistema de partículas ou um SpriteRenderer com animação, configurado no Inspector) filho do player. Este componente limita-se a ativar/desativar esses GameObjects com base no estado dos emblemas. Fluxo: 1. Em OnEnable , subscreve para reagir em tempo real quando um emblema é concedido durante a sessão. 2. Em Start , lê o estado actua",
+  "attach": "GameObject/asset indicado pelo sistema; consulta a Missão ou o guia relacionado para a posição exata.",
+  "types": [
+    {
+      "name": "PostGameAuraController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "gaiaEmblem",
+      "type": "EmblemData",
+      "mods": "private",
+      "default": "",
+      "section": "Emblemas (EmblemData com obtainedVariable preenchido)",
+      "attrs": "[Header(\"Emblemas (EmblemData com obtainedVariable preenchido)\")] [Tooltip(\"EmblemData do Emblema de Gaia — contém o nome da variável global que indica se foi obtido.\")] [SerializeField]",
+      "inspector": true,
+      "description": "EmblemData do Emblema de Gaia — contém o nome da variável global que indica se foi obtido."
+    },
+    {
+      "name": "apoloEmblem",
+      "type": "EmblemData",
+      "mods": "private",
+      "default": "",
+      "section": "Emblemas (EmblemData com obtainedVariable preenchido)",
+      "attrs": "[Tooltip(\"EmblemData do Emblema de Apolo — contém o nome da variável global que indica se foi obtido.\")] [SerializeField]",
+      "inspector": true,
+      "description": "EmblemData do Emblema de Apolo — contém o nome da variável global que indica se foi obtido."
+    },
+    {
+      "name": "zeusEmblem",
+      "type": "EmblemData",
+      "mods": "private",
+      "default": "",
+      "section": "Emblemas (EmblemData com obtainedVariable preenchido)",
+      "attrs": "[Tooltip(\"EmblemData do Emblema de Zeus — contém o nome da variável global que indica se foi obtido.\")] [SerializeField]",
+      "inspector": true,
+      "description": "EmblemData do Emblema de Zeus — contém o nome da variável global que indica se foi obtido."
+    },
+    {
+      "name": "gaiaAura",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "GameObjects de Aura (filhos do player)",
+      "attrs": "[Header(\"GameObjects de Aura (filhos do player)\")] [Tooltip(\"Efeito visual activo quando o Emblema de Gaia está obtido (partículas, glow, SpriteRenderer animado, etc.).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Efeito visual ativo quando o Emblema de Gaia está obtido (partículas, glow, SpriteRenderer animado, etc.)."
+    },
+    {
+      "name": "apoloAura",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "GameObjects de Aura (filhos do player)",
+      "attrs": "[Tooltip(\"Efeito visual activo quando o Emblema de Apolo está obtido.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Efeito visual ativo quando o Emblema de Apolo está obtido."
+    },
+    {
+      "name": "zeusAura",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "GameObjects de Aura (filhos do player)",
+      "attrs": "[Tooltip(\"Efeito visual activo quando o Emblema de Zeus está obtido.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Efeito visual ativo quando o Emblema de Zeus está obtido."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "OnEmblemGranted",
+      "ret": "void",
+      "mods": "private",
+      "params": "EmblemData emblem",
+      "description": "Executa a operação OnEmblemGranted."
+    },
+    {
+      "name": "ApplyAuras",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ApplyAuras."
+    }
+  ],
+  "dependencies": [
+    "EmblemData",
+    "EmblemManager",
+    "GameSettings",
+    "GameVariables"
+  ],
+  "used_by": [
+    "ApoloRunaCollectUI"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Auras visuais pós-game (Tarefa #34) — activa/desactiva efeitos visuais no\n/// player de acordo com os Emblemas globais obtidos (Gaia, Apolo, Zeus):\n///\n/// - <b>Aura de Gaia</b>: activa quando o Emblema de Gaia está obtido.\n/// - <b>Aura de Apolo</b>: activa quando o Emblema de Apolo está obtido.\n/// - <b>Aura de Zeus</b>: activa quando o Emblema de Zeus está obtido.\n///\n/// Cada aura é um <see cref=\"GameObject\"/> (tipicamente um sistema de partículas\n/// ou um SpriteRenderer com animação, configurado no Inspector) filho do player.\n/// Este componente limita-se a activar/desactivar esses GameObjects com base no\n/// estado dos emblemas.\n///\n/// Fluxo:\n/// 1. Em <c>OnEnable</c>, subscreve <see cref=\"EmblemManager.EmblemGranted\"/> para\n///    reagir em tempo real quando um emblema é concedido durante a sessão.\n/// 2. Em <c>Start</c>, lê o estado actual das variáveis de emblema (catch-up\n///    para saves carregados já com emblemas obtidos).\n/// 3. Cada mudança aplica <see cref=\"ApplyAuras\"/>, que activa/desactiva os\n///    GameObjects de aura correspondentes.\n///\n/// Montagem no Editor:\n/// - Adicionar este componente ao GameObject do player (ou a um filho).\n/// - \"gaiaAura\"/\"apoloAura\"/\"zeusAura\": filhos do player com o efeito visual.\n/// - \"gaiaEmblem\"/\"apoloEmblem\"/\"zeusEmblem\": referências ao EmblemData com\n///   <c>obtainedVariable</c> preenchido — este controller lê essa variável no\n///   GameVariables para saber se o emblema foi obtido.\n/// </summary>\npublic class PostGameAuraController : MonoBehaviour\n{\n    [Header(\"Emblemas (EmblemData com obtainedVariable preenchido)\")]\n    [Tooltip(\"EmblemData do Emblema de Gaia — contém o nome da variável global que indica se foi obtido.\")]\n    [SerializeField] private EmblemData gaiaEmblem;\n    [Tooltip(\"EmblemData do Emblema de Apolo — contém o nome da variável global que indica se foi obtido.\")]\n    [SerializeField] private EmblemData apoloEmblem;\n    [Tooltip(\"EmblemData do Emblema de Zeus — contém o nome da variável global que indica se foi obtido.\")]\n    [SerializeField] private EmblemData zeusEmblem;\n\n    [Header(\"GameObjects de Aura (filhos do player)\")]\n    [Tooltip(\"Efeito visual activo quando o Emblema de Gaia está obtido (partículas, glow, SpriteRenderer animado, etc.).\")]\n    [SerializeField] private GameObject gaiaAura;\n    [Tooltip(\"Efeito visual activo quando o Emblema de Apolo está obtido.\")]\n    [SerializeField] private GameObject apoloAura;\n    [Tooltip(\"Efeito visual activo quando o Emblema de Zeus está obtido.\")]\n    [SerializeField] private GameObject zeusAura;\n\n    private void OnEnable()\n    {\n        EmblemManager.EmblemGranted += OnEmblemGranted;\n\n        if (GameSettings.Instance != null)\n            GameSettings.Instance.SettingsChanged += ApplyAuras;\n    }\n\n    private void OnDisable()\n    {\n        EmblemManager.EmblemGranted -= OnEmblemGranted;\n\n        if (GameSettings.Instance != null)\n            GameSettings.Instance.SettingsChanged -= ApplyAuras;\n    }\n\n    private void Start()\n    {\n        // Catch-up: aplica o estado actual ao carregar uma cena (emblemas já obtidos antes).\n        ApplyAuras();\n    }\n\n    private void OnEmblemGranted(EmblemData emblem)\n    {\n        // Verifica se o emblema concedido é relevante para este controller.\n        if (emblem == gaiaEmblem || emblem == apoloEmblem || emblem == zeusEmblem)\n            ApplyAuras();\n    }\n\n    private void ApplyAuras()\n    {\n        var vars = GameVariables.Instance;\n        var settings = GameSettings.Instance;\n\n        // Zeus é o troféu máximo: quando obtido, substitui Gaia e Apolo\n        // (as três auras NÃO ficam activas ao mesmo tempo — GDD).\n        bool zeusObtained = zeusEmblem != null\n            && !string.IsNullOrEmpty(zeusEmblem.obtainedVariable)\n            && (vars?.GetBool(zeusEmblem.obtainedVariable) ?? false);\n\n        // Respeita o toggle do jogador — aura só aparece se obtida E toggle ligado.\n        bool zeusEnabled = settings == null || settings.ZeusAuraEnabled;\n        if (zeusAura != null) zeusAura.SetActive(zeusObtained && zeusEnabled);\n\n        // Gaia e Apolo só ficam activas se Zeus ainda não foi obtido (ou obtido mas com toggle desligado).\n        bool zeusVisible = zeusObtained && zeusEnabled;\n\n        bool gaiaObtained = !zeusVisible && gaiaEmblem != null\n            && !string.IsNullOrEmpty(gaiaEmblem.obtainedVariable)\n            && (vars?.GetBool(gaiaEmblem.obtainedVariable) ?? false);\n\n        bool apoloObtained = !zeusVisible && apoloEmblem != null\n            && !string.IsNullOrEmpty(apoloEmblem.obtainedVariable)\n            && (vars?.GetBool(apoloEmblem.obtainedVariable) ?? false);\n\n        bool gaiaEnabled = settings == null || settings.GaiaAuraEnabled;\n        bool apoloEnabled = settings == null || settings.ApoloAuraEnabled;\n\n        if (gaiaAura != null)  gaiaAura.SetActive(gaiaObtained && gaiaEnabled);\n        if (apoloAura != null) apoloAura.SetActive(apoloObtained && apoloEnabled);\n    }\n}\n",
+  "id": "script-player-postgameauracontroller-cs",
+  "dependencyIds": [
+    "script-data-emblemdata-cs",
+    "script-data-emblemmanager-cs",
+    "script-data-gamesettings-cs",
+    "script-data-gamevariables-cs"
+  ],
+  "usedByIds": [
+    "script-ui-apolorunacollectui-cs"
+  ]
+}

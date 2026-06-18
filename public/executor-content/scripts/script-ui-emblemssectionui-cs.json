@@ -1,0 +1,236 @@
+{
+  "path": "UI/EmblemsSectionUI.cs",
+  "filename": "EmblemsSectionUI.cs",
+  "category": "UI",
+  "primary": "EmblemsSectionUI",
+  "kind": "Componente",
+  "summary": "Seção \"Emblemas\" (Tarefa #35 — Restructurar menus) — tela separada dedicada exclusivamente aos emblemas de Gaia, Apolo, Zeus e dos mundos. Anteriormente, os emblemas faziam parte da seção Progresso ( ). Esta seção separada permite: - Mais espaço de tela para cada nó de emblema. - Colocação num menu secundário ( , acessível via \"-\") sem ocupar espaço no menu de pausa principal (\"+\"). Usa o mesmo prefab e lógica de ProgressSectionUI.RefreshEmblems() , mas sem os cartões de mundo. Montagem no Editor: - \"root\": GameObject do painel desta seção. - \"emblemsContainer\"/\"emblemNodePrefab\": grelha de nós de emblema. - \"allEmblems\": todos os EmblemData (Gaia, Apolo, Zeus + um por mundo). - \"allArea",
+  "attach": "GameObject/asset indicado pelo sistema; consulta a Missão ou o guia relacionado para a posição exata.",
+  "types": [
+    {
+      "name": "EmblemsSectionUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, ISecondaryMenuTab, IPauseMenuSection",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Header(\"Framework\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "firstSelectable",
+      "type": "Selectable",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Tooltip(\"Primeiro controlo a seleccionar ao abrir esta secção.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Primeiro controlo a selecionar ao abrir esta seção."
+    },
+    {
+      "name": "allEmblems",
+      "type": "List<EmblemData>",
+      "mods": "private",
+      "default": "new List<EmblemData>()",
+      "section": "Dados",
+      "attrs": "[Header(\"Dados\")] [Tooltip(\"Todos os EmblemData do jogo (Gaia, Apolo, Zeus, um por mundo). Mesma lista de ProgressSectionUI.allEmblems.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Todos os EmblemData do jogo (Gaia, Apolo, Zeus, um por mundo). Mesma lista de ProgressSectionUI.allEmblems."
+    },
+    {
+      "name": "allAreas",
+      "type": "List<AreaData>",
+      "mods": "private",
+      "default": "new List<AreaData>()",
+      "section": "Dados",
+      "attrs": "[Tooltip(\"Necessário para calcular a % total — mesmo conjunto de ProgressSectionUI.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Necessário para calcular a % total — mesmo conjunto de ProgressSectionUI."
+    },
+    {
+      "name": "allForms",
+      "type": "List<AnimalFormData>",
+      "mods": "private",
+      "default": "new List<AnimalFormData>()",
+      "section": "Dados",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "allMissions",
+      "type": "List<MissionData>",
+      "mods": "private",
+      "default": "new List<MissionData>()",
+      "section": "Dados",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emblemsContainer",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Nós de Emblema",
+      "attrs": "[Header(\"Nós de Emblema\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emblemNodePrefab",
+      "type": "EmblemNodeUI",
+      "mods": "private",
+      "default": "",
+      "section": "Nós de Emblema",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalPercentText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Percentagem Total",
+      "attrs": "[Header(\"Percentagem Total\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalPercentFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"{0}%\"",
+      "section": "Percentagem Total",
+      "attrs": "[Tooltip(\"Formato da % total — {0} = percentagem (0-101). Ex: \\\"Conclusão total: {0}%\\\".\")] [SerializeField]",
+      "inspector": true,
+      "description": "Formato da % total — {0} = percentagem (0-101). Ex: \"Conclusão total: {0}%\"."
+    },
+    {
+      "name": "TabName",
+      "type": "string",
+      "mods": "public",
+      "default": "> \"EMBLEMAS\"",
+      "section": "Percentagem Total",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SectionName",
+      "type": "string",
+      "mods": "public",
+      "default": "> \"EMBLEMAS\"",
+      "section": "Percentagem Total",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Root",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "> root != null ? root : gameObject",
+      "section": "Percentagem Total",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spawnedEmblems",
+      "type": "List<GameObject>",
+      "mods": "private readonly",
+      "default": "new List<GameObject>()",
+      "section": "Percentagem Total",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Refresh",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Refresh."
+    },
+    {
+      "name": "OnHide",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação OnHide."
+    },
+    {
+      "name": "RefreshEmblems",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshEmblems."
+    },
+    {
+      "name": "RefreshTotalPercent",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshTotalPercent."
+    },
+    {
+      "name": "ClearSpawned",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ClearSpawned."
+    },
+    {
+      "name": "SelectFirst",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SelectFirst."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "AreaData",
+    "EmblemData",
+    "EmblemNodeUI",
+    "GameVariables",
+    "IPauseMenuSection",
+    "ISecondaryMenuTab",
+    "MissionData",
+    "PlayerProgress",
+    "ProgressSectionUI",
+    "SecondaryMenuController"
+  ],
+  "used_by": [
+    "SecondaryMenuController"
+  ],
+  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Secção \"Emblemas\" (Tarefa #35 — Restructurar menus) — tela separada\n/// dedicada exclusivamente aos emblemas de Gaia, Apolo, Zeus e dos mundos.\n///\n/// Anteriormente, os emblemas faziam parte da secção Progresso\n/// (<see cref=\"ProgressSectionUI\"/>). Esta secção separada permite:\n/// - Mais espaço de ecrã para cada nó de emblema.\n/// - Colocação num menu secundário (<see cref=\"SecondaryMenuController\"/>,\n///   acessível via \"-\") sem ocupar espaço no menu de pausa principal (\"+\").\n///\n/// Usa o mesmo prefab <see cref=\"EmblemNodeUI\"/> e lógica de\n/// <c>ProgressSectionUI.RefreshEmblems()</c>, mas sem os cartões de mundo.\n///\n/// Montagem no Editor:\n/// - \"root\": GameObject do painel desta secção.\n/// - \"emblemsContainer\"/\"emblemNodePrefab\": grelha de nós de emblema.\n/// - \"allEmblems\": todos os EmblemData (Gaia, Apolo, Zeus + um por mundo).\n/// - \"allAreas/allForms/allMissions\": usados para calcular <see cref=\"totalPercentText\"/>.\n/// - \"firstSelectable\": primeiro controlo a seleccionar ao abrir esta secção.\n/// </summary>\n/// <summary>\n/// Implementa <see cref=\"ISecondaryMenuTab\"/> para poder ser colocada no\n/// <see cref=\"SecondaryMenuController\"/> (menu \"-\"). Também implementa\n/// <see cref=\"IPauseMenuSection\"/> para compatibilidade com o menu de pausa\n/// principal (\"+\"), caso o designer prefira colocá-la aí.\n/// </summary>\npublic class EmblemsSectionUI : MonoBehaviour, ISecondaryMenuTab, IPauseMenuSection\n{\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject root;\n\n    [Tooltip(\"Primeiro controlo a seleccionar ao abrir esta secção.\")]\n    [SerializeField] private Selectable firstSelectable;\n\n    [Header(\"Dados\")]\n    [Tooltip(\"Todos os EmblemData do jogo (Gaia, Apolo, Zeus, um por mundo). Mesma lista de ProgressSectionUI.allEmblems.\")]\n    [SerializeField] private List<EmblemData> allEmblems = new List<EmblemData>();\n\n    [Tooltip(\"Necessário para calcular a % total — mesmo conjunto de ProgressSectionUI.\")]\n    [SerializeField] private List<AreaData> allAreas = new List<AreaData>();\n    [SerializeField] private List<AnimalFormData> allForms = new List<AnimalFormData>();\n    [SerializeField] private List<MissionData> allMissions = new List<MissionData>();\n\n    [Header(\"Nós de Emblema\")]\n    [SerializeField] private Transform emblemsContainer;\n    [SerializeField] private EmblemNodeUI emblemNodePrefab;\n\n    [Header(\"Percentagem Total\")]\n    [SerializeField] private TMP_Text totalPercentText;\n    [Tooltip(\"Formato da % total — {0} = percentagem (0-101). Ex: \\\"Conclusão total: {0}%\\\".\")]\n    [SerializeField] private string totalPercentFormat = \"{0}%\";\n\n    // ISecondaryMenuTab\n    public string TabName => \"EMBLEMAS\";\n\n    // IPauseMenuSection\n    public string SectionName => \"EMBLEMAS\";\n\n    public GameObject Root => root != null ? root : gameObject;\n\n    private readonly List<GameObject> spawnedEmblems = new List<GameObject>();\n\n    // ---------------- ISecondaryMenuTab / IPauseMenuSection ----------------\n\n    public void Refresh()\n    {\n        ClearSpawned();\n        RefreshEmblems();\n        RefreshTotalPercent();\n\n        SelectFirst();\n    }\n\n    public void OnHide()\n    {\n        // Nada a limpar (emblemas são recriados em cada Refresh).\n    }\n\n    // ---------------- Emblemas ----------------\n\n    private void RefreshEmblems()\n    {\n        if (emblemNodePrefab == null || emblemsContainer == null) return;\n\n        var vars = GameVariables.Instance;\n\n        foreach (var emblem in allEmblems)\n        {\n            if (emblem == null) continue;\n\n            bool obtained = vars != null && !string.IsNullOrEmpty(emblem.obtainedVariable) && vars.GetBool(emblem.obtainedVariable);\n            bool heardAbout = vars != null && !string.IsNullOrEmpty(emblem.heardAboutVariable) && vars.GetBool(emblem.heardAboutVariable);\n\n            var node = Instantiate(emblemNodePrefab, emblemsContainer);\n            node.gameObject.SetActive(true);\n            node.Setup(emblem, obtained, heardAbout);\n            spawnedEmblems.Add(node.gameObject);\n        }\n    }\n\n    // ---------------- Percentagem Total ----------------\n\n    private void RefreshTotalPercent()\n    {\n        if (totalPercentText == null) return;\n\n        var progress = PlayerProgress.Instance;\n        int percent = progress != null ? progress.GetTotalCompletionPercent(allAreas, allForms, allMissions, allEmblems) : 0;\n        totalPercentText.text = string.Format(totalPercentFormat, percent);\n    }\n\n    // ---------------- Utilitários ----------------\n\n    private void ClearSpawned()\n    {\n        foreach (var go in spawnedEmblems)\n            if (go != null) Destroy(go);\n        spawnedEmblems.Clear();\n    }\n\n    private void SelectFirst()\n    {\n        if (EventSystem.current != null && firstSelectable != null)\n            EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);\n    }\n}\n",
+  "id": "script-ui-emblemssectionui-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-data-emblemdata-cs",
+    "script-data-gamevariables-cs",
+    "script-ui-ipausemenusection-cs",
+    "script-ui-isecondarymenutab-cs",
+    "script-data-missiondata-cs",
+    "script-data-playerprogress-cs",
+    "script-ui-progresssectionui-cs",
+    "script-ui-secondarymenucontroller-cs"
+  ],
+  "usedByIds": [
+    "script-ui-secondarymenucontroller-cs"
+  ]
+}

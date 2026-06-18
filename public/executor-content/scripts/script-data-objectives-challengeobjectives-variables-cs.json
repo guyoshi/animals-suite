@@ -1,0 +1,107 @@
+{
+  "path": "Data/Objectives/ChallengeObjectives_Variables.cs",
+  "filename": "ChallengeObjectives_Variables.cs",
+  "category": "Data",
+  "primary": "Objective_BoolVariable",
+  "kind": "Definição",
+  "summary": "Objetivo cumprido quando uma variável global bool (GameVariables) tem o valor \"expectedValue\". Genérico — cobre \"chegar a uma zona/checkpoint\" (uma zona/gatilho na cena usa Action_SetBoolVariable ao entrar), \"puzzle resolvido\", \"NPC salvo/encontrado\", etc., reaproveitando o mesmo mecanismo de Condition_BoolVariable/Action_SetBoolVariable já usado pelos NPCs — sem precisar de nenhum script novo por desafio. Objetivo binário (sem contador) — devolve -1.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Objective_BoolVariable",
+      "kind": "class",
+      "bases": "ChallengeObjective",
+      "attrs": ""
+    },
+    {
+      "name": "Objective_IntVariableThreshold",
+      "kind": "class",
+      "bases": "ChallengeObjective",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "variableName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como tendo o valor por omissão (false).\")]",
+      "inspector": true,
+      "description": "Nome da variável global (GameVariables). Se não existir, é tratada como tendo o valor por omissão (false)."
+    },
+    {
+      "name": "expectedValue",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Valor que a variável tem de ter para este objectivo estar cumprido.\")]",
+      "inspector": true,
+      "description": "Valor que a variável tem de ter para este objetivo estar cumprido."
+    },
+    {
+      "name": "comparison",
+      "type": "Comparison",
+      "mods": "public",
+      "default": "Comparison.GreaterOrEqual",
+      "section": "",
+      "attrs": "[Tooltip(\"Como comparar o valor actual da variável com \\\"targetValue\\\".\")]",
+      "inspector": true,
+      "description": "Como comparar o valor atual da variável com \"targetValue\"."
+    },
+    {
+      "name": "targetValue",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Valor-alvo, mostrado no HUD como \\\"actual/targetValue\\\".\")]",
+      "inspector": true,
+      "description": "Valor-alvo, mostrado no HUD como \"atual/targetValue\"."
+    }
+  ],
+  "methods": [
+    {
+      "name": "IsComplete",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação IsComplete."
+    },
+    {
+      "name": "CurrentProgress",
+      "ret": "int",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação CurrentProgress."
+    },
+    {
+      "name": "TargetProgress",
+      "ret": "int",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação TargetProgress."
+    }
+  ],
+  "dependencies": [
+    "Action_SetBoolVariable",
+    "Action_SetIntVariable",
+    "ChallengeObjective",
+    "Comparison",
+    "Condition_BoolVariable",
+    "GameVariables",
+    "NpcConditionUtil"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Objectivo cumprido quando uma variável global bool (GameVariables) tem o\n/// valor \"expectedValue\". Genérico — cobre \"chegar a uma zona/checkpoint\"\n/// (uma zona/gatilho na cena usa Action_SetBoolVariable ao entrar), \"puzzle\n/// resolvido\", \"NPC salvo/encontrado\", etc., reaproveitando o mesmo mecanismo\n/// de Condition_BoolVariable/Action_SetBoolVariable já usado pelos NPCs —\n/// sem precisar de nenhum script novo por desafio.\n///\n/// Objectivo binário (sem contador) — <see cref=\"TargetProgress\"/> devolve -1.\n/// </summary>\n[System.Serializable]\npublic class Objective_BoolVariable : ChallengeObjective\n{\n    [Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como tendo o valor por omissão (false).\")]\n    public string variableName;\n\n    [Tooltip(\"Valor que a variável tem de ter para este objectivo estar cumprido.\")]\n    public bool expectedValue = true;\n\n    public override bool IsComplete()\n    {\n        bool actual = GameVariables.Instance != null && GameVariables.Instance.GetBool(variableName);\n        return actual == expectedValue;\n    }\n}\n\n/// <summary>\n/// Objectivo cumprido quando uma variável global int (GameVariables) cumpre\n/// \"comparison\" face a \"targetValue\". Genérico — cobre contadores mantidos por\n/// Action_IncrementIntVariable/Action_SetIntVariable já existentes: derrotar N\n/// inimigos, recolher N objectos, ondas sobrevividas, etc.\n///\n/// Mostra \"actual/targetValue\" no HUD (Tarefa #12).\n/// </summary>\n[System.Serializable]\npublic class Objective_IntVariableThreshold : ChallengeObjective\n{\n    [Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como tendo o valor por omissão (0).\")]\n    public string variableName;\n\n    [Tooltip(\"Como comparar o valor actual da variável com \\\"targetValue\\\".\")]\n    public Comparison comparison = Comparison.GreaterOrEqual;\n\n    [Tooltip(\"Valor-alvo, mostrado no HUD como \\\"actual/targetValue\\\".\")]\n    public int targetValue;\n\n    public override bool IsComplete()\n    {\n        int actual = GameVariables.Instance != null ? GameVariables.Instance.GetInt(variableName) : 0;\n        return NpcConditionUtil.Compare(actual, comparison, targetValue);\n    }\n\n    public override int CurrentProgress() => GameVariables.Instance != null ? GameVariables.Instance.GetInt(variableName) : 0;\n\n    public override int TargetProgress() => targetValue;\n}\n",
+  "id": "script-data-objectives-challengeobjectives-variables-cs",
+  "dependencyIds": [
+    "script-data-challengeobjective-cs",
+    "script-npc-conditions-variableconditions-cs",
+    "script-data-gamevariables-cs",
+    "script-npc-npcconditionutil-cs"
+  ],
+  "usedByIds": []
+}

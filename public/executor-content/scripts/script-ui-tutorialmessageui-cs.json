@@ -1,0 +1,333 @@
+{
+  "path": "UI/TutorialMessageUI.cs",
+  "filename": "TutorialMessageUI.cs",
+  "category": "UI",
+  "primary": "TutorialMessageUI",
+  "kind": "Componente",
+  "summary": "Renderizador de mensagens de tutorial — gerido por . Trata dos três tipos de painel: Importante ( ): centro do tela, suporta imagem ( ), texto longo rola ( ) ao pressionar \"Continuar\", confirmar via botão ou input. Pausa o jogo durante a exibição. Média ( ): posicionamento configurável via , requer confirmação, sem imagem. Toast / Não Importante ( ): pop-up no topo, fade in/out, sem confirmação. Scroll de texto longo (Importante): Se o texto não cabe numa \"página\", o botão \"Continuar\" avança para a próxima página até chegar ao fim, quando então fecha o painel. Isto evita caixas de diálogo enormes e mantém a leitura confortável. Montagem no Editor: - : painel central (CanvasGroup + RectTransf",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "TutorialMessageUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "importantRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[Header(\"Painel Importante (centro do ecrã)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "importantCanvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "importantImageContainer",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "importantImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "importantScrollRect",
+      "type": "ScrollRect",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "importantText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "importantConfirmButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "importantConfirmLabel",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "continueLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Continuar\"",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "closeLabel",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Fechar\"",
+      "section": "Painel Importante (centro do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mediaRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Média (perto de elemento da HUD)",
+      "attrs": "[Header(\"Painel Média (perto de elemento da HUD)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mediaCanvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Média (perto de elemento da HUD)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mediaText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Média (perto de elemento da HUD)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mediaConfirmButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Média (perto de elemento da HUD)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mediaRectTransform",
+      "type": "RectTransform",
+      "mods": "private",
+      "default": "",
+      "section": "Painel Média (perto de elemento da HUD)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "toastRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Toast (Não Importante — topo do ecrã)",
+      "attrs": "[Header(\"Toast (Não Importante — topo do ecrã)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "toastCanvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Toast (Não Importante — topo do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "toastText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Toast (Não Importante — topo do ecrã)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fadeDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.2f",
+      "section": "Transição",
+      "attrs": "[Header(\"Transição\")] [Tooltip(\"Duração do fade in/out de todos os painéis, em segundos.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração do fade in/out de todos os painéis, em segundos."
+    },
+    {
+      "name": "_confirmPressed",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_toastRunning",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "ShowConfirmRoutine",
+      "ret": "IEnumerator",
+      "mods": "public",
+      "params": "TutorialMessageRequest request, System.Action onConfirmed",
+      "description": "Executa a operação ShowConfirmRoutine."
+    },
+    {
+      "name": "ShowToastRoutine",
+      "ret": "IEnumerator",
+      "mods": "public",
+      "params": "string text, float duration",
+      "description": "Executa a operação ShowToastRoutine."
+    },
+    {
+      "name": "ShowImportantRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "TutorialMessageRequest request, System.Action onConfirmed",
+      "description": "Executa a operação ShowImportantRoutine."
+    },
+    {
+      "name": "ShowMediaRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "TutorialMessageRequest request, System.Action onConfirmed",
+      "description": "Executa a operação ShowMediaRoutine."
+    },
+    {
+      "name": "OnConfirmPressed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnConfirmPressed."
+    },
+    {
+      "name": "PollConfirmInput",
+      "ret": "bool",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação PollConfirmInput."
+    },
+    {
+      "name": "IsScrolledToBottom",
+      "ret": "bool",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação IsScrolledToBottom."
+    },
+    {
+      "name": "ScrollPage",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ScrollPage."
+    },
+    {
+      "name": "UpdateConfirmLabel",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateConfirmLabel."
+    },
+    {
+      "name": "FadeRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "CanvasGroup group, float from, float to",
+      "description": "Executa a operação FadeRoutine."
+    },
+    {
+      "name": "WaitUnscaled",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação WaitUnscaled."
+    }
+  ],
+  "dependencies": [
+    "GamePauseUtil",
+    "TutorialMessageManager",
+    "TutorialMessageRequest",
+    "TutorialMessageType"
+  ],
+  "used_by": [
+    "TutorialMessageManager"
+  ],
+  "source": "using System.Collections;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Renderizador de mensagens de tutorial — gerido por\n/// <see cref=\"TutorialMessageManager\"/>. Trata dos três tipos de painel:\n///\n/// <list type=\"bullet\">\n///   <item><b>Importante</b> (<see cref=\"importantRoot\"/>): centro do ecrã,\n///     suporta imagem (<see cref=\"importantImage\"/>), texto longo rola (\n///     <see cref=\"importantScrollRect\"/>) ao pressionar \"Continuar\", confirmar\n///     via botão ou input. Pausa o jogo durante a exibição.</item>\n///   <item><b>Média</b> (<see cref=\"mediaRoot\"/>): posicionamento configurável\n///     via <see cref=\"TutorialMessageRequest.anchorPosition\"/>, requer\n///     confirmação, sem imagem.</item>\n///   <item><b>Toast / Não Importante</b> (<see cref=\"toastRoot\"/>): pop-up no\n///     topo, fade in/out, sem confirmação.</item>\n/// </list>\n///\n/// <b>Scroll de texto longo (Importante):</b>\n/// Se o texto não cabe numa \"página\", o botão \"Continuar\" avança para a\n/// próxima página até chegar ao fim, quando então fecha o painel. Isto evita\n/// caixas de diálogo enormes e mantém a leitura confortável.\n///\n/// <b>Montagem no Editor:</b>\n/// - <see cref=\"importantRoot\"/>: painel central (CanvasGroup + RectTransform).\n/// - <see cref=\"importantCanvasGroup\"/>: para fade in/out.\n/// - <see cref=\"importantImageContainer\"/>: GameObject pai da imagem —\n///   desactivado quando <see cref=\"TutorialMessageRequest.image\"/> é null.\n/// - <see cref=\"importantImage\"/>: a Image que exibe o sprite.\n/// - <see cref=\"importantScrollRect\"/>: ScrollRect com o texto (scroll vertical).\n/// - <see cref=\"importantText\"/>: TMP_Text dentro do ScrollRect.\n/// - <see cref=\"importantConfirmButton\"/>: botão \"Continuar\"/\"Fechar\".\n/// - <see cref=\"importantConfirmLabel\"/>: TMP_Text do botão (\"Continuar\" / \"Fechar\").\n/// - <see cref=\"mediaRoot\"/> / <see cref=\"mediaText\"/> / <see cref=\"mediaConfirmButton\"/>:\n///   mesmo padrão, sem imagem; <see cref=\"mediaRectTransform\"/> posicionado em\n///   runtime via anchorPosition.\n/// - <see cref=\"toastRoot\"/> / <see cref=\"toastText\"/> / <see cref=\"toastCanvasGroup\"/>:\n///   painel pequeno no topo do Canvas — sem confirmação.\n/// </summary>\n[RequireComponent(typeof(Canvas))]\npublic class TutorialMessageUI : MonoBehaviour\n{\n    // ==================== Importante ====================\n\n    [Header(\"Painel Importante (centro do ecrã)\")]\n    [SerializeField] private GameObject      importantRoot;\n    [SerializeField] private CanvasGroup     importantCanvasGroup;\n    [SerializeField] private GameObject      importantImageContainer;\n    [SerializeField] private Image           importantImage;\n    [SerializeField] private ScrollRect      importantScrollRect;\n    [SerializeField] private TMP_Text        importantText;\n    [SerializeField] private Button          importantConfirmButton;\n    [SerializeField] private TMP_Text        importantConfirmLabel;\n    [SerializeField] private string          continueLabel = \"Continuar\";\n    [SerializeField] private string          closeLabel    = \"Fechar\";\n\n    // ==================== Média ====================\n\n    [Header(\"Painel Média (perto de elemento da HUD)\")]\n    [SerializeField] private GameObject      mediaRoot;\n    [SerializeField] private CanvasGroup     mediaCanvasGroup;\n    [SerializeField] private TMP_Text        mediaText;\n    [SerializeField] private Button          mediaConfirmButton;\n    [SerializeField] private RectTransform   mediaRectTransform;\n\n    // ==================== Toast / Não Importante ====================\n\n    [Header(\"Toast (Não Importante — topo do ecrã)\")]\n    [SerializeField] private GameObject      toastRoot;\n    [SerializeField] private CanvasGroup     toastCanvasGroup;\n    [SerializeField] private TMP_Text        toastText;\n\n    [Header(\"Transição\")]\n    [Tooltip(\"Duração do fade in/out de todos os painéis, em segundos.\")]\n    [SerializeField] private float fadeDuration = 0.2f;\n\n    // ==================== Estado ====================\n\n    private bool _confirmPressed;\n    private bool _toastRunning;\n\n    private void Awake()\n    {\n        if (importantRoot  != null) importantRoot.SetActive(false);\n        if (mediaRoot      != null) mediaRoot.SetActive(false);\n        if (toastRoot      != null) toastRoot.SetActive(false);\n\n        if (importantConfirmButton != null)\n            importantConfirmButton.onClick.AddListener(OnConfirmPressed);\n        if (mediaConfirmButton != null)\n            mediaConfirmButton.onClick.AddListener(OnConfirmPressed);\n    }\n\n    // ==================== Corrotinas Públicas ====================\n\n    /// <summary>\n    /// Mostra o painel correcto para \"request\" e aguarda até o jogador confirmar.\n    /// Chama \"onConfirmed\" ao fechar. Chamado por TutorialMessageManager.\n    /// </summary>\n    public IEnumerator ShowConfirmRoutine(TutorialMessageRequest request, System.Action onConfirmed)\n    {\n        if (request.type == TutorialMessageType.Importante)\n            yield return ShowImportantRoutine(request, onConfirmed);\n        else\n            yield return ShowMediaRoutine(request, onConfirmed);\n    }\n\n    /// <summary>\n    /// Exibe um toast no topo do ecrã durante \"duration\" segundos, com fade.\n    /// Chamado por TutorialMessageManager para mensagens NaoImportante.\n    /// </summary>\n    public IEnumerator ShowToastRoutine(string text, float duration)\n    {\n        if (toastRoot == null || toastCanvasGroup == null) yield break;\n\n        if (toastText != null) toastText.text = text;\n\n        toastRoot.SetActive(true);\n        yield return FadeRoutine(toastCanvasGroup, 0f, 1f);\n        yield return WaitUnscaled(duration);\n        yield return FadeRoutine(toastCanvasGroup, 1f, 0f);\n        toastRoot.SetActive(false);\n    }\n\n    // ==================== Importante ====================\n\n    private IEnumerator ShowImportantRoutine(TutorialMessageRequest request, System.Action onConfirmed)\n    {\n        if (importantRoot == null) { onConfirmed?.Invoke(); yield break; }\n\n        // Configura imagem.\n        bool hasImage = request.image != null;\n        if (importantImageContainer != null) importantImageContainer.SetActive(hasImage);\n        if (importantImage != null)\n        {\n            importantImage.sprite  = request.image;\n            importantImage.enabled = hasImage;\n        }\n\n        // Configura texto e scroll.\n        if (importantText != null) importantText.text = request.text ?? \"\";\n\n        // Reset scroll para o topo.\n        if (importantScrollRect != null)\n        {\n            Canvas.ForceUpdateCanvases();\n            importantScrollRect.verticalNormalizedPosition = 1f;\n        }\n\n        UpdateConfirmLabel();\n\n        importantRoot.SetActive(true);\n        if (importantCanvasGroup != null) yield return FadeRoutine(importantCanvasGroup, 0f, 1f);\n\n        GamePauseUtil.Pause();\n\n        _confirmPressed = false;\n\n        while (true)\n        {\n            // Input: gamepad Sul (A/Cross) ou teclado Enter/Space.\n            if (PollConfirmInput() || _confirmPressed)\n            {\n                _confirmPressed = false;\n\n                // Se o texto ainda tem conteúdo abaixo: avança uma \"página\".\n                if (importantScrollRect != null && !IsScrolledToBottom())\n                {\n                    ScrollPage();\n                    UpdateConfirmLabel();\n                }\n                else\n                {\n                    break; // Fecha.\n                }\n            }\n\n            yield return null;\n        }\n\n        if (importantCanvasGroup != null) yield return FadeRoutine(importantCanvasGroup, 1f, 0f);\n        importantRoot.SetActive(false);\n\n        GamePauseUtil.Resume();\n        onConfirmed?.Invoke();\n    }\n\n    // ==================== Média ====================\n\n    private IEnumerator ShowMediaRoutine(TutorialMessageRequest request, System.Action onConfirmed)\n    {\n        if (mediaRoot == null) { onConfirmed?.Invoke(); yield break; }\n\n        if (mediaText != null) mediaText.text = request.text ?? \"\";\n\n        // Posicionamento: anchorPosition em coordenadas de viewport/canvas.\n        if (mediaRectTransform != null && request.anchorPosition != default)\n            mediaRectTransform.anchoredPosition = request.anchorPosition;\n\n        mediaRoot.SetActive(true);\n        if (mediaCanvasGroup != null) yield return FadeRoutine(mediaCanvasGroup, 0f, 1f);\n\n        GamePauseUtil.Pause();\n\n        _confirmPressed = false;\n\n        while (true)\n        {\n            if (PollConfirmInput() || _confirmPressed)\n            {\n                _confirmPressed = false;\n                break;\n            }\n            yield return null;\n        }\n\n        if (mediaCanvasGroup != null) yield return FadeRoutine(mediaCanvasGroup, 1f, 0f);\n        mediaRoot.SetActive(false);\n\n        GamePauseUtil.Resume();\n        onConfirmed?.Invoke();\n    }\n\n    // ==================== Helpers ====================\n\n    private void OnConfirmPressed() => _confirmPressed = true;\n\n    private bool PollConfirmInput()\n    {\n        var keyboard = Keyboard.current;\n        if (keyboard != null && (keyboard.enterKey.wasPressedThisFrame || keyboard.spaceKey.wasPressedThisFrame))\n            return true;\n\n        var gamepad = Gamepad.current;\n        if (gamepad != null && gamepad.buttonSouth.wasPressedThisFrame)\n            return true;\n\n        return false;\n    }\n\n    private bool IsScrolledToBottom()\n    {\n        if (importantScrollRect == null) return true;\n\n        // Considera \"no fundo\" quando o scroll está a ≤ 5% do fim.\n        return importantScrollRect.verticalNormalizedPosition <= 0.05f;\n    }\n\n    private void ScrollPage()\n    {\n        if (importantScrollRect == null) return;\n\n        // Avança uma \"página\" (altura do viewport).\n        float viewportHeight = importantScrollRect.viewport != null\n            ? importantScrollRect.viewport.rect.height\n            : 200f;\n\n        float contentHeight = importantScrollRect.content != null\n            ? importantScrollRect.content.rect.height\n            : viewportHeight;\n\n        float scrollableHeight = Mathf.Max(0f, contentHeight - viewportHeight);\n        if (scrollableHeight <= 0f) return;\n\n        // Quanto o scroll atual está em pixels do topo.\n        float currentPixelOffset = (1f - importantScrollRect.verticalNormalizedPosition) * scrollableHeight;\n        float nextPixelOffset    = Mathf.Min(currentPixelOffset + viewportHeight, scrollableHeight);\n\n        importantScrollRect.verticalNormalizedPosition = 1f - nextPixelOffset / scrollableHeight;\n    }\n\n    private void UpdateConfirmLabel()\n    {\n        if (importantConfirmLabel == null) return;\n\n        bool atBottom = importantScrollRect == null || IsScrolledToBottom();\n        importantConfirmLabel.text = atBottom ? closeLabel : continueLabel;\n    }\n\n    private IEnumerator FadeRoutine(CanvasGroup group, float from, float to)\n    {\n        if (group == null) yield break;\n\n        group.alpha = from;\n        if (fadeDuration <= 0f) { group.alpha = to; yield break; }\n\n        float t = 0f;\n        while (t < fadeDuration)\n        {\n            t          += Time.unscaledDeltaTime;\n            group.alpha = Mathf.Lerp(from, to, t / fadeDuration);\n            yield return null;\n        }\n        group.alpha = to;\n    }\n\n    private IEnumerator WaitUnscaled(float duration)\n    {\n        float t = 0f;\n        while (t < duration) { t += Time.unscaledDeltaTime; yield return null; }\n    }\n}\n",
+  "id": "script-ui-tutorialmessageui-cs",
+  "dependencyIds": [
+    "script-npc-pauseutil-cs",
+    "script-ui-tutorialmessagemanager-cs"
+  ],
+  "usedByIds": [
+    "script-ui-tutorialmessagemanager-cs"
+  ]
+}

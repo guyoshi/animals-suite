@@ -1,0 +1,132 @@
+{
+  "path": "UI/BossHealthBarUI.cs",
+  "filename": "BossHealthBarUI.cs",
+  "category": "UI",
+  "primary": "BossHealthBarUI",
+  "kind": "Componente",
+  "summary": "Barra de vida de boss do HUD (Tarefa #32) — scaffolding genérico, sem lógica de combate própria: o script do boss (fora do âmbito desta tarefa) chama ao iniciar o combate, a cada dano sofrido e ao morrer ou ao terminar o combate. Singleton simples (Instance), como .",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "BossHealthBarUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "nameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fillImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Image do tipo 'Filled' (horizontal) — fillAmount = vida actual / vida máxima.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Image do tipo 'Filled' (horizontal) — fillAmount = vida atual / vida máxima."
+    },
+    {
+      "name": "_maxHealth",
+      "type": "float",
+      "mods": "private",
+      "default": "1f",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDestroy",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDestroy."
+    },
+    {
+      "name": "Show",
+      "ret": "void",
+      "mods": "public",
+      "params": "string bossName, float maxHealth",
+      "description": "Executa a operação Show."
+    },
+    {
+      "name": "SetHealth",
+      "ret": "void",
+      "mods": "public",
+      "params": "float currentHealth",
+      "description": "Executa a operação SetHealth."
+    },
+    {
+      "name": "Hide",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Hide."
+    }
+  ],
+  "dependencies": [
+    "InteractionPromptUI",
+    "PlayerHealthRegen"
+  ],
+  "used_by": [
+    "BossController",
+    "Boss_AMaoQueFere",
+    "Boss_AMenteQueMata",
+    "Boss_GargantaDoFogo",
+    "Boss_GiganteDoDegelo",
+    "Boss_GuardiaoDoFerroEnraizado",
+    "Boss_MareDeRede",
+    "Boss_SinoDoRuido",
+    "Boss_SolDePlastico",
+    "HUDController",
+    "PlayerHealthRegen"
+  ],
+  "source": "using TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Barra de vida de boss do HUD (Tarefa #32) — scaffolding genérico, sem\n/// lógica de combate própria: o script do boss (fora do âmbito desta tarefa)\n/// chama <see cref=\"Show\"/> ao iniciar o combate, <see cref=\"SetHealth\"/> a\n/// cada dano sofrido e <see cref=\"Hide\"/> ao morrer ou ao terminar o combate.\n///\n/// Singleton simples (Instance), como <see cref=\"InteractionPromptUI\"/>.\n/// </summary>\npublic class BossHealthBarUI : MonoBehaviour\n{\n    public static BossHealthBarUI Instance { get; private set; }\n\n    [SerializeField] private GameObject root;\n    [SerializeField] private TMP_Text nameText;\n    [Tooltip(\"Image do tipo 'Filled' (horizontal) — fillAmount = vida actual / vida máxima.\")]\n    [SerializeField] private Image fillImage;\n\n    private float _maxHealth = 1f;\n\n    private void Awake()\n    {\n        Instance = this;\n        if (root != null) root.SetActive(false);\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    /// <summary>Mostra a barra (cheia) para \"bossName\" com vida máxima \"maxHealth\".</summary>\n    public void Show(string bossName, float maxHealth)\n    {\n        _maxHealth = Mathf.Max(1f, maxHealth);\n\n        if (nameText != null) nameText.text = bossName;\n        if (fillImage != null) fillImage.fillAmount = 1f;\n        if (root != null) root.SetActive(true);\n\n        // Tarefa #28 — bosses bloqueiam a regeneração automática de vida.\n        PlayerHealthRegen.Instance?.SetBlocked(this, true);\n    }\n\n    /// <summary>Actualiza o preenchimento da barra para \"currentHealth\" (0..maxHealth definido em Show).</summary>\n    public void SetHealth(float currentHealth)\n    {\n        if (fillImage != null) fillImage.fillAmount = Mathf.Clamp01(currentHealth / _maxHealth);\n    }\n\n    public void Hide()\n    {\n        if (root != null) root.SetActive(false);\n\n        // Tarefa #28 — fim do combate de boss: desbloqueia a regeneração automática.\n        PlayerHealthRegen.Instance?.SetBlocked(this, false);\n    }\n}\n",
+  "id": "script-ui-bosshealthbarui-cs",
+  "dependencyIds": [
+    "script-ui-interactionpromptui-cs",
+    "script-player-playerhealthregen-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-enemy-bosses-boss-amaoquefere-cs",
+    "script-enemy-bosses-boss-amentequemata-cs",
+    "script-enemy-bosses-boss-gargantadofogo-cs",
+    "script-enemy-bosses-boss-gigantedodegelo-cs",
+    "script-enemy-bosses-boss-guardiaodoferroenraizado-cs",
+    "script-enemy-bosses-boss-marederede-cs",
+    "script-enemy-bosses-boss-sinodoruido-cs",
+    "script-enemy-bosses-boss-soldeplastico-cs",
+    "script-ui-hudcontroller-cs",
+    "script-player-playerhealthregen-cs"
+  ]
+}

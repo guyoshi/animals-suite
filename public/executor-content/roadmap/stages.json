@@ -1,0 +1,154 @@
+[
+  {
+    "id": "build-stage-01",
+    "number": 1,
+    "title": "Fase 1 — Página/cena de testes",
+    "missionIds": [
+      "build-mission-001",
+      "build-mission-002",
+      "build-mission-003",
+      "build-mission-004",
+      "build-mission-005",
+      "build-mission-006",
+      "build-mission-007",
+      "build-mission-008",
+      "build-mission-009",
+      "build-mission-010",
+      "build-mission-011",
+      "build-mission-012",
+      "build-mission-013",
+      "build-mission-014",
+      "build-mission-015",
+      "build-mission-016",
+      "build-mission-017",
+      "build-mission-018",
+      "build-mission-019",
+      "build-mission-020",
+      "build-mission-021",
+      "build-mission-022",
+      "build-mission-023",
+      "build-mission-024",
+      "build-mission-025",
+      "build-mission-026"
+    ]
+  },
+  {
+    "id": "build-stage-02",
+    "number": 2,
+    "title": "Fase 2 — Coração de Gaia e Terra de Gaia",
+    "missionIds": [
+      "build-mission-027",
+      "build-mission-028",
+      "build-mission-029",
+      "build-mission-030",
+      "build-mission-031",
+      "build-mission-032",
+      "build-mission-033",
+      "build-mission-034",
+      "build-mission-035",
+      "build-mission-036",
+      "build-mission-037",
+      "build-mission-038",
+      "build-mission-039",
+      "build-mission-040",
+      "build-mission-041",
+      "build-mission-042",
+      "build-mission-043",
+      "build-mission-044",
+      "build-mission-045",
+      "build-mission-046"
+    ]
+  },
+  {
+    "id": "build-stage-03",
+    "number": 3,
+    "title": "Fase 3 — Trilho do Musgo",
+    "missionIds": [
+      "build-mission-047",
+      "build-mission-048",
+      "build-mission-049",
+      "build-mission-050",
+      "build-mission-051",
+      "build-mission-052",
+      "build-mission-053",
+      "build-mission-054",
+      "build-mission-055",
+      "build-mission-056",
+      "build-mission-057",
+      "build-mission-058",
+      "build-mission-059"
+    ]
+  },
+  {
+    "id": "build-stage-04",
+    "number": 4,
+    "title": "Fase 4 — Clareira dos Contos",
+    "missionIds": [
+      "build-mission-060",
+      "build-mission-061",
+      "build-mission-062",
+      "build-mission-063",
+      "build-mission-064"
+    ]
+  },
+  {
+    "id": "build-stage-05",
+    "number": 5,
+    "title": "Fase 5 — Vertical Slice: Bosque de Bruma",
+    "missionIds": [
+      "build-mission-065",
+      "build-mission-066",
+      "build-mission-067",
+      "build-mission-068",
+      "build-mission-069",
+      "build-mission-070",
+      "build-mission-071",
+      "build-mission-072",
+      "build-mission-073",
+      "build-mission-074",
+      "build-mission-075",
+      "build-mission-076",
+      "build-mission-077",
+      "build-mission-078",
+      "build-mission-079"
+    ]
+  },
+  {
+    "id": "build-stage-06",
+    "number": 6,
+    "title": "Fase 6 — Produção dos mundos",
+    "missionIds": [
+      "build-mission-080",
+      "build-mission-081",
+      "build-mission-082",
+      "build-mission-083",
+      "build-mission-084"
+    ]
+  },
+  {
+    "id": "build-stage-07",
+    "number": 7,
+    "title": "Fase 7 — Endgame",
+    "missionIds": [
+      "build-mission-085",
+      "build-mission-086",
+      "build-mission-087",
+      "build-mission-088",
+      "build-mission-089"
+    ]
+  },
+  {
+    "id": "build-stage-08",
+    "number": 8,
+    "title": "Fase 8 — Polimento e lançamento",
+    "missionIds": [
+      "build-mission-090",
+      "build-mission-091",
+      "build-mission-092",
+      "build-mission-093",
+      "build-mission-094",
+      "build-mission-095",
+      "build-mission-096"
+    ]
+  }
+]

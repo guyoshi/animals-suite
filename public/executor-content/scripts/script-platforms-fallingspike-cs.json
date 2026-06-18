@@ -1,0 +1,312 @@
+{
+  "path": "Platforms/FallingSpike.cs",
+  "filename": "FallingSpike.cs",
+  "category": "Platforms",
+  "primary": "FallingSpike",
+  "kind": "Componente",
+  "summary": "Espinho que cai do céu (hazard de queda). Fluxo: 1. Idle — espera quieto na posição inicial. 2. Ao detectar o player dentro do (OverlapCircle na direção de queda), mostra uma sombra de aviso no chão durante segundos. 3. Cai a m/s até colidir com algo (collider tipo \"queda\" — layer configurável via ) OU o player. 4. Ao atingir o chão (ou um bloco): causa dano de área a qualquer player dentro de , aplica knockback e vibra. 5. Fica cravo (inactivo — sem collider) durante segundos. - Se > 0: repõe-se automaticamente após esse tempo e regressa a Idle. - Se == 0: permanece inactivo até o player sair e reentrar na área (OnEnable/OnDisable do trigger de área, ou reativar via script externo — ex.: ",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "FallingSpike",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "State",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "detectRadius",
+      "type": "float",
+      "mods": "public",
+      "default": "0.8f",
+      "section": "Detecção do Player",
+      "attrs": "[Header(\"Detecção do Player\")] [Tooltip(\"Raio (m) da zona de detecção do player. Quando o player entra neste raio (OverlapCircle para baixo), o espinho começa o aviso. Recomendado: 0.5–1.5 m (largura do espinho + margem).\")] [Min(0.1f)]",
+      "inspector": true,
+      "description": "Raio (m) da zona de detecção do player. Quando o player entra neste raio (OverlapCircle para baixo), o espinho começa o aviso. Recomendado: 0.5–1.5 m (largura do espinho + margem)."
+    },
+    {
+      "name": "playerLayer",
+      "type": "LayerMask",
+      "mods": "public",
+      "default": "",
+      "section": "Detecção do Player",
+      "attrs": "[Tooltip(\"Layer(s) do player para detecção.\")]",
+      "inspector": true,
+      "description": "Layer(s) do player para detecção."
+    },
+    {
+      "name": "warningDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Detecção do Player",
+      "attrs": "[Tooltip(\"Duração (segundos) do aviso (sombra no chão) antes da queda.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Duração (segundos) do aviso (sombra no chão) antes da queda."
+    },
+    {
+      "name": "warningShadow",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Sombra de Aviso (opcional)",
+      "attrs": "[Header(\"Sombra de Aviso (opcional)\")] [Tooltip(\"GameObject filho com o sprite da sombra de aviso no chão. Activado/desactivado automaticamente. Se vazio, sem aviso visual.\")]",
+      "inspector": true,
+      "description": "GameObject filho com o sprite da sombra de aviso no chão. Ativado/desativado automaticamente. Se vazio, sem aviso visual."
+    },
+    {
+      "name": "fallSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "12f",
+      "section": "Queda",
+      "attrs": "[Header(\"Queda\")] [Tooltip(\"Velocidade de queda (m/s). O espinho cai com esta velocidade constante (gravidade ignorada — movimento controlado).\")] [Min(0.5f)]",
+      "inspector": true,
+      "description": "Velocidade de queda (m/s). O espinho cai com esta velocidade constante (gravidade ignorada — movimento controlado)."
+    },
+    {
+      "name": "groundLayer",
+      "type": "LayerMask",
+      "mods": "public",
+      "default": "",
+      "section": "Queda",
+      "attrs": "[Tooltip(\"Layer(s) consideradas 'chão' para o espinho parar. Usar a mesma layer que as plataformas/chão normal.\")]",
+      "inspector": true,
+      "description": "Layer(s) consideradas 'chão' para o espinho parar. Usar a mesma layer que as plataformas/chão normal."
+    },
+    {
+      "name": "impactDamage",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Impacto e Dano",
+      "attrs": "[Header(\"Impacto e Dano\")] [Tooltip(\"Dano de impacto ao atingir o chão (dano de área a qualquer player dentro de 'impactRadius').\")] [Min(0)]",
+      "inspector": true,
+      "description": "Dano de impacto ao atingir o chão (dano de área a qualquer player dentro de 'impactRadius')."
+    },
+    {
+      "name": "impactRadius",
+      "type": "float",
+      "mods": "public",
+      "default": "0.6f",
+      "section": "Impacto e Dano",
+      "attrs": "[Tooltip(\"Raio (m) do impacto: player dentro deste raio ao cair recebe dano.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Raio (m) do impacto: player dentro deste raio ao cair recebe dano."
+    },
+    {
+      "name": "impactKnockback",
+      "type": "float",
+      "mods": "public",
+      "default": "8f",
+      "section": "Impacto e Dano",
+      "attrs": "[Tooltip(\"Knockback aplicado ao player atingido pelo impacto.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Knockback aplicado ao player atingido pelo impacto."
+    },
+    {
+      "name": "stuckDamage",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Impacto e Dano",
+      "attrs": "[Tooltip(\"Dano de contacto (por tick) ao player que toca no espinho cravo no chão. 0 = sem dano de contacto.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Dano de contato (por tick) ao player que toca no espinho cravo no chão. 0 = sem dano de contato."
+    },
+    {
+      "name": "stuckTickInterval",
+      "type": "float",
+      "mods": "public",
+      "default": "0.6f",
+      "section": "Impacto e Dano",
+      "attrs": "[Tooltip(\"Intervalo (segundos) entre ticks de dano de contacto enquanto cravo.\")] [Min(0.05f)]",
+      "inspector": true,
+      "description": "Intervalo (segundos) entre ticks de dano de contato enquanto cravo."
+    },
+    {
+      "name": "respawnDelay",
+      "type": "float",
+      "mods": "public",
+      "default": "3f",
+      "section": "Respawn",
+      "attrs": "[Header(\"Respawn\")] [Tooltip(\"Tempo (segundos) até o espinho voltar à posição inicial após cravar no chão. Padrão: 3 s.\\n\\n0 = NÃO volta automaticamente — permanece inactivo até o player sair da área e reentrar (ou reactivar via script externo).\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Tempo (segundos) até o espinho voltar à posição inicial após cravar no chão. Padrão: 3 s.\\n\\n0 = NÃO volta automaticamente — permanece inactivo até o player sair da área e reentrar (ou reativar via script externo)."
+    },
+    {
+      "name": "impactVfx",
+      "type": "ParticleSystem",
+      "mods": "private",
+      "default": "",
+      "section": "VFX / Áudio",
+      "attrs": "[Header(\"VFX / Áudio\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "warningSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "VFX / Áudio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "impactSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "VFX / Áudio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "VFX / Áudio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "col",
+      "type": "Collider2D",
+      "mods": "private",
+      "default": "",
+      "section": "VFX / Áudio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "originPosition",
+      "type": "Vector3",
+      "mods": "private",
+      "default": "",
+      "section": "VFX / Áudio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "state",
+      "type": "State",
+      "mods": "private",
+      "default": "State.Idle",
+      "section": "VFX / Áudio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "nextStuckDamageTime",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "VFX / Áudio",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "FixedUpdate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FixedUpdate."
+    },
+    {
+      "name": "WarningThenFall",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação WarningThenFall."
+    },
+    {
+      "name": "Land",
+      "ret": "void",
+      "mods": "private",
+      "params": "Vector2 hitPoint",
+      "description": "Executa a operação Land."
+    },
+    {
+      "name": "RespawnAfterDelay",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RespawnAfterDelay."
+    },
+    {
+      "name": "Respawn",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Respawn."
+    },
+    {
+      "name": "OnTriggerStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerStay2D."
+    },
+    {
+      "name": "GetColliderSize",
+      "ret": "Vector2",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação GetColliderSize."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "DamageInfo",
+    "DamageType",
+    "PlayerCombat"
+  ],
+  "used_by": [],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Espinho que cai do céu (hazard de queda).\n///\n/// Fluxo:\n/// 1. Idle — espera quieto na posição inicial.\n/// 2. Ao detectar o player dentro do <see cref=\"detectRadius\"/> (OverlapCircle\n///    na direcção de queda), mostra uma sombra de aviso no chão durante\n///    <see cref=\"warningDuration\"/> segundos.\n/// 3. Cai a <see cref=\"fallSpeed\"/> m/s até colidir com algo (collider tipo\n///    \"queda\" — layer configurável via <see cref=\"groundLayer\"/>) OU o player.\n/// 4. Ao atingir o chão (ou um bloco): causa dano de área a qualquer player\n///    dentro de <see cref=\"impactRadius\"/>, aplica knockback e vibra.\n/// 5. Fica cravo (inactivo — sem collider) durante\n///    <see cref=\"respawnDelay\"/> segundos.\n///    - Se <see cref=\"respawnDelay\"/> > 0: repõe-se automaticamente após esse\n///      tempo e regressa a Idle.\n///    - Se <see cref=\"respawnDelay\"/> == 0: permanece inactivo até o player\n///      sair e reentrar na área (OnEnable/OnDisable do trigger de área,\n///      ou reactivar via script externo — ex.: ao entrar na sala de novo).\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]\n[DisallowMultipleComponent]\npublic class FallingSpike : MonoBehaviour\n{\n    // ── Detecção ──────────────────────────────────────────────────────────────\n\n    [Header(\"Detecção do Player\")]\n    [Tooltip(\"Raio (m) da zona de detecção do player. Quando o player entra neste raio (OverlapCircle para baixo), o espinho começa o aviso. Recomendado: 0.5–1.5 m (largura do espinho + margem).\")]\n    [Min(0.1f)] public float detectRadius = 0.8f;\n\n    [Tooltip(\"Layer(s) do player para detecção.\")]\n    public LayerMask playerLayer;\n\n    [Tooltip(\"Duração (segundos) do aviso (sombra no chão) antes da queda.\")]\n    [Min(0f)] public float warningDuration = 0.5f;\n\n    // ── Sombra de Aviso ────────────────────────────────────────────────────────\n\n    [Header(\"Sombra de Aviso (opcional)\")]\n    [Tooltip(\"GameObject filho com o sprite da sombra de aviso no chão. Activado/desactivado automaticamente. Se vazio, sem aviso visual.\")]\n    public GameObject warningShadow;\n\n    // ── Queda ─────────────────────────────────────────────────────────────────\n\n    [Header(\"Queda\")]\n    [Tooltip(\"Velocidade de queda (m/s). O espinho cai com esta velocidade constante (gravidade ignorada — movimento controlado).\")]\n    [Min(0.5f)] public float fallSpeed = 12f;\n\n    [Tooltip(\"Layer(s) consideradas 'chão' para o espinho parar. Usar a mesma layer que as plataformas/chão normal.\")]\n    public LayerMask groundLayer;\n\n    // ── Impacto ────────────────────────────────────────────────────────────────\n\n    [Header(\"Impacto e Dano\")]\n    [Tooltip(\"Dano de impacto ao atingir o chão (dano de área a qualquer player dentro de 'impactRadius').\")]\n    [Min(0)] public int impactDamage = 1;\n\n    [Tooltip(\"Raio (m) do impacto: player dentro deste raio ao cair recebe dano.\")]\n    [Min(0f)] public float impactRadius = 0.6f;\n\n    [Tooltip(\"Knockback aplicado ao player atingido pelo impacto.\")]\n    [Min(0f)] public float impactKnockback = 8f;\n\n    [Tooltip(\"Dano de contacto (por tick) ao player que toca no espinho cravo no chão. 0 = sem dano de contacto.\")]\n    [Min(0)] public int stuckDamage = 1;\n\n    [Tooltip(\"Intervalo (segundos) entre ticks de dano de contacto enquanto cravo.\")]\n    [Min(0.05f)] public float stuckTickInterval = 0.6f;\n\n    // ── Respawn ────────────────────────────────────────────────────────────────\n\n    [Header(\"Respawn\")]\n    [Tooltip(\"Tempo (segundos) até o espinho voltar à posição inicial após cravar no chão. Padrão: 3 s.\\n\\n0 = NÃO volta automaticamente — permanece inactivo até o player sair da área e reentrar (ou reactivar via script externo).\")]\n    [Min(0f)] public float respawnDelay = 3f;\n\n    // ── VFX / Áudio ────────────────────────────────────────────────────────────\n\n    [Header(\"VFX / Áudio\")]\n    [SerializeField] private ParticleSystem impactVfx;\n    [SerializeField] private AudioClip warningSfx;\n    [SerializeField] private AudioClip impactSfx;\n\n    // ── Internos ───────────────────────────────────────────────────────────────\n\n    private Rigidbody2D rb;\n    private Collider2D col;\n\n    private Vector3 originPosition;\n\n    private enum State { Idle, Warning, Falling, Stuck }\n    private State state = State.Idle;\n\n    private float nextStuckDamageTime;\n\n    private void Awake()\n    {\n        rb = GetComponent<Rigidbody2D>();\n        col = GetComponent<Collider2D>();\n\n        rb.bodyType = RigidbodyType2D.Kinematic;\n        rb.gravityScale = 0f;\n\n        originPosition = transform.position;\n\n        if (warningShadow != null) warningShadow.SetActive(false);\n    }\n\n    private void Update()\n    {\n        if (state == State.Idle)\n        {\n            // Verifica se o player entrou no raio de detecção.\n            if (Physics2D.OverlapCircle(transform.position, detectRadius, playerLayer) != null)\n                StartCoroutine(WarningThenFall());\n        }\n    }\n\n    private void FixedUpdate()\n    {\n        if (state != State.Falling) return;\n\n        // Move para baixo a velocidade constante.\n        rb.MovePosition(rb.position + Vector2.down * fallSpeed * Time.fixedDeltaTime);\n\n        // Detecção de colisão com chão via raycast (mais fiável que OnCollision com kinematic).\n        float checkDist = fallSpeed * Time.fixedDeltaTime + 0.05f;\n        RaycastHit2D hit = Physics2D.BoxCast(rb.position, GetColliderSize() * 0.9f, 0f, Vector2.down, checkDist, groundLayer);\n        if (hit.collider != null)\n            Land(hit.point);\n    }\n\n    private IEnumerator WarningThenFall()\n    {\n        state = State.Warning;\n\n        if (warningShadow != null) warningShadow.SetActive(true);\n        AudioManager.Instance?.PlaySE(warningSfx);\n\n        yield return new WaitForSeconds(warningDuration);\n\n        if (state != State.Warning) yield break; // cancelado externamente\n\n        if (warningShadow != null) warningShadow.SetActive(false);\n        state = State.Falling;\n    }\n\n    private void Land(Vector2 hitPoint)\n    {\n        state = State.Stuck;\n        rb.velocity = Vector2.zero;\n\n        // Impacto: dano de área.\n        if (impactDamage > 0)\n        {\n            var player = Physics2D.OverlapCircle(transform.position, impactRadius, playerLayer);\n            if (player != null)\n            {\n                var info = new DamageInfo(impactDamage, DamageType.Hazard, transform.position, impactKnockback, null, ignoreDefense: true);\n                PlayerCombat.TryDamagePlayer(player.transform, info);\n            }\n        }\n\n        if (impactVfx != null) impactVfx.Play();\n        AudioManager.Instance?.PlaySE(impactSfx);\n\n        nextStuckDamageTime = 0f;\n\n        if (respawnDelay > 0f)\n            StartCoroutine(RespawnAfterDelay());\n        // Se respawnDelay == 0, fica cravo até ser reactivado externamente.\n    }\n\n    private IEnumerator RespawnAfterDelay()\n    {\n        yield return new WaitForSeconds(respawnDelay);\n        Respawn();\n    }\n\n    /// <summary>\n    /// Repõe o espinho na posição inicial (pode ser chamado externamente para\n    /// forçar o respawn, ex.: ao entrar numa nova área quando respawnDelay == 0).\n    /// </summary>\n    public void Respawn()\n    {\n        StopAllCoroutines();\n        state = State.Idle;\n        transform.position = originPosition;\n        rb.velocity = Vector2.zero;\n\n        if (warningShadow != null) warningShadow.SetActive(false);\n    }\n\n    // Dano de contacto enquanto cravo.\n    private void OnTriggerStay2D(Collider2D other)\n    {\n        if (state != State.Stuck) return;\n        if (stuckDamage <= 0) return;\n        if (!other.CompareTag(\"Player\")) return;\n        if (Time.time < nextStuckDamageTime) return;\n\n        var info = new DamageInfo(stuckDamage, DamageType.Hazard, transform.position, 0f, null, ignoreDefense: true);\n        if (PlayerCombat.TryDamagePlayer(other.transform, info))\n            nextStuckDamageTime = Time.time + stuckTickInterval;\n    }\n\n    private Vector2 GetColliderSize()\n    {\n        if (col is BoxCollider2D box) return box.size;\n        if (col is CapsuleCollider2D cap) return cap.size;\n        return Vector2.one * 0.5f;\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        // Raio de detecção\n        Gizmos.color = new Color(1f, 0.9f, 0f, 0.4f);\n        Gizmos.DrawWireSphere(Application.isPlaying ? transform.position : transform.position, detectRadius);\n\n        // Raio de impacto\n        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.4f);\n        Gizmos.DrawWireSphere(Application.isPlaying ? transform.position : transform.position, impactRadius);\n    }\n}\n",
+  "id": "script-platforms-fallingspike-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-player-damageinfo-cs",
+    "script-player-playercombat-cs"
+  ],
+  "usedByIds": []
+}

@@ -1,0 +1,336 @@
+{
+  "path": "Enemy/EnemyStatusEffectReceiver.cs",
+  "filename": "EnemyStatusEffectReceiver.cs",
+  "category": "Enemy",
+  "primary": "EnemyStatusEffectReceiver",
+  "kind": "Componente",
+  "summary": "Executor de efeitos de status num inimigo (P7 — consome EnemyItemInteractionConfig/EnemyStatusEffect, que estavam configuráveis mas sem executor). Usado por itens do player (PlayerItemUser), pelo Rugido (RoarAbility) e por qualquer mecânica futura. Respeita as fraquezas e imunidades do EnemyData: - Sleep → canBePutToSleep (acorda ao tomar dano); - Freeze → canBeFrozen (tinge o sprite de azul); - Trap → canBeGroundPinned; - Stun → canBeStunned; - LoseTarget → sempre permitido (perde o alvo e volta para casa); - Knockback → itemInteractions.affectedByKnockbackItems + canBePushed; - immuneEffects/immuneItems → bloqueiam tudo. Sleep/Freeze/Trap/Stun usam o estado Atordoado (EnemyState) com duraç",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyStatusEffectReceiver",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "SilenceFlowerId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"flor_do_silencio\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "AncientResinId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"resina_antiga\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "GoldenDustId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"po_dourado\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IceCrystalId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"cristal_de_gelo\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CoralBubbleId",
+      "type": "string",
+      "mods": "public const",
+      "default": "\"bolha_de_coral\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sleepDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "5f",
+      "section": "Durações por Defeito (segundos)",
+      "attrs": "[Header(\"Durações por Defeito (segundos)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freezeDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "3f",
+      "section": "Durações por Defeito (segundos)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "trapDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "Durações por Defeito (segundos)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "stunDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Durações por Defeito (segundos)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freezeTint",
+      "type": "Color",
+      "mods": "public",
+      "default": "new Color(0.6f, 0.8f, 1f, 1f)",
+      "section": "Feedback",
+      "attrs": "[Header(\"Feedback\")] [Tooltip(\"Tinta aplicada ao sprite enquanto congelado.\")]",
+      "inspector": true,
+      "description": "Tinta aplicada ao sprite enquanto congelado."
+    },
+    {
+      "name": "_controller",
+      "type": "EnemyController",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_health",
+      "type": "EnemyHealth",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_sprite",
+      "type": "SpriteRenderer",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_baseColor",
+      "type": "Color",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_effectRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_stateBeforeEffect",
+      "type": "EnemyState",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_sleeping",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_pullVelocity",
+      "type": "Vector2",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "HandleDamaged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int amount, int currentHealth",
+      "description": "Executa a operação HandleDamaged."
+    },
+    {
+      "name": "ApplyEffect",
+      "ret": "bool",
+      "mods": "public",
+      "params": "EnemyStatusEffect effect, float duration = 0f, Vector2? origin = null, float force = 0f",
+      "description": "Executa a operação ApplyEffect."
+    },
+    {
+      "name": "ApplyItem",
+      "ret": "bool",
+      "mods": "public",
+      "params": "ItemData item, Vector2? origin = null",
+      "description": "Executa a operação ApplyItem."
+    },
+    {
+      "name": "ApplyAncientResin",
+      "ret": "bool",
+      "mods": "private",
+      "params": "ItemData item, Vector2? origin",
+      "description": "Executa a operação ApplyAncientResin."
+    },
+    {
+      "name": "FixedUpdate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FixedUpdate."
+    },
+    {
+      "name": "CancelEffect",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação CancelEffect."
+    },
+    {
+      "name": "StartStunLike",
+      "ret": "void",
+      "mods": "private",
+      "params": "float duration, bool sleeping = false, bool frozen = false",
+      "description": "Executa a operação StartStunLike."
+    },
+    {
+      "name": "EffectRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação EffectRoutine."
+    },
+    {
+      "name": "EndStunLike",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação EndStunLike."
+    },
+    {
+      "name": "ApplyKnockback",
+      "ret": "void",
+      "mods": "private",
+      "params": "Vector2 origin, float force",
+      "description": "Executa a operação ApplyKnockback."
+    }
+  ],
+  "dependencies": [
+    "BossController",
+    "EnemyController",
+    "EnemyData",
+    "EnemyHealth",
+    "EnemyItemInteractionConfig",
+    "EnemyState",
+    "EnemyStats",
+    "EnemyStatusEffect",
+    "EnemyWaterConfig",
+    "ItemData",
+    "PlayerConsumableEffects",
+    "PlayerItemUser",
+    "RoarAbility",
+    "State",
+    "WaterMotor2D"
+  ],
+  "used_by": [
+    "ItemData",
+    "ItemDataEditor",
+    "PlayerConsumableEffects",
+    "PlayerItemUser",
+    "RoarAbility"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Executor de efeitos de status num inimigo (P7 — consome\n/// EnemyItemInteractionConfig/EnemyStatusEffect, que estavam configuráveis mas\n/// sem executor). Usado por itens do player (PlayerItemUser), pelo Rugido\n/// (RoarAbility) e por qualquer mecânica futura.\n///\n/// Respeita as fraquezas e imunidades do EnemyData:\n/// - Sleep → canBePutToSleep (acorda ao tomar dano);\n/// - Freeze → canBeFrozen (tinge o sprite de azul);\n/// - Trap → canBeGroundPinned;\n/// - Stun → canBeStunned;\n/// - LoseTarget → sempre permitido (perde o alvo e volta para casa);\n/// - Knockback → itemInteractions.affectedByKnockbackItems + canBePushed;\n/// - immuneEffects/immuneItems → bloqueiam tudo.\n///\n/// Sleep/Freeze/Trap/Stun usam o estado Atordoado (EnemyState) com duração e\n/// feedback próprios. <see cref=\"ApplyItem\"/> resolve o efeito de um ItemData:\n/// primeiro \"otherItemEffects\", depois os itens do GDD por itemId\n/// (flor_do_silencio, resina_antiga, po_dourado, cristal_de_gelo,\n/// bolha_de_coral) ligados às flags can*From*.\n/// </summary>\n[DisallowMultipleComponent]\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyStatusEffectReceiver : MonoBehaviour\n{\n    // IDs dos itens do GDD (usar nos assets ItemData correspondentes, ou ligar via otherItemEffects).\n    public const string SilenceFlowerId = \"flor_do_silencio\";\n    public const string AncientResinId = \"resina_antiga\";\n    public const string GoldenDustId = \"po_dourado\";\n    public const string IceCrystalId = \"cristal_de_gelo\";\n    public const string CoralBubbleId = \"bolha_de_coral\";\n\n    [Header(\"Durações por Defeito (segundos)\")]\n    public float sleepDuration = 5f;\n    public float freezeDuration = 3f;\n    public float trapDuration = 2f;\n    public float stunDuration = 1f;\n\n    [Header(\"Feedback\")]\n    [Tooltip(\"Tinta aplicada ao sprite enquanto congelado.\")]\n    public Color freezeTint = new Color(0.6f, 0.8f, 1f, 1f);\n\n    private EnemyController _controller;\n    private EnemyHealth _health;\n    private SpriteRenderer _sprite;\n    private Color _baseColor;\n\n    private Coroutine _effectRoutine;\n    private EnemyState _stateBeforeEffect;\n    private bool _sleeping;\n\n    // Resina Antiga (Tarefa \"Itens Consumíveis\"): velocidade adicional aplicada\n    // enquanto o efeito de Trap estiver activo (puxão para baixo em inimigos\n    // voadores, afundamento em aquáticos). Vector2.zero = sem efeito extra\n    // (comportamento normal de terrestre: apenas imobilizado).\n    private Vector2 _pullVelocity;\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n        _health = GetComponent<EnemyHealth>();\n        _sprite = _controller.SpriteRenderer;\n        if (_sprite != null) _baseColor = _sprite.color;\n    }\n\n    private void OnEnable()\n    {\n        if (_health != null) _health.OnDamaged += HandleDamaged;\n    }\n\n    private void OnDisable()\n    {\n        if (_health != null) _health.OnDamaged -= HandleDamaged;\n    }\n\n    /// <summary>Acordar ao tomar dano (Sleep).</summary>\n    private void HandleDamaged(int amount, int currentHealth)\n    {\n        if (_sleeping) CancelEffect();\n    }\n\n    /// <summary>\n    /// Aplica um efeito de status, respeitando fraquezas/imunidades. Devolve\n    /// true se o efeito foi aplicado. \"duration\" &lt;= 0 usa a duração por defeito.\n    /// </summary>\n    public bool ApplyEffect(EnemyStatusEffect effect, float duration = 0f, Vector2? origin = null, float force = 0f)\n    {\n        if (_controller.IsTerminal) return false;\n\n        var data = _controller.Data;\n        var weaknesses = data != null ? data.weaknesses : null;\n        var items = data != null ? data.itemInteractions : null;\n\n        // Imunidade total ao efeito.\n        if (items != null && items.immuneEffects != null && items.immuneEffects.Contains(effect)) return false;\n\n        switch (effect)\n        {\n            case EnemyStatusEffect.Sleep:\n                // GDD: Flor do Silêncio não funciona em bosses (imunidade universal,\n                // independentemente de canBePutToSleep ou immuneEffects mal configurados).\n                if (_controller.GetComponent<BossController>() != null) return false;\n                if (weaknesses == null || !weaknesses.canBePutToSleep) return false;\n                StartStunLike(duration > 0f ? duration : sleepDuration, sleeping: true);\n                return true;\n\n            case EnemyStatusEffect.Freeze:\n                if (weaknesses == null || !weaknesses.canBeFrozen) return false;\n                StartStunLike(duration > 0f ? duration : freezeDuration, frozen: true);\n                return true;\n\n            case EnemyStatusEffect.Trap:\n                if (weaknesses == null || !weaknesses.canBeGroundPinned) return false;\n                StartStunLike(duration > 0f ? duration : trapDuration);\n                return true;\n\n            case EnemyStatusEffect.Stun:\n                if (weaknesses == null || !weaknesses.canBeStunned) return false;\n                StartStunLike(duration > 0f ? duration : stunDuration);\n                return true;\n\n            case EnemyStatusEffect.LoseTarget:\n                _controller.Target = null;\n                if (_controller.State == EnemyState.Perseguindo || _controller.State == EnemyState.Alerta)\n                    _controller.SetState(EnemyState.VoltandoParaCasa);\n                return true;\n\n            case EnemyStatusEffect.Knockback:\n                if (items != null && !items.affectedByKnockbackItems) return false;\n                if (weaknesses != null && !weaknesses.canBePushed) return false;\n                ApplyKnockback(origin ?? (Vector2)transform.position + Vector2.left, force > 0f ? force : 6f);\n                return true;\n\n            default:\n                return false;\n        }\n    }\n\n    /// <summary>\n    /// Aplica o efeito configurado para \"item\" neste inimigo: primeiro\n    /// \"otherItemEffects\", depois os itens do GDD por itemId. Devolve true se\n    /// algum efeito foi aplicado.\n    /// </summary>\n    public bool ApplyItem(ItemData item, Vector2? origin = null)\n    {\n        if (item == null || _controller.Data == null) return false;\n\n        var config = _controller.Data.itemInteractions;\n        if (config == null) return false;\n\n        // Imune a este item específico.\n        if (config.immuneItems != null && config.immuneItems.Contains(item)) return false;\n\n        // 1. Mapeamento explícito (qualquer item global/regional).\n        if (config.otherItemEffects != null)\n        {\n            foreach (var entry in config.otherItemEffects)\n            {\n                if (entry != null && entry.item == item)\n                    return ApplyEffect(entry.effect, 0f, origin);\n            }\n        }\n\n        // 2. Itens do GDD por itemId + flags.\n        switch (item.itemId)\n        {\n            case SilenceFlowerId:\n                return config.canSleepFromSilenceFlower && ApplyEffect(EnemyStatusEffect.Sleep, item.sleepDuration, origin);\n\n            case AncientResinId:\n                return config.canBeTrappedByAncientResin && ApplyAncientResin(item, origin);\n\n            case GoldenDustId:\n                return config.losesTargetFromGoldenDust && ApplyEffect(EnemyStatusEffect.LoseTarget, 0f, origin);\n\n            case IceCrystalId:\n                return config.canBeFrozenByIceCrystal && ApplyEffect(EnemyStatusEffect.Freeze, item.freezeDuration, origin);\n\n            case CoralBubbleId:\n                // Bolha de Coral (Tarefa \"Itens Consumíveis\"): correcção de design —\n                // este item é um buff exclusivo do player (imunidade temporária a\n                // correntes de água, ver PlayerConsumableEffects/WaterMotor2D), não\n                // um efeito sobre inimigos. \"affectedByCoralBubble\"/Stun deixou de\n                // ser usado aqui.\n                return false;\n\n            default:\n                return false;\n        }\n    }\n\n    /// <summary>\n    /// Resina Antiga (Tarefa \"Itens Consumíveis\"): aplica o efeito de Trap\n    /// (respeita canBeGroundPinned/immuneEffects, via <see cref=\"ApplyEffect\"/>)\n    /// e, adicionalmente, configura um \"puxão\" contínuo conforme o ambiente do\n    /// inimigo enquanto o efeito durar:\n    /// - Terrestre (padrão): apenas imobilizado (sem puxão).\n    /// - Voador (<see cref=\"EnemyStats.isFlying\"/>): puxado para baixo a\n    ///   <see cref=\"ItemData.resinFlyingPullSpeed\"/> unidades/seg.\n    /// - Aquático (<see cref=\"EnemyWaterConfig.canSwim\"/> ou\n    ///   <see cref=\"EnemyWaterConfig.canDive\"/>): afunda a\n    ///   <see cref=\"ItemData.resinAquaticSinkSpeed\"/> unidades/seg.\n    /// </summary>\n    private bool ApplyAncientResin(ItemData item, Vector2? origin)\n    {\n        var data = _controller.Data;\n        float duration = item.resinDuration > 0f ? item.resinDuration : trapDuration;\n\n        if (!ApplyEffect(EnemyStatusEffect.Trap, duration, origin)) return false;\n\n        var stats = data != null ? data.stats : null;\n        var water = data != null ? data.water : null;\n\n        if (stats != null && stats.isFlying && item.resinFlyingPullSpeed > 0f)\n            _pullVelocity = Vector2.down * item.resinFlyingPullSpeed;\n        else if (water != null && (water.canSwim || water.canDive) && item.resinAquaticSinkSpeed > 0f)\n            _pullVelocity = Vector2.down * item.resinAquaticSinkSpeed;\n        else\n            _pullVelocity = Vector2.zero;\n\n        return true;\n    }\n\n    /// <summary>Aplica o \"puxão\" da Resina Antiga (ver <see cref=\"ApplyAncientResin\"/>) enquanto o inimigo estiver Atordoado por este efeito.</summary>\n    private void FixedUpdate()\n    {\n        if (_pullVelocity == Vector2.zero) return;\n        if (_controller.State != EnemyState.Atordoado) return;\n        if (_controller.Rb == null) return;\n\n        _controller.Rb.MovePosition(_controller.Rb.position + _pullVelocity * Time.fixedDeltaTime);\n    }\n\n    /// <summary>Cancela o efeito em curso (acordar/descongelar antecipado).</summary>\n    public void CancelEffect()\n    {\n        if (_effectRoutine != null)\n        {\n            StopCoroutine(_effectRoutine);\n            _effectRoutine = null;\n        }\n\n        EndStunLike();\n    }\n\n    private void StartStunLike(float duration, bool sleeping = false, bool frozen = false)\n    {\n        if (_effectRoutine != null) StopCoroutine(_effectRoutine);\n        else _stateBeforeEffect = _controller.State == EnemyState.Atordoado ? EnemyState.Perseguindo : _controller.State;\n\n        _sleeping = sleeping;\n\n        if (_controller.Rb != null) _controller.Rb.velocity = Vector2.zero;\n        _controller.SetState(EnemyState.Atordoado);\n\n        if (frozen && _sprite != null) _sprite.color = freezeTint;\n\n        _effectRoutine = StartCoroutine(EffectRoutine(duration));\n    }\n\n    private IEnumerator EffectRoutine(float duration)\n    {\n        yield return new WaitForSeconds(duration);\n        _effectRoutine = null;\n        EndStunLike();\n    }\n\n    private void EndStunLike()\n    {\n        _sleeping = false;\n        _pullVelocity = Vector2.zero;\n\n        if (_sprite != null) _sprite.color = _baseColor;\n\n        if (_controller.State == EnemyState.Atordoado && !_controller.IsTerminal)\n            _controller.SetState(_stateBeforeEffect);\n    }\n\n    private void ApplyKnockback(Vector2 origin, float force)\n    {\n        var rb = _controller.Rb;\n        if (rb == null) return;\n\n        var stats = _controller.Data != null ? _controller.Data.stats : null;\n        float resistance = stats != null ? Mathf.Clamp01(stats.knockbackResistance) : 0f;\n        float weight = stats != null && stats.weight > 0f ? stats.weight : 1f;\n\n        Vector2 dir = (Vector2)transform.position - origin;\n        if (dir.sqrMagnitude < 0.0001f) dir = Vector2.right;\n\n        float effective = force * (1f - resistance) / weight;\n        if (effective > 0f) rb.AddForce(dir.normalized * effective, ForceMode2D.Impulse);\n    }\n}\n",
+  "id": "script-enemy-enemystatuseffectreceiver-cs",
+  "dependencyIds": [
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-data-itemdata-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-player-playeritemuser-cs",
+    "script-abilities-roarability-cs",
+    "script-player-watermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-data-itemdata-cs",
+    "script-data-editor-itemdataeditor-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-player-playeritemuser-cs",
+    "script-abilities-roarability-cs"
+  ]
+}

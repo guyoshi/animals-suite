@@ -1,0 +1,251 @@
+{
+  "path": "Data/EmblemManager.cs",
+  "filename": "EmblemManager.cs",
+  "category": "Data",
+  "primary": "EmblemManager",
+  "kind": "Componente",
+  "summary": "Gestor de Emblemas (Tarefa #32) — verifica automaticamente as condições de obtenção de cada emblema e concede-os (define a sua em GameVariables) quando as condições são cumpridas. Condições por tipo de emblema: Emblemas de Mundo (via ): obtidos ao derrotar o boss do respectivo mundo ( ). Boss Alternativo : quando todos os têm o seu emblema obtido, define = true — o nível usa esta variável para escolher a variante do boss final. Emblema de Apolo ( ): obtido quando qualquer variável de for true (CompletedVariable das ChallengeDefinitions com isApoloTrial). Emblema de Gaia ( ): obtido quando ≥ 100. Emblema de Zeus ( ): obtido quando Gaia E Apolo estão ambos obtidos (GDD Tarefa #31: \"Gaia + Apol",
+  "attach": "GameObject/asset indicado pelo sistema; consulta a Missão ou o guia relacionado para a posição exata.",
+  "types": [
+    {
+      "name": "EmblemManager",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "gaiaEmblem",
+      "type": "EmblemData",
+      "mods": "public",
+      "default": "",
+      "section": "Emblemas Globais",
+      "attrs": "[Header(\"Emblemas Globais\")] [Tooltip(\"Emblema de Gaia (EmblemData.isGaiaEmblem = true). Obtido ao atingir 100% de conclusão.\")]",
+      "inspector": true,
+      "description": "Emblema de Gaia (EmblemData.isGaiaEmblem = true). Obtido ao atingir 100% de conclusão."
+    },
+    {
+      "name": "apoloEmblem",
+      "type": "EmblemData",
+      "mods": "public",
+      "default": "",
+      "section": "Emblemas Globais",
+      "attrs": "[Tooltip(\"Emblema de Apolo (EmblemData.isApoloEmblem = true). Obtido ao completar qualquer Provação de Apolo listada em 'apoloTrialCompletedVariables'.\")]",
+      "inspector": true,
+      "description": "Emblema de Apolo (EmblemData.isApoloEmblem = true). Obtido ao completar qualquer Provação de Apolo listada em 'apoloTrialCompletedVariables'."
+    },
+    {
+      "name": "zeusEmblem",
+      "type": "EmblemData",
+      "mods": "public",
+      "default": "",
+      "section": "Emblemas Globais",
+      "attrs": "[Tooltip(\"Emblema de Zeus (EmblemData.isBonus = true). Obtido quando Gaia + Apolo ambos obtidos (GDD: 101%).\")]",
+      "inspector": true,
+      "description": "Emblema de Zeus (EmblemData.isBonus = true). Obtido quando Gaia + Apolo ambos obtidos (GDD: 101%)."
+    },
+    {
+      "name": "worlds",
+      "type": "List<WorldData>",
+      "mods": "public",
+      "default": "new List<WorldData>()",
+      "section": "Emblemas de Mundo",
+      "attrs": "[Header(\"Emblemas de Mundo\")] [Tooltip(\"Os 6 WorldData do jogo. O emblema de cada mundo (WorldData.worldEmblem) é obtido ao derrotar o boss desse mundo.\")]",
+      "inspector": true,
+      "description": "Os 6 WorldData do jogo. O emblema de cada mundo (WorldData.worldEmblem) é obtido ao derrotar o boss desse mundo."
+    },
+    {
+      "name": "allWorldEmblemsVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Boss Alternativo",
+      "attrs": "[Header(\"Boss Alternativo\")] [Tooltip(\"Variável bool em GameVariables definida como true quando todos os emblemas de mundo estiverem obtidos. O nível do boss final usa esta variável para escolher a variante alternativa.\")]",
+      "inspector": true,
+      "description": "Variável bool em GameVariables definida como true quando todos os emblemas de mundo estiverem obtidos. O nível do boss final usa esta variável para escolher a variante alternativa."
+    },
+    {
+      "name": "runasDeApoloRequired",
+      "type": "int",
+      "mods": "public",
+      "default": "6",
+      "section": "Provação de Apolo",
+      "attrs": "[Header(\"Provação de Apolo\")] [Tooltip(\"Número de Runas de Apolo necessárias para obter o Emblema de Apolo. Padrão: 6 (uma por Provação de Apolo no jogo). O player acumula Runas de Apolo como recompensa de cada Provação concluída; ao atingir este valor, o Emblema é concedido.\")] [Min(1)]",
+      "inspector": true,
+      "description": "Número de Runas de Apolo necessárias para obter o Emblema de Apolo. Padrão: 6 (uma por Provação de Apolo no jogo). O player acumula Runas de Apolo como recompensa de cada Provação concluída; ao atingir este valor, o Emblema é concedido."
+    },
+    {
+      "name": "apoloTrialCompletedVariables",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "Provação de Apolo",
+      "attrs": "[Tooltip(\"(Legado/alternativo) ChallengeDefinition.CompletedVariable de desafios marcados como 'isApoloTrial'. Quando qualquer uma destas variáveis for true em GameVariables, o Emblema de Apolo é concedido — condição alternativa à contagem de Runas de Apolo.\")]",
+      "inspector": true,
+      "description": "(Legado/alternativo) ChallengeDefinition.CompletedVariable de desafios marcados como 'isApoloTrial'. Quando qualquer uma destas variáveis for true em GameVariables, o Emblema de Apolo é concedido — condição alternativa à contagem de Runas de Apolo."
+    },
+    {
+      "name": "apoloSecretArea",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "Área Secreta de Apolo (desbloqueada ao obter o Emblema de Apolo)",
+      "attrs": "[Header(\"Área Secreta de Apolo (desbloqueada ao obter o Emblema de Apolo)\")] [Tooltip(\"AreaData da área secreta desbloqueada automaticamente quando o Emblema de Apolo é concedido (6 Runas de Apolo recolhidas). O WorldMapController.CheckApoloAreaUnlock() detecta esta mudança e reproduz a sequência de câmara. Deixar vazio para desactivar esta funcionalidade.\")]",
+      "inspector": true,
+      "description": "AreaData da área secreta desbloqueada automaticamente quando o Emblema de Apolo é concedido (6 Runas de Apolo coletadas). O WorldMapController.CheckApoloAreaUnlock() detecta esta mudança e reproduz a sequência de câmera. Deixar vazio para desativar esta funcionalidade."
+    },
+    {
+      "name": "allAreas",
+      "type": "List<AreaData>",
+      "mods": "public",
+      "default": "new List<AreaData>()",
+      "section": "Listas para % de Conclusão (Emblema de Gaia)",
+      "attrs": "[Header(\"Listas para % de Conclusão (Emblema de Gaia)\")] [Tooltip(\"Todas as AreaData do jogo — passadas a PlayerProgress.GetTotalCompletionPercent.\")]",
+      "inspector": true,
+      "description": "Todas as AreaData do jogo — passadas a PlayerProgress.GetTotalCompletionPercent."
+    },
+    {
+      "name": "allForms",
+      "type": "List<AnimalFormData>",
+      "mods": "public",
+      "default": "new List<AnimalFormData>()",
+      "section": "Listas para % de Conclusão (Emblema de Gaia)",
+      "attrs": "[Tooltip(\"Todas as AnimalFormData do jogo.\")]",
+      "inspector": true,
+      "description": "Todas as AnimalFormData do jogo."
+    },
+    {
+      "name": "allMissions",
+      "type": "List<MissionData>",
+      "mods": "public",
+      "default": "new List<MissionData>()",
+      "section": "Listas para % de Conclusão (Emblema de Gaia)",
+      "attrs": "[Tooltip(\"Todas as MissionData do jogo.\")]",
+      "inspector": true,
+      "description": "Todas as MissionData do jogo."
+    },
+    {
+      "name": "allEmblems",
+      "type": "List<EmblemData>",
+      "mods": "public",
+      "default": "new List<EmblemData>()",
+      "section": "Listas para % de Conclusão (Emblema de Gaia)",
+      "attrs": "[Tooltip(\"Todos os 9 emblemas (6 mundos + Gaia + Apolo + Zeus).\")]",
+      "inspector": true,
+      "description": "Todos os 9 emblemas (6 mundos + Gaia + Apolo + Zeus)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnProgressEvent",
+      "ret": "void",
+      "mods": "private",
+      "params": "string _",
+      "description": "Executa a operação OnProgressEvent."
+    },
+    {
+      "name": "OnPickupEvent",
+      "ret": "void",
+      "mods": "private",
+      "params": "PickupType _, string __",
+      "description": "Executa a operação OnPickupEvent."
+    },
+    {
+      "name": "OnMissionCompleted",
+      "ret": "void",
+      "mods": "private",
+      "params": "MissionData _",
+      "description": "Executa a operação OnMissionCompleted."
+    },
+    {
+      "name": "OnRunasDeApoloChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int _",
+      "description": "Executa a operação OnRunasDeApoloChanged."
+    },
+    {
+      "name": "CheckAll",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação CheckAll."
+    },
+    {
+      "name": "Grant",
+      "ret": "void",
+      "mods": "private",
+      "params": "EmblemData emblem, GameVariables vars",
+      "description": "Executa a operação Grant."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "AreaData",
+    "ChallengeDefinition",
+    "ChallengeManager",
+    "EmblemData",
+    "GameVariables",
+    "MissionData",
+    "MissionManager",
+    "PickupType",
+    "PlayerProgress",
+    "WorldData",
+    "WorldMapController"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "ApoloRunaCollectUI",
+    "ChallengeManager",
+    "OptionsSectionUI",
+    "PlayerProgress",
+    "PostGameAuraController",
+    "WorldMapController"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Gestor de Emblemas (Tarefa #32) — verifica automaticamente as condições de\n/// obtenção de cada emblema e concede-os (define a sua <see cref=\"EmblemData.obtainedVariable\"/>\n/// em GameVariables) quando as condições são cumpridas.\n///\n/// <b>Condições por tipo de emblema:</b>\n/// <list type=\"bullet\">\n///   <item><b>Emblemas de Mundo</b> (via <see cref=\"WorldData.worldEmblem\"/>):\n///     obtidos ao derrotar o boss do respectivo mundo\n///     (<see cref=\"PlayerProgress.HasDefeatedBoss\"/>).</item>\n///   <item><b>Boss Alternativo</b>: quando todos os\n///     <see cref=\"worlds\"/> têm o seu emblema obtido, define\n///     <see cref=\"allWorldEmblemsVariable\"/> = true — o nível usa esta variável\n///     para escolher a variante do boss final.</item>\n///   <item><b>Emblema de Apolo</b> (<see cref=\"apoloEmblem\"/>): obtido quando\n///     qualquer variável de <see cref=\"apoloTrialCompletedVariables\"/> for true\n///     (CompletedVariable das ChallengeDefinitions com isApoloTrial).</item>\n///   <item><b>Emblema de Gaia</b> (<see cref=\"gaiaEmblem\"/>): obtido quando\n///     <see cref=\"PlayerProgress.GetTotalCompletionPercent\"/> ≥ 100.</item>\n///   <item><b>Emblema de Zeus</b> (<see cref=\"zeusEmblem\"/>): obtido quando\n///     Gaia E Apolo estão ambos obtidos (GDD Tarefa #31: \"Gaia + Apolo = 101%\n///     e Emblema de Zeus\").</item>\n/// </list>\n///\n/// <b>Quando verificar:</b> <see cref=\"CheckAll\"/> é chamado automaticamente após:\n/// <list type=\"bullet\">\n///   <item><see cref=\"PlayerProgress.SetBossDefeated\"/> (boss derrotado).</item>\n///   <item><see cref=\"ChallengeManager.HandleSuccess\"/> (desafio concluído).</item>\n///   <item><see cref=\"PlayerProgress.AnimalUnlocked\"/> (último animal libertado).</item>\n///   <item><see cref=\"PlayerProgress.PickupCollected\"/> (última Runa, Sussurro, baú, etc.).</item>\n///   <item><see cref=\"MissionManager.OnMissionCompleted\"/> (missão concluída).</item>\n///   <item><c>OnEnable</c> (ao carregar uma cena/save).</item>\n/// </list>\n///\n/// <b>Notificação:</b> ao conceder um emblema, dispara <see cref=\"EmblemGranted\"/>\n/// — ligar para mostrar uma notificação na HUD (ex: \"Emblema obtido!\").\n///\n/// <b>Montagem no Editor:</b>\n/// - Colocar na cena persistente (DontDestroyOnLoad) ou na cena de gameplay.\n/// - Preencher <see cref=\"gaiaEmblem\"/>, <see cref=\"apoloEmblem\"/>,\n///   <see cref=\"zeusEmblem\"/>.\n/// - Preencher <see cref=\"worlds\"/> com os 6 WorldData (um por mundo).\n/// - <see cref=\"allWorldEmblemsVariable\"/>: nome da variável bool em GameVariables\n///   que activa o boss alternativo (ex: \"Emblemas_TodosOsMundos\").\n/// - <see cref=\"apoloTrialCompletedVariables\"/>: preencher com o(s)\n///   ChallengeDefinition.CompletedVariable das Provações de Apolo.\n/// - Preencher <see cref=\"allAreas\"/>, <see cref=\"allForms\"/>,\n///   <see cref=\"allMissions\"/>, <see cref=\"allEmblems\"/> (os 9 emblemas) para\n///   o cálculo de percentagem do Emblema de Gaia.\n/// </summary>\npublic class EmblemManager : MonoBehaviour\n{\n    public static EmblemManager Instance { get; private set; }\n\n    // ==================== Emblemas Globais ====================\n\n    [Header(\"Emblemas Globais\")]\n    [Tooltip(\"Emblema de Gaia (EmblemData.isGaiaEmblem = true). Obtido ao atingir 100% de conclusão.\")]\n    public EmblemData gaiaEmblem;\n\n    [Tooltip(\"Emblema de Apolo (EmblemData.isApoloEmblem = true). Obtido ao completar qualquer Provação de Apolo listada em 'apoloTrialCompletedVariables'.\")]\n    public EmblemData apoloEmblem;\n\n    [Tooltip(\"Emblema de Zeus (EmblemData.isBonus = true). Obtido quando Gaia + Apolo ambos obtidos (GDD: 101%).\")]\n    public EmblemData zeusEmblem;\n\n    // ==================== Emblemas de Mundo ====================\n\n    [Header(\"Emblemas de Mundo\")]\n    [Tooltip(\"Os 6 WorldData do jogo. O emblema de cada mundo (WorldData.worldEmblem) é obtido ao derrotar o boss desse mundo.\")]\n    public List<WorldData> worlds = new List<WorldData>();\n\n    [Header(\"Boss Alternativo\")]\n    [Tooltip(\"Variável bool em GameVariables definida como true quando todos os emblemas de mundo estiverem obtidos. O nível do boss final usa esta variável para escolher a variante alternativa.\")]\n    public string allWorldEmblemsVariable;\n\n    // ==================== Provação de Apolo ====================\n\n    [Header(\"Provação de Apolo\")]\n    [Tooltip(\"Número de Runas de Apolo necessárias para obter o Emblema de Apolo. Padrão: 6 (uma por Provação de Apolo no jogo). O player acumula Runas de Apolo como recompensa de cada Provação concluída; ao atingir este valor, o Emblema é concedido.\")]\n    [Min(1)] public int runasDeApoloRequired = 6;\n\n    [Tooltip(\"(Legado/alternativo) ChallengeDefinition.CompletedVariable de desafios marcados como 'isApoloTrial'. Quando qualquer uma destas variáveis for true em GameVariables, o Emblema de Apolo é concedido — condição alternativa à contagem de Runas de Apolo.\")]\n    public List<string> apoloTrialCompletedVariables = new List<string>();\n\n    // ==================== Área Secreta de Apolo ====================\n\n    [Header(\"Área Secreta de Apolo (desbloqueada ao obter o Emblema de Apolo)\")]\n    [Tooltip(\"AreaData da área secreta desbloqueada automaticamente quando o Emblema de Apolo é concedido (6 Runas de Apolo recolhidas). O WorldMapController.CheckApoloAreaUnlock() detecta esta mudança e reproduz a sequência de câmara. Deixar vazio para desactivar esta funcionalidade.\")]\n    public AreaData apoloSecretArea;\n\n    // ==================== Listas para Cálculo de % (Emblema de Gaia) ====================\n\n    [Header(\"Listas para % de Conclusão (Emblema de Gaia)\")]\n    [Tooltip(\"Todas as AreaData do jogo — passadas a PlayerProgress.GetTotalCompletionPercent.\")]\n    public List<AreaData> allAreas = new List<AreaData>();\n\n    [Tooltip(\"Todas as AnimalFormData do jogo.\")]\n    public List<AnimalFormData> allForms = new List<AnimalFormData>();\n\n    [Tooltip(\"Todas as MissionData do jogo.\")]\n    public List<MissionData> allMissions = new List<MissionData>();\n\n    [Tooltip(\"Todos os 9 emblemas (6 mundos + Gaia + Apolo + Zeus).\")]\n    public List<EmblemData> allEmblems = new List<EmblemData>();\n\n    // ==================== Evento ====================\n\n    /// <summary>\n    /// Disparado quando um emblema é obtido pela primeira vez.\n    /// Parâmetro: o <see cref=\"EmblemData\"/> concedido.\n    /// Ligar para mostrar notificação/SFX na HUD.\n    /// </summary>\n    public static event System.Action<EmblemData> EmblemGranted;\n\n    // ==================== Singleton ====================\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            Destroy(gameObject);\n            return;\n        }\n        Instance = this;\n        // Não persistir: EmblemManager vive na cena de gameplay (junto com\n        // ChallengeManager/MissionManager). Se for necessário torná-lo persistente,\n        // adicionar DontDestroyOnLoad e tratar a limpeza de Instance em OnDestroy.\n    }\n\n    private void OnEnable()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress != null)\n        {\n            progress.AnimalUnlocked       += OnProgressEvent;\n            progress.PickupCollected      += OnPickupEvent;\n            progress.RunasDeApoloChanged  += OnRunasDeApoloChanged;\n        }\n\n        MissionManager.OnMissionCompleted += OnMissionCompleted;\n\n        // Verifica ao (re)activar — apanha casos de save carregado ou cena recarregada.\n        CheckAll();\n    }\n\n    private void OnDisable()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress != null)\n        {\n            progress.AnimalUnlocked       -= OnProgressEvent;\n            progress.PickupCollected      -= OnPickupEvent;\n            progress.RunasDeApoloChanged  -= OnRunasDeApoloChanged;\n        }\n\n        MissionManager.OnMissionCompleted -= OnMissionCompleted;\n    }\n\n    // Adaptadores de assinatura → CheckAll\n    private void OnProgressEvent(string _) => CheckAll();\n    private void OnPickupEvent(PickupType _, string __) => CheckAll();\n    private void OnMissionCompleted(MissionData _) => CheckAll();\n    private void OnRunasDeApoloChanged(int _) => CheckAll();\n\n    // ==================== Verificação Principal ====================\n\n    /// <summary>\n    /// Verifica todas as condições de emblema e concede os que ainda não foram\n    /// obtidos. Chamar após boss derrotado, desafio concluído, ou save carregado.\n    /// Idempotente: seguro chamar várias vezes (só concede se ainda não obtido).\n    /// </summary>\n    public void CheckAll()\n    {\n        var vars = GameVariables.Instance;\n        var progress = PlayerProgress.Instance;\n        if (vars == null || progress == null) return;\n\n        // ---- 1. Emblemas de Mundo ----\n        bool allWorldEmblemsObtained = worlds != null && worlds.Count > 0;\n\n        if (worlds != null)\n        {\n            foreach (var world in worlds)\n            {\n                if (world?.worldEmblem == null) continue;\n                var emblem = world.worldEmblem;\n                if (string.IsNullOrEmpty(emblem.obtainedVariable)) continue;\n\n                bool obtained = vars.GetBool(emblem.obtainedVariable);\n\n                if (!obtained && progress.HasDefeatedBoss(world))\n                {\n                    Grant(emblem, vars);\n                    obtained = true;\n                }\n\n                if (!obtained) allWorldEmblemsObtained = false;\n            }\n        }\n        else\n        {\n            allWorldEmblemsObtained = false;\n        }\n\n        // ---- 2. Boss Alternativo: todos os emblemas de mundo obtidos ----\n        if (!string.IsNullOrEmpty(allWorldEmblemsVariable) && allWorldEmblemsObtained)\n        {\n            if (!vars.GetBool(allWorldEmblemsVariable))\n                vars.SetBool(allWorldEmblemsVariable, true);\n        }\n\n        // ---- 3. Emblema de Apolo: 6 Runas de Apolo recolhidas ----\n        if (apoloEmblem != null && !string.IsNullOrEmpty(apoloEmblem.obtainedVariable)\n            && !vars.GetBool(apoloEmblem.obtainedVariable))\n        {\n            bool apoloUnlocked = false;\n\n            // Condição primária: Runas de Apolo acumuladas (PlayerProgress.runasDeApolo).\n            if (progress.runasDeApolo >= runasDeApoloRequired)\n                apoloUnlocked = true;\n\n            // Condição alternativa/legado: qualquer variável de Provação concluída.\n            if (!apoloUnlocked && apoloTrialCompletedVariables != null)\n            {\n                foreach (var v in apoloTrialCompletedVariables)\n                {\n                    if (!string.IsNullOrEmpty(v) && vars.GetBool(v))\n                    {\n                        apoloUnlocked = true;\n                        break;\n                    }\n                }\n            }\n\n            if (apoloUnlocked) Grant(apoloEmblem, vars);\n        }\n\n        // ---- 4. Emblema de Gaia: ≥ 100% de conclusão ----\n        if (gaiaEmblem != null && !string.IsNullOrEmpty(gaiaEmblem.obtainedVariable)\n            && !vars.GetBool(gaiaEmblem.obtainedVariable))\n        {\n            int pct = progress.GetTotalCompletionPercent(allAreas, allForms, allMissions, allEmblems);\n            if (pct >= 100) Grant(gaiaEmblem, vars);\n        }\n\n        // ---- 5. Emblema de Zeus: Gaia + Apolo ambos obtidos ----\n        if (zeusEmblem != null && !string.IsNullOrEmpty(zeusEmblem.obtainedVariable)\n            && !vars.GetBool(zeusEmblem.obtainedVariable))\n        {\n            bool gaiaObtained  = gaiaEmblem  != null && !string.IsNullOrEmpty(gaiaEmblem.obtainedVariable)  && vars.GetBool(gaiaEmblem.obtainedVariable);\n            bool apoloObtained = apoloEmblem != null && !string.IsNullOrEmpty(apoloEmblem.obtainedVariable) && vars.GetBool(apoloEmblem.obtainedVariable);\n\n            if (gaiaObtained && apoloObtained) Grant(zeusEmblem, vars);\n        }\n    }\n\n    // ==================== Utilitários ====================\n\n    private void Grant(EmblemData emblem, GameVariables vars)\n    {\n        vars.SetBool(emblem.obtainedVariable, true);\n        EmblemGranted?.Invoke(emblem);\n        Debug.Log($\"[EmblemManager] Emblema obtido: {emblem.displayName}\");\n\n        // Área secreta de Apolo: desbloqueia automaticamente ao obter o Emblema de Apolo.\n        if (emblem == apoloEmblem && apoloSecretArea != null)\n        {\n            var progress = PlayerProgress.Instance;\n            if (progress != null && !progress.IsAreaUnlocked(apoloSecretArea))\n            {\n                progress.UnlockArea(apoloSecretArea);\n                Debug.Log($\"[EmblemManager] Área secreta de Apolo desbloqueada: {apoloSecretArea.displayName}\");\n            }\n        }\n    }\n}\n",
+  "id": "script-data-emblemmanager-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-challengemanager-cs",
+    "script-data-emblemdata-cs",
+    "script-data-gamevariables-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-data-playerprogress-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapcontroller-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-ui-apolorunacollectui-cs",
+    "script-data-challengemanager-cs",
+    "script-ui-optionssectionui-cs",
+    "script-data-playerprogress-cs",
+    "script-player-postgameauracontroller-cs",
+    "script-world-worldmapcontroller-cs"
+  ]
+}

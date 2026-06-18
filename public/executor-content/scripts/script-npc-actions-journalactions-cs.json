@@ -1,0 +1,151 @@
+{
+  "path": "NPC/Actions/JournalActions.cs",
+  "filename": "JournalActions.cs",
+  "category": "NPC",
+  "primary": "Action_ShowFullscreenImage",
+  "kind": "Acção de NPC",
+  "summary": "Mostra uma imagem em tela inteiro (fora do balão de diálogo, fundo escurecido), pausa o diálogo e o jogo enquanto estiver aberta, e fecha com o botão normal de Confirmar/Interagir (teclado ou comando) — ver FullscreenImageUI. Depois de confirmada, a ação termina e o diálogo continua normalmente. Se \"saveAsClue\" estiver ativo, a pista correspondente (\"mission.clues[clueId]\") fica marcada como obtida (JournalManager) e passa a aparecer, permanentemente, na sub-seção \"Pistas\" dessa missão no Diário — onde pode ser reaberta em tela inteiro a qualquer momento.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Action_ShowFullscreenImage",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_AddRumor",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_MarkRumorFound",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "image",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Imagem em Ecrã Inteiro",
+      "attrs": "[Header(\"Imagem em Ecrã Inteiro\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Imagem em Ecrã Inteiro",
+      "attrs": "[Tooltip(\"Título opcional mostrado por cima da imagem.\")]",
+      "inspector": true,
+      "description": "Título opcional mostrado por cima da imagem."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Imagem em Ecrã Inteiro",
+      "attrs": "[TextArea] [Tooltip(\"Descrição/texto opcional mostrado junto à imagem.\")]",
+      "inspector": true,
+      "description": "Descrição/texto opcional mostrado junto à imagem."
+    },
+    {
+      "name": "saveAsClue",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Guardar como Pista (Diário)",
+      "attrs": "[Header(\"Guardar como Pista (Diário)\")] [Tooltip(\"Se activo, ao confirmar a imagem fica guardada na sub-secção \\\"Pistas\\\" da missão indicada, reabrível a partir do Diário.\")]",
+      "inspector": true,
+      "description": "Se ativo, ao confirmar a imagem fica guardada na sub-seção \"Pistas\" da missão indicada, reabrível a partir do Diário."
+    },
+    {
+      "name": "mission",
+      "type": "MissionData",
+      "mods": "public",
+      "default": "",
+      "section": "Guardar como Pista (Diário)",
+      "attrs": "[Tooltip(\"Missão a que esta pista pertence (necessário se \\\"saveAsClue\\\" estiver activo). Tem de ter uma entrada correspondente em \\\"mission.clues\\\" com o mesmo \\\"clueId\\\".\")]",
+      "inspector": true,
+      "description": "Missão a que esta pista pertence (necessário se \"saveAsClue\" estiver ativo). Tem de ter uma entrada correspondente em \"mission.clues\" com o mesmo \"clueId\"."
+    },
+    {
+      "name": "clueId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Guardar como Pista (Diário)",
+      "attrs": "[Tooltip(\"Identificador da pista dentro de \\\"mission.clues\\\" (necessário se \\\"saveAsClue\\\" estiver activo).\")]",
+      "inspector": true,
+      "description": "Identificador da pista dentro de \"mission.clues\" (necessário se \"saveAsClue\" estiver ativo)."
+    },
+    {
+      "name": "rumor",
+      "type": "RumorData",
+      "mods": "public",
+      "default": "",
+      "section": "Guardar como Pista (Diário)",
+      "attrs": "[Tooltip(\"Rumor a registar na secção \\\"Rumores\\\" do Diário (texto e/ou imagem).\")]",
+      "inspector": true,
+      "description": "Rumor a registrar na seção \"Rumores\" do Diário (texto e/ou imagem)."
+    },
+    {
+      "name": "showImageNow",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Guardar como Pista (Diário)",
+      "attrs": "[Tooltip(\"Se activo e o rumor tiver imagem, mostra-a em ecrã inteiro de imediato.\")]",
+      "inspector": true,
+      "description": "Se ativo e o rumor tiver imagem, mostra-a em tela inteiro de imediato."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "Condition_RumorFound",
+    "FullscreenImageUI",
+    "JournalManager",
+    "MissionData",
+    "NpcAction",
+    "NpcController",
+    "RumorData"
+  ],
+  "used_by": [
+    "Condition_HasClue",
+    "FullscreenImageUI",
+    "JournalManager",
+    "MissionData"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n// Ações do Sistema de Pistas/Rumores (Diário) — aparecem automaticamente no\n// \"+ Adicionar Ação\" de qualquer NpcController (incluindo objectos genéricos\n// reutilizados como interactivos, Ponto 9 da especificação).\n\n/// <summary>\n/// Mostra uma imagem em ecrã inteiro (fora do balão de diálogo, fundo\n/// escurecido), pausa o diálogo e o jogo enquanto estiver aberta, e fecha com\n/// o botão normal de Confirmar/Interagir (teclado ou comando) — ver\n/// FullscreenImageUI. Depois de confirmada, a ação termina e o diálogo\n/// continua normalmente.\n///\n/// Se \"saveAsClue\" estiver activo, a pista correspondente\n/// (\"mission.clues[clueId]\") fica marcada como obtida (JournalManager) e\n/// passa a aparecer, permanentemente, na sub-secção \"Pistas\" dessa missão no\n/// Diário — onde pode ser reaberta em ecrã inteiro a qualquer momento.\n/// </summary>\n[System.Serializable]\npublic class Action_ShowFullscreenImage : NpcAction\n{\n    [Header(\"Imagem em Ecrã Inteiro\")]\n    public Sprite image;\n\n    [Tooltip(\"Título opcional mostrado por cima da imagem.\")]\n    public string title;\n\n    [TextArea]\n    [Tooltip(\"Descrição/texto opcional mostrado junto à imagem.\")]\n    public string description;\n\n    [Header(\"Guardar como Pista (Diário)\")]\n    [Tooltip(\"Se activo, ao confirmar a imagem fica guardada na sub-secção \\\"Pistas\\\" da missão indicada, reabrível a partir do Diário.\")]\n    public bool saveAsClue;\n\n    [Tooltip(\"Missão a que esta pista pertence (necessário se \\\"saveAsClue\\\" estiver activo). Tem de ter uma entrada correspondente em \\\"mission.clues\\\" com o mesmo \\\"clueId\\\".\")]\n    public MissionData mission;\n\n    [Tooltip(\"Identificador da pista dentro de \\\"mission.clues\\\" (necessário se \\\"saveAsClue\\\" estiver activo).\")]\n    public string clueId;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (FullscreenImageUI.Instance != null)\n            yield return FullscreenImageUI.Instance.Show(image, title, description);\n\n        if (saveAsClue && mission != null && !string.IsNullOrEmpty(clueId))\n            JournalManager.Instance?.GiveClue(mission, clueId);\n    }\n}\n\n/// <summary>\n/// Regista um Rumor (RumorData) — informação mais indirecta, sem iniciar\n/// nenhuma missão — na secção global \"Rumores\" do Diário (JournalManager).\n/// Um rumor pode ter texto e/ou imagem; nunca desaparece do Diário depois de\n/// ouvido (ver Action_MarkRumorFound para o ícone de \"Check\").\n///\n/// Se \"showImageNow\" estiver activo e o rumor tiver imagem, esta é mostrada em\n/// ecrã inteiro de imediato (ex: o NPC mostra uma fotografia enquanto fala) —\n/// a imagem fica sempre disponível a partir do Diário, mesmo sem isto\n/// activado.\n/// </summary>\n[System.Serializable]\npublic class Action_AddRumor : NpcAction\n{\n    [Tooltip(\"Rumor a registar na secção \\\"Rumores\\\" do Diário (texto e/ou imagem).\")]\n    public RumorData rumor;\n\n    [Tooltip(\"Se activo e o rumor tiver imagem, mostra-a em ecrã inteiro de imediato.\")]\n    public bool showImageNow;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (rumor == null) yield break;\n\n        if (showImageNow && rumor.image != null && FullscreenImageUI.Instance != null)\n            yield return FullscreenImageUI.Instance.Show(rumor.image, rumor.title, rumor.text);\n\n        JournalManager.Instance?.AddRumor(rumor);\n    }\n}\n\n/// <summary>\n/// Marca um Rumor (RumorData) já ouvido como \"encontrado\" — mostra um ícone de\n/// \"Check\" junto a ele na secção \"Rumores\" do Diário, sem o remover da lista\n/// (ver Condition_RumorFound).\n/// </summary>\n[System.Serializable]\npublic class Action_MarkRumorFound : NpcAction\n{\n    [Tooltip(\"Rumor a marcar como \\\"encontrado\\\".\")]\n    public RumorData rumor;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        JournalManager.Instance?.MarkRumorFound(rumor);\n        yield break;\n    }\n}\n",
+  "id": "script-npc-actions-journalactions-cs",
+  "dependencyIds": [
+    "script-ui-fullscreenimageui-cs",
+    "script-data-journalmanager-cs",
+    "script-data-missiondata-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs",
+    "script-data-rumordata-cs"
+  ],
+  "usedByIds": [
+    "script-npc-conditions-journalconditions-cs",
+    "script-ui-fullscreenimageui-cs",
+    "script-data-journalmanager-cs",
+    "script-data-missiondata-cs"
+  ]
+}

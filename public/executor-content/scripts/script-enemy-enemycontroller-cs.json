@@ -1,0 +1,390 @@
+{
+  "path": "Enemy/EnemyController.cs",
+  "filename": "EnemyController.cs",
+  "category": "Enemy",
+  "primary": "EnemyController",
+  "kind": "Componente",
+  "summary": "Estado atual de um inimigo (Enemy Creator — Etapa 1.2). Controla qual componente \"tem a palavra\" em cada momento: - Idle: parado, sem alvo, sem patrulha ativa. - Patrulhando: a seguir os pontos de patrulha (EnemyMovement — Etapa 1.5). - Alerta: notou algo suspeito mas ainda não confirmou o alvo (ícone \"?\" — Etapa 7.1). - Perseguindo: detectou o alvo e está a ir atrás dele (ícone \"!\" — Etapa 7.1). - PreparandoAtaque: telegraph/aviso antes de um ataque (EnemyAttack — Etapa 2.1). - Atacando: ataque em execução. - Recuperando: pós-ataque, antes de poder agir de novo. - Atordoado: atordoado por um efeito externo (stun). - Desativado: desligado permanentemente (dano, com \"canOnlyBeDeactivated\",",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyState",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "data",
+      "type": "EnemyData",
+      "mods": "public",
+      "default": "",
+      "section": "Dados",
+      "attrs": "[Header(\"Dados\")] [Tooltip(\"Configuração partilhada deste inimigo (Enemy Creator — Etapa 1.1).\")]",
+      "inspector": true,
+      "description": "Configuração partilhada deste inimigo (Enemy Creator — Etapa 1.1)."
+    },
+    {
+      "name": "enemyInstanceId",
+      "type": "string",
+      "mods": "private",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Identificador único desta instância na cena (opcional). Permite que outros sistemas (puzzles, eventos) a encontrem por FindById — ex: \\\"este Drone específico tem de continuar vivo para o puzzle\\\". Deve ser único; duplicados geram um aviso no Console.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Identificador único desta instância na cena (opcional). Permite que outros sistemas (puzzles, eventos) a encontrem por FindById — ex: \"este Drone específico tem de continuar vivo para o puzzle\". Deve ser único; duplicados geram um aviso no Console."
+    },
+    {
+      "name": "deactivationConditions",
+      "type": "List<EnemyCondition>",
+      "mods": "public",
+      "default": "new List<EnemyCondition>()",
+      "section": "Condições de Desactivação",
+      "attrs": "[Header(\"Condições de Desactivação\")] [Tooltip(\"Se qualquer uma destas condições for verdadeira, o inimigo passa a Desactivado (estado terminal). Lista editável no Inspector via EnemyControllerEditor (Etapa 1.6). Populada com condições concretas na Etapa 5.4.\")] [SerializeReference]",
+      "inspector": true,
+      "description": "Se qualquer uma destas condições for verdadeira, o inimigo passa a Desativado (estado terminal). Lista editável no Inspector via EnemyControllerEditor (Etapa 1.6). Populada com condições concretas na Etapa 5.4."
+    },
+    {
+      "name": "player",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[Header(\"Referências (auto-detectadas se vazias)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spriteRenderer",
+      "type": "SpriteRenderer",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "animator",
+      "type": "Animator",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_terminalStates",
+      "type": "HashSet<EnemyState>",
+      "mods": "private static readonly",
+      "default": "new HashSet<EnemyState> { EnemyState.Morto, EnemyState.Desactivado }",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_state",
+      "type": "EnemyState",
+      "mods": "private",
+      "default": "EnemyState.Idle",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_homePosition",
+      "type": "Vector3",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Data",
+      "type": "EnemyData",
+      "mods": "public",
+      "default": "> data",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "EnemyInstanceId",
+      "type": "string",
+      "mods": "public",
+      "default": "> enemyInstanceId",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Player",
+      "type": "Transform",
+      "mods": "public",
+      "default": "> player",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Rb",
+      "type": "Rigidbody2D",
+      "mods": "public",
+      "default": "> rb",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SpriteRenderer",
+      "type": "SpriteRenderer",
+      "mods": "public",
+      "default": "> spriteRenderer",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Animator",
+      "type": "Animator",
+      "mods": "public",
+      "default": "> animator",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "HomePosition",
+      "type": "Vector3",
+      "mods": "public",
+      "default": "> _homePosition",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "State",
+      "type": "EnemyState",
+      "mods": "public",
+      "default": "> _state",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsTerminal",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _terminalStates.Contains(_state)",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsDead",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _state == EnemyState.Morto",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsDeactivated",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _state == EnemyState.Desactivado",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "FindById",
+      "ret": "EnemyController",
+      "mods": "public static",
+      "params": "string id",
+      "description": "Executa a operação FindById."
+    },
+    {
+      "name": "SetState",
+      "ret": "void",
+      "mods": "public",
+      "params": "EnemyState newState",
+      "description": "Executa a operação SetState."
+    },
+    {
+      "name": "ResetState",
+      "ret": "void",
+      "mods": "public",
+      "params": "EnemyState newState = EnemyState.Idle",
+      "description": "Executa a operação ResetState."
+    },
+    {
+      "name": "OnValidate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnValidate."
+    }
+  ],
+  "dependencies": [
+    "EnemyAttack",
+    "EnemyCondition",
+    "EnemyControllerEditor",
+    "EnemyData",
+    "EnemyDetection",
+    "EnemyDropTable",
+    "EnemyFeedback",
+    "EnemyHealth",
+    "EnemyMovement",
+    "EnemyPuzzleInteraction",
+    "EnemyWaterConfig",
+    "GameVariables",
+    "NpcController",
+    "Objective_DefeatEnemyCount",
+    "Objective_DefeatSpecificEnemy",
+    "PolymorphicListDrawer",
+    "State"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "Attack_ProjectileStraight",
+    "BossController",
+    "Condition_GlobalBoolVariable",
+    "Condition_HasItemQuantity",
+    "EnemyAttackController",
+    "EnemyCondition",
+    "EnemyContactDamage",
+    "EnemyControllerEditor",
+    "EnemyData",
+    "EnemyDetection",
+    "EnemyDropTable",
+    "EnemyFeedback",
+    "EnemyHealth",
+    "EnemyMovement",
+    "EnemyMultiPartBoss",
+    "EnemyPuzzleInteraction",
+    "EnemyRespawn",
+    "EnemyRespawnZone",
+    "EnemyStatusEffectReceiver",
+    "EnemyVoidTrigger",
+    "EnemyWaterBehavior",
+    "GameWeightUtil",
+    "Objective_DefeatSpecificEnemy",
+    "ProjectileController",
+    "RoarAbility",
+    "SpringPlatform",
+    "Switch"
+  ],
+  "source": "using System;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Estado actual de um inimigo (Enemy Creator — Etapa 1.2). Controla qual\n/// componente \"tem a palavra\" em cada momento:\n///\n/// - Idle: parado, sem alvo, sem patrulha activa.\n/// - Patrulhando: a seguir os pontos de patrulha (EnemyMovement — Etapa 1.5).\n/// - Alerta: notou algo suspeito mas ainda não confirmou o alvo (ícone \"?\" — Etapa 7.1).\n/// - Perseguindo: detectou o alvo e está a ir atrás dele (ícone \"!\" — Etapa 7.1).\n/// - PreparandoAtaque: telegraph/aviso antes de um ataque (EnemyAttack — Etapa 2.1).\n/// - Atacando: ataque em execução.\n/// - Recuperando: pós-ataque, antes de poder agir de novo.\n/// - Atordoado: atordoado por um efeito externo (stun).\n/// - Desactivado: desligado permanentemente (dano, com \"canOnlyBeDeactivated\", ou\n///   por variável global — Etapa 5.4). Estado terminal.\n/// - Morto: destruído (com \"canBeDestroyed\"). Estado terminal.\n/// - VoltandoParaCasa: perdeu o alvo e está a voltar para a posição/patrulha original.\n/// </summary>\npublic enum EnemyState\n{\n    Idle,\n    Patrulhando,\n    Alerta,\n    Perseguindo,\n    PreparandoAtaque,\n    Atacando,\n    Recuperando,\n    Atordoado,\n    Desactivado,\n    Morto,\n    VoltandoParaCasa\n}\n\n/// <summary>\n/// Núcleo de um inimigo (Enemy Creator — Etapa 1.2): liga-se ao EnemyData,\n/// regista-se num registry por \"Enemy Instance Id\" (padrão NpcController/FindById),\n/// guarda a referência ao player e expõe uma máquina de estados simples\n/// (EnemyState) com um evento \"OnStateChanged\".\n///\n/// Este componente é o \"esqueleto\" onde os componentes das próximas etapas se\n/// ligam — cada um vive no mesmo GameObject e usa <see cref=\"GetEnemyComponent{T}\"/>\n/// (ou GetComponent directo) para se encontrarem entre si:\n///\n/// - EnemyHealth (Etapa 1.3): vida/dano/destruição. Chama SetState(Morto) ou\n///   SetState(Desactivado) consoante \"stats.canBeDestroyed\"/\"canOnlyBeDeactivated\".\n/// - EnemyDetection (Etapa 1.4): define <see cref=\"Target\"/> e chama SetState\n///   (Alerta/Perseguindo) quando detecta o player.\n/// - EnemyMovement (Etapa 1.5): lê <see cref=\"Target\"/> e <see cref=\"HomePosition\"/>,\n///   reage a Patrulhando/Perseguindo/VoltandoParaCasa.\n/// - EnemyAttack (Etapa 2.1): lê <see cref=\"Target\"/>, chama SetState\n///   (PreparandoAtaque/Atacando/Recuperando).\n/// - EnemyWaterConfig/Detector (Etapa 3.x), EnemyDropTable (Etapa 4.3),\n///   EnemyFeedback (Etapa 7.1) e EnemyPuzzleInteraction (Etapa 6.2) escutam\n///   <see cref=\"OnStateChanged\"/> para tocar sons/partículas, soltar drops,\n///   ou avisar puzzles quando o inimigo morre/desactiva.\n///\n/// <see cref=\"deactivationConditions\"/> (Etapa 1.6, editável via\n/// EnemyControllerEditor com PolymorphicListDrawer) é avaliada a cada frame:\n/// se alguma condição for verdadeira, o inimigo passa a Desactivado. A Etapa\n/// 5.4 adiciona as primeiras subclasses concretas de EnemyCondition (baseadas\n/// em variáveis globais — ver GameVariables).\n/// </summary>\n[DisallowMultipleComponent]\npublic class EnemyController : MonoBehaviour\n{\n    [Header(\"Dados\")]\n    [Tooltip(\"Configuração partilhada deste inimigo (Enemy Creator — Etapa 1.1).\")]\n    public EnemyData data;\n\n    [Header(\"Identidade\")]\n    [Tooltip(\"Identificador único desta instância na cena (opcional). Permite que outros sistemas (puzzles, eventos) a encontrem por FindById — ex: \\\"este Drone específico tem de continuar vivo para o puzzle\\\". Deve ser único; duplicados geram um aviso no Console.\")]\n    [SerializeField] private string enemyInstanceId;\n\n    [Header(\"Condições de Desactivação\")]\n    [Tooltip(\"Se qualquer uma destas condições for verdadeira, o inimigo passa a Desactivado (estado terminal). Lista editável no Inspector via EnemyControllerEditor (Etapa 1.6). Populada com condições concretas na Etapa 5.4.\")]\n    [SerializeReference] public List<EnemyCondition> deactivationConditions = new List<EnemyCondition>();\n\n    [Header(\"Referências (auto-detectadas se vazias)\")]\n    [SerializeField] private Transform player;\n    [SerializeField] private Rigidbody2D rb;\n    [SerializeField] private SpriteRenderer spriteRenderer;\n    [SerializeField] private Animator animator;\n\n    /// <summary>Regista todas as instâncias activas pelo seu \"Enemy Instance Id\" (ver FindById).</summary>\n    private static readonly Dictionary<string, EnemyController> _registry = new Dictionary<string, EnemyController>();\n\n    /// <summary>Estados a partir dos quais SetState não produz efeito — só ResetState() pode saír deles (ex: respawn — Etapa 7.3).</summary>\n    private static readonly HashSet<EnemyState> _terminalStates = new HashSet<EnemyState> { EnemyState.Morto, EnemyState.Desactivado };\n\n    private EnemyState _state = EnemyState.Idle;\n    private Vector3 _homePosition;\n\n    /// <summary>EnemyData associado a este inimigo (atalho para \"data\").</summary>\n    public EnemyData Data => data;\n\n    /// <summary>Identificador único desta instância (ver campo \"Enemy Instance Id\" no Inspector). Pode estar vazio.</summary>\n    public string EnemyInstanceId => enemyInstanceId;\n\n    /// <summary>Transform do player (auto-detectado pela tag \"Player\" se não atribuído).</summary>\n    public Transform Player => player;\n\n    /// <summary>Rigidbody2D deste inimigo (auto-detectado). Pode ser null em inimigos puramente estáticos (ex: Armadilha).</summary>\n    public Rigidbody2D Rb => rb;\n\n    /// <summary>SpriteRenderer deste inimigo (auto-detectado). Usado por EnemyFeedback (Etapa 7.1) para o \"pisca ao tomar dano\".</summary>\n    public SpriteRenderer SpriteRenderer => spriteRenderer;\n\n    /// <summary>Animator deste inimigo (auto-detectado, opcional).</summary>\n    public Animator Animator => animator;\n\n    /// <summary>\n    /// Alvo actual (normalmente o player). Definido por EnemyDetection (Etapa 1.4)\n    /// quando o inimigo detecta algo; lido por EnemyMovement (Etapa 1.5) e\n    /// EnemyAttack (Etapa 2.1). Null = sem alvo.\n    /// </summary>\n    public Transform Target { get; set; }\n\n    /// <summary>Posição inicial deste inimigo (cacheada em Awake). Usada por EnemyMovement (Etapa 1.5) para \"VoltandoParaCasa\" e como origem da patrulha.</summary>\n    public Vector3 HomePosition => _homePosition;\n\n    /// <summary>Estado actual da máquina de estados.</summary>\n    public EnemyState State => _state;\n\n    /// <summary>True se o estado actual for Morto ou Desactivado (estados terminais).</summary>\n    public bool IsTerminal => _terminalStates.Contains(_state);\n\n    /// <summary>Atalho para State == Morto.</summary>\n    public bool IsDead => _state == EnemyState.Morto;\n\n    /// <summary>Atalho para State == Desactivado.</summary>\n    public bool IsDeactivated => _state == EnemyState.Desactivado;\n\n    /// <summary>\n    /// Disparado sempre que o estado muda (estado anterior, novo estado).\n    /// Componentes das próximas etapas devem subscrever isto em OnEnable e\n    /// desinscrever em OnDisable.\n    /// </summary>\n    public event Action<EnemyState, EnemyState> OnStateChanged;\n\n    /// <summary>\n    /// Disparado sempre que QUALQUER inimigo (de qualquer instância) entra num\n    /// estado terminal (Morto/Desactivado) — Tarefa #22. Usado por\n    /// Objective_DefeatSpecificEnemy/Objective_DefeatEnemyCount para detectar\n    /// derrotas sem precisar de listar inimigos no Inspector.\n    /// </summary>\n    public static event Action<EnemyController> OnAnyEnemyDefeated;\n\n    private void Awake()\n    {\n        _homePosition = transform.position;\n\n        if (player == null)\n        {\n            var playerGo = GameObject.FindGameObjectWithTag(\"Player\");\n            if (playerGo != null) player = playerGo.transform;\n        }\n\n        if (rb == null)\n            rb = GetComponent<Rigidbody2D>();\n\n        if (spriteRenderer == null)\n            spriteRenderer = GetComponent<SpriteRenderer>();\n\n        if (animator == null)\n            animator = GetComponent<Animator>();\n    }\n\n    private void OnEnable()\n    {\n        if (!string.IsNullOrEmpty(enemyInstanceId))\n            _registry[enemyInstanceId] = this;\n    }\n\n    private void OnDisable()\n    {\n        if (!string.IsNullOrEmpty(enemyInstanceId) && _registry.TryGetValue(enemyInstanceId, out var registered) && registered == this)\n            _registry.Remove(enemyInstanceId);\n    }\n\n    /// <summary>\n    /// Avalia <see cref=\"deactivationConditions\"/> a cada frame (Etapa 1.6). Se\n    /// alguma condição devolver true, o inimigo passa a Desactivado. Não faz\n    /// nada se já estiver num estado terminal ou se a lista estiver vazia\n    /// (caso normal antes da Etapa 5.4 adicionar condições concretas).\n    /// </summary>\n    private void Update()\n    {\n        if (IsTerminal) return;\n        if (deactivationConditions == null || deactivationConditions.Count == 0) return;\n\n        for (int i = 0; i < deactivationConditions.Count; i++)\n        {\n            var condition = deactivationConditions[i];\n            if (condition != null && condition.Evaluate(this))\n            {\n                SetState(EnemyState.Desactivado);\n                break;\n            }\n        }\n    }\n\n    /// <summary>Procura, entre as instâncias activas, aquela cujo \"Enemy Instance Id\" seja \"id\". Devolve null se vazio ou não encontrado.</summary>\n    public static EnemyController FindById(string id)\n    {\n        if (string.IsNullOrEmpty(id)) return null;\n        return _registry.TryGetValue(id, out var enemy) ? enemy : null;\n    }\n\n    /// <summary>\n    /// Atalho para os componentes das próximas etapas encontrarem outros\n    /// componentes deste inimigo no mesmo GameObject (ex: EnemyAttack a\n    /// encontrar EnemyHealth).\n    /// </summary>\n    public T GetEnemyComponent<T>() where T : Component\n    {\n        return GetComponent<T>();\n    }\n\n    /// <summary>\n    /// Tenta mudar de estado. Não tem efeito se o estado actual for terminal\n    /// (Morto/Desactivado) — usa <see cref=\"ResetState\"/> para saír desses\n    /// estados (ex: respawn — Etapa 7.3). Não tem efeito se \"newState\" for\n    /// igual ao estado actual.\n    /// </summary>\n    public void SetState(EnemyState newState)\n    {\n        if (_state == newState) return;\n        if (_terminalStates.Contains(_state)) return;\n\n        var old = _state;\n        _state = newState;\n        OnStateChanged?.Invoke(old, newState);\n\n        if (_terminalStates.Contains(newState))\n            OnAnyEnemyDefeated?.Invoke(this);\n    }\n\n    /// <summary>\n    /// Força a mudança de estado mesmo a partir de um estado terminal (Morto/Desactivado).\n    /// Usado pela lógica de respawn/reset (Etapa 7.3). Por omissão volta a Idle.\n    /// </summary>\n    public void ResetState(EnemyState newState = EnemyState.Idle)\n    {\n        if (_state == newState) return;\n\n        var old = _state;\n        _state = newState;\n        OnStateChanged?.Invoke(old, newState);\n    }\n\n    private void OnValidate()\n    {\n        if (!string.IsNullOrEmpty(enemyInstanceId))\n        {\n            foreach (var other in FindObjectsOfType<EnemyController>())\n            {\n                if (other == this || other.enemyInstanceId != enemyInstanceId) continue;\n                Debug.LogWarning($\"[{name}] Enemy Instance Id '{enemyInstanceId}' já está em uso por '{other.name}'. Escolhe um ID único.\", this);\n                break;\n            }\n        }\n    }\n}\n",
+  "id": "script-enemy-enemycontroller-cs",
+  "dependencyIds": [
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemycondition-cs",
+    "script-enemy-editor-enemycontrollereditor-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyfeedback-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-enemymovement-cs",
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-data-gamevariables-cs",
+    "script-npc-npccontroller-cs",
+    "script-data-objectives-challengeobjectives-enemy-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-enemy-enemyconditions-variables-cs",
+    "script-npc-conditions-missionconditions-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemycondition-cs",
+    "script-enemy-enemycontactdamage-cs",
+    "script-enemy-editor-enemycontrollereditor-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyfeedback-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-enemymovement-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-enemy-enemypuzzleinteraction-cs",
+    "script-enemy-enemyrespawn-cs",
+    "script-enemy-enemyrespawnzone-cs",
+    "script-enemy-enemystatuseffectreceiver-cs",
+    "script-enemy-enemyvoidtrigger-cs",
+    "script-enemy-enemywaterbehavior-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-data-objectives-challengeobjectives-enemy-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-abilities-roarability-cs",
+    "script-platforms-springplatform-cs",
+    "script-interactables-switch-cs"
+  ]
+}

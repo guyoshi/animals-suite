@@ -1,0 +1,66 @@
+{
+  "path": "Interactables/FallResetZone.cs",
+  "filename": "FallResetZone.cs",
+  "category": "Interactables",
+  "primary": "FallResetZone",
+  "kind": "Componente",
+  "summary": "Zona de queda NÃO-letal (Tarefa \"Morte e checkpoints\"): ao entrar nesta zona (ex: poço/abismo sem dano grave), o player é reposicionado no checkpoint atual ( — checkpoint temporário da área, ou último Refúgio Seguro), SEM disparar a sequência de morte (sem animação/SFX de morte, sem RegisterDeath, sem reset de inimigos). Opcionalmente pode aplicar um pequeno dano ( , em corações) ao cair — ex: \"queda magoa mas não mata\". Se esse dano esvaziar os corações, a sequência de morte normal (PlayerDeathHandler) assume o controlo e este componente não reposiciona (evita duplo reposicionamento).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "FallResetZone",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "damage",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "Dano (opcional)",
+      "attrs": "[Header(\"Dano (opcional)\")] [Tooltip(\"Corações de dano ao cair nesta zona. 0 = sem dano, apenas reposiciona no checkpoint.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Corações de dano ao cair nesta zona. 0 = sem dano, apenas reposiciona no checkpoint."
+    },
+    {
+      "name": "fallSfx",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Feedback",
+      "attrs": "[Header(\"Feedback\")] [Tooltip(\"Som tocado ao reposicionar o player (não tocado se o dano causar morte normal).\")]",
+      "inspector": true,
+      "description": "Som tocado ao reposicionar o player (não tocado se o dano causar morte normal)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "PlayerDeathHandler",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "PlayerDeathHandler"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Zona de queda NÃO-letal (Tarefa \"Morte e checkpoints\"): ao entrar nesta\n/// zona (ex: poço/abismo sem dano grave), o player é reposicionado no\n/// checkpoint actual (<see cref=\"PlayerDeathHandler.TeleportToCheckpoint\"/> —\n/// checkpoint temporário da área, ou último Refúgio Seguro), SEM disparar a\n/// sequência de morte (sem animação/SFX de morte, sem RegisterDeath, sem reset\n/// de inimigos).\n///\n/// Opcionalmente pode aplicar um pequeno dano (<see cref=\"damage\"/>, em\n/// corações) ao cair — ex: \"queda magoa mas não mata\". Se esse dano esvaziar\n/// os corações, a sequência de morte normal (PlayerDeathHandler) assume o\n/// controlo e este componente não reposiciona (evita duplo reposicionamento).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class FallResetZone : MonoBehaviour\n{\n    [Header(\"Dano (opcional)\")]\n    [Tooltip(\"Corações de dano ao cair nesta zona. 0 = sem dano, apenas reposiciona no checkpoint.\")]\n    [Min(0)] public int damage = 0;\n\n    [Header(\"Feedback\")]\n    [Tooltip(\"Som tocado ao reposicionar o player (não tocado se o dano causar morte normal).\")]\n    public AudioClip fallSfx;\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        var progress = PlayerProgress.Instance;\n\n        if (damage > 0 && progress != null)\n        {\n            progress.Damage(damage);\n\n            // Dano esvaziou os corações: a sequência de morte normal\n            // (PlayerDeathHandler.OnHeartsDepleted → Respawn) já trata do\n            // reposicionamento/reset — não duplicar aqui.\n            if (progress.currentHearts <= 0) return;\n        }\n\n        var deathHandler = other.GetComponent<PlayerDeathHandler>();\n        if (deathHandler == null) return;\n\n        deathHandler.TeleportToCheckpoint();\n\n        if (fallSfx != null) AudioManager.Instance?.PlaySE(fallSfx);\n    }\n}\n",
+  "id": "script-interactables-fallresetzone-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-player-playerdeathhandler-cs"
+  ]
+}

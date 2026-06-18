@@ -1,0 +1,43 @@
+{
+  "path": "Collectibles/EcoPerdidoPickup.cs",
+  "filename": "EcoPerdidoPickup.cs",
+  "category": "Collectibles",
+  "primary": "EcoPerdidoPickup",
+  "kind": "Definição",
+  "summary": "Eco Perdido — colecionável escondido nas fases (exploração ou puzzles). Serve de moeda para comprar Sussurros da Terra no Contador de Histórias (NPC especial de cada área). Regras de design (GDD): - Cada área normal tem normalmente 15 Ecos Perdidos , pois os 5 Sussurros disponíveis têm preços crescentes: 1, 2, 3, 4 e 5 Ecos. - Áreas de Vila e de Boss NÃO têm Ecos Perdidos (não há Contador de Histórias nessas áreas). - Ficam escondidos — exigem exploração ou resolução de pequenos puzzles. Ao coletar: - Regista o eco como encontrado nesta área (AreaProgress.ecosPerdidosFound / AreaData.totalEcosPerdidos) — limitado ao total da área. - Dá +1 ao saldo global do jogador (PlayerProgress.GiveEcos",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "EcoPerdidoPickup",
+      "kind": "class",
+      "bases": "PickupBase",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "GrantReward",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação GrantReward."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AreaProgress",
+    "PickupBase",
+    "PickupType",
+    "PlayerProgress"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Eco Perdido — coleccionável escondido nas fases (exploração ou puzzles).\n///\n/// Serve de moeda para comprar <b>Sussurros da Terra</b> no\n/// <b>Contador de Histórias</b> (NPC especial de cada área).\n///\n/// Regras de design (GDD):\n/// - Cada área normal tem normalmente <b>15 Ecos Perdidos</b>, pois os\n///   5 Sussurros disponíveis têm preços crescentes: 1, 2, 3, 4 e 5 Ecos.\n/// - Áreas de <b>Vila</b> e de <b>Boss</b> NÃO têm Ecos Perdidos\n///   (não há Contador de Histórias nessas áreas).\n/// - Ficam escondidos — exigem exploração ou resolução de pequenos puzzles.\n///\n/// Ao recolher:\n/// - Regista o eco como encontrado nesta área (AreaProgress.ecosPerdidosFound /\n///   AreaData.totalEcosPerdidos) — limitado ao total da área.\n/// - Dá +1 ao saldo global do jogador (PlayerProgress.GiveEcosPerdidos →\n///   ecosPerdidos / totalEcosPerdidosCollected).\n/// </summary>\npublic class EcoPerdidoPickup : PickupBase\n{\n    public override PickupType Type => PickupType.EcoPerdido;\n\n    protected override void GrantReward()\n    {\n        // AddEcoPerdidoFound já chama GiveEcosPerdidos(1) internamente.\n        if (area != null)\n            PlayerProgress.Instance?.AddEcoPerdidoFound(area);\n        else\n            PlayerProgress.Instance?.GiveEcosPerdidos(1);\n    }\n}\n",
+  "id": "script-collectibles-ecoperdidopickup-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": []
+}

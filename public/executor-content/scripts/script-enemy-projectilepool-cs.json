@@ -1,0 +1,93 @@
+{
+  "path": "Enemy/ProjectilePool.cs",
+  "filename": "ProjectilePool.cs",
+  "category": "Enemy",
+  "primary": "ProjectilePool",
+  "kind": "Componente",
+  "summary": "Pool de projécteis (Tarefa #22 — melhoria de performance): reutiliza GameObjects de em vez de Instantiate/Destroy a cada tiro de . Singleton auto-fallback (mesmo padrão de PlayerProgress/ChallengeManager — ver PlayerProgress.cs \"GameBootstrap e singletons\"): não precisa de nenhuma configuração no Inspector, basta existir na cena (ou é criado automaticamente antes da primeira cena carregar). Cada (ou, se definir um \"prefab\" próprio, esse prefab) tem a sua própria fila de objetos inactivos — diferentes projécteis nunca se misturam, mesmo com sprites/configurações diferentes.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ProjectilePool",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "poolRoot",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "Get",
+      "ret": "ProjectileController",
+      "mods": "public",
+      "params": "ProjectileData data, Vector3 position, Quaternion rotation",
+      "description": "Executa a operação Get."
+    },
+    {
+      "name": "Release",
+      "ret": "void",
+      "mods": "public",
+      "params": "ProjectileController proj",
+      "description": "Executa a operação Release."
+    }
+  ],
+  "dependencies": [
+    "ChallengeManager",
+    "EnemyAttackController",
+    "PlayerProgress",
+    "ProjectileController",
+    "ProjectileData"
+  ],
+  "used_by": [
+    "EnemyAttackController",
+    "ProjectileController"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Pool de projécteis (Tarefa #22 — melhoria de performance): reutiliza\n/// GameObjects de <see cref=\"ProjectileController\"/> em vez de\n/// Instantiate/Destroy a cada tiro de <see cref=\"EnemyAttackController.SpawnProjectile\"/>.\n///\n/// Singleton auto-fallback (mesmo padrão de PlayerProgress/ChallengeManager —\n/// ver PlayerProgress.cs \"GameBootstrap e singletons\"): não precisa de\n/// nenhuma configuração no Inspector, basta existir na cena (ou é criado\n/// automaticamente antes da primeira cena carregar).\n///\n/// Cada <see cref=\"ProjectileData\"/> (ou, se definir um \"prefab\" próprio, esse\n/// prefab) tem a sua própria fila de objectos inactivos — diferentes\n/// projécteis nunca se misturam, mesmo com sprites/configurações diferentes.\n/// </summary>\npublic class ProjectilePool : MonoBehaviour\n{\n    public static ProjectilePool Instance { get; private set; }\n\n    /// <summary>Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/> (ver PlayerProgress.cs).</summary>\n    private bool isAutoFallback;\n\n    private readonly Dictionary<Object, Queue<ProjectileController>> pools = new Dictionary<Object, Queue<ProjectileController>>();\n    private Transform poolRoot;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(ProjectilePool) + \" (Fallback)\");\n        var instance = go.AddComponent<ProjectilePool>();\n        instance.isAutoFallback = true;\n    }\n\n    /// <summary>\n    /// Devolve um <see cref=\"ProjectileController\"/> pronto para\n    /// <see cref=\"ProjectileController.Activate\"/>, posicionado/rodado em\n    /// \"position\"/\"rotation\": reutiliza um objecto inactivo da fila de \"data\"\n    /// se existir, senão cria um novo (a partir de \"data.prefab\", ou de\n    /// <see cref=\"ProjectileController.CreateDefaultProjectileObject\"/> se\n    /// \"data\" não tiver prefab).\n    /// </summary>\n    public ProjectileController Get(ProjectileData data, Vector3 position, Quaternion rotation)\n    {\n        Object key = data.prefab != null ? (Object)data.prefab : (Object)data;\n\n        if (pools.TryGetValue(key, out var queue))\n        {\n            while (queue.Count > 0)\n            {\n                var proj = queue.Dequeue();\n                if (proj == null) continue; // destruído externamente (ex: troca de cena)\n\n                proj.transform.SetParent(null);\n                proj.transform.SetPositionAndRotation(position, rotation);\n                proj.gameObject.SetActive(true);\n                return proj;\n            }\n        }\n\n        GameObject go = data.prefab != null\n            ? Instantiate(data.prefab, position, rotation)\n            : ProjectileController.CreateDefaultProjectileObject(data, position);\n\n        var newProj = go.GetComponent<ProjectileController>();\n        if (newProj == null) newProj = go.AddComponent<ProjectileController>();\n\n        newProj.PoolKey = key;\n        return newProj;\n    }\n\n    /// <summary>\n    /// Desactiva \"proj\" e devolve-o à fila correspondente à sua\n    /// <see cref=\"ProjectileController.PoolKey\"/>, para reutilização futura por\n    /// <see cref=\"Get\"/>.\n    /// </summary>\n    public void Release(ProjectileController proj)\n    {\n        if (proj == null) return;\n\n        proj.gameObject.SetActive(false);\n\n        if (poolRoot == null)\n        {\n            var rootGo = new GameObject(\"Projectiles (Pool)\");\n            rootGo.transform.SetParent(transform);\n            poolRoot = rootGo.transform;\n        }\n\n        proj.transform.SetParent(poolRoot);\n\n        if (!pools.TryGetValue(proj.PoolKey, out var queue))\n        {\n            queue = new Queue<ProjectileController>();\n            pools[proj.PoolKey] = queue;\n        }\n\n        queue.Enqueue(proj);\n    }\n}\n",
+  "id": "script-enemy-projectilepool-cs",
+  "dependencyIds": [
+    "script-data-challengemanager-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-data-playerprogress-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-enemy-projectiledata-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-projectilecontroller-cs"
+  ]
+}

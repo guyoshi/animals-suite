@@ -1,0 +1,146 @@
+{
+  "path": "Camera/CameraManager.Bounds.cs",
+  "filename": "CameraManager.Bounds.cs",
+  "category": "Camera",
+  "primary": "CameraManager",
+  "kind": "Definição",
+  "summary": "CameraManager — bounds/blockers e confiner (Tarefa #21): calcula a interseção entre a área base ( ) e quaisquer blockers ativos ( ), e escreve o resultado no PolygonCollider2D usado pelo CinemachineConfiner2D das 3 vcams automáticas.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "CameraManager",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "finalBoundsCollider",
+      "type": "PolygonCollider2D",
+      "mods": "private",
+      "default": "",
+      "section": "Confiner Runtime Bounds (FinalBounds PolygonCollider2D)",
+      "attrs": "[Header(\"Confiner Runtime Bounds (FinalBounds PolygonCollider2D)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "baseBounds",
+      "type": "BoxCollider2D",
+      "mods": "private",
+      "default": "",
+      "section": "Confiner Runtime Bounds (FinalBounds PolygonCollider2D)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "activeBlockerBounds",
+      "type": "List<BoxCollider2D>",
+      "mods": "private readonly",
+      "default": "new()",
+      "section": "Confiner Runtime Bounds (FinalBounds PolygonCollider2D)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "confinerInvalidateMethod",
+      "type": "MethodInfo",
+      "mods": "private static",
+      "default": "",
+      "section": "Confiner Runtime Bounds (FinalBounds PolygonCollider2D)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "confinerMethodResolved",
+      "type": "bool",
+      "mods": "private static",
+      "default": "",
+      "section": "Confiner Runtime Bounds (FinalBounds PolygonCollider2D)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "SetBaseBounds",
+      "ret": "void",
+      "mods": "public",
+      "params": "BoxCollider2D bounds",
+      "description": "Executa a operação SetBaseBounds."
+    },
+    {
+      "name": "AddBlocker",
+      "ret": "void",
+      "mods": "public",
+      "params": "BoxCollider2D allowedBounds",
+      "description": "Executa a operação AddBlocker."
+    },
+    {
+      "name": "RemoveBlocker",
+      "ret": "void",
+      "mods": "public",
+      "params": "BoxCollider2D allowedBounds",
+      "description": "Executa a operação RemoveBlocker."
+    },
+    {
+      "name": "UpdateConfinerBounds",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateConfinerBounds."
+    },
+    {
+      "name": "InvalidateConfiner",
+      "ret": "void",
+      "mods": "private",
+      "params": "CinemachineVirtualCamera vcam",
+      "description": "Executa a operação InvalidateConfiner."
+    },
+    {
+      "name": "GetWorldRect",
+      "ret": "Rect",
+      "mods": "private static",
+      "params": "BoxCollider2D col",
+      "description": "Executa a operação GetWorldRect."
+    },
+    {
+      "name": "Intersect",
+      "ret": "Rect",
+      "mods": "private static",
+      "params": "Rect a, Rect b",
+      "description": "Executa a operação Intersect."
+    }
+  ],
+  "dependencies": [
+    "CameraAreaBounds",
+    "CameraBlocker"
+  ],
+  "used_by": [
+    "AreaManager",
+    "CameraAreaBounds",
+    "CameraBlocker",
+    "CameraFocusMode",
+    "CameraZone",
+    "PlayerFeedback"
+  ],
+  "source": "using System.Collections.Generic;\nusing System.Reflection;\nusing UnityEngine;\nusing Cinemachine;\n\n/// <summary>\n/// CameraManager — bounds/blockers e confiner (Tarefa #21): calcula a\n/// interseção entre a área base (<see cref=\"CameraAreaBounds\"/>) e quaisquer\n/// blockers activos (<see cref=\"CameraBlocker\"/>), e escreve o resultado no\n/// PolygonCollider2D usado pelo CinemachineConfiner2D das 3 vcams automáticas.\n/// </summary>\npublic partial class CameraManager\n{\n    [Header(\"Confiner Runtime Bounds (FinalBounds PolygonCollider2D)\")]\n    [SerializeField] private PolygonCollider2D finalBoundsCollider;\n\n    // Bounds (area) + blockers\n    private BoxCollider2D baseBounds;\n    private readonly List<BoxCollider2D> activeBlockerBounds = new();\n\n    // Cache da reflexão: resolvida uma vez só (mesmo tipo p/ todas as vcams)\n    private static MethodInfo confinerInvalidateMethod;\n    private static bool confinerMethodResolved;\n\n    public void SetBaseBounds(BoxCollider2D bounds)\n    {\n        if (baseBounds == bounds) return; // evita recalcular todo frame (OnTriggerStay2D)\n\n        baseBounds = bounds;\n        UpdateConfinerBounds();\n    }\n\n    public void AddBlocker(BoxCollider2D allowedBounds)\n    {\n        if (allowedBounds == null) return;\n        if (!activeBlockerBounds.Contains(allowedBounds))\n            activeBlockerBounds.Add(allowedBounds);\n\n        UpdateConfinerBounds();\n    }\n\n    public void RemoveBlocker(BoxCollider2D allowedBounds)\n    {\n        if (allowedBounds == null) return;\n        activeBlockerBounds.Remove(allowedBounds);\n        UpdateConfinerBounds();\n    }\n\n    private void UpdateConfinerBounds()\n    {\n        if (finalBoundsCollider == null) return;\n        if (baseBounds == null) return;\n\n        Rect baseRect = GetWorldRect(baseBounds);\n        Rect finalRect = baseRect;\n\n        for (int i = 0; i < activeBlockerBounds.Count; i++)\n        {\n            var b = activeBlockerBounds[i];\n            if (b == null) continue;\n\n            Rect br = GetWorldRect(b);\n            Rect inter = Intersect(finalRect, br);\n\n            if (inter.width > 0.01f && inter.height > 0.01f)\n                finalRect = inter;\n        }\n\n        finalBoundsCollider.pathCount = 1;\n\n        Transform t = finalBoundsCollider.transform;\n\n        Vector3 wp0 = new Vector3(finalRect.xMin, finalRect.yMin, 0f);\n        Vector3 wp1 = new Vector3(finalRect.xMax, finalRect.yMin, 0f);\n        Vector3 wp2 = new Vector3(finalRect.xMax, finalRect.yMax, 0f);\n        Vector3 wp3 = new Vector3(finalRect.xMin, finalRect.yMax, 0f);\n\n        Vector2 p0 = t.InverseTransformPoint(wp0);\n        Vector2 p1 = t.InverseTransformPoint(wp1);\n        Vector2 p2 = t.InverseTransformPoint(wp2);\n        Vector2 p3 = t.InverseTransformPoint(wp3);\n\n        finalBoundsCollider.SetPath(0, new Vector2[] { p0, p1, p2, p3 });\n\n        InvalidateConfiner(vcamNormal);\n        InvalidateConfiner(vcamCorridor);\n        InvalidateConfiner(vcamBoss);\n    }\n\n    private void InvalidateConfiner(CinemachineVirtualCamera vcam)\n    {\n        if (vcam == null) return;\n        var conf = vcam.GetComponent<CinemachineConfiner2D>();\n        if (conf == null) return;\n\n        if (!confinerMethodResolved)\n        {\n            // Compatível com várias versões (InvalidateCache / InvalidatePathCache)\n            var t = conf.GetType();\n            confinerInvalidateMethod = t.GetMethod(\"InvalidateCache\", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)\n                                     ?? t.GetMethod(\"InvalidatePathCache\", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);\n            confinerMethodResolved = true;\n        }\n\n        confinerInvalidateMethod?.Invoke(conf, null);\n    }\n\n    private static Rect GetWorldRect(BoxCollider2D col)\n    {\n        Bounds b = col.bounds;\n        return new Rect(b.min.x, b.min.y, b.size.x, b.size.y);\n    }\n\n    private static Rect Intersect(Rect a, Rect b)\n    {\n        float xMin = Mathf.Max(a.xMin, b.xMin);\n        float xMax = Mathf.Min(a.xMax, b.xMax);\n        float yMin = Mathf.Max(a.yMin, b.yMin);\n        float yMax = Mathf.Min(a.yMax, b.yMax);\n\n        float w = xMax - xMin;\n        float h = yMax - yMin;\n\n        if (w <= 0f || h <= 0f) return new Rect(0, 0, 0, 0);\n        return new Rect(xMin, yMin, w, h);\n    }\n}\n",
+  "id": "script-camera-cameramanager-bounds-cs",
+  "dependencyIds": [
+    "script-camera-cameraareabounds-cs",
+    "script-camera-camerablocker-cs"
+  ],
+  "usedByIds": [
+    "script-world-areamanager-cs",
+    "script-camera-cameraareabounds-cs",
+    "script-camera-camerablocker-cs",
+    "script-npc-actions-cameraactions-cs",
+    "script-camera-camerazone-cs",
+    "script-player-playerfeedback-cs"
+  ]
+}

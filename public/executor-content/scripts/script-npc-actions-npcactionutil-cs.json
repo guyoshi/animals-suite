@@ -1,0 +1,52 @@
+{
+  "path": "NPC/Actions/NpcActionUtil.cs",
+  "filename": "NpcActionUtil.cs",
+  "category": "NPC",
+  "primary": "NpcActionUtil",
+  "kind": "Definição",
+  "summary": "Helpers partilhados pelas NpcActions.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "NpcActionUtil",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "Wait",
+      "ret": "object",
+      "mods": "public static",
+      "params": "float seconds",
+      "description": "Executa a operação Wait."
+    }
+  ],
+  "dependencies": [
+    "Action_PauseGame",
+    "GamePauseUtil"
+  ],
+  "used_by": [
+    "Action_Dialogue",
+    "Action_PauseNearbyNpcs",
+    "Action_PlaySE",
+    "Action_ShowSementes",
+    "CameraFocusMode",
+    "GamePauseUtil"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Helpers partilhados pelas NpcActions.\n/// </summary>\npublic static class NpcActionUtil\n{\n    /// <summary>\n    /// Espera \"seconds\": em tempo real (WaitForSecondsRealtime) se o jogo\n    /// estiver em pausa física (Time.timeScale == 0 — ver GamePauseUtil /\n    /// Action_PauseGame, Etapa 8), ou em tempo de jogo (WaitForSeconds) caso\n    /// contrário. Usado por todas as ações que esperam um tempo fixo, para que\n    /// a sequência de ações do evento que pausou o jogo continue a correr em\n    /// tempo real (e possa, por exemplo, retomar o jogo decorrido esse tempo).\n    /// </summary>\n    public static object Wait(float seconds)\n    {\n        return Time.timeScale <= 0f ? new WaitForSecondsRealtime(seconds) : new WaitForSeconds(seconds);\n    }\n}\n",
+  "id": "script-npc-actions-npcactionutil-cs",
+  "dependencyIds": [
+    "script-npc-pauseutil-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-coreactions-cs",
+    "script-npc-actions-pauseactions-cs",
+    "script-npc-actions-audioactions-cs",
+    "script-npc-actions-seedsnpcactions-cs",
+    "script-npc-actions-cameraactions-cs",
+    "script-npc-pauseutil-cs"
+  ]
+}

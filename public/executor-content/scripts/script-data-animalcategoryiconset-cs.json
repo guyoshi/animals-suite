@@ -1,0 +1,89 @@
+{
+  "path": "Data/AnimalCategoryIconSet.cs",
+  "filename": "AnimalCategoryIconSet.cs",
+  "category": "Data",
+  "primary": "AnimalCategoryIconSet",
+  "kind": "Asset de dados",
+  "summary": "Mapeia cada a um nome de exibição em PT-BR e a um pequeno ícone simbólico, usados na seção \"Formas\" do Menu de Pausa (Tarefa #9) — ex: asa para Voador, pata veloz para Rápido, pedra para Forte, olho fechado para Furtivo, escudo natural para Resistente. Só as entradas aqui presentes são mostradas — categorias internas (ex: \"Secreto\", usada pelo sistema de fraquezas de inimigos) podem ficar de fora da lista para nunca aparecerem na ficha do animal.",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "AnimalCategoryIconSet",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    },
+    {
+      "name": "Entry",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "category",
+      "type": "AnimalCategory",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "icon",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "entries",
+      "type": "List<Entry>",
+      "mods": "public",
+      "default": "new List<Entry>()",
+      "section": "",
+      "attrs": "[Tooltip(\"Ordem de exibição das categorias na ficha do animal (\\\"Rápido • Furtivo\\\", ícones, etc).\")]",
+      "inspector": true,
+      "description": "Ordem de exibição das categorias na ficha do animal (\"Rápido • Furtivo\", ícones, etc)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Match",
+      "ret": "IEnumerable<Entry>",
+      "mods": "public",
+      "params": "AnimalCategory categories",
+      "description": "Executa a operação Match."
+    }
+  ],
+  "dependencies": [
+    "AnimalCategory",
+    "AnimalFormData"
+  ],
+  "used_by": [
+    "FormsSectionUI"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Mapeia cada <see cref=\"AnimalCategory\"/> a um nome de exibição em PT-BR e a um\n/// pequeno ícone simbólico, usados na secção \"Formas\" do Menu de Pausa (Tarefa #9)\n/// — ex: asa para Voador, pata veloz para Rápido, pedra para Forte, olho fechado\n/// para Furtivo, escudo natural para Resistente.\n///\n/// Só as entradas aqui presentes são mostradas — categorias internas (ex:\n/// \"Secreto\", usada pelo sistema de fraquezas de inimigos) podem ficar de fora\n/// da lista para nunca aparecerem na ficha do animal.\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Animal Category Icon Set\", fileName = \"AnimalCategoryIconSet\")]\npublic class AnimalCategoryIconSet : ScriptableObject\n{\n    [System.Serializable]\n    public class Entry\n    {\n        public AnimalCategory category;\n        public string displayName;\n        public Sprite icon;\n    }\n\n    [Tooltip(\"Ordem de exibição das categorias na ficha do animal (\\\"Rápido • Furtivo\\\", ícones, etc).\")]\n    public List<Entry> entries = new List<Entry>();\n\n    /// <summary>Todas as entradas cuja categoria está presente em \"categories\" (AnimalFormData.categories), na ordem da lista.</summary>\n    public IEnumerable<Entry> Match(AnimalCategory categories)\n    {\n        foreach (var entry in entries)\n        {\n            if (entry == null || entry.category == AnimalCategory.None) continue;\n            if ((categories & entry.category) == entry.category) yield return entry;\n        }\n    }\n}\n",
+  "id": "script-data-animalcategoryiconset-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs"
+  ],
+  "usedByIds": [
+    "script-ui-formssectionui-cs"
+  ]
+}

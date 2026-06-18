@@ -1,0 +1,64 @@
+{
+  "path": "NPC/Actions/ChallengeActions.cs",
+  "filename": "ChallengeActions.cs",
+  "category": "NPC",
+  "primary": "Action_StartChallenge",
+  "kind": "Acção de NPC",
+  "summary": "Inicia \"challenge\" via ChallengeManager.StartChallenge — activador de desafio por NPC (Sistema de Missões/Desafios, Tarefa #11): usar como última ação de um evento de diálogo/interação do NPC (ex: \"Aceitar Desafio\") em vez de (ou além de) um ChallengeTrigger no mundo. Não faz nada se já houver um desafio ativo (ChallengeManager.IsActive) ou se a forma atual do jogador não puder iniciar este desafio (ChallengeDefinition.IsFormAllowed) — nesse caso, usar Condition_BoolVariable (ChallengeDefinition.CompletedVariable/ActiveVariable) nas condições do evento para esconder/desativar esta opção de diálogo antes de chegar aqui. A posição do jogador no momento em que esta ação corre é guardada c",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Action_StartChallenge",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "challenge",
+      "type": "ChallengeDefinition",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Desafio a iniciar.\")]",
+      "inspector": true,
+      "description": "Desafio a iniciar."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "ChallengeDefinition",
+    "ChallengeManager",
+    "ChallengeTrigger",
+    "Condition_BoolVariable",
+    "FormSwitcher",
+    "NpcAction",
+    "NpcController"
+  ],
+  "used_by": [
+    "GameDataValidatorWindow"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Inicia \"challenge\" via ChallengeManager.StartChallenge — activador de\n/// desafio por NPC (Sistema de Missões/Desafios, Tarefa #11): usar como última\n/// acção de um evento de diálogo/interacção do NPC (ex: \"Aceitar Desafio\") em\n/// vez de (ou além de) um ChallengeTrigger no mundo.\n///\n/// Não faz nada se já houver um desafio activo (ChallengeManager.IsActive) ou\n/// se a forma actual do jogador não puder iniciar este desafio\n/// (ChallengeDefinition.IsFormAllowed) — nesse caso, usar\n/// Condition_BoolVariable (ChallengeDefinition.CompletedVariable/ActiveVariable)\n/// nas condições do evento para esconder/desactivar esta opção de diálogo\n/// antes de chegar aqui.\n///\n/// A posição do jogador no momento em que esta acção corre é guardada como\n/// \"ponto de regresso\" (usada por ChallengeDefinition.endBehavior =\n/// VoltarParaEntrada).\n/// </summary>\n[System.Serializable]\npublic class Action_StartChallenge : NpcAction\n{\n    [Tooltip(\"Desafio a iniciar.\")]\n    public ChallengeDefinition challenge;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (challenge == null || ChallengeManager.Instance == null) yield break;\n\n        var playerGo = GameObject.FindWithTag(\"Player\");\n        if (playerGo == null) yield break;\n\n        var switcher = playerGo.GetComponent<FormSwitcher>();\n        var form = switcher != null ? switcher.CurrentForm : null;\n\n        ChallengeManager.Instance.StartChallenge(challenge, form, playerGo.transform.position);\n    }\n}\n",
+  "id": "script-npc-actions-challengeactions-cs",
+  "dependencyIds": [
+    "script-data-challengedefinition-cs",
+    "script-data-challengemanager-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-npc-conditions-variableconditions-cs",
+    "script-forms-formswitcher-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-data-editor-gamedatavalidatorwindow-cs"
+  ]
+}

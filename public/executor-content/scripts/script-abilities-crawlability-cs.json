@@ -1,0 +1,194 @@
+{
+  "path": "Abilities/CrawlAbility.cs",
+  "filename": "CrawlAbility.cs",
+  "category": "Abilities",
+  "primary": "CrawlAbility",
+  "kind": "Componente",
+  "summary": "Habilidade de rastejar (CRW do GDD): passiva, sem botão. Enquanto ativa para a forma atual (form.canCrawl), detecta automaticamente quando o tamanho normal do collider não cabe no espaço (tecto baixo/fenda) e troca para o CapsuleCollider2D \"de rastejar\" (crawlColliderSize/Offset), reduzindo também a velocidade horizontal máxima. Quando o espaço normal volta a caber, restaura o collider normal. [DefaultExecutionOrder(100)] garante que o FixedUpdate desta habilidade corre DEPOIS do FixedUpdate do PlayerMotor2D (ordem padrão = 0), para que o clamp de velocidade de rastejar seja aplicado depois do movimento horizontal normal do motor.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "CrawlAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "solidLayer",
+      "type": "LayerMask",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "[Header(\"Detecção (CRW)\")] [Tooltip(\"Layers sólidas (chão/paredes/tectos) usadas para verificar se o tamanho normal do collider cabe no espaço actual.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Layers sólidas (chão/paredes/tectos) usadas para verificar se o tamanho normal do collider cabe no espaço atual."
+    },
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "normalColliderSize",
+      "type": "Vector2",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "normalColliderOffset",
+      "type": "Vector2",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "crawlColliderSize",
+      "type": "Vector2",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "crawlColliderOffset",
+      "type": "Vector2",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "crawlMaxSpeed",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isCrawling",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsCrawling",
+      "type": "bool",
+      "mods": "public",
+      "default": "> isCrawling",
+      "section": "Detecção (CRW)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "FixedUpdate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FixedUpdate."
+    },
+    {
+      "name": "EnterCrawl",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação EnterCrawl."
+    },
+    {
+      "name": "ExitCrawl",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ExitCrawl."
+    },
+    {
+      "name": "ClampCrawlSpeed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ClampCrawlSpeed."
+    },
+    {
+      "name": "FitsAt",
+      "ret": "bool",
+      "mods": "private",
+      "params": "Vector2 size, Vector2 offset",
+      "description": "Executa a operação FitsAt."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "FormSwitcher",
+    "IFormAbility",
+    "PlayerMotor2D"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "AnimalFormData",
+    "PlayerMotor2D"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Habilidade de rastejar (CRW do GDD): passiva, sem botão. Enquanto activa\n/// para a forma actual (form.canCrawl), detecta automaticamente quando o\n/// tamanho normal do collider não cabe no espaço (tecto baixo/fenda) e troca\n/// para o CapsuleCollider2D \"de rastejar\" (crawlColliderSize/Offset),\n/// reduzindo também a velocidade horizontal máxima. Quando o espaço normal\n/// volta a caber, restaura o collider normal.\n///\n/// [DefaultExecutionOrder(100)] garante que o FixedUpdate desta habilidade\n/// corre DEPOIS do FixedUpdate do PlayerMotor2D (ordem padrão = 0), para que\n/// o clamp de velocidade de rastejar seja aplicado depois do movimento\n/// horizontal normal do motor.\n/// </summary>\n[DefaultExecutionOrder(100)]\n[RequireComponent(typeof(PlayerMotor2D))]\npublic class CrawlAbility : MonoBehaviour, IFormAbility\n{\n    [Header(\"Detecção (CRW)\")]\n    [Tooltip(\"Layers sólidas (chão/paredes/tectos) usadas para verificar se o tamanho normal do collider cabe no espaço actual.\")]\n    [SerializeField] private LayerMask solidLayer;\n\n    private PlayerMotor2D motor;\n\n    private bool enabledForForm;\n\n    private Vector2 normalColliderSize;\n    private Vector2 normalColliderOffset;\n    private Vector2 crawlColliderSize;\n    private Vector2 crawlColliderOffset;\n\n    private float crawlMaxSpeed;\n\n    private bool isCrawling;\n\n    /// <summary>true enquanto o player está com o collider \"de rastejar\" activo.</summary>\n    public bool IsCrawling => isCrawling;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.canCrawl;\n\n        if (form != null)\n        {\n            normalColliderSize = form.colliderSize;\n            normalColliderOffset = form.colliderOffset;\n            crawlColliderSize = form.crawlColliderSize;\n            crawlColliderOffset = form.crawlColliderOffset;\n            crawlMaxSpeed = form.maxSpeed * form.crawlSpeedMultiplier;\n        }\n\n        // FormSwitcher já chamou motor.ApplyForm(form) antes disto, o que\n        // repõe o collider para o tamanho normal da nova forma. Por isso\n        // aqui só limpamos o nosso estado interno, sem voltar a tocar no\n        // collider.\n        isCrawling = false;\n    }\n\n    private void FixedUpdate()\n    {\n        if (!enabledForForm) return;\n\n        if (!isCrawling)\n        {\n            // Tecto baixo/fenda à frente -> entra em modo rastejar.\n            if (!FitsAt(normalColliderSize, normalColliderOffset))\n                EnterCrawl();\n        }\n        else\n        {\n            // Já há espaço para o tamanho normal -> volta ao normal.\n            if (FitsAt(normalColliderSize, normalColliderOffset))\n                ExitCrawl();\n        }\n\n        if (isCrawling)\n            ClampCrawlSpeed();\n    }\n\n    private void EnterCrawl()\n    {\n        isCrawling = true;\n\n        motor.Capsule.size = crawlColliderSize;\n        motor.Capsule.offset = crawlColliderOffset;\n        motor.RecalculateGroundCheck();\n    }\n\n    private void ExitCrawl()\n    {\n        isCrawling = false;\n\n        motor.Capsule.size = normalColliderSize;\n        motor.Capsule.offset = normalColliderOffset;\n        motor.RecalculateGroundCheck();\n    }\n\n    private void ClampCrawlSpeed()\n    {\n        var rb = motor.RB;\n        float vx = rb.velocity.x;\n\n        if (Mathf.Abs(vx) > crawlMaxSpeed)\n            rb.velocity = new Vector2(Mathf.Sign(vx) * crawlMaxSpeed, rb.velocity.y);\n    }\n\n    /// <summary>\n    /// Verifica se um CapsuleCollider2D com o tamanho/offset indicados, na\n    /// posição actual do player, cabe sem sobrepor \"solidLayer\".\n    /// </summary>\n    private bool FitsAt(Vector2 size, Vector2 offset)\n    {\n        bool wasEnabled = motor.Capsule.enabled;\n        motor.Capsule.enabled = false;\n\n        try\n        {\n            Vector2 worldPos = (Vector2)transform.position + offset;\n\n            Collider2D hit = Physics2D.OverlapCapsule(\n                worldPos,\n                size,\n                CapsuleDirection2D.Vertical,\n                0f,\n                solidLayer\n            );\n\n            return hit == null;\n        }\n        finally\n        {\n            motor.Capsule.enabled = wasEnabled;\n        }\n    }\n}\n",
+  "id": "script-abilities-crawlability-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-forms-formswitcher-cs",
+    "script-abilities-iformability-cs",
+    "script-player-playermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-player-playermotor2d-cs"
+  ]
+}

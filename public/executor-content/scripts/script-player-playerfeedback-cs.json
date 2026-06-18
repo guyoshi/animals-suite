@@ -1,0 +1,387 @@
+{
+  "path": "Player/PlayerFeedback.cs",
+  "filename": "PlayerFeedback.cs",
+  "category": "Player",
+  "primary": "PlayerFeedback",
+  "kind": "Componente",
+  "summary": "Tarefa #29 — feedback audiovisual de combate do player: pisca do sprite, SFX, vibração do comando, screen shake e VFX (pooled — VfxPoolManager) ao tomar dano, acertar um golpe e morrer. Liga-se a: - (tomar dano que passou pelos i-frames): pisca o sprite (mesma lógica de EnemyHealth.FlashRoutine), som de dano, screen shake (CameraManager.ShakeHit), vibração e VFX de impacto na posição do player. - (golpe acertou pelo menos um alvo): VFX/SFX de impacto no ponto do golpe + vibração leve. - PlayerProgress.OnHeartsDepleted (morte): som/VFX de morte + shake e vibração mais fortes.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PlayerFeedback",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "hurtSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Tomar Dano",
+      "attrs": "[Header(\"Tomar Dano\")] [Tooltip(\"Som ao tomar dano (e sobreviver).\")]",
+      "inspector": true,
+      "description": "Som ao tomar dano (e sobreviver)."
+    },
+    {
+      "name": "hitVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Tomar Dano",
+      "attrs": "[Tooltip(\"VFX (pooled — VfxPoolManager) instanciado na posição do player ao tomar dano.\")]",
+      "inspector": true,
+      "description": "VFX (pooled — VfxPoolManager) instanciado na posição do player ao tomar dano."
+    },
+    {
+      "name": "flashColor",
+      "type": "Color",
+      "mods": "public",
+      "default": "new Color(1f, 0.4f, 0.4f, 1f)",
+      "section": "Tomar Dano",
+      "attrs": "[Tooltip(\"Cor usada no pisca do sprite, alternada com a cor original (mesma ideia de EnemyHealth.flashColor).\")]",
+      "inspector": true,
+      "description": "Cor usada no pisca do sprite, alternada com a cor original (mesma ideia de EnemyHealth.flashColor)."
+    },
+    {
+      "name": "flashInterval",
+      "type": "float",
+      "mods": "public",
+      "default": "0.06f",
+      "section": "Tomar Dano",
+      "attrs": "[Tooltip(\"Duração de cada alternância do pisca, em segundos.\")]",
+      "inspector": true,
+      "description": "Duração de cada alternância do pisca, em segundos."
+    },
+    {
+      "name": "flashDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.4f",
+      "section": "Tomar Dano",
+      "attrs": "[Tooltip(\"Duração total do pisca, em segundos.\")]",
+      "inspector": true,
+      "description": "Duração total do pisca, em segundos."
+    },
+    {
+      "name": "hitRumbleLow",
+      "type": "float",
+      "mods": "public",
+      "default": "0.4f",
+      "section": "Vibração — Tomar Dano",
+      "attrs": "[Header(\"Vibração — Tomar Dano\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hitRumbleHigh",
+      "type": "float",
+      "mods": "public",
+      "default": "0.7f",
+      "section": "Vibração — Tomar Dano",
+      "attrs": "[Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "hitRumbleDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.15f",
+      "section": "Vibração — Tomar Dano",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "attackHitVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Acertar um Golpe",
+      "attrs": "[Header(\"Acertar um Golpe\")] [Tooltip(\"VFX (pooled — VfxPoolManager) instanciado no ponto de impacto ao acertar um golpe (PlayerAttack.OnHitLanded).\")]",
+      "inspector": true,
+      "description": "VFX (pooled — VfxPoolManager) instanciado no ponto de impacto ao acertar um golpe (PlayerAttack.OnHitLanded)."
+    },
+    {
+      "name": "attackHitSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Acertar um Golpe",
+      "attrs": "[Tooltip(\"Som ao acertar um golpe.\")]",
+      "inspector": true,
+      "description": "Som ao acertar um golpe."
+    },
+    {
+      "name": "attackRumbleLow",
+      "type": "float",
+      "mods": "public",
+      "default": "0.15f",
+      "section": "Vibração — Acertar um Golpe",
+      "attrs": "[Header(\"Vibração — Acertar um Golpe\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "attackRumbleHigh",
+      "type": "float",
+      "mods": "public",
+      "default": "0.25f",
+      "section": "Vibração — Acertar um Golpe",
+      "attrs": "[Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "attackRumbleDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.08f",
+      "section": "Vibração — Acertar um Golpe",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Morte",
+      "attrs": "[Header(\"Morte\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Morte",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathShakeAmplitude",
+      "type": "float",
+      "mods": "public",
+      "default": "2.5f",
+      "section": "Screen Shake — Morte",
+      "attrs": "[Header(\"Screen Shake — Morte\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathShakeFrequency",
+      "type": "float",
+      "mods": "public",
+      "default": "2.5f",
+      "section": "Screen Shake — Morte",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathShakeDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.35f",
+      "section": "Screen Shake — Morte",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathRumbleLow",
+      "type": "float",
+      "mods": "public",
+      "default": "0.6f",
+      "section": "Vibração — Morte",
+      "attrs": "[Header(\"Vibração — Morte\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathRumbleHigh",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Vibração — Morte",
+      "attrs": "[Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "deathRumbleDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "0.4f",
+      "section": "Vibração — Morte",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_combat",
+      "type": "PlayerCombat",
+      "mods": "private",
+      "default": "",
+      "section": "Vibração — Morte",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_attack",
+      "type": "PlayerAttack",
+      "mods": "private",
+      "default": "",
+      "section": "Vibração — Morte",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_sprite",
+      "type": "SpriteRenderer",
+      "mods": "private",
+      "default": "",
+      "section": "Vibração — Morte",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_baseColor",
+      "type": "Color",
+      "mods": "private",
+      "default": "",
+      "section": "Vibração — Morte",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_flashRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Vibração — Morte",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "HandleDamaged",
+      "ret": "void",
+      "mods": "private",
+      "params": "DamageInfo info, int finalAmount",
+      "description": "Executa a operação HandleDamaged."
+    },
+    {
+      "name": "HandleHitLanded",
+      "ret": "void",
+      "mods": "private",
+      "params": "Vector2 hitPoint",
+      "description": "Executa a operação HandleHitLanded."
+    },
+    {
+      "name": "HandleDeath",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleDeath."
+    },
+    {
+      "name": "StartFlash",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação StartFlash."
+    },
+    {
+      "name": "FlashRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FlashRoutine."
+    },
+    {
+      "name": "PlaySound",
+      "ret": "void",
+      "mods": "private",
+      "params": "AudioClip clip, Vector3 position",
+      "description": "Executa a operação PlaySound."
+    },
+    {
+      "name": "SpawnVfx",
+      "ret": "void",
+      "mods": "private",
+      "params": "GameObject prefab, Vector3 position",
+      "description": "Executa a operação SpawnVfx."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "CameraManager",
+    "DamageInfo",
+    "EnemyHealth",
+    "GameSettings",
+    "PlayerAttack",
+    "PlayerCombat",
+    "PlayerProgress",
+    "RumbleManager",
+    "VfxPoolManager"
+  ],
+  "used_by": [
+    "CameraManager",
+    "PlayerAttack",
+    "VfxPoolManager"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #29 — feedback audiovisual de combate do player: pisca do sprite,\n/// SFX, vibração do comando, screen shake e VFX (pooled — VfxPoolManager) ao\n/// tomar dano, acertar um golpe e morrer.\n///\n/// Liga-se a:\n/// - <see cref=\"PlayerCombat.OnPlayerDamaged\"/> (tomar dano que passou pelos\n///   i-frames): pisca o sprite (mesma lógica de EnemyHealth.FlashRoutine),\n///   som de dano, screen shake (CameraManager.ShakeHit), vibração e VFX de\n///   impacto na posição do player.\n/// - <see cref=\"PlayerAttack.OnHitLanded\"/> (golpe acertou pelo menos um\n///   alvo): VFX/SFX de impacto no ponto do golpe + vibração leve.\n/// - PlayerProgress.OnHeartsDepleted (morte): som/VFX de morte + shake e\n///   vibração mais fortes.\n/// </summary>\n[RequireComponent(typeof(PlayerCombat))]\npublic class PlayerFeedback : MonoBehaviour\n{\n    [Header(\"Tomar Dano\")]\n    [Tooltip(\"Som ao tomar dano (e sobreviver).\")]\n    public AudioClip hurtSound;\n\n    [Tooltip(\"VFX (pooled — VfxPoolManager) instanciado na posição do player ao tomar dano.\")]\n    public GameObject hitVfxPrefab;\n\n    [Tooltip(\"Cor usada no pisca do sprite, alternada com a cor original (mesma ideia de EnemyHealth.flashColor).\")]\n    public Color flashColor = new Color(1f, 0.4f, 0.4f, 1f);\n\n    [Tooltip(\"Duração de cada alternância do pisca, em segundos.\")]\n    public float flashInterval = 0.06f;\n\n    [Tooltip(\"Duração total do pisca, em segundos.\")]\n    public float flashDuration = 0.4f;\n\n    [Header(\"Vibração — Tomar Dano\")]\n    [Range(0f, 1f)] public float hitRumbleLow = 0.4f;\n    [Range(0f, 1f)] public float hitRumbleHigh = 0.7f;\n    public float hitRumbleDuration = 0.15f;\n\n    [Header(\"Acertar um Golpe\")]\n    [Tooltip(\"VFX (pooled — VfxPoolManager) instanciado no ponto de impacto ao acertar um golpe (PlayerAttack.OnHitLanded).\")]\n    public GameObject attackHitVfxPrefab;\n\n    [Tooltip(\"Som ao acertar um golpe.\")]\n    public AudioClip attackHitSound;\n\n    [Header(\"Vibração — Acertar um Golpe\")]\n    [Range(0f, 1f)] public float attackRumbleLow = 0.15f;\n    [Range(0f, 1f)] public float attackRumbleHigh = 0.25f;\n    public float attackRumbleDuration = 0.08f;\n\n    [Header(\"Morte\")]\n    public AudioClip deathSound;\n    public GameObject deathVfxPrefab;\n\n    [Header(\"Screen Shake — Morte\")]\n    public float deathShakeAmplitude = 2.5f;\n    public float deathShakeFrequency = 2.5f;\n    public float deathShakeDuration = 0.35f;\n\n    [Header(\"Vibração — Morte\")]\n    [Range(0f, 1f)] public float deathRumbleLow = 0.6f;\n    [Range(0f, 1f)] public float deathRumbleHigh = 1f;\n    public float deathRumbleDuration = 0.4f;\n\n    private PlayerCombat _combat;\n    private PlayerAttack _attack;\n    private SpriteRenderer _sprite;\n    private Color _baseColor;\n    private Coroutine _flashRoutine;\n\n    private void Awake()\n    {\n        _combat = GetComponent<PlayerCombat>();\n        _attack = GetComponent<PlayerAttack>();\n        _sprite = GetComponentInChildren<SpriteRenderer>();\n        if (_sprite != null) _baseColor = _sprite.color;\n    }\n\n    private void OnEnable()\n    {\n        _combat.OnPlayerDamaged += HandleDamaged;\n        if (_attack != null) _attack.OnHitLanded += HandleHitLanded;\n        if (PlayerProgress.Instance != null) PlayerProgress.Instance.OnHeartsDepleted += HandleDeath;\n    }\n\n    private void OnDisable()\n    {\n        _combat.OnPlayerDamaged -= HandleDamaged;\n        if (_attack != null) _attack.OnHitLanded -= HandleHitLanded;\n        if (PlayerProgress.Instance != null) PlayerProgress.Instance.OnHeartsDepleted -= HandleDeath;\n\n        if (_flashRoutine != null) StopCoroutine(_flashRoutine);\n        if (_sprite != null) _sprite.color = _baseColor;\n    }\n\n    // ==================== PlayerCombat.OnPlayerDamaged ====================\n\n    private void HandleDamaged(DamageInfo info, int finalAmount)\n    {\n        StartFlash();\n        PlaySound(hurtSound, transform.position);\n        CameraManager.Instance?.ShakeHit();\n        RumbleManager.Instance?.Pulse(hitRumbleLow, hitRumbleHigh, hitRumbleDuration);\n        SpawnVfx(hitVfxPrefab, transform.position);\n    }\n\n    // ==================== PlayerAttack.OnHitLanded ====================\n\n    private void HandleHitLanded(Vector2 hitPoint)\n    {\n        SpawnVfx(attackHitVfxPrefab, hitPoint);\n        PlaySound(attackHitSound, hitPoint);\n        RumbleManager.Instance?.Pulse(attackRumbleLow, attackRumbleHigh, attackRumbleDuration);\n    }\n\n    // ==================== PlayerProgress.OnHeartsDepleted ====================\n\n    private void HandleDeath()\n    {\n        PlaySound(deathSound, transform.position);\n        SpawnVfx(deathVfxPrefab, transform.position);\n        CameraManager.Instance?.Shake(deathShakeAmplitude, deathShakeFrequency, deathShakeDuration);\n        RumbleManager.Instance?.Pulse(deathRumbleLow, deathRumbleHigh, deathRumbleDuration);\n    }\n\n    // ==================== Helpers ====================\n\n    private void StartFlash()\n    {\n        if (_sprite == null) return;\n        if (_flashRoutine != null) StopCoroutine(_flashRoutine);\n        _flashRoutine = StartCoroutine(FlashRoutine());\n    }\n\n    private IEnumerator FlashRoutine()\n    {\n        // Tarefa #40 — acessibilidade: se \"Flashes Reduzidos\" estiver activo,\n        // faz apenas UMA piscada curta em vez do ciclo completo.\n        bool reduced = GameSettings.Instance != null && GameSettings.Instance.ReducedFlashes;\n\n        if (reduced)\n        {\n            _sprite.color = flashColor;\n            yield return new WaitForSeconds(flashInterval);\n            _sprite.color = _baseColor;\n            _flashRoutine = null;\n            yield break;\n        }\n\n        float elapsed = 0f;\n        bool toggled = false;\n\n        while (elapsed < flashDuration)\n        {\n            toggled = !toggled;\n            _sprite.color = toggled ? flashColor : _baseColor;\n\n            yield return new WaitForSeconds(flashInterval);\n            elapsed += flashInterval;\n        }\n\n        _sprite.color = _baseColor;\n        _flashRoutine = null;\n    }\n\n    private void PlaySound(AudioClip clip, Vector3 position)\n    {\n        if (clip == null) return;\n        if (AudioManager.Instance != null) AudioManager.Instance.PlaySEAtPoint(clip, position);\n        else AudioSource.PlayClipAtPoint(clip, position);\n    }\n\n    private void SpawnVfx(GameObject prefab, Vector3 position)\n    {\n        if (prefab == null) return;\n        if (VfxPoolManager.Instance != null) VfxPoolManager.Instance.Spawn(prefab, position);\n        else Instantiate(prefab, position, Quaternion.identity);\n    }\n}\n",
+  "id": "script-player-playerfeedback-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-camera-cameramanager-cs",
+    "script-player-damageinfo-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-data-gamesettings-cs",
+    "script-player-playerattack-cs",
+    "script-player-playercombat-cs",
+    "script-data-playerprogress-cs",
+    "script-combat-rumblemanager-cs",
+    "script-combat-vfxpoolmanager-cs"
+  ],
+  "usedByIds": [
+    "script-camera-cameramanager-cs",
+    "script-player-playerattack-cs",
+    "script-combat-vfxpoolmanager-cs"
+  ]
+}

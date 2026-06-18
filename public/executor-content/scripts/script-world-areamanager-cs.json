@@ -1,0 +1,150 @@
+{
+  "path": "World/AreaManager.cs",
+  "filename": "AreaManager.cs",
+  "category": "World",
+  "primary": "AreaManager",
+  "kind": "Componente",
+  "summary": "Tarefa #31 — coordena transições entre áreas/cenas: recebe pedidos de , pede a para carregar a cena da área de destino (AreaData.sceneName) e, depois de carregada, reposiciona o player no indicado e atualiza WorldState/PlayerProgress — mesma lógica de (marca a área como visitada e dispara autosave ao mudar de área). Mantém o player (GameObject com tag \"Player\") persistente entre cenas (DontDestroyOnLoad) — sem isto, SceneManager.LoadSceneAsync (modo Single, usado por LoadingScreenController) destruiria o player ao trocar de cena. Singleton com auto-fallback (mesmo padrão de outros managers — Tarefa #15, ver PlayerProgress.cs para a explicação completa).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "AreaManager",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playerRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "transitionPending",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "TransitionPending",
+      "type": "bool",
+      "mods": "public",
+      "default": "> transitionPending || (SceneLoader.Instance != null && SceneLoader.Instance.IsLoading)",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "RequestTransition",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData targetArea, string targetSpawnPointId",
+      "description": "Executa a operação RequestTransition."
+    },
+    {
+      "name": "EnsurePlayerPersistent",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação EnsurePlayerPersistent."
+    },
+    {
+      "name": "OnAreaSceneLoaded",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area, string spawnPointId",
+      "description": "Executa a operação OnAreaSceneLoaded."
+    },
+    {
+      "name": "FindSpawnPoint",
+      "ret": "AreaSpawnPoint",
+      "mods": "private static",
+      "params": "string spawnId",
+      "description": "Executa a operação FindSpawnPoint."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AreaData",
+    "AreaSpawnPoint",
+    "AreaTransition",
+    "CameraAreaBounds",
+    "CameraManager",
+    "FormSwitcher",
+    "LoadingScreenController",
+    "PlayerDeathHandler",
+    "PlayerProgress",
+    "SaveManager",
+    "SceneLoader",
+    "WorldState"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "AreaData",
+    "AreaSpawnPoint",
+    "AreaTransition",
+    "SceneLoader"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Tarefa #31 — coordena transições entre áreas/cenas: recebe pedidos de\n/// <see cref=\"AreaTransition\"/>, pede a <see cref=\"SceneLoader\"/> para\n/// carregar a cena da área de destino (AreaData.sceneName) e, depois de\n/// carregada, reposiciona o player no <see cref=\"AreaSpawnPoint\"/> indicado\n/// e actualiza WorldState/PlayerProgress — mesma lógica de\n/// <see cref=\"CameraAreaBounds\"/> (marca a área como visitada e dispara\n/// autosave ao mudar de área).\n///\n/// Mantém o player (GameObject com tag \"Player\") persistente entre cenas\n/// (DontDestroyOnLoad) — sem isto, SceneManager.LoadSceneAsync (modo Single,\n/// usado por LoadingScreenController) destruiria o player ao trocar de cena.\n///\n/// Singleton com auto-fallback (mesmo padrão de outros managers — Tarefa #15,\n/// ver PlayerProgress.cs para a explicação completa).\n/// </summary>\npublic class AreaManager : MonoBehaviour\n{\n    public static AreaManager Instance { get; private set; }\n\n    private bool isAutoFallback;\n    private GameObject playerRoot;\n    private bool transitionPending;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(AreaManager) + \" (Fallback)\");\n        var instance = go.AddComponent<AreaManager>();\n        instance.isAutoFallback = true;\n    }\n\n    /// <summary>true enquanto uma transição de área (pedido + carregamento de cena) estiver em curso — AreaTransition deve ignorar novos pedidos.</summary>\n    public bool TransitionPending => transitionPending || (SceneLoader.Instance != null && SceneLoader.Instance.IsLoading);\n\n    /// <summary>\n    /// Pede a troca para a cena de \"targetArea\" (AreaData.sceneName),\n    /// reaparecendo no AreaSpawnPoint \"targetSpawnPointId\" dessa cena. Sem\n    /// efeito se já houver uma transição em curso, se \"targetArea\"/\n    /// \"targetArea.sceneName\" forem inválidos, ou se SceneLoader não existir.\n    /// </summary>\n    public void RequestTransition(AreaData targetArea, string targetSpawnPointId)\n    {\n        if (TransitionPending) return;\n        if (targetArea == null || string.IsNullOrEmpty(targetArea.sceneName)) return;\n        if (SceneLoader.Instance == null) return;\n\n        EnsurePlayerPersistent();\n\n        // Interrompe habilidades \"com estado\" (planar, escudo, carregar\n        // objecto, camuflagem, balanço, escalada, investida, língua, ...)\n        // antes de trocar de cena — sem isto, o estado/efeitos de movimento\n        // (gravidade alterada, locks, etc.) eram transportados para a área\n        // de destino. Mesmo padrão de PlayerDeathHandler/FormSwitcher.\n        if (playerRoot != null)\n            playerRoot.GetComponent<AbilityRouter>()?.CancelAll(AbilityCancelReason.SceneLoad);\n\n        transitionPending = true;\n        SceneLoader.Instance.LoadArea(targetArea, () => OnAreaSceneLoaded(targetArea, targetSpawnPointId));\n    }\n\n    /// <summary>\n    /// Garante que o player (tag \"Player\") sobrevive à troca de cena\n    /// (DontDestroyOnLoad) — chamado antes do primeiro LoadArea. Sem efeito\n    /// se já estiver persistente ou se nenhum objecto com tag \"Player\" for\n    /// encontrado.\n    /// </summary>\n    private void EnsurePlayerPersistent()\n    {\n        if (playerRoot != null) return;\n\n        var playerGo = GameObject.FindWithTag(\"Player\");\n        if (playerGo == null) return;\n\n        playerRoot = playerGo.transform.root.gameObject;\n        playerRoot.transform.SetParent(null);\n        DontDestroyOnLoad(playerRoot);\n    }\n\n    /// <summary>\n    /// Chamado por SceneLoader depois da cena de \"area\" activar: reposiciona\n    /// o player no AreaSpawnPoint \"spawnPointId\" (se existir nessa cena) e\n    /// actualiza WorldState.CurrentArea/PlayerProgress (área visitada +\n    /// autosave em mudanças reais de área), tal como CameraAreaBounds faz ao\n    /// entrar numa área pela primeira vez.\n    /// </summary>\n    private void OnAreaSceneLoaded(AreaData area, string spawnPointId)\n    {\n        if (playerRoot != null)\n        {\n            var spawn = FindSpawnPoint(spawnPointId);\n            if (spawn != null)\n            {\n                var rb = playerRoot.GetComponent<Rigidbody2D>();\n                if (rb != null)\n                {\n                    rb.position = spawn.transform.position;\n                    rb.velocity = Vector2.zero;\n                }\n                else\n                {\n                    playerRoot.transform.position = spawn.transform.position;\n                }\n            }\n            else if (!string.IsNullOrEmpty(spawnPointId))\n            {\n                Debug.LogWarning($\"[AreaManager] AreaSpawnPoint '{spawnPointId}' não encontrado na cena '{area.sceneName}'.\");\n            }\n        }\n\n        // Re-liga a câmara da nova cena ao player persistente — sem isto, a\n        // CameraManager da cena recém-carregada não segue o player (o campo\n        // \"player\" do Inspector está vazio/aponta para um player antigo\n        // destruído, e SetPlayer nunca era chamado por ninguém).\n        if (playerRoot != null)\n            CameraManager.Instance?.SetPlayer(playerRoot.transform);\n\n        bool areaChanged = WorldState.Instance != null && WorldState.Instance.SetCurrentArea(area);\n        PlayerProgress.Instance?.MarkVisited(area);\n\n        // Autosave ao mudar de área (mesma lógica de CameraAreaBounds — cobre\n        // também \"entrar/sair de uma cidade\", já que isso é sempre uma\n        // mudança de área).\n        if (areaChanged) SaveManager.Instance?.SaveAutosave();\n\n        transitionPending = false;\n    }\n\n    private static AreaSpawnPoint FindSpawnPoint(string spawnId)\n    {\n        if (string.IsNullOrEmpty(spawnId)) return null;\n\n        var points = FindObjectsOfType<AreaSpawnPoint>();\n        foreach (var point in points)\n        {\n            if (point != null && point.spawnId == spawnId) return point;\n        }\n\n        return null;\n    }\n}\n",
+  "id": "script-world-areamanager-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-data-areadata-cs",
+    "script-world-areaspawnpoint-cs",
+    "script-world-areatransition-cs",
+    "script-camera-cameraareabounds-cs",
+    "script-camera-cameramanager-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-loadingscreencontroller-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savemanager-cs",
+    "script-world-sceneloader-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-data-areadata-cs",
+    "script-world-areaspawnpoint-cs",
+    "script-world-areatransition-cs",
+    "script-world-sceneloader-cs"
+  ]
+}

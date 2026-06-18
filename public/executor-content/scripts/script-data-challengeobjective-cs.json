@@ -1,0 +1,94 @@
+{
+  "path": "Data/ChallengeObjective.cs",
+  "filename": "ChallengeObjective.cs",
+  "category": "Data",
+  "primary": "ChallengeObjective",
+  "kind": "Definição",
+  "summary": "Classe-base de todos os objetivos (condições de vitória) de um . Cada subclasse representa um objetivo configurável no Inspector (ex: chegar a uma zona, coletar N itens, derrotar inimigos, sobreviver X segundos, defender um NPC, resolver um puzzle via variável global). Para adicionar um novo objetivo: cria uma subclasse [System.Serializable] em Data/Objectives/ com prefixo \"Objective_\" e implementa IsComplete() (e, se fizer sentido, CurrentProgress/TargetProgress/ResetState). Aparece automaticamente no botão \"+ Adicionar Objetivo\" do ChallengeDefinitionEditor (PolymorphicListDrawer, Tarefa #10/#14). Ciclo de vida (chamado por ChallengeManager): 1. ao (re)iniciar o desafio. 2. verificado",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "ChallengeObjective",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "displayText",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "required",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "ResetState",
+      "ret": "void",
+      "mods": "public virtual",
+      "params": "",
+      "description": "Executa a operação ResetState."
+    },
+    {
+      "name": "CurrentProgress",
+      "ret": "int",
+      "mods": "public virtual",
+      "params": "",
+      "description": "Executa a operação CurrentProgress."
+    },
+    {
+      "name": "TargetProgress",
+      "ret": "int",
+      "mods": "public virtual",
+      "params": "",
+      "description": "Executa a operação TargetProgress."
+    }
+  ],
+  "dependencies": [
+    "ChallengeDefinition",
+    "ChallengeDefinitionEditor",
+    "ChallengeManager",
+    "PolymorphicListDrawer"
+  ],
+  "used_by": [
+    "ChallengeDefinition",
+    "ChallengeDefinitionEditor",
+    "ChallengeHudUI",
+    "ChallengeManager",
+    "Objective_BoolVariable",
+    "Objective_DefeatSpecificEnemy",
+    "Objective_ItemCollected"
+  ],
+  "source": "/// <summary>\n/// Classe-base de todos os objectivos (condições de vitória) de um\n/// <see cref=\"ChallengeDefinition\"/>. Cada subclasse representa um objectivo\n/// configurável no Inspector (ex: chegar a uma zona, recolher N itens, derrotar\n/// inimigos, sobreviver X segundos, defender um NPC, resolver um puzzle via\n/// variável global).\n///\n/// Para adicionar um novo objectivo: cria uma subclasse [System.Serializable]\n/// em Data/Objectives/ com prefixo \"Objective_\" e implementa IsComplete()\n/// (e, se fizer sentido, CurrentProgress/TargetProgress/ResetState). Aparece\n/// automaticamente no botão \"+ Adicionar Objectivo\" do ChallengeDefinitionEditor\n/// (PolymorphicListDrawer, Tarefa #10/#14).\n///\n/// Ciclo de vida (chamado por ChallengeManager):\n/// 1. <see cref=\"ResetState\"/> ao (re)iniciar o desafio.\n/// 2. <see cref=\"IsComplete\"/> verificado a cada frame enquanto o desafio\n///    estiver activo; quando TODOS os objectivos com <see cref=\"required\"/> = true\n///    estiverem completos, o desafio termina com sucesso.\n/// 3. <see cref=\"CurrentProgress\"/>/<see cref=\"TargetProgress\"/> alimentam o\n///    HUD (\"descrição: actual/total\") — devolver -1 em TargetProgress para\n///    objectivos binários (sem contador).\n/// </summary>\n[System.Serializable]\npublic abstract class ChallengeObjective\n{\n    /// <summary>Texto curto mostrado no HUD do desafio (ex: \"Apanha as Sementes\", \"Chega ao fim\").</summary>\n    public string displayText;\n\n    /// <summary>\n    /// Se true (padrão), este objectivo tem de estar completo para o desafio\n    /// ter sucesso. Se false, é apenas informativo/opcional (ex: bónus que não\n    /// bloqueia a conclusão).\n    /// </summary>\n    public bool required = true;\n\n    /// <summary>Chamado ao iniciar ou reiniciar o desafio — repõe contadores/estado interno.</summary>\n    public virtual void ResetState() { }\n\n    /// <summary>Progresso actual, para o HUD \"actual/total\". Devolver 0 se não aplicável.</summary>\n    public virtual int CurrentProgress() => 0;\n\n    /// <summary>Meta de progresso, para o HUD \"actual/total\". Devolver -1 para objectivos binários (sem contador, o HUD mostra só 'displayText').</summary>\n    public virtual int TargetProgress() => -1;\n\n    /// <summary>Devolve true quando este objectivo está cumprido.</summary>\n    public abstract bool IsComplete();\n}\n",
+  "id": "script-data-challengeobjective-cs",
+  "dependencyIds": [
+    "script-data-challengedefinition-cs",
+    "script-data-editor-challengedefinitioneditor-cs",
+    "script-data-challengemanager-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-data-challengedefinition-cs",
+    "script-data-editor-challengedefinitioneditor-cs",
+    "script-ui-challengehudui-cs",
+    "script-data-challengemanager-cs",
+    "script-data-objectives-challengeobjectives-variables-cs",
+    "script-data-objectives-challengeobjectives-enemy-cs",
+    "script-data-objectives-challengeobjectives-player-cs"
+  ]
+}

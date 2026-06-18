@@ -1,0 +1,97 @@
+{
+  "path": "Camera/CameraAreaBounds.cs",
+  "filename": "CameraAreaBounds.cs",
+  "category": "Camera",
+  "primary": "CameraAreaBounds",
+  "kind": "Componente",
+  "summary": "Autosave ao entrar numa área diferente (cobre também \"entrar/sair",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "CameraAreaBounds",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "area",
+      "type": "AreaData",
+      "mods": "private",
+      "default": "",
+      "section": "Área (opcional)",
+      "attrs": "[Header(\"Área (opcional)\")] [Tooltip(\"Se definido, ao entrar aqui actualiza WorldState.CurrentArea e marca a área como visitada (PlayerProgress).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Se definido, ao entrar aqui atualiza WorldState.CurrentArea e marca a área como visitada (PlayerProgress)."
+    },
+    {
+      "name": "bounds",
+      "type": "BoxCollider2D",
+      "mods": "private",
+      "default": "",
+      "section": "Área (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "ApplyIfPlayer",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação ApplyIfPlayer."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnTriggerStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerStay2D."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "CameraManager",
+    "PlayerProgress",
+    "SaveManager",
+    "WorldState"
+  ],
+  "used_by": [
+    "AreaManager",
+    "CameraManager",
+    "PlayerResourceType",
+    "WorldState"
+  ],
+  "source": "using UnityEngine;\n\n[RequireComponent(typeof(BoxCollider2D))]\npublic class CameraAreaBounds : MonoBehaviour\n{\n    [Header(\"Área (opcional)\")]\n    [Tooltip(\"Se definido, ao entrar aqui actualiza WorldState.CurrentArea e marca a área como visitada (PlayerProgress).\")]\n    [SerializeField] private AreaData area;\n\n    private BoxCollider2D bounds;\n\n    private void Awake()\n    {\n        bounds = GetComponent<BoxCollider2D>();\n        bounds.isTrigger = true;\n    }\n\n    private void ApplyIfPlayer(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        if (CameraManager.Instance != null)\n            CameraManager.Instance.SetBaseBounds(bounds);\n\n        if (area != null)\n        {\n            bool areaChanged = WorldState.Instance != null && WorldState.Instance.SetCurrentArea(area);\n            PlayerProgress.Instance?.MarkVisited(area);\n\n            // Autosave ao entrar numa área diferente (cobre também \"entrar/sair\n            // de uma cidade\", já que isso é sempre uma mudança de área).\n            if (areaChanged) SaveManager.Instance?.SaveAutosave();\n        }\n    }\n\n    private void OnTriggerEnter2D(Collider2D other) => ApplyIfPlayer(other);\n\n    private void OnTriggerStay2D(Collider2D other) => ApplyIfPlayer(other);\n}\n",
+  "id": "script-camera-cameraareabounds-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-camera-cameramanager-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savemanager-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-world-areamanager-cs",
+    "script-camera-cameramanager-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-data-worldstate-cs"
+  ]
+}

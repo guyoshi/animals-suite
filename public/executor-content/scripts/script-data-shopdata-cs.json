@@ -1,0 +1,216 @@
+{
+  "path": "Data/ShopData.cs",
+  "filename": "ShopData.cs",
+  "category": "Data",
+  "primary": "ShopData",
+  "kind": "Asset de dados",
+  "summary": "Tarefa #35 — Sistema de Loja: promoção de horário aplicada a uma . Enquanto estiver em , o preço-base do item recebe um desconto de %.",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "ShopPromotion",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ShopEntry",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ShopData",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "activeDuring",
+      "type": "List<TimeOfDay>",
+      "mods": "public",
+      "default": "new List<TimeOfDay>()",
+      "section": "",
+      "attrs": "[Tooltip(\"Horas do dia em que esta promoção está activa (WorldState.CurrentTimeOfDay, alimentado por DayNightCycle2D).\")]",
+      "inspector": true,
+      "description": "Horas do dia em que esta promoção está ativa (WorldState.CurrentTimeOfDay, alimentado por DayNightCycle2D)."
+    },
+    {
+      "name": "discountPercent",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "",
+      "attrs": "[Tooltip(\"Desconto aplicado ao preço-base durante estas horas (0-100%). Ex: 25 = -25%.\")] [Range(0, 100)]",
+      "inspector": true,
+      "description": "Desconto aplicado ao preço-base durante estas horas (0-100%). Ex: 25 = -25%."
+    },
+    {
+      "name": "item",
+      "type": "ItemData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Item à venda nesta loja.\")]",
+      "inspector": true,
+      "description": "Item à venda nesta loja."
+    },
+    {
+      "name": "useCustomPrice",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, usa 'customPrice' em vez do preço padrão do item (ItemData.buyPrice).\")]",
+      "inspector": true,
+      "description": "Se ativo, usa 'customPrice' em vez do preço padrão do item (ItemData.buyPrice)."
+    },
+    {
+      "name": "customPrice",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Preço personalizado (Sementes), usado apenas se 'useCustomPrice' estiver activo.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Preço personalizado (Sementes), usado apenas se 'useCustomPrice' estiver ativo."
+    },
+    {
+      "name": "availableDuring",
+      "type": "List<TimeOfDay>",
+      "mods": "public",
+      "default": "new List<TimeOfDay>()",
+      "section": "",
+      "attrs": "[Tooltip(\"Se não vazio, este item só aparece à venda durante estas horas do dia (ex: item nocturno).\")]",
+      "inspector": true,
+      "description": "Se não vazio, este item só aparece à venda durante estas horas do dia (ex: item nocturno)."
+    },
+    {
+      "name": "promotions",
+      "type": "List<ShopPromotion>",
+      "mods": "public",
+      "default": "new List<ShopPromotion>()",
+      "section": "",
+      "attrs": "[Tooltip(\"Promoções de horário (descontos) aplicadas ao preço-base deste item.\")]",
+      "inspector": true,
+      "description": "Promoções de horário (descontos) aplicadas ao preço-base deste item."
+    },
+    {
+      "name": "BasePrice",
+      "type": "int",
+      "mods": "public",
+      "default": "> useCustomPrice ? customPrice : (item != null ? item.buyPrice : 0)",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "shopName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Loja\"",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "entries",
+      "type": "List<ShopEntry>",
+      "mods": "public",
+      "default": "new List<ShopEntry>()",
+      "section": "Inventário",
+      "attrs": "[Header(\"Inventário\")] [Tooltip(\"Itens à venda nesta loja (preço, disponibilidade e promoções por entrada).\")]",
+      "inspector": true,
+      "description": "Itens à venda nesta loja (preço, disponibilidade e promoções por entrada)."
+    },
+    {
+      "name": "merchantBuysItems",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Recompra (vendedor compra itens do jogador)",
+      "attrs": "[Header(\"Recompra (vendedor compra itens do jogador)\")] [Tooltip(\"Se activo, o jogador pode vender a este vendedor qualquer item com ItemData.sellable == true (incluindo Tesouros).\")]",
+      "inspector": true,
+      "description": "Se ativo, o jogador pode vender a este vendedor qualquer item com ItemData.sellable == true (incluindo Tesouros)."
+    },
+    {
+      "name": "buybackMultiplier",
+      "type": "float",
+      "mods": "public",
+      "default": "0.5f",
+      "section": "Recompra (vendedor compra itens do jogador)",
+      "attrs": "[Tooltip(\"Fracção do ItemData.sellPrice paga ao jogador na recompra. Por omissão, 0.5 = 'sempre pela metade do valor'.\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Fração do ItemData.sellPrice paga ao jogador na recompra. Por omissão, 0.5 = 'sempre pela metade do valor'."
+    }
+  ],
+  "methods": [
+    {
+      "name": "IsAvailableNow",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação IsAvailableNow."
+    },
+    {
+      "name": "HasActivePromotion",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação HasActivePromotion."
+    },
+    {
+      "name": "GetCurrentPrice",
+      "ret": "int",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação GetCurrentPrice."
+    },
+    {
+      "name": "CurrentTime",
+      "ret": "TimeOfDay",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação CurrentTime."
+    },
+    {
+      "name": "GetBuybackPrice",
+      "ret": "int",
+      "mods": "public",
+      "params": "ItemData item",
+      "description": "Executa a operação GetBuybackPrice."
+    }
+  ],
+  "dependencies": [
+    "Action_OpenShop",
+    "DayNightCycle2D",
+    "ItemData",
+    "ItemType",
+    "ShopUI",
+    "TimeOfDay",
+    "WorldState"
+  ],
+  "used_by": [
+    "Action_OpenShop",
+    "ItemData",
+    "ShopUI"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #35 — Sistema de Loja: promoção de horário aplicada a uma\n/// <see cref=\"ShopEntry\"/>. Enquanto <see cref=\"WorldState.CurrentTimeOfDay\"/>\n/// estiver em <see cref=\"activeDuring\"/>, o preço-base do item recebe um\n/// desconto de <see cref=\"discountPercent\"/>%.\n/// </summary>\n[System.Serializable]\npublic class ShopPromotion\n{\n    [Tooltip(\"Horas do dia em que esta promoção está activa (WorldState.CurrentTimeOfDay, alimentado por DayNightCycle2D).\")]\n    public List<TimeOfDay> activeDuring = new List<TimeOfDay>();\n\n    [Tooltip(\"Desconto aplicado ao preço-base durante estas horas (0-100%). Ex: 25 = -25%.\")]\n    [Range(0, 100)] public int discountPercent = 0;\n}\n\n/// <summary>\n/// Tarefa #35 — uma entrada de inventário de uma <see cref=\"ShopData\"/>: o\n/// item à venda, o seu preço (padrão ou personalizado), em que horas do dia\n/// está disponível, e eventuais promoções de horário.\n/// </summary>\n[System.Serializable]\npublic class ShopEntry\n{\n    [Tooltip(\"Item à venda nesta loja.\")]\n    public ItemData item;\n\n    [Tooltip(\"Se activo, usa 'customPrice' em vez do preço padrão do item (ItemData.buyPrice).\")]\n    public bool useCustomPrice;\n\n    [Tooltip(\"Preço personalizado (Sementes), usado apenas se 'useCustomPrice' estiver activo.\")]\n    [Min(0)] public int customPrice;\n\n    [Tooltip(\"Se não vazio, este item só aparece à venda durante estas horas do dia (ex: item nocturno).\")]\n    public List<TimeOfDay> availableDuring = new List<TimeOfDay>();\n\n    [Tooltip(\"Promoções de horário (descontos) aplicadas ao preço-base deste item.\")]\n    public List<ShopPromotion> promotions = new List<ShopPromotion>();\n\n    /// <summary>Preço-base (antes de promoções): 'customPrice' se 'useCustomPrice', senão ItemData.buyPrice.</summary>\n    public int BasePrice => useCustomPrice ? customPrice : (item != null ? item.buyPrice : 0);\n\n    /// <summary>True se este item deve aparecer à venda na hora actual do mundo (WorldState.CurrentTimeOfDay).</summary>\n    public bool IsAvailableNow()\n    {\n        if (availableDuring == null || availableDuring.Count == 0) return true;\n\n        var time = CurrentTime();\n        return availableDuring.Contains(time);\n    }\n\n    /// <summary>True se alguma promoção com desconto > 0 estiver activa na hora actual.</summary>\n    public bool HasActivePromotion()\n    {\n        if (promotions == null) return false;\n\n        var time = CurrentTime();\n        foreach (var promo in promotions)\n        {\n            if (promo == null || promo.discountPercent <= 0) continue;\n            if (promo.activeDuring != null && promo.activeDuring.Contains(time)) return true;\n        }\n\n        return false;\n    }\n\n    /// <summary>Preço final (Sementes), já com o maior desconto de promoção activa aplicado (descontos não se acumulam).</summary>\n    public int GetCurrentPrice()\n    {\n        int basePrice = BasePrice;\n        int bestDiscount = 0;\n\n        if (promotions != null)\n        {\n            var time = CurrentTime();\n            foreach (var promo in promotions)\n            {\n                if (promo == null) continue;\n                if (promo.activeDuring != null && promo.activeDuring.Contains(time))\n                    bestDiscount = Mathf.Max(bestDiscount, promo.discountPercent);\n            }\n        }\n\n        return Mathf.Max(0, Mathf.RoundToInt(basePrice * (1f - bestDiscount / 100f)));\n    }\n\n    private static TimeOfDay CurrentTime() =>\n        WorldState.Instance != null ? WorldState.Instance.CurrentTimeOfDay : TimeOfDay.Manha;\n}\n\n/// <summary>\n/// Tarefa #35 — Sistema de Loja: define o inventário, preços/promoções e a\n/// configuração de recompra de uma loja, para usar com\n/// <see cref=\"Action_OpenShop\"/> (Eventos de NPC) e <see cref=\"ShopUI\"/>.\n///\n/// - Compra (jogador → loja): cada <see cref=\"ShopEntry\"/> usa o preço padrão\n///   do item (ItemData.buyPrice) ou um preço personalizado, com possíveis\n///   promoções/restrições de horário (ligadas a WorldState.CurrentTimeOfDay,\n///   alimentado por DayNightCycle2D).\n/// - Venda (jogador → loja, \"recompra\"): se <see cref=\"merchantBuysItems\"/>\n///   estiver activo, o vendedor compra qualquer item com\n///   ItemData.sellable == true por <see cref=\"buybackMultiplier\"/> × ItemData.sellPrice\n///   (por omissão, metade do valor — GetBuybackPrice).\n/// - Tesouros (ItemType.Tesouro): categoria de itens vendáveis e trocáveis\n///   por Sementes — funcionam como qualquer item \"sellable\" na recompra\n///   acima; não precisam de tratamento especial além de\n///   sellable = true e sellPrice definido.\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Shop Data\", fileName = \"NewShop\")]\npublic class ShopData : ScriptableObject\n{\n    [Header(\"Identidade\")]\n    public string shopName = \"Loja\";\n\n    [Header(\"Inventário\")]\n    [Tooltip(\"Itens à venda nesta loja (preço, disponibilidade e promoções por entrada).\")]\n    public List<ShopEntry> entries = new List<ShopEntry>();\n\n    [Header(\"Recompra (vendedor compra itens do jogador)\")]\n    [Tooltip(\"Se activo, o jogador pode vender a este vendedor qualquer item com ItemData.sellable == true (incluindo Tesouros).\")]\n    public bool merchantBuysItems = false;\n\n    [Tooltip(\"Fracção do ItemData.sellPrice paga ao jogador na recompra. Por omissão, 0.5 = 'sempre pela metade do valor'.\")]\n    [Range(0f, 1f)] public float buybackMultiplier = 0.5f;\n\n    /// <summary>\n    /// Preço (Sementes) pago ao jogador ao vender \"item\" a esta loja, ou 0 se\n    /// a loja não compra itens, o item for null, ou ItemData.sellable for\n    /// false.\n    /// </summary>\n    public int GetBuybackPrice(ItemData item)\n    {\n        if (!merchantBuysItems || item == null || !item.sellable) return 0;\n        return Mathf.Max(1, Mathf.RoundToInt(item.sellPrice * buybackMultiplier));\n    }\n}\n",
+  "id": "script-data-shopdata-cs",
+  "dependencyIds": [
+    "script-npc-actions-shopactions-cs",
+    "script-environment-daynightcycle2d-cs",
+    "script-data-itemdata-cs",
+    "script-ui-shopui-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-shopactions-cs",
+    "script-data-itemdata-cs",
+    "script-ui-shopui-cs"
+  ]
+}

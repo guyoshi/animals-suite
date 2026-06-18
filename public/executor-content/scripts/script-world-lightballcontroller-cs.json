@@ -1,0 +1,106 @@
+{
+  "path": "World/LightBallController.cs",
+  "filename": "LightBallController.cs",
+  "category": "World",
+  "primary": "LightBallController",
+  "kind": "Componente",
+  "summary": "Mapa-Múndi (GDD \"Navegação\"): controla a \"bola de luz\" que representa o jogador no Mapa-Múndi. Move-se ao longo de um de cada vez, a uma velocidade configurável no Inspector ( ), e PÁRA SEMPRE em cada — nunca salta nós, mesmo que já estejam desbloqueados. decide PARA ONDE a bola viaja (com base no analógico esquerdo e na regra de alcançabilidade dos nós); este componente só sabe mover-se de um extremo ao outro de uma ligação e avisar quando chega/quando o progresso muda (para a câmera e transições visuais).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "LightBallController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "speed",
+      "type": "float",
+      "mods": "public",
+      "default": "4f",
+      "section": "Velocidade",
+      "attrs": "[Header(\"Velocidade\")] [Tooltip(\"Velocidade da bola de luz ao longo dos ramos, em unidades de mundo por segundo. Ajustar aqui controla o ritmo de toda a navegação do Mapa-Múndi.\")] [Min(0.01f)]",
+      "inspector": true,
+      "description": "Velocidade da bola de luz ao longo dos ramos, em unidades de mundo por segundo. Ajustar aqui controla o ritmo de toda a navegação do Mapa-Múndi."
+    },
+    {
+      "name": "startingNode",
+      "type": "WorldMapNode",
+      "mods": "public",
+      "default": "",
+      "section": "Estado Inicial (apenas testes no Editor)",
+      "attrs": "[Header(\"Estado Inicial (apenas testes no Editor)\")] [Tooltip(\"Nó onde a bola aparece ao iniciar, se WorldMapController não a reposicionar primeiro. Em jogo normal, WorldMapController.WarpToCurrentArea define a posição correcta ao abrir o mapa.\")]",
+      "inspector": true,
+      "description": "Nó onde a bola aparece ao iniciar, se WorldMapController não a reposicionar primeiro. Em jogo normal, WorldMapController.WarpToCurrentArea define a posição correcta ao abrir o mapa."
+    },
+    {
+      "name": "moveRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Estado Inicial (apenas testes no Editor)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "WarpToNode",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldMapNode node",
+      "description": "Executa a operação WarpToNode."
+    },
+    {
+      "name": "TravelAlong",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldMapConnection connection, WorldMapNode targetNode",
+      "description": "Executa a operação TravelAlong."
+    },
+    {
+      "name": "StopMoving",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StopMoving."
+    },
+    {
+      "name": "MoveRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "WorldMapConnection connection, WorldMapNode targetNode",
+      "description": "Executa a operação MoveRoutine."
+    }
+  ],
+  "dependencies": [
+    "WorldMapCameraRig",
+    "WorldMapConnection",
+    "WorldMapController",
+    "WorldMapNode"
+  ],
+  "used_by": [
+    "WorldMapController"
+  ],
+  "source": "using System;\nusing System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Mapa-Múndi (GDD \"Navegação\"): controla a \"bola de luz\" que representa o\n/// jogador no Mapa-Múndi. Move-se ao longo de um <see cref=\"WorldMapConnection\"/>\n/// de cada vez, a uma velocidade configurável no Inspector\n/// (<see cref=\"speed\"/>), e PÁRA SEMPRE em cada <see cref=\"WorldMapNode\"/> —\n/// nunca salta nós, mesmo que já estejam desbloqueados.\n///\n/// <see cref=\"WorldMapController\"/> decide PARA ONDE a bola viaja (com base no\n/// analógico esquerdo e na regra de alcançabilidade dos nós); este componente\n/// só sabe mover-se de um extremo ao outro de uma ligação e avisar quando\n/// chega/quando o progresso muda (para a câmara e transições visuais).\n/// </summary>\npublic class LightBallController : MonoBehaviour\n{\n    [Header(\"Velocidade\")]\n    [Tooltip(\"Velocidade da bola de luz ao longo dos ramos, em unidades de mundo por segundo. Ajustar aqui controla o ritmo de toda a navegação do Mapa-Múndi.\")]\n    [Min(0.01f)]\n    public float speed = 4f;\n\n    [Header(\"Estado Inicial (apenas testes no Editor)\")]\n    [Tooltip(\"Nó onde a bola aparece ao iniciar, se WorldMapController não a reposicionar primeiro. Em jogo normal, WorldMapController.WarpToCurrentArea define a posição correcta ao abrir o mapa.\")]\n    public WorldMapNode startingNode;\n\n    /// <summary>Nó onde a bola está parada (válido apenas quando !IsMoving).</summary>\n    public WorldMapNode CurrentNode { get; private set; }\n\n    /// <summary>Ligação que a bola está a atravessar (válido apenas enquanto IsMoving).</summary>\n    public WorldMapConnection CurrentConnection { get; private set; }\n\n    /// <summary>Progresso 0-1 ao longo de CurrentConnection (0 = fromNode, 1 = toNode), válido apenas enquanto IsMoving.</summary>\n    public float Progress { get; private set; }\n\n    public bool IsMoving { get; private set; }\n\n    /// <summary>Disparado quando a bola chega a um nó e PÁRA — em todos os nós, mesmo já desbloqueados. WorldMapController abre o painel automático aqui.</summary>\n    public event Action<WorldMapNode> ArrivedAtNode;\n\n    /// <summary>Disparado a cada frame de movimento com (ligação, progresso 0-1) — usado pela câmara (WorldMapCameraRig) e pela transição visual entre regiões.</summary>\n    public event Action<WorldMapConnection, float> ProgressChanged;\n\n    private Coroutine moveRoutine;\n\n    private void Start()\n    {\n        if (CurrentNode == null && startingNode != null)\n            WarpToNode(startingNode);\n    }\n\n    /// <summary>Posiciona a bola instantaneamente num nó, sem animação (usado ao abrir o mapa — a bola \"aparece\" no nó da área actual).</summary>\n    public void WarpToNode(WorldMapNode node)\n    {\n        if (node == null) return;\n\n        StopMoving();\n        CurrentNode = node;\n        CurrentConnection = null;\n        Progress = 0f;\n        transform.position = node.transform.position;\n\n        ArrivedAtNode?.Invoke(CurrentNode);\n    }\n\n    /// <summary>\n    /// Move a bola ao longo de \"connection\", do nó actual para \"targetNode\"\n    /// (o outro extremo dessa ligação). Devolve false se a bola já estiver em\n    /// movimento, ou se \"connection\" não ligar ao nó onde a bola está parada.\n    /// </summary>\n    public bool TravelAlong(WorldMapConnection connection, WorldMapNode targetNode)\n    {\n        if (IsMoving || connection == null || targetNode == null || CurrentNode == null) return false;\n        if (CurrentNode != connection.fromNode && CurrentNode != connection.toNode) return false;\n        if (targetNode != connection.fromNode && targetNode != connection.toNode) return false;\n        if (targetNode == CurrentNode) return false;\n\n        moveRoutine = StartCoroutine(MoveRoutine(connection, targetNode));\n        return true;\n    }\n\n    /// <summary>Pára o movimento imediatamente (sem chegar a um nó) — uso raro, ex: cancelar uma viagem por uma cutscene.</summary>\n    public void StopMoving()\n    {\n        if (moveRoutine != null) StopCoroutine(moveRoutine);\n        moveRoutine = null;\n        IsMoving = false;\n    }\n\n    private IEnumerator MoveRoutine(WorldMapConnection connection, WorldMapNode targetNode)\n    {\n        IsMoving = true;\n        CurrentConnection = connection;\n\n        bool forward = targetNode == connection.toNode;\n        float length = Mathf.Max(0.001f, connection.GetLength());\n\n        float t = forward ? 0f : 1f;\n        float dir = forward ? 1f : -1f;\n\n        Progress = t;\n        transform.position = connection.GetPositionAtProgress(t);\n        ProgressChanged?.Invoke(connection, t);\n\n        while ((forward && t < 1f) || (!forward && t > 0f))\n        {\n            float step = (speed / length) * Time.deltaTime;\n            t = Mathf.Clamp01(t + dir * step);\n            Progress = t;\n\n            transform.position = connection.GetPositionAtProgress(t);\n            ProgressChanged?.Invoke(connection, t);\n\n            yield return null;\n        }\n\n        CurrentNode = targetNode;\n        CurrentConnection = null;\n        IsMoving = false;\n        moveRoutine = null;\n\n        ArrivedAtNode?.Invoke(CurrentNode);\n    }\n}\n",
+  "id": "script-world-lightballcontroller-cs",
+  "dependencyIds": [
+    "script-world-worldmapcamerarig-cs",
+    "script-world-worldmapconnection-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapnode-cs"
+  ],
+  "usedByIds": [
+    "script-world-worldmapcontroller-cs"
+  ]
+}

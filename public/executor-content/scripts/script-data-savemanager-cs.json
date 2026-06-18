@@ -1,0 +1,293 @@
+{
+  "path": "Data/SaveManager.cs",
+  "filename": "SaveManager.cs",
+  "category": "Data",
+  "primary": "SaveManager",
+  "kind": "Componente",
+  "summary": "Gestor central do sistema de save (singleton, mesmo padrão de PlayerProgress/WorldState/GameVariables). Responsável por: - Capturar o estado atual (PlayerProgress, WorldState, GameVariables, FormSwitcher, cena/posição do player) numa . - Restaurar esse estado a partir de uma SaveData carregada. - Ler/escrever arquivos JSON em disco, num slot de autosave (1) e até slots manuais (0-29), conforme o esquema do menu de save (1 slot automático no topo + até 30 manuais escolhidos pelo jogador). Não decide QUANDO gravar/carregar — isso é feito por SafeHaven (save manual) e pelos triggers de entrada/saída de área/cidade (autosave), e pelo futuro SaveMenuController (escolha de slot). ⚠ ORDEM DE INIC",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SaveManager",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "MaxManualSlots",
+      "type": "int",
+      "mods": "public const",
+      "default": "30",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SaveFolderName",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"Saves\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "AutoSaveFileName",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"save_auto.json\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ManualSaveFilePrefix",
+      "type": "string",
+      "mods": "private const",
+      "default": "\"save_slot_\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SaveFileExtension",
+      "type": "string",
+      "mods": "private const",
+      "default": "\".json\"",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "SaveDirectory",
+      "type": "string",
+      "mods": "private",
+      "default": "> Path.Combine(Application.persistentDataPath, SaveFolderName)",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "AutoSavePath",
+      "type": "string",
+      "mods": "private",
+      "default": "> Path.Combine(SaveDirectory, AutoSaveFileName)",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CurrentSaveVersion",
+      "type": "int",
+      "mods": "public const",
+      "default": "1",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "ManualSavePath",
+      "ret": "string",
+      "mods": "private",
+      "params": "int slotIndex",
+      "description": "Executa a operação ManualSavePath."
+    },
+    {
+      "name": "PathForSlot",
+      "ret": "string",
+      "mods": "private",
+      "params": "int slotIndex, bool isAuto",
+      "description": "Executa a operação PathForSlot."
+    },
+    {
+      "name": "HasAutoSave",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação HasAutoSave."
+    },
+    {
+      "name": "HasManualSave",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int slotIndex",
+      "description": "Executa a operação HasManualSave."
+    },
+    {
+      "name": "GetUsedManualSlots",
+      "ret": "List<int>",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação GetUsedManualSlots."
+    },
+    {
+      "name": "GetFirstFreeManualSlot",
+      "ret": "int",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação GetFirstFreeManualSlot."
+    },
+    {
+      "name": "CaptureState",
+      "ret": "SaveData",
+      "mods": "public",
+      "params": "int slotIndex, bool isAuto",
+      "description": "Executa a operação CaptureState."
+    },
+    {
+      "name": "RestoreState",
+      "ret": "void",
+      "mods": "public",
+      "params": "SaveData data",
+      "description": "Executa a operação RestoreState."
+    },
+    {
+      "name": "SaveAutosave",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação SaveAutosave."
+    },
+    {
+      "name": "SaveToManualSlot",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int slotIndex",
+      "description": "Executa a operação SaveToManualSlot."
+    },
+    {
+      "name": "WriteToFile",
+      "ret": "bool",
+      "mods": "private",
+      "params": "SaveData data, string path",
+      "description": "Executa a operação WriteToFile."
+    },
+    {
+      "name": "LoadAutosave",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação LoadAutosave."
+    },
+    {
+      "name": "LoadManualSlot",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int slotIndex",
+      "description": "Executa a operação LoadManualSlot."
+    },
+    {
+      "name": "PeekSlot",
+      "ret": "SaveData",
+      "mods": "public",
+      "params": "int slotIndex, bool isAuto",
+      "description": "Executa a operação PeekSlot."
+    },
+    {
+      "name": "ReadFromFile",
+      "ret": "SaveData",
+      "mods": "private",
+      "params": "string path",
+      "description": "Executa a operação ReadFromFile."
+    },
+    {
+      "name": "DeleteManualSlot",
+      "ret": "bool",
+      "mods": "public",
+      "params": "int slotIndex",
+      "description": "Executa a operação DeleteManualSlot."
+    }
+  ],
+  "dependencies": [
+    "FormSwitcher",
+    "GameVariables",
+    "PlayerProgress",
+    "SafeHaven",
+    "SaveData",
+    "SaveMenuController",
+    "WorldState"
+  ],
+  "used_by": [
+    "Action_SavePlayerSnapshot",
+    "AnimalSpiritRescue",
+    "AnimalsDebugPanel",
+    "AreaManager",
+    "CameraAreaBounds",
+    "FormSwitcher",
+    "GameVariables",
+    "HUDController",
+    "MainMenuController",
+    "PickupBase",
+    "PlayerProgress",
+    "PlayerResourceType",
+    "SafeHaven",
+    "SaveData",
+    "SaveMenuController",
+    "WorldState"
+  ],
+  "source": "using System;\nusing System.Collections.Generic;\nusing System.IO;\nusing UnityEngine;\nusing UnityEngine.SceneManagement;\n\n/// <summary>\n/// Gestor central do sistema de save (singleton, mesmo padrão de\n/// PlayerProgress/WorldState/GameVariables). Responsável por:\n///\n/// - Capturar o estado actual (PlayerProgress, WorldState, GameVariables,\n///   FormSwitcher, cena/posição do player) numa <see cref=\"SaveData\"/>.\n/// - Restaurar esse estado a partir de uma SaveData carregada.\n/// - Ler/escrever ficheiros JSON em disco, num slot de autosave (1) e até\n///   <see cref=\"MaxManualSlots\"/> slots manuais (0-29), conforme o esquema do\n///   menu de save (1 slot automático no topo + até 30 manuais escolhidos pelo\n///   jogador).\n///\n/// Não decide QUANDO gravar/carregar — isso é feito por SafeHaven (save\n/// manual) e pelos triggers de entrada/saída de área/cidade (autosave), e pelo\n/// futuro SaveMenuController (escolha de slot).\n///\n/// ⚠ ORDEM DE INICIALIZAÇÃO: <see cref=\"RestoreState\"/> (e portanto\n/// <see cref=\"LoadAutosave\"/>/<see cref=\"LoadManualSlot\"/>) NUNCA deve ser\n/// chamado a partir de Awake(). Deve ser chamado em Start() ou mais tarde,\n/// depois de todos os outros scripts terem corrido o seu Start() (em\n/// particular FormSwitcher.Start(), que chama SyncFreedAnimalsFromProgress()).\n/// O [DefaultExecutionOrder(100)] abaixo garante que o Start() deste script\n/// corre depois dos sistemas de jogo (ordem por defeito = 0), prevenindo\n/// conflitos caso algum sistema de boot carregue o save no Start() deste\n/// componente. Se precisares de iniciar um load numa fase anterior, usa uma\n/// coroutine com yield return null para esperar um frame.\n/// </summary>\n[DefaultExecutionOrder(100)]\npublic class SaveManager : MonoBehaviour\n{\n    public static SaveManager Instance { get; private set; }\n\n    /// <summary>Número máximo de slots manuais (1-30, indexados 0-29).</summary>\n    public const int MaxManualSlots = 30;\n\n    private const string SaveFolderName = \"Saves\";\n    private const string AutoSaveFileName = \"save_auto.json\";\n    private const string ManualSaveFilePrefix = \"save_slot_\";\n    private const string SaveFileExtension = \".json\";\n\n    /// <summary>Disparado depois de um save (autosave ou manual) ser escrito com sucesso. Argumento: slotIndex (-1 = auto).</summary>\n    public event Action<int> OnSaveCompleted;\n\n    /// <summary>Disparado depois de um load (autosave ou manual) ser aplicado com sucesso. Argumento: slotIndex (-1 = auto).</summary>\n    public event Action<int> OnLoadCompleted;\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\").\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(SaveManager) + \" (Fallback)\");\n        var instance = go.AddComponent<SaveManager>();\n        instance.isAutoFallback = true;\n    }\n\n    // ---------------- Caminhos ----------------\n\n    private string SaveDirectory => Path.Combine(Application.persistentDataPath, SaveFolderName);\n\n    private string AutoSavePath => Path.Combine(SaveDirectory, AutoSaveFileName);\n\n    private string ManualSavePath(int slotIndex) =>\n        Path.Combine(SaveDirectory, $\"{ManualSaveFilePrefix}{slotIndex:00}{SaveFileExtension}\");\n\n    private string PathForSlot(int slotIndex, bool isAuto) => isAuto ? AutoSavePath : ManualSavePath(slotIndex);\n\n    // ---------------- Consultas de Slots ----------------\n\n    public bool HasAutoSave() => File.Exists(AutoSavePath);\n\n    public bool HasManualSave(int slotIndex)\n    {\n        if (slotIndex < 0 || slotIndex >= MaxManualSlots) return false;\n        return File.Exists(ManualSavePath(slotIndex));\n    }\n\n    /// <summary>Índices (0-29) dos slots manuais já usados, por ordem.</summary>\n    public List<int> GetUsedManualSlots()\n    {\n        var used = new List<int>();\n        for (int i = 0; i < MaxManualSlots; i++)\n            if (HasManualSave(i)) used.Add(i);\n\n        return used;\n    }\n\n    /// <summary>\n    /// Primeiro slot manual livre (0-29), ou -1 se os 30 estiverem ocupados.\n    /// Usado pelo botão \"Criar novo save\" do menu — esse botão fica escondido\n    /// quando isto devolve -1.\n    /// </summary>\n    public int GetFirstFreeManualSlot()\n    {\n        for (int i = 0; i < MaxManualSlots; i++)\n            if (!HasManualSave(i)) return i;\n\n        return -1;\n    }\n\n    // ---------------- Versão actual do Schema ----------------\n\n    /// <summary>\n    /// Incrementar sempre que o schema de SaveData mudar de forma\n    /// incompatível (campos renomeados/removidos/com tipo alterado).\n    /// O campo SaveData.saveVersion é escrito em cada novo save e lido ao\n    /// restaurar — se saveVersion &lt; CurrentSaveVersion, RestoreState avisa e\n    /// pode aplicar lógica de migração.\n    /// </summary>\n    public const int CurrentSaveVersion = 1;\n\n    // ---------------- Captura / Restauro de Estado ----------------\n\n    /// <summary>Constrói uma SaveData com o estado actual do jogo.</summary>\n    public SaveData CaptureState(int slotIndex, bool isAuto)\n    {\n        var data = new SaveData\n        {\n            slotIndex = slotIndex,\n            isAutosave = isAuto,\n            saveVersion = CurrentSaveVersion,\n            timestamp = DateTime.UtcNow.ToString(\"o\"),\n            sceneName = SceneManager.GetActiveScene().name\n        };\n\n        var player = GameObject.FindGameObjectWithTag(\"Player\");\n        if (player != null)\n        {\n            var pos = player.transform.position;\n            data.playerPosX = pos.x;\n            data.playerPosY = pos.y;\n            data.playerPosZ = pos.z;\n        }\n\n        PlayerProgress.Instance?.CaptureTo(data);\n        WorldState.Instance?.CaptureTo(data);\n        GameVariables.Instance?.CaptureTo(data);\n\n        var formSwitcher = player != null ? player.GetComponent<FormSwitcher>() : null;\n        formSwitcher?.CaptureTo(data);\n\n        return data;\n    }\n\n    /// <summary>\n    /// Aplica o estado guardado em \"data\" aos singletons relevantes e\n    /// reposiciona o player. Não trata de mudança de cena — chamar depois de a\n    /// cena de \"data.sceneName\" estar carregada.\n    /// </summary>\n    public void RestoreState(SaveData data)\n    {\n        if (data == null) return;\n\n        // Verificação de versão: avisa se o save é mais antigo que o schema actual.\n        // Adicionar lógica de migração aqui conforme o jogo evolui.\n        if (data.saveVersion < CurrentSaveVersion)\n            Debug.LogWarning(\n                $\"[SaveManager] Save versão {data.saveVersion} (actual: {CurrentSaveVersion}). \" +\n                $\"Campos novos ficarão em valores padrão. Se ocorrerem comportamentos inesperados, \" +\n                $\"cria um novo save.\");\n\n        PlayerProgress.Instance?.RestoreFrom(data);\n        WorldState.Instance?.RestoreFrom(data);\n        GameVariables.Instance?.RestoreFrom(data);\n\n        var player = GameObject.FindGameObjectWithTag(\"Player\");\n        var formSwitcher = player != null ? player.GetComponent<FormSwitcher>() : null;\n        formSwitcher?.RestoreFrom(data);\n\n        if (player != null)\n            player.transform.position = new Vector3(data.playerPosX, data.playerPosY, data.playerPosZ);\n    }\n\n    // ---------------- Gravar ----------------\n\n    /// <summary>Grava o autosave (chamado ao entrar/sair de área ou cidade — Etapa de Safe Haven/Autosave).</summary>\n    public bool SaveAutosave()\n    {\n        return WriteToFile(CaptureState(-1, true), AutoSavePath);\n    }\n\n    /// <summary>Grava num slot manual (0-29), tipicamente a partir de um Safe Haven ou do menu de save.</summary>\n    public bool SaveToManualSlot(int slotIndex)\n    {\n        if (slotIndex < 0 || slotIndex >= MaxManualSlots)\n        {\n            Debug.LogError($\"[SaveManager] Slot manual inválido: {slotIndex}\");\n            return false;\n        }\n\n        return WriteToFile(CaptureState(slotIndex, false), ManualSavePath(slotIndex));\n    }\n\n    private bool WriteToFile(SaveData data, string path)\n    {\n        try\n        {\n            Directory.CreateDirectory(SaveDirectory);\n\n            string json = JsonUtility.ToJson(data, true);\n            File.WriteAllText(path, json);\n\n            OnSaveCompleted?.Invoke(data.slotIndex);\n            return true;\n        }\n        catch (Exception e)\n        {\n            Debug.LogError($\"[SaveManager] Falha ao gravar '{path}': {e}\");\n            return false;\n        }\n    }\n\n    // ---------------- Carregar ----------------\n\n    /// <summary>Lê e aplica o autosave. Devolve false se não existir ou falhar.</summary>\n    public bool LoadAutosave()\n    {\n        var data = ReadFromFile(AutoSavePath);\n        if (data == null) return false;\n\n        RestoreState(data);\n        OnLoadCompleted?.Invoke(-1);\n        return true;\n    }\n\n    /// <summary>Lê e aplica um slot manual (0-29). Devolve false se não existir ou falhar.</summary>\n    public bool LoadManualSlot(int slotIndex)\n    {\n        if (slotIndex < 0 || slotIndex >= MaxManualSlots) return false;\n\n        var data = ReadFromFile(ManualSavePath(slotIndex));\n        if (data == null) return false;\n\n        RestoreState(data);\n        OnLoadCompleted?.Invoke(slotIndex);\n        return true;\n    }\n\n    /// <summary>\n    /// Lê os metadados de um slot (timestamp, cena, recursos, % etc.) sem\n    /// aplicar o estado ao jogo — usado pelo menu de save para desenhar os\n    /// botões de slot (preview). Devolve null se o slot não existir.\n    /// </summary>\n    public SaveData PeekSlot(int slotIndex, bool isAuto)\n    {\n        return ReadFromFile(PathForSlot(slotIndex, isAuto));\n    }\n\n    private SaveData ReadFromFile(string path)\n    {\n        try\n        {\n            if (!File.Exists(path)) return null;\n\n            string json = File.ReadAllText(path);\n            return JsonUtility.FromJson<SaveData>(json);\n        }\n        catch (Exception e)\n        {\n            Debug.LogError($\"[SaveManager] Falha ao ler '{path}': {e}\");\n            return null;\n        }\n    }\n\n    // ---------------- Apagar ----------------\n\n    /// <summary>\n    /// Apaga um slot manual (0-29). Liberta o slot para reutilização e pode\n    /// fazer reaparecer o botão \"Criar novo save\" no menu (se estava escondido\n    /// por os 30 estarem ocupados).\n    /// </summary>\n    public bool DeleteManualSlot(int slotIndex)\n    {\n        if (slotIndex < 0 || slotIndex >= MaxManualSlots) return false;\n\n        string path = ManualSavePath(slotIndex);\n        if (!File.Exists(path)) return false;\n\n        try\n        {\n            File.Delete(path);\n            return true;\n        }\n        catch (Exception e)\n        {\n            Debug.LogError($\"[SaveManager] Falha ao apagar '{path}': {e}\");\n            return false;\n        }\n    }\n}\n",
+  "id": "script-data-savemanager-cs",
+  "dependencyIds": [
+    "script-forms-formswitcher-cs",
+    "script-data-gamevariables-cs",
+    "script-data-playerprogress-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savedata-cs",
+    "script-ui-savemenucontroller-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-interactables-animalspiritrescue-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-world-areamanager-cs",
+    "script-camera-cameraareabounds-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-gamevariables-cs",
+    "script-ui-hudcontroller-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savedata-cs",
+    "script-ui-savemenucontroller-cs",
+    "script-data-worldstate-cs"
+  ]
+}

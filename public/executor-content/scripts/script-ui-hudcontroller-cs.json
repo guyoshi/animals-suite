@@ -1,0 +1,603 @@
+{
+  "path": "UI/HUDController.cs",
+  "filename": "HUDController.cs",
+  "category": "UI",
+  "primary": "HUDController",
+  "kind": "Componente",
+  "summary": "HUD principal do jogo (Tarefa #32) — elementos sempre visíveis (ou temporariamente visíveis) durante o jogo, fora dos menus: - Corações (vida atual/máxima — ). - Item equipado + quantidade ( , , ). - Forma atual ( ) + cooldown de transformação ( ). - Cooldown/estado/disponibilidade da habilidade da forma atual (Tarefa #34 — devolve um para TODAS as formas). Se for 0 (habilidades passivas ou sem cooldown próprio), nenhum indicador de cooldown é mostrado; caso contrário mostra-se o tempo restante e o ícone fica acinzentado ( ) durante o cooldown, ou realçado ( ) enquanto for true. - Sementes ( ) e Runas de Gaia ( ). - Banner com o nome da área atual ( ), com fade in/out e ocultação automát",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "HUDController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "formSwitcher",
+      "type": "FormSwitcher",
+      "mods": "private",
+      "default": "",
+      "section": "Player (auto-detectado via tag 'Player' se vazio)",
+      "attrs": "[Header(\"Player (auto-detectado via tag 'Player' se vazio)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "abilityRouter",
+      "type": "AbilityRouter",
+      "mods": "private",
+      "default": "",
+      "section": "Player (auto-detectado via tag 'Player' se vazio)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "heartsContainer",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Corações",
+      "attrs": "[Header(\"Corações\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "heartIconPrefab",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Corações",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "heartFullSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Corações",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "heartEmptySprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Corações",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equippedItemIcon",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Item Equipado",
+      "attrs": "[Header(\"Item Equipado\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equippedItemQuantityText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Item Equipado",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "formIconImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Forma Actual",
+      "attrs": "[Header(\"Forma Actual\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "transformCooldownFill",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Forma Actual",
+      "attrs": "[Tooltip(\"Image do tipo 'Filled' (radial) sobreposta ao ícone da forma — fillAmount = TransformCooldownRemaining01 (1 = acabou de transformar, 0 = pronto).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Image do tipo 'Filled' (radial) sobreposta ao ícone da forma — fillAmount = TransformCooldownRemaining01 (1 = acabou de transformar, 0 = pronto)."
+    },
+    {
+      "name": "abilityIconImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Cooldown de Habilidade",
+      "attrs": "[Header(\"Cooldown de Habilidade\")] [Tooltip(\"Ícone do botão de Habilidade (Tarefa #34) — acinzentado (abilityCooldownColor) durante o cooldown, realçado (abilityActiveColor) enquanto a habilidade está activa (IAbility.IsActive), branco normal nos restantes casos. Formas cuja habilidade primária não tem cooldown próprio (IActiveAbility.CooldownDuration == 0) nunca mostram o texto/indicador de cooldown.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Ícone do botão de Habilidade (Tarefa #34) — acinzentado (abilityCooldownColor) durante o cooldown, realçado (abilityActiveColor) enquanto a habilidade está ativa (IAbility.IsActive), branco normal nos restantes casos. Formas cuja habilidade primária não tem cooldown próprio (IActiveAbility.CooldownDuration == 0) nunca mostram o texto/indicador de cooldown."
+    },
+    {
+      "name": "abilityCooldownText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Cooldown de Habilidade",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "abilityCooldownColor",
+      "type": "Color",
+      "mods": "private",
+      "default": "new Color(1f, 1f, 1f, 0.4f)",
+      "section": "Cooldown de Habilidade",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "abilityActiveColor",
+      "type": "Color",
+      "mods": "private",
+      "default": "new Color(0.6f, 1f, 0.6f, 1f)",
+      "section": "Cooldown de Habilidade",
+      "attrs": "[Tooltip(\"Cor do ícone de habilidade enquanto a habilidade está activa (ex: ShellGuard em guarda, Camo activo, Glide a planar).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Cor do ícone de habilidade enquanto a habilidade está ativa (ex: ShellGuard em guarda, Camo ativo, Glide a planar)."
+    },
+    {
+      "name": "sementesRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "[Header(\"Recursos\")] [Tooltip(\"GameObject raiz do display de Sementes — ocultado automaticamente e mostrado apenas temporariamente ao apanhar/comprar sementes (Tarefa #37).\")] [SerializeField]",
+      "inspector": true,
+      "description": "GameObject raiz do display de Sementes — ocultado automaticamente e mostrado apenas temporariamente ao coletar/comprar sementes (Tarefa #37)."
+    },
+    {
+      "name": "sementesCanvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sementesText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sementesDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "3f",
+      "section": "Recursos",
+      "attrs": "[Tooltip(\"Duração (segundos) em que o display de Sementes fica visível após uma mudança (Tarefa #37).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração (segundos) em que o display de Sementes fica visível após uma mudança (Tarefa #37)."
+    },
+    {
+      "name": "sementesFadeDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.3f",
+      "section": "Recursos",
+      "attrs": "[Tooltip(\"Duração do fade in/out do display de Sementes (Tarefa #37).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração do fade in/out do display de Sementes (Tarefa #37)."
+    },
+    {
+      "name": "runasText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Recursos",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaBannerRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Banner de Área",
+      "attrs": "[Header(\"Banner de Área\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaBannerCanvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Banner de Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaNameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Banner de Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaBannerDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "3f",
+      "section": "Banner de Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaBannerFadeDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.4f",
+      "section": "Banner de Área",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "saveIndicatorRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Mensagem de Save",
+      "attrs": "[Header(\"Mensagem de Save\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "saveIndicatorText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Mensagem de Save",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "saveMessage",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Jogo guardado\"",
+      "section": "Mensagem de Save",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "saveIndicatorDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "2f",
+      "section": "Mensagem de Save",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "villagePopulationRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "População da Vila",
+      "attrs": "[Header(\"População da Vila\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "villagePopulationText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "População da Vila",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "villagePopulationFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"{0} / {1}\"",
+      "section": "População da Vila",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_heartIcons",
+      "type": "List<Image>",
+      "mods": "private readonly",
+      "default": "new List<Image>()",
+      "section": "População da Vila",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_areaBannerRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "População da Vila",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_saveIndicatorRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "População da Vila",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_sementesRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "População da Vila",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "OnHealthChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int current, int max",
+      "description": "Executa a operação OnHealthChanged."
+    },
+    {
+      "name": "RefreshHearts",
+      "ret": "void",
+      "mods": "private",
+      "params": "int current, int max",
+      "description": "Executa a operação RefreshHearts."
+    },
+    {
+      "name": "RebuildHearts",
+      "ret": "void",
+      "mods": "private",
+      "params": "int max",
+      "description": "Executa a operação RebuildHearts."
+    },
+    {
+      "name": "OnEquippedItemChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "string itemId",
+      "description": "Executa a operação OnEquippedItemChanged."
+    },
+    {
+      "name": "OnPickupCollected",
+      "ret": "void",
+      "mods": "private",
+      "params": "PickupType type, string pickupId",
+      "description": "Executa a operação OnPickupCollected."
+    },
+    {
+      "name": "RefreshEquippedItem",
+      "ret": "void",
+      "mods": "private",
+      "params": "string itemId",
+      "description": "Executa a operação RefreshEquippedItem."
+    },
+    {
+      "name": "OnFormApplied",
+      "ret": "void",
+      "mods": "private",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação OnFormApplied."
+    },
+    {
+      "name": "UpdateTransformCooldown",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateTransformCooldown."
+    },
+    {
+      "name": "UpdateAbilityCooldown",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateAbilityCooldown."
+    },
+    {
+      "name": "SetAbilityIndicator",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool showCooldownText, bool onCooldown, bool isActive",
+      "description": "Executa a operação SetAbilityIndicator."
+    },
+    {
+      "name": "OnSeedsChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int sementes",
+      "description": "Executa a operação OnSeedsChanged."
+    },
+    {
+      "name": "SementesBannerRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SementesBannerRoutine."
+    },
+    {
+      "name": "OnRunasChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int runas, int totalCollected",
+      "description": "Executa a operação OnRunasChanged."
+    },
+    {
+      "name": "OnCurrentAreaChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area",
+      "description": "Executa a operação OnCurrentAreaChanged."
+    },
+    {
+      "name": "AreaBannerRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação AreaBannerRoutine."
+    },
+    {
+      "name": "OnSaveCompleted",
+      "ret": "void",
+      "mods": "private",
+      "params": "int slotIndex",
+      "description": "Executa a operação OnSaveCompleted."
+    },
+    {
+      "name": "SaveIndicatorRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SaveIndicatorRoutine."
+    },
+    {
+      "name": "OnVillagePopulationChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "string changedVillageId, int current, int max",
+      "description": "Executa a operação OnVillagePopulationChanged."
+    },
+    {
+      "name": "RefreshVillagePopulation",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area",
+      "description": "Executa a operação RefreshVillagePopulation."
+    },
+    {
+      "name": "RefreshVillagePopulation",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RefreshVillagePopulation."
+    },
+    {
+      "name": "FadeCanvasGroup",
+      "ret": "IEnumerator",
+      "mods": "private static",
+      "params": "CanvasGroup group, float from, float to, float duration",
+      "description": "Executa a operação FadeCanvasGroup."
+    }
+  ],
+  "dependencies": [
+    "AbilityRouter",
+    "AnimalFormData",
+    "AreaData",
+    "BossHealthBarUI",
+    "ChallengeHudUI",
+    "FormSwitcher",
+    "FormWheelNodeUI",
+    "FormWheelUI",
+    "GameDatabase",
+    "IAbility",
+    "IActiveAbility",
+    "InteractionPromptUI",
+    "ItemData",
+    "PickupType",
+    "PlayerProgress",
+    "SaveManager",
+    "WorldData",
+    "WorldState"
+  ],
+  "used_by": [
+    "IActiveAbility"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// HUD principal do jogo (Tarefa #32) — elementos sempre visíveis (ou\n/// temporariamente visíveis) durante o jogo, fora dos menus:\n///\n/// - Corações (vida actual/máxima — <see cref=\"PlayerProgress.HealthChanged\"/>).\n/// - Item equipado + quantidade (<see cref=\"PlayerProgress.EquippedItemChanged\"/>,\n///   <see cref=\"GameDatabase.FindItem\"/>, <see cref=\"PlayerProgress.GetItemQuantity(ItemData)\"/>).\n/// - Forma actual (<see cref=\"FormSwitcher.OnFormApplied\"/>) + cooldown de\n///   transformação (<see cref=\"FormSwitcher.TransformCooldownRemaining01\"/>).\n/// - Cooldown/estado/disponibilidade da habilidade da forma actual (Tarefa\n///   #34 — <see cref=\"AbilityRouter.GetPrimaryAbilityCooldownSource\"/> devolve\n///   um <see cref=\"IActiveAbility\"/> para TODAS as formas). Se\n///   <see cref=\"IActiveAbility.CooldownDuration\"/> for 0 (habilidades\n///   passivas ou sem cooldown próprio), nenhum indicador de cooldown é\n///   mostrado; caso contrário mostra-se o tempo restante e o ícone fica\n///   acinzentado (<see cref=\"abilityCooldownColor\"/>) durante o cooldown, ou\n///   realçado (<see cref=\"abilityActiveColor\"/>) enquanto\n///   <see cref=\"IAbility.IsActive\"/> for true.\n/// - Sementes (<see cref=\"PlayerProgress.SeedsChanged\"/>) e Runas de Gaia\n///   (<see cref=\"PlayerProgress.RunasChanged\"/>).\n/// - Banner com o nome da área actual\n///   (<see cref=\"WorldState.CurrentAreaChanged\"/>), com fade in/out e\n///   ocultação automática.\n/// - Mensagem de save (<see cref=\"SaveManager.OnSaveCompleted\"/>), com\n///   ocultação automática.\n/// - População da vila (<see cref=\"WorldState.GetVillagePopulation\"/>),\n///   mostrada apenas quando <see cref=\"AreaData.isCity\"/> é true. O villageId\n///   vem de <see cref=\"AreaData.world\"/> → <see cref=\"WorldData.mainVillageId\"/>\n///   (uma vila principal por mundo) — chamar <see cref=\"RefreshVillagePopulation()\"/>\n///   depois de <see cref=\"WorldState.SetVillagePopulation\"/> alterar a\n///   população, para o HUD actualizar sem esperar por uma mudança de área.\n///\n/// NÃO incluído aqui (UI próprio, separado):\n/// - Prompt de interacção: <see cref=\"InteractionPromptUI\"/>.\n/// - Barra de vida de boss: <see cref=\"BossHealthBarUI\"/>.\n/// - HUD de Desafio (nome, cronómetro, lista de objectivos com progresso):\n///   <see cref=\"ChallengeHudUI\"/> (Sistema de Desafios, Tarefa #12) — substitui\n///   o scaffolding antigo \"ChallengeObjectiveUI\" da Tarefa #32, removido por\n///   ficar redundante (Tarefa #18).\n/// - Feedback de \"animal bloqueado na roda\": já tratado por\n///   FormWheelNodeUI/FormWheelUI (Tarefa #21).\n///\n/// Montagem no Editor: ligar \"formSwitcher\"/\"abilityRouter\" ao GameObject do\n/// Player (ou deixar vazio para auto-detectar via tag \"Player\" em Start), e\n/// todas as referências de UI abaixo dentro do Canvas do HUD.\n/// </summary>\npublic class HUDController : MonoBehaviour\n{\n    [Header(\"Player (auto-detectado via tag 'Player' se vazio)\")]\n    [SerializeField] private FormSwitcher formSwitcher;\n    [SerializeField] private AbilityRouter abilityRouter;\n\n    [Header(\"Corações\")]\n    [SerializeField] private Transform heartsContainer;\n    [SerializeField] private Image heartIconPrefab;\n    [SerializeField] private Sprite heartFullSprite;\n    [SerializeField] private Sprite heartEmptySprite;\n\n    [Header(\"Item Equipado\")]\n    [SerializeField] private Image equippedItemIcon;\n    [SerializeField] private TMP_Text equippedItemQuantityText;\n\n    [Header(\"Forma Actual\")]\n    [SerializeField] private Image formIconImage;\n    [Tooltip(\"Image do tipo 'Filled' (radial) sobreposta ao ícone da forma — fillAmount = TransformCooldownRemaining01 (1 = acabou de transformar, 0 = pronto).\")]\n    [SerializeField] private Image transformCooldownFill;\n\n    [Header(\"Cooldown de Habilidade\")]\n    [Tooltip(\"Ícone do botão de Habilidade (Tarefa #34) — acinzentado (abilityCooldownColor) durante o cooldown, realçado (abilityActiveColor) enquanto a habilidade está activa (IAbility.IsActive), branco normal nos restantes casos. Formas cuja habilidade primária não tem cooldown próprio (IActiveAbility.CooldownDuration == 0) nunca mostram o texto/indicador de cooldown.\")]\n    [SerializeField] private Image abilityIconImage;\n    [SerializeField] private TMP_Text abilityCooldownText;\n    [SerializeField] private Color abilityCooldownColor = new Color(1f, 1f, 1f, 0.4f);\n    [Tooltip(\"Cor do ícone de habilidade enquanto a habilidade está activa (ex: ShellGuard em guarda, Camo activo, Glide a planar).\")]\n    [SerializeField] private Color abilityActiveColor = new Color(0.6f, 1f, 0.6f, 1f);\n\n    [Header(\"Recursos\")]\n    [Tooltip(\"GameObject raiz do display de Sementes — ocultado automaticamente e mostrado apenas temporariamente ao apanhar/comprar sementes (Tarefa #37).\")]\n    [SerializeField] private GameObject sementesRoot;\n    [SerializeField] private CanvasGroup sementesCanvasGroup;\n    [SerializeField] private TMP_Text sementesText;\n    [Tooltip(\"Duração (segundos) em que o display de Sementes fica visível após uma mudança (Tarefa #37).\")]\n    [SerializeField] private float sementesDuration = 3f;\n    [Tooltip(\"Duração do fade in/out do display de Sementes (Tarefa #37).\")]\n    [SerializeField] private float sementesFadeDuration = 0.3f;\n    [SerializeField] private TMP_Text runasText;\n\n    [Header(\"Banner de Área\")]\n    [SerializeField] private GameObject areaBannerRoot;\n    [SerializeField] private CanvasGroup areaBannerCanvasGroup;\n    [SerializeField] private TMP_Text areaNameText;\n    [SerializeField] private float areaBannerDuration = 3f;\n    [SerializeField] private float areaBannerFadeDuration = 0.4f;\n\n    [Header(\"Mensagem de Save\")]\n    [SerializeField] private GameObject saveIndicatorRoot;\n    [SerializeField] private TMP_Text saveIndicatorText;\n    [SerializeField] private string saveMessage = \"Jogo guardado\";\n    [SerializeField] private float saveIndicatorDuration = 2f;\n\n    [Header(\"População da Vila\")]\n    [SerializeField] private GameObject villagePopulationRoot;\n    [SerializeField] private TMP_Text villagePopulationText;\n    [SerializeField] private string villagePopulationFormat = \"{0} / {1}\";\n\n    private readonly List<Image> _heartIcons = new List<Image>();\n    private Coroutine _areaBannerRoutine;\n    private Coroutine _saveIndicatorRoutine;\n    private Coroutine _sementesRoutine;\n\n    // ==================== Ciclo de Vida ====================\n\n    private void OnEnable()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress != null)\n        {\n            progress.HealthChanged += OnHealthChanged;\n            progress.SeedsChanged += OnSeedsChanged;\n            progress.RunasChanged += OnRunasChanged;\n            progress.EquippedItemChanged += OnEquippedItemChanged;\n            progress.PickupCollected += OnPickupCollected;\n        }\n\n        var world = WorldState.Instance;\n        if (world != null) world.CurrentAreaChanged += OnCurrentAreaChanged;\n\n        WorldState.VillagePopulationChanged += OnVillagePopulationChanged;\n\n        var saveManager = SaveManager.Instance;\n        if (saveManager != null) saveManager.OnSaveCompleted += OnSaveCompleted;\n    }\n\n    private void OnDisable()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress != null)\n        {\n            progress.HealthChanged -= OnHealthChanged;\n            progress.SeedsChanged -= OnSeedsChanged;\n            progress.RunasChanged -= OnRunasChanged;\n            progress.EquippedItemChanged -= OnEquippedItemChanged;\n            progress.PickupCollected -= OnPickupCollected;\n        }\n\n        var world = WorldState.Instance;\n        if (world != null) world.CurrentAreaChanged -= OnCurrentAreaChanged;\n\n        WorldState.VillagePopulationChanged -= OnVillagePopulationChanged;\n\n        var saveManager = SaveManager.Instance;\n        if (saveManager != null) saveManager.OnSaveCompleted -= OnSaveCompleted;\n\n        if (formSwitcher != null) formSwitcher.OnFormApplied -= OnFormApplied;\n    }\n\n    private void Start()\n    {\n        if (formSwitcher == null || abilityRouter == null)\n        {\n            var player = GameObject.FindGameObjectWithTag(\"Player\");\n            if (player != null)\n            {\n                if (formSwitcher == null) formSwitcher = player.GetComponent<FormSwitcher>();\n                if (abilityRouter == null) abilityRouter = player.GetComponent<AbilityRouter>();\n            }\n        }\n\n        if (formSwitcher != null)\n        {\n            formSwitcher.OnFormApplied += OnFormApplied;\n            OnFormApplied(formSwitcher.CurrentForm);\n        }\n\n        var progress = PlayerProgress.Instance;\n        if (progress != null)\n        {\n            RefreshHearts(progress.currentHearts, progress.maxHearts);\n            OnSeedsChanged(progress.sementes);\n            OnRunasChanged(progress.runasDeGaia, progress.totalRunasDeGaiaCollected);\n            RefreshEquippedItem(progress.equippedItemId);\n        }\n\n        RefreshVillagePopulation(WorldState.Instance != null ? WorldState.Instance.CurrentArea : null);\n\n        if (areaBannerRoot != null) areaBannerRoot.SetActive(false);\n        if (saveIndicatorRoot != null) saveIndicatorRoot.SetActive(false);\n        if (sementesRoot != null) sementesRoot.SetActive(false);\n        SetAbilityIndicator(false, false, false);\n    }\n\n    private void Update()\n    {\n        UpdateTransformCooldown();\n        UpdateAbilityCooldown();\n    }\n\n    // ==================== Corações ====================\n\n    private void OnHealthChanged(int current, int max) => RefreshHearts(current, max);\n\n    private void RefreshHearts(int current, int max)\n    {\n        if (_heartIcons.Count != max) RebuildHearts(max);\n\n        for (int i = 0; i < _heartIcons.Count; i++)\n        {\n            if (_heartIcons[i] == null) continue;\n            _heartIcons[i].sprite = i < current ? heartFullSprite : heartEmptySprite;\n        }\n    }\n\n    private void RebuildHearts(int max)\n    {\n        foreach (var icon in _heartIcons)\n            if (icon != null) Destroy(icon.gameObject);\n\n        _heartIcons.Clear();\n\n        if (heartIconPrefab == null || heartsContainer == null) return;\n\n        for (int i = 0; i < max; i++)\n        {\n            var icon = Instantiate(heartIconPrefab, heartsContainer);\n            icon.gameObject.SetActive(true);\n            _heartIcons.Add(icon);\n        }\n    }\n\n    // ==================== Item Equipado ====================\n\n    private void OnEquippedItemChanged(string itemId) => RefreshEquippedItem(itemId);\n\n    private void OnPickupCollected(PickupType type, string pickupId)\n    {\n        // A quantidade recolhida pode ser do item actualmente equipado —\n        // actualiza o número mostrado no HUD.\n        var progress = PlayerProgress.Instance;\n        RefreshEquippedItem(progress != null ? progress.equippedItemId : null);\n    }\n\n    private void RefreshEquippedItem(string itemId)\n    {\n        ItemData item = null;\n        if (!string.IsNullOrEmpty(itemId) && GameDatabase.Instance != null)\n            item = GameDatabase.Instance.FindItem(itemId);\n\n        if (equippedItemIcon != null)\n        {\n            equippedItemIcon.sprite = item != null ? item.icon : null;\n            equippedItemIcon.enabled = item != null && item.icon != null;\n        }\n\n        if (equippedItemQuantityText != null)\n        {\n            if (item != null && PlayerProgress.Instance != null)\n            {\n                int quantity = PlayerProgress.Instance.GetItemQuantity(item);\n                equippedItemQuantityText.text = $\"x{quantity}\";\n                equippedItemQuantityText.gameObject.SetActive(true);\n            }\n            else\n            {\n                equippedItemQuantityText.gameObject.SetActive(false);\n            }\n        }\n    }\n\n    // ==================== Forma Actual / Cooldown de Transformação ====================\n\n    private void OnFormApplied(AnimalFormData form)\n    {\n        if (formIconImage == null) return;\n\n        formIconImage.sprite = form != null ? form.icon : null;\n        formIconImage.enabled = form != null && form.icon != null;\n    }\n\n    private void UpdateTransformCooldown()\n    {\n        if (transformCooldownFill == null || formSwitcher == null) return;\n\n        transformCooldownFill.fillAmount = formSwitcher.TransformCooldownRemaining01;\n    }\n\n    // ==================== Cooldown de Habilidade ====================\n\n    private void UpdateAbilityCooldown()\n    {\n        if (abilityRouter == null)\n        {\n            SetAbilityIndicator(false, false, false);\n            return;\n        }\n\n        var ability = abilityRouter.GetPrimaryAbilityCooldownSource();\n\n        // Sem fonte, ou habilidade sem cooldown próprio (passiva/instantânea\n        // sem cooldown) — Tarefa #34: não mostrar indicador de cooldown.\n        if (ability == null || ability.CooldownDuration <= 0f)\n        {\n            SetAbilityIndicator(false, false, ability != null && ability.IsActive);\n            return;\n        }\n\n        float remaining = Mathf.Max(0f, ability.CooldownRemaining);\n        bool onCooldown = remaining > 0f;\n\n        SetAbilityIndicator(true, onCooldown, ability.IsActive);\n        if (abilityCooldownText != null) abilityCooldownText.text = remaining.ToString(\"F1\");\n    }\n\n    /// <summary>\n    /// Actualiza o ícone/texto do botão de Habilidade (Tarefa #34):\n    /// - showCooldownText: true se esta habilidade tem cooldown próprio\n    ///   (IActiveAbility.CooldownDuration > 0) e o HUD deve mostrar o texto de\n    ///   tempo restante.\n    /// - onCooldown: true enquanto o cooldown estiver a decorrer (ícone\n    ///   acinzentado, texto visível).\n    /// - isActive: true enquanto a habilidade estiver num estado activo\n    ///   (IAbility.IsActive) — ícone realçado com abilityActiveColor, desde\n    ///   que não esteja em cooldown.\n    /// </summary>\n    private void SetAbilityIndicator(bool showCooldownText, bool onCooldown, bool isActive)\n    {\n        if (abilityCooldownText != null) abilityCooldownText.gameObject.SetActive(showCooldownText && onCooldown);\n\n        if (abilityIconImage != null)\n        {\n            if (onCooldown) abilityIconImage.color = abilityCooldownColor;\n            else if (isActive) abilityIconImage.color = abilityActiveColor;\n            else abilityIconImage.color = Color.white;\n        }\n    }\n\n    // ==================== Recursos ====================\n\n    private void OnSeedsChanged(int sementes)\n    {\n        if (sementesText != null) sementesText.text = sementes.ToString();\n\n        // Tarefa #37: mostrar temporariamente e depois esconder.\n        if (sementesRoot != null)\n        {\n            if (_sementesRoutine != null) StopCoroutine(_sementesRoutine);\n            _sementesRoutine = StartCoroutine(SementesBannerRoutine());\n        }\n    }\n\n    private IEnumerator SementesBannerRoutine()\n    {\n        if (sementesRoot != null) sementesRoot.SetActive(true);\n\n        yield return FadeCanvasGroup(sementesCanvasGroup, 0f, 1f, sementesFadeDuration);\n        yield return new WaitForSeconds(sementesDuration);\n        yield return FadeCanvasGroup(sementesCanvasGroup, 1f, 0f, sementesFadeDuration);\n\n        if (sementesRoot != null) sementesRoot.SetActive(false);\n        _sementesRoutine = null;\n    }\n\n    private void OnRunasChanged(int runas, int totalCollected)\n    {\n        if (runasText != null) runasText.text = runas.ToString();\n    }\n\n    // ==================== Banner de Área ====================\n\n    private void OnCurrentAreaChanged(AreaData area)\n    {\n        if (area != null && areaNameText != null)\n        {\n            areaNameText.text = area.displayName;\n\n            if (_areaBannerRoutine != null) StopCoroutine(_areaBannerRoutine);\n            _areaBannerRoutine = StartCoroutine(AreaBannerRoutine());\n        }\n\n        RefreshVillagePopulation(area);\n    }\n\n    private IEnumerator AreaBannerRoutine()\n    {\n        if (areaBannerRoot != null) areaBannerRoot.SetActive(true);\n\n        yield return FadeCanvasGroup(areaBannerCanvasGroup, 0f, 1f, areaBannerFadeDuration);\n        yield return new WaitForSeconds(areaBannerDuration);\n        yield return FadeCanvasGroup(areaBannerCanvasGroup, 1f, 0f, areaBannerFadeDuration);\n\n        if (areaBannerRoot != null) areaBannerRoot.SetActive(false);\n        _areaBannerRoutine = null;\n    }\n\n    // ==================== Mensagem de Save ====================\n\n    private void OnSaveCompleted(int slotIndex)\n    {\n        if (saveIndicatorRoot == null) return;\n\n        if (saveIndicatorText != null) saveIndicatorText.text = saveMessage;\n\n        if (_saveIndicatorRoutine != null) StopCoroutine(_saveIndicatorRoutine);\n        _saveIndicatorRoutine = StartCoroutine(SaveIndicatorRoutine());\n    }\n\n    private IEnumerator SaveIndicatorRoutine()\n    {\n        saveIndicatorRoot.SetActive(true);\n        yield return new WaitForSeconds(saveIndicatorDuration);\n        saveIndicatorRoot.SetActive(false);\n        _saveIndicatorRoutine = null;\n    }\n\n    // ==================== População da Vila ====================\n\n    /// <summary>\n    /// Reage a WorldState.VillagePopulationChanged — actualiza o HUD da população\n    /// sempre que qualquer vila muda, sem esperar pela próxima mudança de área.\n    /// </summary>\n    private void OnVillagePopulationChanged(string changedVillageId, int current, int max)\n    {\n        // Actualiza apenas se o HUD estiver a mostrar esta vila.\n        var area = WorldState.Instance != null ? WorldState.Instance.CurrentArea : null;\n        if (area == null || !area.isCity) return;\n\n        string currentVillageId = area.world != null ? area.world.mainVillageId : null;\n        if (currentVillageId != changedVillageId) return;\n\n        RefreshVillagePopulation(area);\n    }\n\n    private void RefreshVillagePopulation(AreaData area)\n    {\n        bool show = false;\n\n        string villageId = area != null && area.world != null ? area.world.mainVillageId : null;\n\n        if (area != null && area.isCity && !string.IsNullOrEmpty(villageId) && WorldState.Instance != null)\n        {\n            var pop = WorldState.Instance.GetVillagePopulation(villageId);\n            if (pop != null)\n            {\n                show = true;\n                if (villagePopulationText != null)\n                    villagePopulationText.text = string.Format(villagePopulationFormat, pop.current, pop.max);\n            }\n        }\n\n        if (villagePopulationRoot != null) villagePopulationRoot.SetActive(show);\n    }\n\n    /// <summary>\n    /// Chamar depois de <see cref=\"WorldState.SetVillagePopulation\"/> alterar\n    /// a população da área actual, para o HUD actualizar imediatamente (sem\n    /// esperar por uma mudança de área).\n    /// </summary>\n    public void RefreshVillagePopulation()\n    {\n        RefreshVillagePopulation(WorldState.Instance != null ? WorldState.Instance.CurrentArea : null);\n    }\n\n    // ==================== Utilidades ====================\n\n    private static IEnumerator FadeCanvasGroup(CanvasGroup group, float from, float to, float duration)\n    {\n        if (group == null) yield break;\n\n        if (duration <= 0f)\n        {\n            group.alpha = to;\n            yield break;\n        }\n\n        float t = 0f;\n        group.alpha = from;\n        while (t < duration)\n        {\n            t += Time.deltaTime;\n            group.alpha = Mathf.Lerp(from, to, t / duration);\n            yield return null;\n        }\n\n        group.alpha = to;\n    }\n}\n",
+  "id": "script-ui-hudcontroller-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-ui-bosshealthbarui-cs",
+    "script-ui-challengehudui-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-formwheelnodeui-cs",
+    "script-ui-formwheelui-cs",
+    "script-data-gamedatabase-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-ui-interactionpromptui-cs",
+    "script-data-itemdata-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savemanager-cs",
+    "script-data-worlddata-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-iactiveability-cs"
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "path": "Player/PlayerHealthRegen.cs",
+  "filename": "PlayerHealthRegen.cs",
+  "category": "Player",
+  "primary": "PlayerHealthRegen",
+  "kind": "Componente",
+  "summary": "Tarefa #28 — regeneração automática de vida, disponível por defeito no modo normal (sem precisar de upgrade). Regras: - Só começa depois de o player passar segundos sem receber dano (reinicia sempre que dispara). - Lenta e gradual: recupera 1 coração a cada segundos. - Pára (e reinicia a espera) imediatamente ao receber dano. - Não funciona durante bosses nem em qualquer estado \"bloqueado\" — ver (referência contada; já está ligado aqui, e outros sistemas — ex: alerta/perseguição de inimigos — podem usar a mesma API no futuro). - Pára ao chegar à vida máxima. - Completamente desativada quando (Juramento Difícil). - Independente da Pele Serena (não interfere com esta regeneração). - Brotos de",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PlayerHealthRegen",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "delayAfterDamage",
+      "type": "float",
+      "mods": "private",
+      "default": "5f",
+      "section": "Regeneração Automática (Tarefa #28)",
+      "attrs": "[Header(\"Regeneração Automática (Tarefa #28)\")] [Tooltip(\"Segundos sem receber dano antes de a regeneração começar (ou recomeçar, depois de ser interrompida).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Segundos sem receber dano antes de a regeneração começar (ou recomeçar, depois de ser interrompida)."
+    },
+    {
+      "name": "regenInterval",
+      "type": "float",
+      "mods": "private",
+      "default": "3f",
+      "section": "Regeneração Automática (Tarefa #28)",
+      "attrs": "[Tooltip(\"Segundos entre cada coração regenerado.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Segundos entre cada coração regenerado."
+    },
+    {
+      "name": "combat",
+      "type": "PlayerCombat",
+      "mods": "private",
+      "default": "",
+      "section": "Regeneração Automática (Tarefa #28)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "noDamageTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Regeneração Automática (Tarefa #28)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "regenTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Regeneração Automática (Tarefa #28)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "blockers",
+      "type": "HashSet<object>",
+      "mods": "private readonly",
+      "default": "new HashSet<object>()",
+      "section": "Regeneração Automática (Tarefa #28)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsBlocked",
+      "type": "bool",
+      "mods": "public",
+      "default": "> blockers.Count > 0",
+      "section": "Regeneração Automática (Tarefa #28)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDestroy",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDestroy."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnPlayerDamaged",
+      "ret": "void",
+      "mods": "private",
+      "params": "DamageInfo info, int finalAmount",
+      "description": "Executa a operação OnPlayerDamaged."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "SetBlocked",
+      "ret": "void",
+      "mods": "public",
+      "params": "object source, bool blocked",
+      "description": "Executa a operação SetBlocked."
+    }
+  ],
+  "dependencies": [
+    "BossHealthBarUI",
+    "DamageInfo",
+    "PlayerCombat",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "BossHealthBarUI",
+    "NpcPlayerConditionUtil",
+    "PlayerConsumableEffects",
+    "PlayerProgress",
+    "PlayerResourceType"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #28 — regeneração automática de vida, disponível por defeito no modo\n/// normal (sem precisar de upgrade). Regras:\n///\n/// - Só começa depois de o player passar <see cref=\"delayAfterDamage\"/>\n///   segundos sem receber dano (reinicia sempre que <see cref=\"PlayerCombat.OnPlayerDamaged\"/> dispara).\n/// - Lenta e gradual: recupera 1 coração a cada <see cref=\"regenInterval\"/> segundos.\n/// - Pára (e reinicia a espera) imediatamente ao receber dano.\n/// - Não funciona durante bosses nem em qualquer estado \"bloqueado\" — ver\n///   <see cref=\"SetBlocked\"/> (referência contada; <see cref=\"BossHealthBarUI\"/>\n///   já está ligado aqui, e outros sistemas — ex: alerta/perseguição de\n///   inimigos — podem usar a mesma API no futuro).\n/// - Pára ao chegar à vida máxima.\n/// - Completamente desactivada quando <see cref=\"PlayerProgress.IsHardModeActive\"/> (Juramento Difícil).\n/// - Independente da Pele Serena (não interfere com esta regeneração).\n/// - Brotos de Vida e itens de cura continuam a funcionar normalmente — não\n///   passam por este componente, usam directamente <see cref=\"PlayerProgress.Heal\"/>.\n/// </summary>\n[RequireComponent(typeof(PlayerCombat))]\npublic class PlayerHealthRegen : MonoBehaviour\n{\n    /// <summary>Singleton simples (1 player), para sistemas como BossHealthBarUI bloquearem a regen sem precisar de referência directa ao player.</summary>\n    public static PlayerHealthRegen Instance { get; private set; }\n\n    [Header(\"Regeneração Automática (Tarefa #28)\")]\n    [Tooltip(\"Segundos sem receber dano antes de a regeneração começar (ou recomeçar, depois de ser interrompida).\")]\n    [SerializeField] private float delayAfterDamage = 5f;\n\n    [Tooltip(\"Segundos entre cada coração regenerado.\")]\n    [SerializeField] private float regenInterval = 3f;\n\n    private PlayerCombat combat;\n    private float noDamageTimer;\n    private float regenTimer;\n\n    // Bloqueio com referência contada — vários sistemas podem bloquear em simultâneo (ex: boss + zona de perigo).\n    private readonly HashSet<object> blockers = new HashSet<object>();\n\n    /// <summary>True enquanto qualquer sistema tiver bloqueado a regeneração (ver <see cref=\"SetBlocked\"/>).</summary>\n    public bool IsBlocked => blockers.Count > 0;\n\n    private void Awake()\n    {\n        Instance = this;\n        combat = GetComponent<PlayerCombat>();\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    private void OnEnable()\n    {\n        if (combat != null) combat.OnPlayerDamaged += OnPlayerDamaged;\n    }\n\n    private void OnDisable()\n    {\n        if (combat != null) combat.OnPlayerDamaged -= OnPlayerDamaged;\n    }\n\n    private void OnPlayerDamaged(DamageInfo info, int finalAmount)\n    {\n        noDamageTimer = 0f;\n        regenTimer = 0f;\n    }\n\n    private void Update()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return;\n\n        // Juramento Difícil desactiva completamente a regeneração automática.\n        if (progress.IsHardModeActive) { noDamageTimer = 0f; regenTimer = 0f; return; }\n\n        // Bosses / estados de perigo bloqueiam a regeneração (ver SetBlocked).\n        if (IsBlocked) { noDamageTimer = 0f; regenTimer = 0f; return; }\n\n        // Já está à vida máxima — nada a fazer.\n        if (progress.currentHearts >= progress.maxHearts) { noDamageTimer = 0f; regenTimer = 0f; return; }\n\n        noDamageTimer += Time.deltaTime;\n        if (noDamageTimer < delayAfterDamage) return;\n\n        regenTimer += Time.deltaTime;\n        if (regenTimer >= regenInterval)\n        {\n            regenTimer = 0f;\n            progress.Heal(1);\n        }\n    }\n\n    /// <summary>\n    /// Bloqueia/desbloqueia a regeneração automática enquanto \"source\"\n    /// estiver registado. Referência contada: a regen só corre quando NENHUM\n    /// \"source\" estiver a bloquear. Usado por <see cref=\"BossHealthBarUI\"/>\n    /// (Show/Hide) para impedir regen durante bosses; outros sistemas (ex:\n    /// estado de perigo/combate de inimigos) podem chamar esta mesma API com\n    /// a sua própria chave.\n    /// </summary>\n    public void SetBlocked(object source, bool blocked)\n    {\n        if (source == null) return;\n        if (blocked) blockers.Add(source);\n        else blockers.Remove(source);\n    }\n}\n",
+  "id": "script-player-playerhealthregen-cs",
+  "dependencyIds": [
+    "script-ui-bosshealthbarui-cs",
+    "script-player-damageinfo-cs",
+    "script-player-playercombat-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-ui-bosshealthbarui-cs",
+    "script-npc-conditions-playerconditions-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-data-playerprogress-cs",
+    "script-npc-actions-rewardactions-cs"
+  ]
+}

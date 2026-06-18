@@ -1,0 +1,361 @@
+{
+  "path": "Enemy/EnemyFeedback.cs",
+  "filename": "EnemyFeedback.cs",
+  "category": "Enemy",
+  "primary": "EnemyFeedback",
+  "kind": "Componente",
+  "summary": "Feedback audiovisual de um inimigo (Enemy Creator — Etapa 7.1): sons, partículas/VFX e ícones de \"?\"/\"!\" acima da cabeça. Liga-se aos eventos já existentes: - EnemyDetection (Etapa 1.4): OnPlayerSuspicious (ícone \"?\"), OnPlayerSpotted (ícone \"!\" + som de detectar + VFX), OnPlayerLost (som de voltar ao normal). - EnemyController.OnStateChanged: carregar (PreparandoAtaque), atacar (Atacando), morrer (Morto), desativar (Desativado). - EnemyHealth.OnDamaged: som de tomar dano. O \"pisca\" ao tomar dano já é feito por EnemyHealth (stats.flashOnHit + flashColor/flashInterval). O som de \"disparar\" de projécteis vem de ProjectileData.fireSound/ chargeSound (Etapa 2.2) — não é duplicado aqui.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyFeedback",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "detectSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Header(\"Sons\")] [Tooltip(\"Ao confirmar o player (Perseguindo — ícone \\\"!\\\").\")]",
+      "inspector": true,
+      "description": "Ao confirmar o player (Perseguindo — ícone \"!\\"
+    },
+    {
+      "name": "suspiciousSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Tooltip(\"Ao ficar desconfiado (Alerta — ícone \\\"?\\\").\")]",
+      "inspector": true,
+      "description": "Ao ficar desconfiado (Alerta — ícone \"?\\"
+    },
+    {
+      "name": "chargeSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Tooltip(\"Ao começar a carregar/preparar um ataque (PreparandoAtaque).\")]",
+      "inspector": true,
+      "description": "Ao começar a carregar/preparar um ataque (PreparandoAtaque)."
+    },
+    {
+      "name": "attackSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Tooltip(\"Ao executar um ataque (Atacando).\")]",
+      "inspector": true,
+      "description": "Ao executar um ataque (Atacando)."
+    },
+    {
+      "name": "hurtSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Tooltip(\"Ao tomar dano (e sobreviver).\")]",
+      "inspector": true,
+      "description": "Ao tomar dano (e sobreviver)."
+    },
+    {
+      "name": "deathSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Tooltip(\"Ao morrer (Morto).\")]",
+      "inspector": true,
+      "description": "Ao morrer (Morto)."
+    },
+    {
+      "name": "deactivateSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Tooltip(\"Ao ser desactivado (Desactivado).\")]",
+      "inspector": true,
+      "description": "Ao ser desativado (Desativado)."
+    },
+    {
+      "name": "calmDownSound",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Sons",
+      "attrs": "[Tooltip(\"Ao perder o alvo e voltar ao normal (VoltandoParaCasa).\")]",
+      "inspector": true,
+      "description": "Ao perder o alvo e voltar ao normal (VoltandoParaCasa)."
+    },
+    {
+      "name": "deathVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Partículas / VFX (prefabs instanciados — opcionais)",
+      "attrs": "[Header(\"Partículas / VFX (prefabs instanciados — opcionais)\")] [Tooltip(\"Ao morrer (explosão/fumo).\")]",
+      "inspector": true,
+      "description": "Ao morrer (explosão/fumo)."
+    },
+    {
+      "name": "deactivateVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Partículas / VFX (prefabs instanciados — opcionais)",
+      "attrs": "[Tooltip(\"Ao ser desactivado (faíscas/desligar). Vazio = usa 'deathVfxPrefab'.\")]",
+      "inspector": true,
+      "description": "Ao ser desativado (faíscas/desligar). Vazio = usa 'deathVfxPrefab'."
+    },
+    {
+      "name": "attackVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Partículas / VFX (prefabs instanciados — opcionais)",
+      "attrs": "[Tooltip(\"Ao executar um ataque.\")]",
+      "inspector": true,
+      "description": "Ao executar um ataque."
+    },
+    {
+      "name": "detectVfxPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Partículas / VFX (prefabs instanciados — opcionais)",
+      "attrs": "[Tooltip(\"Ao detectar o player (efeito visual de detecção).\")]",
+      "inspector": true,
+      "description": "Ao detectar o player (efeito visual de detecção)."
+    },
+    {
+      "name": "walkParticles",
+      "type": "ParticleSystem",
+      "mods": "public",
+      "default": "",
+      "section": "Partículas / VFX (prefabs instanciados — opcionais)",
+      "attrs": "[Tooltip(\"ParticleSystem (filho deste inimigo) ligado enquanto anda (Patrulhando/Perseguindo/VoltandoParaCasa) — ex: poeira. Opcional.\")]",
+      "inspector": true,
+      "description": "ParticleSystem (filho deste inimigo) ligado enquanto anda (Patrulhando/Perseguindo/VoltandoParaCasa) — ex: poeira. Opcional."
+    },
+    {
+      "name": "questionIconPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Ícones (\\\"?\\\" / \\\"!\\\")",
+      "attrs": "[Header(\"Ícones (\\\"?\\\" / \\\"!\\\")\")] [Tooltip(\"Prefab do ícone de interrogação (Alerta). Instanciado acima da cabeça.\")]",
+      "inspector": true,
+      "description": "Prefab do ícone de interrogação (Alerta). Instanciado acima da cabeça."
+    },
+    {
+      "name": "exclamationIconPrefab",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Ícones (\\\"?\\\" / \\\"!\\\")",
+      "attrs": "[Tooltip(\"Prefab do ícone de exclamação (Perseguindo).\")]",
+      "inspector": true,
+      "description": "Prefab do ícone de exclamação (Perseguindo)."
+    },
+    {
+      "name": "iconOffset",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "new Vector2(0f, 1.2f)",
+      "section": "Ícones (\\\"?\\\" / \\\"!\\\")",
+      "attrs": "[Tooltip(\"Deslocamento do ícone em relação ao inimigo.\")]",
+      "inspector": true,
+      "description": "Deslocamento do ícone em relação ao inimigo."
+    },
+    {
+      "name": "iconDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Ícones (\\\"?\\\" / \\\"!\\\")",
+      "attrs": "[Tooltip(\"Duração (segundos) do ícone antes de desaparecer.\")] [Min(0.1f)]",
+      "inspector": true,
+      "description": "Duração (segundos) do ícone antes de desaparecer."
+    },
+    {
+      "name": "_controller",
+      "type": "EnemyController",
+      "mods": "private",
+      "default": "",
+      "section": "Ícones (\\\"?\\\" / \\\"!\\\")",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_detection",
+      "type": "EnemyDetection",
+      "mods": "private",
+      "default": "",
+      "section": "Ícones (\\\"?\\\" / \\\"!\\\")",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_health",
+      "type": "EnemyHealth",
+      "mods": "private",
+      "default": "",
+      "section": "Ícones (\\\"?\\\" / \\\"!\\\")",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_activeIcon",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Ícones (\\\"?\\\" / \\\"!\\\")",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "HandleSuspicious",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleSuspicious."
+    },
+    {
+      "name": "HandleSpotted",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleSpotted."
+    },
+    {
+      "name": "HandleLost",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleLost."
+    },
+    {
+      "name": "HandleStateChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyState oldState, EnemyState newState",
+      "description": "Executa a operação HandleStateChanged."
+    },
+    {
+      "name": "HandleDamaged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int amount, int currentHealth",
+      "description": "Executa a operação HandleDamaged."
+    },
+    {
+      "name": "PlaySound",
+      "ret": "void",
+      "mods": "private",
+      "params": "AudioClip clip",
+      "description": "Executa a operação PlaySound."
+    },
+    {
+      "name": "SpawnVfx",
+      "ret": "void",
+      "mods": "private",
+      "params": "GameObject prefab",
+      "description": "Executa a operação SpawnVfx."
+    },
+    {
+      "name": "ShowIcon",
+      "ret": "void",
+      "mods": "private",
+      "params": "GameObject prefab",
+      "description": "Executa a operação ShowIcon."
+    },
+    {
+      "name": "HideIconAfter",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float seconds",
+      "description": "Executa a operação HideIconAfter."
+    },
+    {
+      "name": "HideIcon",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HideIcon."
+    }
+  ],
+  "dependencies": [
+    "EnemyController",
+    "EnemyDetection",
+    "EnemyHealth",
+    "EnemyState",
+    "ProjectileData",
+    "State",
+    "VfxPoolManager"
+  ],
+  "used_by": [
+    "EnemyAttack",
+    "EnemyController",
+    "EnemyDetection",
+    "EnemyHealth",
+    "VfxPoolManager"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Feedback audiovisual de um inimigo (Enemy Creator — Etapa 7.1): sons,\n/// partículas/VFX e ícones de \"?\"/\"!\" acima da cabeça.\n///\n/// Liga-se aos eventos já existentes:\n/// - EnemyDetection (Etapa 1.4): OnPlayerSuspicious (ícone \"?\"),\n///   OnPlayerSpotted (ícone \"!\" + som de detectar + VFX), OnPlayerLost\n///   (som de voltar ao normal).\n/// - EnemyController.OnStateChanged: carregar (PreparandoAtaque), atacar\n///   (Atacando), morrer (Morto), desactivar (Desactivado).\n/// - EnemyHealth.OnDamaged: som de tomar dano. O \"pisca\" ao tomar dano já é\n///   feito por EnemyHealth (stats.flashOnHit + flashColor/flashInterval).\n///\n/// O som de \"disparar\" de projécteis vem de ProjectileData.fireSound/\n/// chargeSound (Etapa 2.2) — não é duplicado aqui.\n/// </summary>\n[DisallowMultipleComponent]\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyFeedback : MonoBehaviour\n{\n    [Header(\"Sons\")]\n    [Tooltip(\"Ao confirmar o player (Perseguindo — ícone \\\"!\\\").\")]\n    public AudioClip detectSound;\n\n    [Tooltip(\"Ao ficar desconfiado (Alerta — ícone \\\"?\\\").\")]\n    public AudioClip suspiciousSound;\n\n    [Tooltip(\"Ao começar a carregar/preparar um ataque (PreparandoAtaque).\")]\n    public AudioClip chargeSound;\n\n    [Tooltip(\"Ao executar um ataque (Atacando).\")]\n    public AudioClip attackSound;\n\n    [Tooltip(\"Ao tomar dano (e sobreviver).\")]\n    public AudioClip hurtSound;\n\n    [Tooltip(\"Ao morrer (Morto).\")]\n    public AudioClip deathSound;\n\n    [Tooltip(\"Ao ser desactivado (Desactivado).\")]\n    public AudioClip deactivateSound;\n\n    [Tooltip(\"Ao perder o alvo e voltar ao normal (VoltandoParaCasa).\")]\n    public AudioClip calmDownSound;\n\n    [Header(\"Partículas / VFX (prefabs instanciados — opcionais)\")]\n    [Tooltip(\"Ao morrer (explosão/fumo).\")]\n    public GameObject deathVfxPrefab;\n\n    [Tooltip(\"Ao ser desactivado (faíscas/desligar). Vazio = usa 'deathVfxPrefab'.\")]\n    public GameObject deactivateVfxPrefab;\n\n    [Tooltip(\"Ao executar um ataque.\")]\n    public GameObject attackVfxPrefab;\n\n    [Tooltip(\"Ao detectar o player (efeito visual de detecção).\")]\n    public GameObject detectVfxPrefab;\n\n    [Tooltip(\"ParticleSystem (filho deste inimigo) ligado enquanto anda (Patrulhando/Perseguindo/VoltandoParaCasa) — ex: poeira. Opcional.\")]\n    public ParticleSystem walkParticles;\n\n    [Header(\"Ícones (\\\"?\\\" / \\\"!\\\")\")]\n    [Tooltip(\"Prefab do ícone de interrogação (Alerta). Instanciado acima da cabeça.\")]\n    public GameObject questionIconPrefab;\n\n    [Tooltip(\"Prefab do ícone de exclamação (Perseguindo).\")]\n    public GameObject exclamationIconPrefab;\n\n    [Tooltip(\"Deslocamento do ícone em relação ao inimigo.\")]\n    public Vector2 iconOffset = new Vector2(0f, 1.2f);\n\n    [Tooltip(\"Duração (segundos) do ícone antes de desaparecer.\")]\n    [Min(0.1f)] public float iconDuration = 1f;\n\n    private EnemyController _controller;\n    private EnemyDetection _detection;\n    private EnemyHealth _health;\n    private GameObject _activeIcon;\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n        _detection = GetComponent<EnemyDetection>();\n        _health = GetComponent<EnemyHealth>();\n    }\n\n    private void OnEnable()\n    {\n        _controller.OnStateChanged += HandleStateChanged;\n\n        if (_detection != null)\n        {\n            _detection.OnPlayerSuspicious += HandleSuspicious;\n            _detection.OnPlayerSpotted += HandleSpotted;\n            _detection.OnPlayerLost += HandleLost;\n        }\n\n        if (_health != null)\n            _health.OnDamaged += HandleDamaged;\n    }\n\n    private void OnDisable()\n    {\n        _controller.OnStateChanged -= HandleStateChanged;\n\n        if (_detection != null)\n        {\n            _detection.OnPlayerSuspicious -= HandleSuspicious;\n            _detection.OnPlayerSpotted -= HandleSpotted;\n            _detection.OnPlayerLost -= HandleLost;\n        }\n\n        if (_health != null)\n            _health.OnDamaged -= HandleDamaged;\n    }\n\n    private void Update()\n    {\n        if (walkParticles == null) return;\n\n        bool moving = !_controller.IsTerminal &&\n                      (_controller.State == EnemyState.Patrulhando ||\n                       _controller.State == EnemyState.Perseguindo ||\n                       _controller.State == EnemyState.VoltandoParaCasa);\n\n        if (moving && !walkParticles.isPlaying) walkParticles.Play();\n        else if (!moving && walkParticles.isPlaying) walkParticles.Stop();\n    }\n\n    // ==================== Detecção (Etapa 1.4) ====================\n\n    private void HandleSuspicious()\n    {\n        PlaySound(suspiciousSound);\n        ShowIcon(questionIconPrefab);\n    }\n\n    private void HandleSpotted()\n    {\n        PlaySound(detectSound);\n        ShowIcon(exclamationIconPrefab);\n        SpawnVfx(detectVfxPrefab);\n    }\n\n    private void HandleLost()\n    {\n        PlaySound(calmDownSound);\n        HideIcon();\n    }\n\n    // ==================== Estados ====================\n\n    private void HandleStateChanged(EnemyState oldState, EnemyState newState)\n    {\n        switch (newState)\n        {\n            case EnemyState.PreparandoAtaque:\n                PlaySound(chargeSound);\n                break;\n\n            case EnemyState.Atacando:\n                PlaySound(attackSound);\n                SpawnVfx(attackVfxPrefab);\n                break;\n\n            case EnemyState.Morto:\n                PlaySound(deathSound);\n                SpawnVfx(deathVfxPrefab);\n                HideIcon();\n                break;\n\n            case EnemyState.Desactivado:\n                PlaySound(deactivateSound);\n                SpawnVfx(deactivateVfxPrefab != null ? deactivateVfxPrefab : deathVfxPrefab);\n                HideIcon();\n                break;\n        }\n    }\n\n    private void HandleDamaged(int amount, int currentHealth)\n    {\n        PlaySound(hurtSound);\n    }\n\n    // ==================== Helpers ====================\n\n    private void PlaySound(AudioClip clip)\n    {\n        if (clip != null) AudioSource.PlayClipAtPoint(clip, transform.position);\n    }\n\n    private void SpawnVfx(GameObject prefab)\n    {\n        if (prefab == null) return;\n        if (VfxPoolManager.Instance != null) VfxPoolManager.Instance.Spawn(prefab, transform.position);\n        else Instantiate(prefab, transform.position, Quaternion.identity);\n    }\n\n    private void ShowIcon(GameObject prefab)\n    {\n        HideIcon();\n        if (prefab == null) return;\n\n        _activeIcon = Instantiate(prefab, transform.position + (Vector3)iconOffset, Quaternion.identity, transform);\n        StartCoroutine(HideIconAfter(iconDuration));\n    }\n\n    private IEnumerator HideIconAfter(float seconds)\n    {\n        var icon = _activeIcon;\n        yield return new WaitForSeconds(seconds);\n\n        if (icon != null && icon == _activeIcon) HideIcon();\n    }\n\n    private void HideIcon()\n    {\n        if (_activeIcon != null)\n        {\n            Destroy(_activeIcon);\n            _activeIcon = null;\n        }\n    }\n}\n",
+  "id": "script-enemy-enemyfeedback-cs",
+  "dependencyIds": [
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-projectiledata-cs",
+    "script-combat-vfxpoolmanager-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-combat-vfxpoolmanager-cs"
+  ]
+}

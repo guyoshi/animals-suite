@@ -1,0 +1,452 @@
+{
+  "path": "Player/PlayerConsumableEffects.cs",
+  "filename": "PlayerConsumableEffects.cs",
+  "category": "Player",
+  "primary": "PlayerConsumableEffects",
+  "kind": "Componente",
+  "summary": "Gestor central dos efeitos temporários dos itens consumíveis aplicados diretamente ao PLAYER (Tarefa \"Itens Consumíveis\"): - Escudo (Casca Serenna) — ver , consumido em PlayerCombat.TryDamagePlayer. - Velocidade (Orvalho Veloz) — usa PlayerMotor2D.SetSpeedMultiplier. - Invisibilidade (Pó Dourado) — ver , consultado por EnemyDetection. - Regeneração (Néctar Verde) — cura PlayerProgress.Heal(1) a cada intervalo. - Imunidade a Correntes (Bolha de Coral) — ver , consultado por WaterMotor2D/WaterCurrentZone. - Impulso Vertical (Incenso do Vento) — aplicado instantaneamente ao Rigidbody2D. - Destacar Colecionáveis (Luz de Gaia) — chama PickupBase.SetHighlighted nos colecionáveis próximos. Raiz ",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PlayerConsumableEffects",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_highlightBuffer",
+      "type": "Collider2D[]",
+      "mods": "private static readonly",
+      "default": "new Collider2D[32]",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_shieldActive",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_shieldHasTimeLimit",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_shieldTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_shieldIgnoresSpecialDeaths",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_speedBoostTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_invisibilityTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_regenHeartsRemaining",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_regenInterval",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_regenTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_currentImmunityTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_highlightTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsShieldActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _shieldActive",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsInvisible",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _invisibilityTimer > 0f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsCurrentImmune",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _currentImmunityTimer > 0f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDestroy",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDestroy."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnAreaChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData _",
+      "description": "Executa a operação OnAreaChanged."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ApplyEffect",
+      "ret": "bool",
+      "mods": "public",
+      "params": "ItemData item",
+      "description": "Executa a operação ApplyEffect."
+    },
+    {
+      "name": "StartShield",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação StartShield."
+    },
+    {
+      "name": "UpdateShield",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateShield."
+    },
+    {
+      "name": "EndShield",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool playEndSfx",
+      "description": "Executa a operação EndShield."
+    },
+    {
+      "name": "TryConsumeShield",
+      "ret": "bool",
+      "mods": "public",
+      "params": "bool isSpecialDeath",
+      "description": "Executa a operação TryConsumeShield."
+    },
+    {
+      "name": "StartSpeedBoost",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação StartSpeedBoost."
+    },
+    {
+      "name": "UpdateSpeedBoost",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateSpeedBoost."
+    },
+    {
+      "name": "EndSpeedBoost",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação EndSpeedBoost."
+    },
+    {
+      "name": "StartInvisibility",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação StartInvisibility."
+    },
+    {
+      "name": "UpdateInvisibility",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateInvisibility."
+    },
+    {
+      "name": "StartRegen",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação StartRegen."
+    },
+    {
+      "name": "UpdateRegen",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateRegen."
+    },
+    {
+      "name": "StartCurrentImmunity",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação StartCurrentImmunity."
+    },
+    {
+      "name": "UpdateCurrentImmunity",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateCurrentImmunity."
+    },
+    {
+      "name": "ApplyWindBurst",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação ApplyWindBurst."
+    },
+    {
+      "name": "StartHighlight",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação StartHighlight."
+    },
+    {
+      "name": "UpdateHighlight",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateHighlight."
+    },
+    {
+      "name": "PlayStartFeedback",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação PlayStartFeedback."
+    },
+    {
+      "name": "PlayEndSfx",
+      "ret": "void",
+      "mods": "private",
+      "params": "ConsumableEffectType type",
+      "description": "Executa a operação PlayEndSfx."
+    },
+    {
+      "name": "SpawnVfx",
+      "ret": "void",
+      "mods": "private",
+      "params": "ItemData item",
+      "description": "Executa a operação SpawnVfx."
+    },
+    {
+      "name": "DestroyVfx",
+      "ret": "void",
+      "mods": "private",
+      "params": "ConsumableEffectType type",
+      "description": "Executa a operação DestroyVfx."
+    },
+    {
+      "name": "ClearAll",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ClearAll."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AudioManager",
+    "ConsumableEffectType",
+    "DamageInfo",
+    "EnemyDetection",
+    "EnemyStatusEffectReceiver",
+    "GamePauseUtil",
+    "ItemData",
+    "PickupBase",
+    "PlayerCombat",
+    "PlayerDeathHandler",
+    "PlayerHealthRegen",
+    "PlayerItemUser",
+    "PlayerMotor2D",
+    "PlayerProgress",
+    "WaterCurrentZone",
+    "WaterMotor2D",
+    "WorldState"
+  ],
+  "used_by": [
+    "EnemyDetection",
+    "EnemyStatusEffectReceiver",
+    "ItemData",
+    "PickupBase",
+    "PlayerAttack",
+    "PlayerCombat",
+    "PlayerDeathHandler",
+    "PlayerItemUser",
+    "SpinAttackAbility",
+    "WaterMotor2D"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Gestor central dos efeitos temporários dos itens consumíveis aplicados\n/// directamente ao PLAYER (Tarefa \"Itens Consumíveis\"):\n///\n/// - Escudo (Casca Serenna) — ver <see cref=\"TryConsumeShield\"/>, consumido em\n///   PlayerCombat.TryDamagePlayer.\n/// - Velocidade (Orvalho Veloz) — usa PlayerMotor2D.SetSpeedMultiplier.\n/// - Invisibilidade (Pó Dourado) — ver <see cref=\"IsInvisible\"/>, consultado por\n///   EnemyDetection.\n/// - Regeneração (Néctar Verde) — cura PlayerProgress.Heal(1) a cada intervalo.\n/// - Imunidade a Correntes (Bolha de Coral) — ver <see cref=\"IsCurrentImmune\"/>,\n///   consultado por WaterMotor2D/WaterCurrentZone.\n/// - Impulso Vertical (Incenso do Vento) — aplicado instantaneamente ao Rigidbody2D.\n/// - Destacar Coleccionáveis (Luz de Gaia) — chama PickupBase.SetHighlighted\n///   nos coleccionáveis próximos.\n///\n/// Raiz de Aderência (ConsumableEffectType.Aderencia) NÃO passa por aqui —\n/// continua a usar PlayerCombat.ApplyTemporaryGripBuff directamente (Tarefa\n/// #28), chamado por PlayerItemUser. Itens em área sobre inimigos (Sono,\n/// Resina, Congelamento, e o \"perde-alvo\" do Pó Dourado) também não passam por\n/// aqui — continuam via PlayerItemUser → EnemyStatusEffectReceiver.ApplyItem.\n///\n/// Todos os temporizadores usam Time.deltaTime, pelo que pausam automaticamente\n/// com Time.timeScale = 0 (menus/diálogos — GamePauseUtil). Reaplicar o mesmo\n/// tipo de efeito RENOVA a duração em vez de empilhar.\n///\n/// <see cref=\"ClearAll\"/> remove todos os efeitos activos — chamado\n/// automaticamente ao mudar de área (WorldState.CurrentAreaChanged) e ao\n/// morrer (PlayerDeathHandler). Sistemas futuros (ex: reinício de desafios)\n/// podem chamar isto directamente.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D))]\npublic class PlayerConsumableEffects : MonoBehaviour\n{\n    /// <summary>Singleton simples (1 player) — ver PlayerHealthRegen/PlayerConsumableEffects para o mesmo padrão.</summary>\n    public static PlayerConsumableEffects Instance { get; private set; }\n\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    // Buffer NonAlloc reutilizável para StartHighlight — evita alocação por uso de item.\n    private static readonly Collider2D[] _highlightBuffer = new Collider2D[32];\n\n    // ---- Escudo (Casca Serenna) ----\n    private bool _shieldActive;\n    private bool _shieldHasTimeLimit;\n    private float _shieldTimer;\n    private bool _shieldIgnoresSpecialDeaths;\n\n    // ---- Velocidade (Orvalho Veloz) ----\n    private float _speedBoostTimer;\n\n    // ---- Invisibilidade (Pó Dourado) ----\n    private float _invisibilityTimer;\n\n    // ---- Regeneração (Néctar Verde) ----\n    private int _regenHeartsRemaining;\n    private float _regenInterval;\n    private float _regenTimer;\n\n    // ---- Imunidade a Correntes (Bolha de Coral) ----\n    private float _currentImmunityTimer;\n\n    // ---- Destacar Coleccionáveis (Luz de Gaia) ----\n    private float _highlightTimer;\n\n    // Item activo por tipo de efeito (para tocar effectEndSfx ao terminar) e\n    // VFX instanciado por tipo de efeito (renovado ao reaplicar).\n    private readonly Dictionary<ConsumableEffectType, ItemData> _activeItems = new Dictionary<ConsumableEffectType, ItemData>();\n    private readonly Dictionary<ConsumableEffectType, GameObject> _activeVfx = new Dictionary<ConsumableEffectType, GameObject>();\n\n    /// <summary>True enquanto o escudo da Casca Serenna estiver activo (ainda não bloqueou um golpe nem expirou).</summary>\n    public bool IsShieldActive => _shieldActive;\n\n    /// <summary>True enquanto a invisibilidade do Pó Dourado estiver activa.</summary>\n    public bool IsInvisible => _invisibilityTimer > 0f;\n\n    /// <summary>True enquanto a imunidade a correntes da Bolha de Coral estiver activa.</summary>\n    public bool IsCurrentImmune => _currentImmunityTimer > 0f;\n\n    private void Awake()\n    {\n        Instance = this;\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    private void OnEnable()\n    {\n        if (WorldState.Instance != null) WorldState.Instance.CurrentAreaChanged += OnAreaChanged;\n    }\n\n    private void OnDisable()\n    {\n        if (WorldState.Instance != null) WorldState.Instance.CurrentAreaChanged -= OnAreaChanged;\n    }\n\n    /// <summary>Sair da área actual remove todos os efeitos temporários activos.</summary>\n    private void OnAreaChanged(AreaData _) => ClearAll();\n\n    private void Update()\n    {\n        UpdateShield();\n        UpdateSpeedBoost();\n        UpdateInvisibility();\n        UpdateRegen();\n        UpdateCurrentImmunity();\n        UpdateHighlight();\n    }\n\n    /// <summary>\n    /// Aplica o efeito pré-programado de \"item\" (ConsumableEffectType != Nenhum/\n    /// Aderencia). Reaplicar o mesmo tipo de efeito renova a duração. Devolve\n    /// false se o tipo de efeito não for tratado aqui (Nenhum, Aderencia, ou\n    /// efeitos em área sobre inimigos).\n    /// </summary>\n    public bool ApplyEffect(ItemData item)\n    {\n        if (item == null) return false;\n\n        switch (item.effectType)\n        {\n            case ConsumableEffectType.Escudo: StartShield(item); return true;\n            case ConsumableEffectType.Velocidade: StartSpeedBoost(item); return true;\n            case ConsumableEffectType.Invisibilidade: StartInvisibility(item); return true;\n            case ConsumableEffectType.Regeneracao: StartRegen(item); return true;\n            case ConsumableEffectType.ImunidadeCorrente: StartCurrentImmunity(item); return true;\n            case ConsumableEffectType.ImpulsoVertical: ApplyWindBurst(item); return true;\n            case ConsumableEffectType.DestacarColecionaveis: StartHighlight(item); return true;\n            default: return false;\n        }\n    }\n\n    // ---------------- Escudo (Casca Serenna) ----------------\n\n    private void StartShield(ItemData item)\n    {\n        _shieldActive = true;\n        _shieldHasTimeLimit = item.shieldMaxDuration > 0f;\n        _shieldTimer = item.shieldMaxDuration;\n        _shieldIgnoresSpecialDeaths = item.shieldIgnoresSpecialDeaths;\n        PlayStartFeedback(item);\n    }\n\n    private void UpdateShield()\n    {\n        if (!_shieldActive || !_shieldHasTimeLimit) return;\n\n        _shieldTimer -= Time.deltaTime;\n        if (_shieldTimer <= 0f) EndShield(playEndSfx: true);\n    }\n\n    private void EndShield(bool playEndSfx)\n    {\n        if (!_shieldActive) return;\n\n        _shieldActive = false;\n        DestroyVfx(ConsumableEffectType.Escudo);\n        if (playEndSfx) PlayEndSfx(ConsumableEffectType.Escudo);\n        else _activeItems.Remove(ConsumableEffectType.Escudo);\n    }\n\n    /// <summary>\n    /// Chamado por PlayerCombat.TryDamagePlayer quando um golpe causaria dano\n    /// (finalAmount &gt; 0, depois de Defesa/ShellGuard). Se o escudo estiver\n    /// activo, consome-o e devolve true (bloqueia dano E knockback do golpe).\n    /// \"isSpecialDeath\" (DamageInfo.IgnoreDefense) — se\n    /// <see cref=\"ItemData.shieldIgnoresSpecialDeaths\"/> estiver activo no item\n    /// que concedeu o escudo, este NÃO bloqueia mortes especiais.\n    /// </summary>\n    public bool TryConsumeShield(bool isSpecialDeath)\n    {\n        if (!_shieldActive) return false;\n        if (isSpecialDeath && _shieldIgnoresSpecialDeaths) return false;\n\n        EndShield(playEndSfx: true);\n        return true;\n    }\n\n    // ---------------- Velocidade (Orvalho Veloz) ----------------\n\n    private void StartSpeedBoost(ItemData item)\n    {\n        motor.SetSpeedMultiplier(item.speedBoostMultiplier);\n        _speedBoostTimer = item.speedBoostDuration;\n        PlayStartFeedback(item);\n    }\n\n    private void UpdateSpeedBoost()\n    {\n        if (_speedBoostTimer <= 0f) return;\n\n        _speedBoostTimer -= Time.deltaTime;\n        if (_speedBoostTimer <= 0f) EndSpeedBoost();\n    }\n\n    private void EndSpeedBoost()\n    {\n        motor.SetSpeedMultiplier(1f);\n        DestroyVfx(ConsumableEffectType.Velocidade);\n        PlayEndSfx(ConsumableEffectType.Velocidade);\n    }\n\n    // ---------------- Invisibilidade (Pó Dourado) ----------------\n\n    private void StartInvisibility(ItemData item)\n    {\n        _invisibilityTimer = item.invisibilityDuration;\n        PlayStartFeedback(item);\n    }\n\n    private void UpdateInvisibility()\n    {\n        if (_invisibilityTimer <= 0f) return;\n\n        _invisibilityTimer -= Time.deltaTime;\n        if (_invisibilityTimer <= 0f)\n        {\n            DestroyVfx(ConsumableEffectType.Invisibilidade);\n            PlayEndSfx(ConsumableEffectType.Invisibilidade);\n        }\n    }\n\n    // ---------------- Regeneração (Néctar Verde) ----------------\n\n    private void StartRegen(ItemData item)\n    {\n        _regenHeartsRemaining = Mathf.Max(1, item.regenHearts);\n        _regenInterval = Mathf.Max(0.01f, item.regenDuration) / _regenHeartsRemaining;\n        _regenTimer = _regenInterval;\n        PlayStartFeedback(item);\n    }\n\n    private void UpdateRegen()\n    {\n        if (_regenHeartsRemaining <= 0) return;\n\n        _regenTimer -= Time.deltaTime;\n        if (_regenTimer > 0f) return;\n\n        PlayerProgress.Instance?.Heal(1);\n        _regenHeartsRemaining--;\n        _regenTimer = _regenInterval;\n\n        if (_regenHeartsRemaining <= 0)\n        {\n            DestroyVfx(ConsumableEffectType.Regeneracao);\n            PlayEndSfx(ConsumableEffectType.Regeneracao);\n        }\n    }\n\n    // ---------------- Imunidade a Correntes (Bolha de Coral) ----------------\n\n    private void StartCurrentImmunity(ItemData item)\n    {\n        _currentImmunityTimer = item.currentImmunityDuration;\n        PlayStartFeedback(item);\n    }\n\n    private void UpdateCurrentImmunity()\n    {\n        if (_currentImmunityTimer <= 0f) return;\n\n        _currentImmunityTimer -= Time.deltaTime;\n        if (_currentImmunityTimer <= 0f)\n        {\n            DestroyVfx(ConsumableEffectType.ImunidadeCorrente);\n            PlayEndSfx(ConsumableEffectType.ImunidadeCorrente);\n        }\n    }\n\n    // ---------------- Impulso Vertical (Incenso do Vento) ----------------\n\n    /// <summary>Aplica o impulso vertical instantaneamente: substitui a velocidade vertical actual se for menor que windBurstForce.</summary>\n    private void ApplyWindBurst(ItemData item)\n    {\n        if (rb != null)\n            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, item.windBurstForce));\n\n        PlayStartFeedback(item);\n\n        // VFX instantâneo: não fica \"activo\" indefinidamente, remover depois de alguns segundos.\n        if (_activeVfx.TryGetValue(ConsumableEffectType.ImpulsoVertical, out var vfx) && vfx != null)\n            Destroy(vfx, 2f);\n\n        _activeItems.Remove(ConsumableEffectType.ImpulsoVertical);\n    }\n\n    // ---------------- Destacar Coleccionáveis (Luz de Gaia) ----------------\n\n    private void StartHighlight(ItemData item)\n    {\n        _highlightTimer = item.highlightDuration;\n        PlayStartFeedback(item);\n\n        int count = Physics2D.OverlapCircleNonAlloc(transform.position, item.highlightRadius, _highlightBuffer);\n        for (int i = 0; i < count; i++)\n        {\n            var pickup = _highlightBuffer[i].GetComponent<PickupBase>();\n            if (pickup == null || pickup.Collected) continue;\n\n            if (item.highlightedPickupTypes != null && item.highlightedPickupTypes.Count > 0\n                && !item.highlightedPickupTypes.Contains(pickup.Type))\n                continue;\n\n            pickup.SetHighlighted(item.highlightColor, item.highlightDuration);\n        }\n    }\n\n    private void UpdateHighlight()\n    {\n        if (_highlightTimer <= 0f) return;\n\n        _highlightTimer -= Time.deltaTime;\n        if (_highlightTimer <= 0f)\n            PlayEndSfx(ConsumableEffectType.DestacarColecionaveis);\n    }\n\n    // ---------------- Feedback / Limpeza ----------------\n\n    private void PlayStartFeedback(ItemData item)\n    {\n        _activeItems[item.effectType] = item;\n        AudioManager.Instance?.PlaySE(item.effectActivateSfx);\n        SpawnVfx(item);\n    }\n\n    private void PlayEndSfx(ConsumableEffectType type)\n    {\n        if (_activeItems.TryGetValue(type, out var item) && item != null)\n            AudioManager.Instance?.PlaySE(item.effectEndSfx);\n\n        _activeItems.Remove(type);\n    }\n\n    private void SpawnVfx(ItemData item)\n    {\n        DestroyVfx(item.effectType);\n        if (item.effectVfxPrefab == null) return;\n\n        _activeVfx[item.effectType] = Instantiate(item.effectVfxPrefab, transform.position, Quaternion.identity, transform);\n    }\n\n    private void DestroyVfx(ConsumableEffectType type)\n    {\n        if (_activeVfx.TryGetValue(type, out var vfx) && vfx != null) Destroy(vfx);\n        _activeVfx.Remove(type);\n    }\n\n    /// <summary>\n    /// Remove TODOS os efeitos activos imediatamente (sem tocar effectEndSfx):\n    /// chamado ao mudar de área e ao morrer. Sistemas futuros (ex: reinício de\n    /// desafio) podem chamar isto directamente.\n    /// </summary>\n    public void ClearAll()\n    {\n        if (_shieldActive) EndShield(playEndSfx: false);\n\n        if (_speedBoostTimer > 0f)\n        {\n            motor.SetSpeedMultiplier(1f);\n            _speedBoostTimer = 0f;\n        }\n\n        _invisibilityTimer = 0f;\n        _regenHeartsRemaining = 0;\n        _currentImmunityTimer = 0f;\n        _highlightTimer = 0f;\n\n        foreach (var vfx in _activeVfx.Values)\n            if (vfx != null) Destroy(vfx);\n\n        _activeVfx.Clear();\n        _activeItems.Clear();\n    }\n}\n",
+  "id": "script-player-playerconsumableeffects-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-audio-audiomanager-cs",
+    "script-player-damageinfo-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemystatuseffectreceiver-cs",
+    "script-npc-pauseutil-cs",
+    "script-data-itemdata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-player-playercombat-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-player-playerhealthregen-cs",
+    "script-player-playeritemuser-cs",
+    "script-player-playermotor2d-cs",
+    "script-data-playerprogress-cs",
+    "script-interactables-watercurrentzone-cs",
+    "script-player-watermotor2d-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemystatuseffectreceiver-cs",
+    "script-data-itemdata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-player-playerattack-cs",
+    "script-player-playercombat-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-player-playeritemuser-cs",
+    "script-abilities-spinattackability-cs",
+    "script-player-watermotor2d-cs"
+  ]
+}

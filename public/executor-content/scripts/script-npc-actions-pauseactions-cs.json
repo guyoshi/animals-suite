@@ -1,0 +1,80 @@
+{
+  "path": "NPC/Actions/PauseActions.cs",
+  "filename": "PauseActions.cs",
+  "category": "NPC",
+  "primary": "Action_PauseNearbyNpcs",
+  "kind": "Acção de NPC",
+  "summary": "\"Pausa NPCs em movimento\" (Etapa 8): suspende temporariamente o NpcMovement de qualquer NPC que esteja atualmente em FollowPlayer/FleePlayer/Patrol (tratados como \"inimigos\"/NPCs em movimento autónomo perto do player), restaurando o respectivo \"DefaultMode\" quando Action_ResumeNearbyNpcs for executada. NPCs em Idle, ou a meio de uma ação de cutscene própria (ex: MoveToTarget), não são afectados.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Action_PauseNearbyNpcs",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_ResumeNearbyNpcs",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_PauseGame",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_ResumeGame",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "radius",
+      "type": "float",
+      "mods": "public",
+      "default": "15f",
+      "section": "",
+      "attrs": "[Tooltip(\"Raio (a partir do player deste NPC) dentro do qual outros NPCs em FollowPlayer/FleePlayer/Patrol são pausados. 0 ou menos = sem limite (todos os NPCs da cena).\")]",
+      "inspector": true,
+      "description": "Raio (a partir do player deste NPC) dentro do qual outros NPCs em FollowPlayer/FleePlayer/Patrol são pausados. 0 ou menos = sem limite (todos os NPCs da cena)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "Action_Wait",
+    "GamePauseUtil",
+    "NpcAction",
+    "NpcActionUtil",
+    "NpcController",
+    "NpcMovement",
+    "NpcPauseUtil"
+  ],
+  "used_by": [
+    "NpcMovement"
+  ],
+  "source": "using System.Collections;\n\n/// <summary>\n/// \"Pausa NPCs em movimento\" (Etapa 8): suspende temporariamente o\n/// NpcMovement de qualquer NPC que esteja actualmente em\n/// FollowPlayer/FleePlayer/Patrol (tratados como \"inimigos\"/NPCs em movimento\n/// autónomo perto do player), restaurando o respectivo \"DefaultMode\" quando\n/// Action_ResumeNearbyNpcs for executada. NPCs em Idle, ou a meio de uma ação\n/// de cutscene própria (ex: MoveToTarget), não são afectados.\n/// </summary>\n[System.Serializable]\npublic class Action_PauseNearbyNpcs : NpcAction\n{\n    [Tooltip(\"Raio (a partir do player deste NPC) dentro do qual outros NPCs em FollowPlayer/FleePlayer/Patrol são pausados. 0 ou menos = sem limite (todos os NPCs da cena).\")]\n    public float radius = 15f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        NpcPauseUtil.PauseNearbyNpcs(npc, radius);\n        yield break;\n    }\n}\n\n/// <summary>Retoma o movimento de todos os NPCs pausados pela última Action_PauseNearbyNpcs.</summary>\n[System.Serializable]\npublic class Action_ResumeNearbyNpcs : NpcAction\n{\n    public override IEnumerator Execute(NpcController npc)\n    {\n        NpcPauseUtil.ResumePausedNpcs();\n        yield break;\n    }\n}\n\n/// <summary>\n/// \"Pausa física\" do jogo (Etapa 8): Time.timeScale = 0, parando toda a física,\n/// animações e Update/FixedUpdate escalados por timeScale (incluindo o\n/// movimento de outros NPCs e do player). A sequência de ações deste evento\n/// continua a correr — Action_Wait (e outras ações com tempos de espera) usam\n/// automaticamente WaitForSecondsRealtime enquanto Time.timeScale == 0 (ver\n/// NpcActionUtil.Wait), por isso podes encadear, por exemplo, \"Pausar Jogo\" →\n/// \"Esperar 2s\" → \"Retomar Jogo\" para um pequeno \"freeze\" controlado.\n/// Ações que dependam de FixedUpdate (ex: movimento de NPC por física) não\n/// avançam enquanto o jogo estiver pausado desta forma.\n/// </summary>\n[System.Serializable]\npublic class Action_PauseGame : NpcAction\n{\n    public override IEnumerator Execute(NpcController npc)\n    {\n        GamePauseUtil.Pause();\n        yield break;\n    }\n}\n\n/// <summary>Desfaz Action_PauseGame, restaurando o Time.timeScale anterior.</summary>\n[System.Serializable]\npublic class Action_ResumeGame : NpcAction\n{\n    public override IEnumerator Execute(NpcController npc)\n    {\n        GamePauseUtil.Resume();\n        yield break;\n    }\n}\n",
+  "id": "script-npc-actions-pauseactions-cs",
+  "dependencyIds": [
+    "script-npc-pauseutil-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-actions-npcactionutil-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-npcmovement-cs"
+  ],
+  "usedByIds": [
+    "script-npc-npcmovement-cs"
+  ]
+}

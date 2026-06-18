@@ -1,0 +1,33 @@
+{
+  "path": "Player/IKnockbackResistanceProvider.cs",
+  "filename": "IKnockbackResistanceProvider.cs",
+  "category": "Player",
+  "primary": "IKnockbackResistanceProvider",
+  "kind": "Interface",
+  "summary": "Tarefa #28 — implementado por qualquer componente do player que conceda resistência adicional a knockback enquanto ativo (ex: habilidade \"Coala agarrado\" a um tronco/parede). multiplica o resultado de todos os providers presentes no player. Um valor de 0 concede IMUNIDADE TOTAL a knockback (ignora o limite mínimo configurado em ); valores entre 0 e 1 reduzem o knockback proporcionalmente; 1 = sem efeito.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "IKnockbackResistanceProvider",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [],
+  "dependencies": [
+    "PlayerCombat"
+  ],
+  "used_by": [
+    "PlayerCombat"
+  ],
+  "source": "/// <summary>\n/// Tarefa #28 — implementado por qualquer componente do player que conceda\n/// resistência adicional a knockback enquanto activo (ex: habilidade \"Coala\n/// agarrado\" a um tronco/parede). <see cref=\"PlayerCombat.ComputeKnockbackMultiplier\"/>\n/// multiplica o resultado de todos os providers presentes no player.\n///\n/// Um valor de 0 concede IMUNIDADE TOTAL a knockback (ignora o limite mínimo\n/// configurado em <see cref=\"PlayerCombat\"/>); valores entre 0 e 1 reduzem o\n/// knockback proporcionalmente; 1 = sem efeito.\n/// </summary>\npublic interface IKnockbackResistanceProvider\n{\n    /// <summary>Multiplicador de knockback (1 = normal, 0 = imunidade total) enquanto este provider estiver activo.</summary>\n    float KnockbackMultiplier { get; }\n}\n",
+  "id": "script-player-iknockbackresistanceprovider-cs",
+  "dependencyIds": [
+    "script-player-playercombat-cs"
+  ],
+  "usedByIds": [
+    "script-player-playercombat-cs"
+  ]
+}

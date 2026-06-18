@@ -1,0 +1,91 @@
+{
+  "path": "UI/InteractionPromptUI.cs",
+  "filename": "InteractionPromptUI.cs",
+  "category": "UI",
+  "primary": "InteractionPromptUI",
+  "kind": "Componente",
+  "summary": "Prompt genérico de interação do HUD (Tarefa #32) — ex: \"Aperta [E] para falar\", \"Aperta [E] para abrir\", \"Aperta [E] para coletar\". Qualquer sistema (NpcController, alavancas, baús, objetos agarráveis, etc.) chama quando o player entra no alcance e quando sai (ou a interação deixa de ser possível). Singleton simples (Instance) — diferente do padrão EnsureExists/DontDestroyOnLoad dos outros singletons (PlayerProgress, WorldState, ...) porque este componente faz parte do Canvas do HUD de cada cena, não precisa de persistir entre cenas.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "InteractionPromptUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "promptText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDestroy",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDestroy."
+    },
+    {
+      "name": "Show",
+      "ret": "void",
+      "mods": "public",
+      "params": "string text",
+      "description": "Executa a operação Show."
+    },
+    {
+      "name": "Hide",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Hide."
+    }
+  ],
+  "dependencies": [
+    "NpcController",
+    "PlayerProgress",
+    "WorldState"
+  ],
+  "used_by": [
+    "BossHealthBarUI",
+    "ChallengeTrigger",
+    "HUDController"
+  ],
+  "source": "using TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Prompt genérico de interacção do HUD (Tarefa #32) — ex: \"Aperta [E] para\n/// falar\", \"Aperta [E] para abrir\", \"Aperta [E] para apanhar\". Qualquer\n/// sistema (NpcController, alavancas, baús, objectos agarráveis, etc.) chama\n/// <see cref=\"Show(string)\"/> quando o player entra no alcance e\n/// <see cref=\"Hide\"/> quando sai (ou a interacção deixa de ser possível).\n///\n/// Singleton simples (Instance) — diferente do padrão\n/// EnsureExists/DontDestroyOnLoad dos outros singletons (PlayerProgress,\n/// WorldState, ...) porque este componente faz parte do Canvas do HUD de cada\n/// cena, não precisa de persistir entre cenas.\n/// </summary>\npublic class InteractionPromptUI : MonoBehaviour\n{\n    public static InteractionPromptUI Instance { get; private set; }\n\n    [SerializeField] private GameObject root;\n    [SerializeField] private TMP_Text promptText;\n\n    private void Awake()\n    {\n        Instance = this;\n        if (root != null) root.SetActive(false);\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    /// <summary>Mostra o prompt com o texto dado (ex: \"Aperta [E] para falar\").</summary>\n    public void Show(string text)\n    {\n        if (promptText != null) promptText.text = text;\n        if (root != null) root.SetActive(true);\n    }\n\n    public void Hide()\n    {\n        if (root != null) root.SetActive(false);\n    }\n}\n",
+  "id": "script-ui-interactionpromptui-cs",
+  "dependencyIds": [
+    "script-npc-npccontroller-cs",
+    "script-data-playerprogress-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-ui-bosshealthbarui-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-ui-hudcontroller-cs"
+  ]
+}

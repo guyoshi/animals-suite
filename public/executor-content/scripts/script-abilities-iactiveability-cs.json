@@ -1,0 +1,82 @@
+{
+  "path": "Abilities/IActiveAbility.cs",
+  "filename": "IActiveAbility.cs",
+  "category": "Abilities",
+  "primary": "IActiveAbility",
+  "kind": "Interface",
+  "summary": "Tarefa #34 — contrato adicional para habilidades ATIVAS (botão de Habilidade) que a HUD precisa de representar de forma uniforme: cooldown, estado ativo e disponibilidade. Estende (que já dá CooldownRemaining e IsActive ) com: - : duração TOTAL do cooldown, usada pela HUD para normalizar uma barra/anel de progresso (CooldownRemaining / CooldownDuration). Um valor de 0 significa \"sem cooldown\" — a HUD não mostra qualquer indicador de cooldown para esta habilidade (habilidades passivas ou instantâneas sem cooldown próprio). - : true se a habilidade pode ser ativada AGORA (cooldown terminado, requisitos da forma/estado cumpridos) — usado pela HUD para indicar disponibilidade (ex: ícone acinz",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "IActiveAbility",
+      "kind": "interface",
+      "bases": "IAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [],
+  "dependencies": [
+    "AbilityRouter",
+    "AnimalsDebugPanel",
+    "HUDController",
+    "IAbility",
+    "PrimaryAbility"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "AnimalsDebugPanel",
+    "CamoAbility",
+    "ChargeAbility",
+    "ClimbAbility",
+    "DashAbility",
+    "EggAbility",
+    "GlideAbility",
+    "GrabThrowAbility",
+    "HUDController",
+    "HeavyStrikeAbility",
+    "IceBrakeAbility",
+    "NightVisionAbility",
+    "PounceAbility",
+    "RoarAbility",
+    "RollAbility",
+    "ShellGuardAbility",
+    "SonarAbility",
+    "SpinAttackAbility",
+    "SprintAbility",
+    "SwingAbility",
+    "TonguePullAbility"
+  ],
+  "source": "/// <summary>\n/// Tarefa #34 — contrato adicional para habilidades ACTIVAS (botão de\n/// Habilidade) que a HUD precisa de representar de forma uniforme: cooldown,\n/// estado activo e disponibilidade.\n///\n/// Estende <see cref=\"IAbility\"/> (que já dá <c>CooldownRemaining</c> e\n/// <c>IsActive</c>) com:\n///\n/// - <see cref=\"CooldownDuration\"/>: duração TOTAL do cooldown, usada pela HUD\n///   para normalizar uma barra/anel de progresso (CooldownRemaining /\n///   CooldownDuration). Um valor de 0 significa \"sem cooldown\" — a HUD não\n///   mostra qualquer indicador de cooldown para esta habilidade (habilidades\n///   passivas ou instantâneas sem cooldown próprio).\n/// - <see cref=\"CanActivate\"/>: true se a habilidade pode ser activada AGORA\n///   (cooldown terminado, requisitos da forma/estado cumpridos) — usado pela\n///   HUD para indicar disponibilidade (ex: ícone acinzentado quando false).\n///\n/// TODAS as habilidades activas (ligadas a PrimaryAbility / botão de\n/// Habilidade) devem implementar esta interface, para que\n/// <see cref=\"AbilityRouter.GetPrimaryAbilityCooldownSource\"/> e\n/// <see cref=\"HUDController\"/> as tratem de forma uniforme. Habilidades sem\n/// cooldown próprio devolvem 0 em CooldownDuration (e portanto não mostram\n/// indicador), mas ainda implementam a interface (sem custo extra).\n/// </summary>\npublic interface IActiveAbility : IAbility\n{\n    /// <summary>Duração total do cooldown (segundos). 0 = sem cooldown — a HUD não mostra indicador para esta habilidade.</summary>\n    float CooldownDuration { get; }\n\n    /// <summary>True se a habilidade pode ser activada agora (cooldown terminado, requisitos da forma cumpridos, etc.) — disponibilidade mostrada pela HUD.</summary>\n    bool CanActivate { get; }\n\n    /// <summary>\n    /// AnimalsDebugPanel (aba \"Habilidades\"): zera imediatamente o cooldown\n    /// desta habilidade, sem esperar o tempo normal. Habilidades sem cooldown\n    /// próprio (CooldownDuration == 0) implementam isto como no-op.\n    /// </summary>\n    void ResetCooldown();\n}\n",
+  "id": "script-abilities-iactiveability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-ui-hudcontroller-cs",
+    "script-abilities-iability-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-camoability-cs",
+    "script-abilities-chargeability-cs",
+    "script-abilities-climbability-cs",
+    "script-abilities-dashability-cs",
+    "script-abilities-eggability-cs",
+    "script-abilities-glideability-cs",
+    "script-abilities-grabthrowability-cs",
+    "script-ui-hudcontroller-cs",
+    "script-abilities-heavystrikeability-cs",
+    "script-abilities-icebrakeability-cs",
+    "script-abilities-nightvisionability-cs",
+    "script-abilities-pounceability-cs",
+    "script-abilities-roarability-cs",
+    "script-abilities-rollability-cs",
+    "script-abilities-shellguardability-cs",
+    "script-abilities-sonarability-cs",
+    "script-abilities-spinattackability-cs",
+    "script-abilities-sprintability-cs",
+    "script-abilities-swingability-cs",
+    "script-abilities-tonguepullability-cs"
+  ]
+}

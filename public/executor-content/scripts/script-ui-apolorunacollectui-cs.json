@@ -1,0 +1,302 @@
+{
+  "path": "UI/ApoloRunaCollectUI.cs",
+  "filename": "ApoloRunaCollectUI.cs",
+  "category": "UI",
+  "primary": "ApoloRunaCollectUI",
+  "kind": "Componente",
+  "summary": "UI de coleta de Runas de Apolo (Tarefa #11): - Ao coletar uma Runa de Apolo ( ), mostra uma notificação pop-up com o contador atualizado (ex: \"2 / 6 Runas de Apolo\"). - Ao chegar a 6 (ou ), exibe a sequência completa de desbloqueio do Emblema de Apolo: 1. Pop-up de progresso (fade-in) → mostra \"6 / 6 Runas de Apolo\". 2. Transição para o painel do Emblema de Apolo (emblema iluminado, texto \"EMBLEMA DE APOLO DESBLOQUEADO!\"). 3. Flash de Aura de Fogo: ativa o (VFX filho do player) durante alguns segundos para dar um aperitivo. 4. Fade-out do painel. Montagem no Editor: - Canvas (Screen Space - Overlay) com \"popupRoot\" + \"canvasGroup\". - Popup (notificação por Runa): - \"runaCountText\": \"N / 6",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "ApoloRunaCollectUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "runasRequired",
+      "type": "int",
+      "mods": "public",
+      "default": "6",
+      "section": "Configuração",
+      "attrs": "[Header(\"Configuração\")] [Tooltip(\"Número de Runas de Apolo para o desbloqueio do Emblema. Deve coincidir com EmblemManager.runasDeApoloRequired.\")] [Min(1)]",
+      "inspector": true,
+      "description": "Número de Runas de Apolo para o desbloqueio do Emblema. Deve coincidir com EmblemManager.runasDeApoloRequired."
+    },
+    {
+      "name": "popupRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Pop-up de Progresso (por Runa)",
+      "attrs": "[Header(\"Pop-up de Progresso (por Runa)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Pop-up de Progresso (por Runa)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runaCountText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Pop-up de Progresso (por Runa)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runaIconImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Pop-up de Progresso (por Runa)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runaIconSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Pop-up de Progresso (por Runa)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emblemPanelRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel de Emblema (apenas ao atingir 6)",
+      "attrs": "[Header(\"Painel de Emblema (apenas ao atingir 6)\")] [Tooltip(\"Root do painel de desbloqueio do Emblema de Apolo. Pode ser o mesmo que 'popupRoot' ou um sub-painel separado dentro do mesmo CanvasGroup.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Root do painel de desbloqueio do Emblema de Apolo. Pode ser o mesmo que 'popupRoot' ou um sub-painel separado dentro do mesmo CanvasGroup."
+    },
+    {
+      "name": "emblemImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Painel de Emblema (apenas ao atingir 6)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "apoloEmblemData",
+      "type": "EmblemData",
+      "mods": "private",
+      "default": "",
+      "section": "Painel de Emblema (apenas ao atingir 6)",
+      "attrs": "[Tooltip(\"EmblemData do Emblema de Apolo — usa .icon como sprite do emblema.\")] [SerializeField]",
+      "inspector": true,
+      "description": "EmblemData do Emblema de Apolo — usa .icon como sprite do emblema."
+    },
+    {
+      "name": "emblemTitleText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel de Emblema (apenas ao atingir 6)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emblemTitleString",
+      "type": "string",
+      "mods": "private",
+      "default": "\"EMBLEMA DE APOLO\\nDESBLOQUEADO!\"",
+      "section": "Painel de Emblema (apenas ao atingir 6)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "apoloAuraPreview",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Aura de Fogo — Preview",
+      "attrs": "[Header(\"Aura de Fogo — Preview\")] [Tooltip(\"GameObject filho do player com o VFX da Aura de Apolo. Activado temporariamente durante a animação de desbloqueio (preview). A activação permanente é gerida pelo PostGameAuraController.\")] [SerializeField]",
+      "inspector": true,
+      "description": "GameObject filho do player com o VFX da Aura de Apolo. Ativado temporariamente durante a animação de desbloqueio (preview). A ativação permanente é gerida pelo PostGameAuraController."
+    },
+    {
+      "name": "auraPreviewDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "3f",
+      "section": "Aura de Fogo — Preview",
+      "attrs": "[Tooltip(\"Duração (segundos) do preview da Aura de Fogo durante a animação de desbloqueio.\")] [Min(0.5f)]",
+      "inspector": true,
+      "description": "Duração (segundos) do preview da Aura de Fogo durante a animação de desbloqueio."
+    },
+    {
+      "name": "runaCollectSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "[Header(\"Áudio\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "emblemUnlockFanfare",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fadeDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.25f",
+      "section": "Transição",
+      "attrs": "[Header(\"Transição\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "popupHoldDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "1.8f",
+      "section": "Transição",
+      "attrs": "[Tooltip(\"Tempo com o pop-up de progresso (por Runa) visível, em segundos.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Tempo com o pop-up de progresso (por Runa) visível, em segundos."
+    },
+    {
+      "name": "emblemHoldDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "4f",
+      "section": "Transição",
+      "attrs": "[Tooltip(\"Tempo com o painel de Emblema visível (ao atingir 6), em segundos.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Tempo com o painel de Emblema visível (ao atingir 6), em segundos."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isShowing",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnRunasDeApoloChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int total",
+      "description": "Executa a operação OnRunasDeApoloChanged."
+    },
+    {
+      "name": "ShowQueueRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ShowQueueRoutine."
+    },
+    {
+      "name": "ShowEmblemUnlock",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ShowEmblemUnlock."
+    },
+    {
+      "name": "WaitUnscaled",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação WaitUnscaled."
+    },
+    {
+      "name": "FadeRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float from, float to",
+      "description": "Executa a operação FadeRoutine."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "EmblemData",
+    "EmblemManager",
+    "PlayerProgress",
+    "PostGameAuraController"
+  ],
+  "used_by": [],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// UI de coleta de Runas de Apolo (Tarefa #11):\n///\n/// - Ao recolher uma Runa de Apolo (<see cref=\"PlayerProgress.RunasDeApoloChanged\"/>),\n///   mostra uma notificação pop-up com o contador actualizado (ex: \"2 / 6\n///   Runas de Apolo\").\n/// - Ao chegar a 6 (ou <see cref=\"runasRequired\"/>), exibe a sequência\n///   completa de desbloqueio do Emblema de Apolo:\n///   1. Pop-up de progresso (fade-in) → mostra \"6 / 6 Runas de Apolo\".\n///   2. Transição para o painel do Emblema de Apolo (emblema iluminado, texto\n///      \"EMBLEMA DE APOLO DESBLOQUEADO!\").\n///   3. Flash de Aura de Fogo: activa o <see cref=\"apoloAuraPreview\"/> (VFX\n///      filho do player) durante alguns segundos para dar um aperitivo.\n///   4. Fade-out do painel.\n///\n/// <b>Montagem no Editor:</b>\n/// - Canvas (Screen Space - Overlay) com \"popupRoot\" + \"canvasGroup\".\n/// - <b>Popup (notificação por Runa):</b>\n///   - \"runaCountText\": \"N / 6 Runas de Apolo\".\n///   - \"runaIconImage\": ícone da Runa de Apolo (opcional).\n/// - <b>Painel de Emblema (visível só no desbloqueio a 6):</b>\n///   - \"emblemPanelRoot\": activado/desactivado pelo código — a notificação\n///     e o painel de emblema podem ser o mesmo ou objectos separados dentro\n///     do \"popupRoot\".\n///   - \"emblemImage\": imagem do Emblema de Apolo.\n///   - \"emblemTitleText\": \"EMBLEMA DE APOLO DESBLOQUEADO!\".\n/// - <b>Aura de Fogo (preview):</b>\n///   - \"apoloAuraPreview\": referência ao GameObject filho do player com o\n///     efeito de Aura de Apolo (o mesmo que <see cref=\"PostGameAuraController\"/>\n///     activa permanentemente depois). Este script activa-o durante\n///     \"auraPreviewDuration\" e depois desactiva-o (a activação permanente\n///     fica a cargo do PostGameAuraController via EmblemManager.EmblemGranted).\n/// </summary>\npublic class ApoloRunaCollectUI : MonoBehaviour\n{\n    public static ApoloRunaCollectUI Instance { get; private set; }\n\n    // ── Configuração ──────────────────────────────────────────────────────────\n\n    [Header(\"Configuração\")]\n    [Tooltip(\"Número de Runas de Apolo para o desbloqueio do Emblema. Deve coincidir com EmblemManager.runasDeApoloRequired.\")]\n    [Min(1)] public int runasRequired = 6;\n\n    // ── UI — Pop-up de Progresso ──────────────────────────────────────────────\n\n    [Header(\"Pop-up de Progresso (por Runa)\")]\n    [SerializeField] private GameObject popupRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private TMP_Text runaCountText;\n    [SerializeField] private Image runaIconImage;\n    [SerializeField] private Sprite runaIconSprite;\n\n    // ── UI — Painel de Desbloqueio do Emblema ─────────────────────────────────\n\n    [Header(\"Painel de Emblema (apenas ao atingir 6)\")]\n    [Tooltip(\"Root do painel de desbloqueio do Emblema de Apolo. Pode ser o mesmo que 'popupRoot' ou um sub-painel separado dentro do mesmo CanvasGroup.\")]\n    [SerializeField] private GameObject emblemPanelRoot;\n    [SerializeField] private Image emblemImage;\n    [Tooltip(\"EmblemData do Emblema de Apolo — usa .icon como sprite do emblema.\")]\n    [SerializeField] private EmblemData apoloEmblemData;\n    [SerializeField] private TMP_Text emblemTitleText;\n    [SerializeField] private string emblemTitleString = \"EMBLEMA DE APOLO\\nDESBLOQUEADO!\";\n\n    // ── Aura de Fogo (preview) ────────────────────────────────────────────────\n\n    [Header(\"Aura de Fogo — Preview\")]\n    [Tooltip(\"GameObject filho do player com o VFX da Aura de Apolo. Activado temporariamente durante a animação de desbloqueio (preview). A activação permanente é gerida pelo PostGameAuraController.\")]\n    [SerializeField] private GameObject apoloAuraPreview;\n\n    [Tooltip(\"Duração (segundos) do preview da Aura de Fogo durante a animação de desbloqueio.\")]\n    [Min(0.5f)] public float auraPreviewDuration = 3f;\n\n    // ── Áudio ─────────────────────────────────────────────────────────────────\n\n    [Header(\"Áudio\")]\n    [SerializeField] private AudioClip runaCollectSfx;\n    [SerializeField] private AudioClip emblemUnlockFanfare;\n\n    // ── Transição ─────────────────────────────────────────────────────────────\n\n    [Header(\"Transição\")]\n    [SerializeField] private float fadeDuration = 0.25f;\n    [Tooltip(\"Tempo com o pop-up de progresso (por Runa) visível, em segundos.\")]\n    [SerializeField] private float popupHoldDuration = 1.8f;\n    [Tooltip(\"Tempo com o painel de Emblema visível (ao atingir 6), em segundos.\")]\n    [SerializeField] private float emblemHoldDuration = 4f;\n\n    // ── Internos ──────────────────────────────────────────────────────────────\n\n    private bool isAutoFallback;\n    private bool isShowing;\n    private readonly Queue<int> _queue = new Queue<int>(); // totais de Runas a mostrar\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n                Destroy(Instance.gameObject);\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (canvasGroup != null) canvasGroup.alpha = 0f;\n        if (popupRoot != null) popupRoot.SetActive(false);\n        if (emblemPanelRoot != null) emblemPanelRoot.SetActive(false);\n        if (apoloAuraPreview != null) apoloAuraPreview.SetActive(false);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(ApoloRunaCollectUI) + \" (Fallback)\");\n        var instance = go.AddComponent<ApoloRunaCollectUI>();\n        instance.isAutoFallback = true;\n    }\n\n    private void OnEnable()\n    {\n        if (PlayerProgress.Instance != null)\n            PlayerProgress.Instance.RunasDeApoloChanged += OnRunasDeApoloChanged;\n    }\n\n    private void OnDisable()\n    {\n        if (PlayerProgress.Instance != null)\n            PlayerProgress.Instance.RunasDeApoloChanged -= OnRunasDeApoloChanged;\n    }\n\n    private void OnRunasDeApoloChanged(int total)\n    {\n        // Só mostra enquanto o total ainda não passou do máximo (não queremos\n        // re-mostrar em saves já com o emblema obtido ao carregar).\n        if (total < 1 || total > runasRequired) return;\n\n        _queue.Enqueue(total);\n        if (!isShowing) StartCoroutine(ShowQueueRoutine());\n    }\n\n    private IEnumerator ShowQueueRoutine()\n    {\n        isShowing = true;\n\n        while (_queue.Count > 0)\n        {\n            int total = _queue.Dequeue();\n            bool isUnlock = total >= runasRequired;\n\n            AudioManager.Instance?.PlaySE(isUnlock ? emblemUnlockFanfare : runaCollectSfx);\n\n            // Configurar pop-up de progresso.\n            if (runaCountText != null)\n                runaCountText.text = $\"{Mathf.Min(total, runasRequired)} / {runasRequired} Runas de Apolo\";\n\n            if (runaIconImage != null)\n            {\n                runaIconImage.sprite = runaIconSprite;\n                runaIconImage.gameObject.SetActive(runaIconSprite != null);\n            }\n\n            if (emblemPanelRoot != null) emblemPanelRoot.SetActive(false);\n\n            // Mostra pop-up normal.\n            if (canvasGroup == null)\n            {\n                yield return WaitUnscaled(popupHoldDuration);\n            }\n            else\n            {\n                if (popupRoot != null) popupRoot.SetActive(true);\n                yield return FadeRoutine(0f, 1f);\n                yield return WaitUnscaled(popupHoldDuration);\n\n                if (!isUnlock)\n                {\n                    yield return FadeRoutine(1f, 0f);\n                    if (popupRoot != null) popupRoot.SetActive(false);\n                }\n                else\n                {\n                    // Transição para o painel do Emblema.\n                    yield return ShowEmblemUnlock();\n                }\n            }\n        }\n\n        isShowing = false;\n    }\n\n    private IEnumerator ShowEmblemUnlock()\n    {\n        // Mostra o painel do Emblema (fade cruzado ou substituição directa).\n        if (emblemPanelRoot != null)\n        {\n            emblemPanelRoot.SetActive(true);\n\n            if (emblemImage != null && apoloEmblemData != null)\n                emblemImage.sprite = apoloEmblemData.icon;\n\n            if (emblemTitleText != null)\n                emblemTitleText.text = emblemTitleString;\n        }\n\n        // Preview da Aura de Fogo.\n        if (apoloAuraPreview != null)\n            apoloAuraPreview.SetActive(true);\n\n        yield return WaitUnscaled(emblemHoldDuration);\n\n        // Desactiva preview da aura (PostGameAuraController assume a seguir).\n        if (apoloAuraPreview != null)\n            apoloAuraPreview.SetActive(false);\n\n        yield return FadeRoutine(1f, 0f);\n\n        if (popupRoot != null) popupRoot.SetActive(false);\n        if (emblemPanelRoot != null) emblemPanelRoot.SetActive(false);\n    }\n\n    // ── Utilitários ───────────────────────────────────────────────────────────\n\n    private IEnumerator WaitUnscaled(float duration)\n    {\n        float t = 0f;\n        while (t < duration) { t += Time.unscaledDeltaTime; yield return null; }\n    }\n\n    private IEnumerator FadeRoutine(float from, float to)\n    {\n        if (canvasGroup == null) yield break;\n        canvasGroup.alpha = from;\n        if (fadeDuration <= 0f) { canvasGroup.alpha = to; yield break; }\n\n        float t = 0f;\n        while (t < fadeDuration)\n        {\n            t += Time.unscaledDeltaTime;\n            canvasGroup.alpha = Mathf.Lerp(from, to, t / fadeDuration);\n            yield return null;\n        }\n        canvasGroup.alpha = to;\n    }\n}\n",
+  "id": "script-ui-apolorunacollectui-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-data-emblemdata-cs",
+    "script-data-emblemmanager-cs",
+    "script-data-playerprogress-cs",
+    "script-player-postgameauracontroller-cs"
+  ],
+  "usedByIds": []
+}

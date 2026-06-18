@@ -1,0 +1,62 @@
+{
+  "path": "Platforms/PlatformSpinner.cs",
+  "filename": "PlatformSpinner.cs",
+  "category": "Platforms",
+  "primary": "PlatformSpinner",
+  "kind": "Componente",
+  "summary": "Faz o GameObject girar continuamente (add-on opcional — ex: plataforma giratória, hélice, obstáculo rotativo). Combina com MovingPlatform se a plataforma também se deslocar.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PlatformSpinner",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "grausPorSegundo",
+      "type": "float",
+      "mods": "public",
+      "default": "90f",
+      "section": "",
+      "attrs": "[Tooltip(\"Velocidade de rotação em graus/segundo.\")]",
+      "inspector": true,
+      "description": "Velocidade de rotação em graus/segundo."
+    },
+    {
+      "name": "sentidoHorario",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Ligado = sentido horário. Desligado = anti-horário.\")]",
+      "inspector": true,
+      "description": "Ligado = sentido horário. Desligado = anti-horário."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    }
+  ],
+  "dependencies": [
+    "MovingPlatform"
+  ],
+  "used_by": [
+    "SpringPlatform"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Faz o GameObject girar continuamente (add-on opcional — ex: plataforma\n/// giratória, hélice, obstáculo rotativo). Combina com MovingPlatform se a\n/// plataforma também se deslocar.\n/// </summary>\n[DisallowMultipleComponent]\npublic class PlatformSpinner : MonoBehaviour\n{\n    [Tooltip(\"Velocidade de rotação em graus/segundo.\")]\n    public float grausPorSegundo = 90f;\n\n    [Tooltip(\"Ligado = sentido horário. Desligado = anti-horário.\")]\n    public bool sentidoHorario = true;\n\n    private void Update()\n    {\n        float sign = sentidoHorario ? -1f : 1f;\n        transform.Rotate(0f, 0f, grausPorSegundo * sign * Time.deltaTime);\n    }\n}\n",
+  "id": "script-platforms-platformspinner-cs",
+  "dependencyIds": [
+    "script-platforms-movingplatform-cs"
+  ],
+  "usedByIds": [
+    "script-platforms-springplatform-cs"
+  ]
+}

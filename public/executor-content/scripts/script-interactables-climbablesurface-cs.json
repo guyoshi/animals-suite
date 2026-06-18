@@ -1,0 +1,76 @@
+{
+  "path": "Interactables/ClimbableSurface.cs",
+  "filename": "ClimbableSurface.cs",
+  "category": "Interactables",
+  "primary": "ClimbableSurface",
+  "kind": "Componente",
+  "summary": "Tipo de objeto escalável (P4 — botão de agarrar). public enum ClimbableKind { Parede/cipó vertical — exige uma forma com 'canClimb'. Parede, Corda — formas com 'canClimb' OU 'canGrab' conseguem agarrar e subir. Corda, Escada — formas com 'canClimb' OU 'canGrab' conseguem agarrar e subir. Escada, Cipó de balanço (P8 — Gibão/Babuíno): formas com 'canClimb' OU 'canGrab' agarram-se (toggle, igual a Corda/Escada) e BALANÇAM em arco a partir do transform deste objeto (pêndulo), em vez de subir/descer. Tratado pelo SwingAbility, não pelo ClimbAbility.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ClimbableKind",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ClimbableSurface",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "kind",
+      "type": "ClimbableKind",
+      "mods": "public",
+      "default": "ClimbableKind.Parede",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "climbSpeedMultiplier",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "",
+      "attrs": "[Tooltip(\"Multiplicador da velocidade de escalada nesta superfície (ex: corda escorregadia = 0.7). Para CipoBalanco: multiplica a 'força' do balanço (input) e a velocidade angular máxima.\")] [Min(0.1f)]",
+      "inspector": true,
+      "description": "Multiplicador da velocidade de escalada nesta superfície (ex: corda escorregadia = 0.7). Para CipoBalanco: multiplica a 'força' do balanço (input) e a velocidade angular máxima."
+    }
+  ],
+  "methods": [
+    {
+      "name": "AllowsForm",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação AllowsForm."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "ClimbAbility",
+    "SwingAbility"
+  ],
+  "used_by": [
+    "AnimalFormData",
+    "ClimbAbility",
+    "SwingAbility"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>Tipo de objecto escalável (P4 — botão de agarrar).</summary>\npublic enum ClimbableKind\n{\n    /// <summary>Parede/cipó vertical — exige uma forma com 'canClimb'.</summary>\n    Parede,\n\n    /// <summary>Corda — formas com 'canClimb' OU 'canGrab' conseguem agarrar e subir.</summary>\n    Corda,\n\n    /// <summary>Escada — formas com 'canClimb' OU 'canGrab' conseguem agarrar e subir.</summary>\n    Escada,\n\n    /// <summary>\n    /// Cipó de balanço (P8 — Gibão/Babuíno): formas com 'canClimb' OU\n    /// 'canGrab' agarram-se (toggle, igual a Corda/Escada) e BALANÇAM em arco\n    /// a partir do transform deste objecto (pêndulo), em vez de subir/descer.\n    /// Tratado pelo SwingAbility, não pelo ClimbAbility.\n    /// </summary>\n    CipoBalanco\n}\n\n/// <summary>\n/// Marca um objecto como escalável (P4): cordas, escadas, paredes/cipós.\n/// Colocar num GameObject com Collider2D (pode ser trigger) a cobrir a área\n/// escalável. O ClimbAbility procura este componente quando o player segura o\n/// botão de AGARRAR e carrega para cima.\n///\n/// Alternativa sem componente: usar a layer \"climbableLayer\" do ClimbAbility\n/// (tratada como Parede — exige canClimb).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class ClimbableSurface : MonoBehaviour\n{\n    public ClimbableKind kind = ClimbableKind.Parede;\n\n    [Tooltip(\"Multiplicador da velocidade de escalada nesta superfície (ex: corda escorregadia = 0.7). Para CipoBalanco: multiplica a 'força' do balanço (input) e a velocidade angular máxima.\")]\n    [Min(0.1f)] public float climbSpeedMultiplier = 1f;\n\n    /// <summary>True se a forma \"form\" pode usar esta superfície: Parede exige canClimb; Corda/Escada/CipoBalanco aceitam canClimb OU canGrab.</summary>\n    public bool AllowsForm(AnimalFormData form)\n    {\n        if (form == null) return false;\n\n        if (kind == ClimbableKind.Parede) return form.canClimb;\n        return form.canClimb || form.canGrab;\n    }\n}\n",
+  "id": "script-interactables-climbablesurface-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-abilities-climbability-cs",
+    "script-abilities-swingability-cs"
+  ],
+  "usedByIds": [
+    "script-forms-animalformdata-cs",
+    "script-abilities-climbability-cs",
+    "script-abilities-swingability-cs"
+  ]
+}

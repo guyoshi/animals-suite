@@ -1,0 +1,128 @@
+{
+  "path": "Enemy/EnemyConditions_Variables.cs",
+  "filename": "EnemyConditions_Variables.cs",
+  "category": "Enemy",
+  "primary": "Condition_GlobalBoolVariable",
+  "kind": "Definição",
+  "summary": "Condições de desactivação de inimigos baseadas em variáveis globais",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Condition_GlobalBoolVariable",
+      "kind": "class",
+      "bases": "EnemyCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_GlobalIntVariable",
+      "kind": "class",
+      "bases": "EnemyCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_MissionStateReached",
+      "kind": "class",
+      "bases": "EnemyCondition",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "variableName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como false.\")]",
+      "inspector": true,
+      "description": "Nome da variável global (GameVariables). Se não existir, é tratada como false."
+    },
+    {
+      "name": "expectedValue",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Valor que desactiva o inimigo (ex: \\\"TorretaSala01Desativada\\\" = true).\")]",
+      "inspector": true,
+      "description": "Valor que desactiva o inimigo (ex: \"TorretaSala01Desativada\" = true)."
+    },
+    {
+      "name": "comparison",
+      "type": "Comparison",
+      "mods": "public",
+      "default": "Comparison.Equal",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "value",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mission",
+      "type": "MissionData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "state",
+      "type": "MissionStateCheck",
+      "mods": "public",
+      "default": "MissionStateCheck.Concluida",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Evaluate",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "EnemyController enemy",
+      "description": "Executa a operação Evaluate."
+    }
+  ],
+  "dependencies": [
+    "Comparison",
+    "EnemyCondition",
+    "EnemyController",
+    "GameVariables",
+    "MissionData",
+    "MissionManager",
+    "MissionStateCheck",
+    "NpcConditionUtil"
+  ],
+  "used_by": [
+    "EnemyHealth",
+    "Lever"
+  ],
+  "source": "using UnityEngine;\n\n// Condições de desactivação de inimigos baseadas em variáveis globais\n// (Enemy Creator — Etapa 5.4). Avaliadas a cada frame por\n// EnemyController.Update (deactivationConditions): quando uma devolve true, o\n// inimigo passa a Desactivado (estado terminal) e assim permanece — mesmo\n// após reentrar na área, a condição continua verdadeira e volta a desactivá-lo\n// (a persistência do respawn é tratada na Etapa 7.3).\n//\n// Exemplo (GDD): uma alavanca (Etapa 6.1) põe a variável global\n// \"TorretaSala01Desativada\" a true/1 — todas as torretas com esta condição\n// desligam ao mesmo tempo (Drone/Torreta/porta/laser/máquina aquática/sensor/\n// hazard móvel).\n\n/// <summary>Desactiva o inimigo quando uma variável global BOOL (GameVariables) tem o valor esperado.</summary>\n[System.Serializable]\npublic class Condition_GlobalBoolVariable : EnemyCondition\n{\n    [Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como false.\")]\n    public string variableName;\n\n    [Tooltip(\"Valor que desactiva o inimigo (ex: \\\"TorretaSala01Desativada\\\" = true).\")]\n    public bool expectedValue = true;\n\n    public override bool Evaluate(EnemyController enemy)\n    {\n        var vars = GameVariables.Instance;\n        return vars != null && vars.GetBool(variableName) == expectedValue;\n    }\n}\n\n/// <summary>Desactiva o inimigo quando uma variável global INT (GameVariables) cumpre a comparação.</summary>\n[System.Serializable]\npublic class Condition_GlobalIntVariable : EnemyCondition\n{\n    [Tooltip(\"Nome da variável global (GameVariables). Se não existir, é tratada como 0.\")]\n    public string variableName;\n\n    public Comparison comparison = Comparison.Equal;\n\n    public int value = 1;\n\n    public override bool Evaluate(EnemyController enemy)\n    {\n        var vars = GameVariables.Instance;\n        if (vars == null) return false;\n\n        return NpcConditionUtil.Compare(vars.GetInt(variableName), comparison, value);\n    }\n}\n\n/// <summary>Desactiva o inimigo quando uma missão atinge um estado (Etapa 5.1 — ex: máquinas que desligam quando a missão é concluída).</summary>\n[System.Serializable]\npublic class Condition_MissionStateReached : EnemyCondition\n{\n    public MissionData mission;\n\n    public MissionStateCheck state = MissionStateCheck.Concluida;\n\n    public override bool Evaluate(EnemyController enemy)\n    {\n        var mm = MissionManager.Instance;\n        if (mm == null || mission == null) return false;\n\n        switch (state)\n        {\n            case MissionStateCheck.Iniciada: return mm.IsMissionStarted(mission);\n            case MissionStateCheck.NaoIniciada: return !mm.IsMissionStarted(mission);\n            case MissionStateCheck.Concluida: return mm.IsMissionCompleted(mission);\n            case MissionStateCheck.NaoConcluida: return !mm.IsMissionCompleted(mission);\n            case MissionStateCheck.EmCurso: return mm.IsMissionStarted(mission) && !mm.IsMissionCompleted(mission);\n            default: return false;\n        }\n    }\n}\n",
+  "id": "script-enemy-enemyconditions-variables-cs",
+  "dependencyIds": [
+    "script-enemy-enemycondition-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-data-gamevariables-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-npc-npcconditionutil-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemyhealth-cs",
+    "script-interactables-lever-cs"
+  ]
+}

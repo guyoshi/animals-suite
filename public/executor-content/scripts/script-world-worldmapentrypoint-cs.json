@@ -1,0 +1,243 @@
+{
+  "path": "World/WorldMapEntryPoint.cs",
+  "filename": "WorldMapEntryPoint.cs",
+  "category": "World",
+  "primary": "WorldMapEntryPoint",
+  "kind": "Componente",
+  "summary": "Terra de Gaia (GDD \"Abertura do Mapa\"): liga o botão de Mapa ( ) à cena do Terra de Gaia. GDD: \"o mapa só abre nas entradas/saídas de área, não livremente\" — por omissão ( = true), só abre enquanto o jogador estiver dentro de uma (colocada nos pontos de entrada/saída de cada área). Ao abrir, guarda a área atual ( ) e carrega a cena do Terra de Gaia ( ) com . Na cena do mapa, subscreve (carrega a área escolhida) e (volta à área guardada). Singleton com auto-fallback (mesmo padrão de ) — persiste entre cenas (DontDestroyOnLoad).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "WorldMapEntryPoint",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    },
+    {
+      "name": "WorldMapAccessZone",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "mapSceneName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"MapaMundi\"",
+      "section": "Cena do Terra de Gaia",
+      "attrs": "[Header(\"Cena do Terra de Gaia\")] [Tooltip(\"Nome da cena do Terra de Gaia (tem de estar nas Build Settings).\")]",
+      "inspector": true,
+      "description": "Nome da cena do Terra de Gaia (tem de estar nas Build Settings)."
+    },
+    {
+      "name": "requireAccessZone",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Acesso",
+      "attrs": "[Header(\"Acesso\")] [Tooltip(\"Se activo (recomendado pelo GDD), o botão de Mapa só abre o Terra de Gaia enquanto o jogador estiver dentro de uma WorldMapAccessZone. Se desactivado, o mapa abre em qualquer lugar.\")]",
+      "inspector": true,
+      "description": "Se ativo (recomendado pelo GDD), o botão de Mapa só abre o Terra de Gaia enquanto o jogador estiver dentro de uma WorldMapAccessZone. Se desativado, o mapa abre em qualquer lugar."
+    },
+    {
+      "name": "inputRouter",
+      "type": "PlayerInputRouter",
+      "mods": "public",
+      "default": "",
+      "section": "Input",
+      "attrs": "[Header(\"Input\")] [Tooltip(\"Router de input cujo evento MapPressed abre o Terra de Gaia. Se vazio, procura automaticamente um PlayerInputRouter na cena (incluindo objectos inactivos) sempre que uma cena carrega.\")]",
+      "inspector": true,
+      "description": "Router de input cujo evento MapPressed abre o Terra de Gaia. Se vazio, procura automaticamente um PlayerInputRouter na cena (incluindo objetos inactivos) sempre que uma cena carrega."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "insideAccessZone",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isMapOpen",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaBeforeMap",
+      "type": "AreaData",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "zoneId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Input",
+      "attrs": "[Tooltip(\"Apenas para identificação no Inspector/depuração.\")]",
+      "inspector": true,
+      "description": "Apenas para identificação no Inspector/depuração."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnSceneLoaded",
+      "ret": "void",
+      "mods": "private",
+      "params": "Scene scene, LoadSceneMode mode",
+      "description": "Executa a operação OnSceneLoaded."
+    },
+    {
+      "name": "TryBindInput",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação TryBindInput."
+    },
+    {
+      "name": "UnbindInput",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UnbindInput."
+    },
+    {
+      "name": "SetInsideAccessZone",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool inside",
+      "description": "Executa a operação SetInsideAccessZone."
+    },
+    {
+      "name": "HandleMapPressed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleMapPressed."
+    },
+    {
+      "name": "HandleTravelRequested",
+      "ret": "void",
+      "mods": "private",
+      "params": "AreaData area",
+      "description": "Executa a operação HandleTravelRequested."
+    },
+    {
+      "name": "HandleCancelRequested",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleCancelRequested."
+    },
+    {
+      "name": "CloseMap",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação CloseMap."
+    },
+    {
+      "name": "UnsubscribeFromMap",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UnsubscribeFromMap."
+    },
+    {
+      "name": "Reset",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Reset."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnTriggerExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerExit2D."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "LoadingScreenController",
+    "PlayerInputRouter",
+    "SceneLoader",
+    "WorldMapController",
+    "WorldState"
+  ],
+  "used_by": [
+    "WorldMapController"
+  ],
+  "source": "using System;\nusing UnityEngine;\nusing UnityEngine.SceneManagement;\n\n/// <summary>\n/// Terra de Gaia (GDD \"Abertura do Mapa\"): liga o botão de Mapa\n/// (<see cref=\"PlayerInputRouter.MapPressed\"/>) à cena do Terra de Gaia.\n///\n/// GDD: \"o mapa só abre nas entradas/saídas de área, não livremente\" — por\n/// omissão (<see cref=\"requireAccessZone\"/> = true), só abre enquanto o\n/// jogador estiver dentro de uma <see cref=\"WorldMapAccessZone\"/> (colocada\n/// nos pontos de entrada/saída de cada área).\n///\n/// Ao abrir, guarda a área actual (<see cref=\"WorldState.CurrentArea\"/>) e\n/// carrega a cena do Terra de Gaia (<see cref=\"mapSceneName\"/>) com\n/// <see cref=\"LoadingScreenController\"/>. Na cena do mapa, subscreve\n/// <see cref=\"WorldMapController.TravelRequested\"/> (carrega a área escolhida)\n/// e <see cref=\"WorldMapController.CancelRequested\"/> (volta à área guardada).\n///\n/// Singleton com auto-fallback (mesmo padrão de <see cref=\"SceneLoader\"/>) —\n/// persiste entre cenas (DontDestroyOnLoad).\n/// </summary>\npublic class WorldMapEntryPoint : MonoBehaviour\n{\n    public static WorldMapEntryPoint Instance { get; private set; }\n\n    [Header(\"Cena do Terra de Gaia\")]\n    [Tooltip(\"Nome da cena do Terra de Gaia (tem de estar nas Build Settings).\")]\n    public string mapSceneName = \"MapaMundi\";\n\n    [Header(\"Acesso\")]\n    [Tooltip(\"Se activo (recomendado pelo GDD), o botão de Mapa só abre o Terra de Gaia enquanto o jogador estiver dentro de uma WorldMapAccessZone. Se desactivado, o mapa abre em qualquer lugar.\")]\n    public bool requireAccessZone = true;\n\n    [Header(\"Input\")]\n    [Tooltip(\"Router de input cujo evento MapPressed abre o Terra de Gaia. Se vazio, procura automaticamente um PlayerInputRouter na cena (incluindo objectos inactivos) sempre que uma cena carrega.\")]\n    public PlayerInputRouter inputRouter;\n\n    private bool isAutoFallback;\n    private bool insideAccessZone;\n    private bool isMapOpen;\n    private AreaData areaBeforeMap;\n\n    // ==================================================================\n    // Singleton (auto-fallback — mesmo padrão de SceneLoader)\n    // ==================================================================\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n\n        var go = new GameObject(nameof(WorldMapEntryPoint) + \" (Fallback)\");\n        var instance = go.AddComponent<WorldMapEntryPoint>();\n        instance.isAutoFallback = true;\n    }\n\n    private void OnEnable()\n    {\n        SceneManager.sceneLoaded += OnSceneLoaded;\n        TryBindInput();\n    }\n\n    private void OnDisable()\n    {\n        SceneManager.sceneLoaded -= OnSceneLoaded;\n        UnbindInput();\n        UnsubscribeFromMap();\n    }\n\n    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)\n    {\n        // Cada cena nova começa sem \"acesso ao mapa\" — uma WorldMapAccessZone\n        // presente na cena (player já dentro dela ao carregar) regista-se de\n        // novo via OnTriggerEnter2D no(s) primeiro(s) frame(s) de física.\n        insideAccessZone = false;\n\n        TryBindInput();\n\n        if (isMapOpen)\n        {\n            // Cena recém-carregada é a do Terra de Gaia: liga-se ao \"cérebro\"\n            // assim que ele existir (WorldMapController.Awake já correu antes\n            // de LoadingScreenController chamar onLoaded).\n            var controller = WorldMapController.Instance;\n            if (controller != null)\n            {\n                controller.TravelRequested += HandleTravelRequested;\n                controller.CancelRequested += HandleCancelRequested;\n            }\n        }\n    }\n\n    private void TryBindInput()\n    {\n        if (inputRouter == null)\n            inputRouter = FindObjectOfType<PlayerInputRouter>(true);\n\n        if (inputRouter != null)\n        {\n            inputRouter.MapPressed -= HandleMapPressed;\n            inputRouter.MapPressed += HandleMapPressed;\n        }\n    }\n\n    private void UnbindInput()\n    {\n        if (inputRouter != null) inputRouter.MapPressed -= HandleMapPressed;\n    }\n\n    // ==================================================================\n    // Zona de Acesso (GDD: \"abre apenas nas entradas/saídas de área\")\n    // ==================================================================\n\n    /// <summary>Chamado por <see cref=\"WorldMapAccessZone\"/> quando o jogador entra/sai de uma zona de acesso ao Terra de Gaia.</summary>\n    public void SetInsideAccessZone(bool inside) => insideAccessZone = inside;\n\n    // ==================================================================\n    // Abrir / Fechar o Mapa\n    // ==================================================================\n\n    private void HandleMapPressed()\n    {\n        if (isMapOpen) return;\n        if (requireAccessZone && !insideAccessZone) return;\n        if (string.IsNullOrEmpty(mapSceneName)) return;\n        if (SceneLoader.Instance != null && SceneLoader.Instance.IsLoading) return;\n\n        areaBeforeMap = WorldState.Instance != null ? WorldState.Instance.CurrentArea : null;\n        isMapOpen = true;\n\n        if (LoadingScreenController.Instance != null)\n            LoadingScreenController.Instance.LoadScene(mapSceneName, null);\n        else\n            Debug.LogWarning(\"[WorldMapEntryPoint] LoadingScreenController.Instance não encontrado — não é possível abrir o Terra de Gaia.\");\n    }\n\n    private void HandleTravelRequested(AreaData area)\n    {\n        CloseMap();\n\n        if (area != null && SceneLoader.Instance != null)\n            SceneLoader.Instance.LoadArea(area);\n    }\n\n    private void HandleCancelRequested()\n    {\n        CloseMap();\n\n        if (areaBeforeMap != null && SceneLoader.Instance != null)\n            SceneLoader.Instance.LoadArea(areaBeforeMap);\n    }\n\n    private void CloseMap()\n    {\n        UnsubscribeFromMap();\n        isMapOpen = false;\n    }\n\n    private void UnsubscribeFromMap()\n    {\n        var controller = WorldMapController.Instance;\n        if (controller == null) return;\n\n        controller.TravelRequested -= HandleTravelRequested;\n        controller.CancelRequested -= HandleCancelRequested;\n    }\n}\n\n/// <summary>\n/// Terra de Gaia (GDD \"Abertura do Mapa\"): colocar nos pontos de entrada/saída de\n/// cada área (Collider2D com \"Is Trigger\" activo). Enquanto o jogador estiver\n/// dentro, <see cref=\"WorldMapEntryPoint\"/> permite abrir o Terra de Gaia com o\n/// botão de Mapa.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class WorldMapAccessZone : MonoBehaviour\n{\n    [Tooltip(\"Apenas para identificação no Inspector/depuração.\")]\n    public string zoneId;\n\n    private void Reset()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col != null) col.isTrigger = true;\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        WorldMapEntryPoint.Instance?.SetInsideAccessZone(true);\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        WorldMapEntryPoint.Instance?.SetInsideAccessZone(false);\n    }\n}\n",
+  "id": "script-world-worldmapentrypoint-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-ui-loadingscreencontroller-cs",
+    "script-input-playerinputrouter-cs",
+    "script-world-sceneloader-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-world-worldmapcontroller-cs"
+  ]
+}

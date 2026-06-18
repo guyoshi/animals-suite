@@ -1,0 +1,122 @@
+ANIMALS — PLANEJADOR 0.9.0
+RELATÓRIO DE ACTUALIZAÇÃO E VALIDAÇÃO
+Data: 18/06/2026
+
+1. FONTES CONSOLIDADAS
+- Decisões mais recentes do director do projecto: prioridade máxima.
+- Scripts backup 18-06 att: fonte técnica principal.
+- Animals GDD.docx actualizado em 18/06/2026: fonte vigente de design.
+- Planejador 0.8.0: base migrada para a versão 0.9.0.
+
+O backup técnico contém 278 ficheiros C# e 520 ficheiros no total.
+Entre os ficheiros directamente verificados estão:
+- Data/PlayerProgress.cs
+- Data/SaveData.cs
+- Data/WorldState.cs
+- Data/WildMelodyData.cs
+- Collectibles/WildMelodyPickup.cs
+- NPC/Actions/VillageActions.cs
+- NPC/VillageEvolutionController.cs
+- UI/JukeboxSectionUI.cs
+
+2. PRINCIPAIS ACTUALIZAÇÕES DO PLANEJADOR
+- Esquema interno actualizado da versão 8 para a versão 9.
+- Migração cumulativa preserva projectos existentes da versão 0.8.0.
+- Editor de NPCs recebeu as Actions de resgate e população de vila.
+- Action_RescueNpc possui npcId, área e opção de contar para restauração.
+- Resgatados e habitantes adicionais são planeados separadamente.
+- Editor de vila calcula o estado previsto entre cinco níveis.
+- Estado pós-boss e limiar dos primeiros resgates tornaram-se configuráveis.
+- Snapshots podem ser guardados, restaurados ou descartados e são tratados como persistentes enquanto activos.
+- Painel de música diferencia faixa base, Melodia Selvagem e faixa fora do Jukebox.
+- Cada Melodia Selvagem possui melodyId próprio.
+- Progresso foi corrigido: Ecos Perdidos não entram directamente nos 100%; Sussurros adquiridos e Melodias entram.
+- Painel de Sistemas documenta SaveData versão 1, Jukebox, vilas e configurações ainda necessárias no Inspector.
+- Base exportada para IA inclui as novas Actions de NPC.
+
+3. VALIDAÇÃO DO CÓDIGO DA INTERFACE
+Comandos executados:
+- npm ci --no-audit --no-fund
+- npm run lint
+- npm run build
+- npm run preview -- --host 127.0.0.1 --port 4173
+
+Resultados:
+- 172 pacotes instalados numa instalação limpa.
+- ESLint: sem erros e sem avisos.
+- TypeScript: sem erros.
+- Vite 8.0.16: compilação concluída.
+- 1.876 módulos transformados.
+- Preview da produção: HTTP 200.
+- Aviso não bloqueante: o chunk JavaScript principal ultrapassa 500 kB e poderá ser dividido numa optimização futura.
+
+Saída de produção:
+- dist/index.html: 474 bytes.
+- CSS principal: 87.836 bytes.
+- JavaScript principal: 1.075.579 bytes.
+
+4. VERSÕES
+- package.json: 0.9.0
+- package-lock.json: 0.9.0
+- Cargo.toml: 0.9.0
+- tauri.conf.json: 0.9.0
+- APP_VERSION: 0.9.0
+- esquema do projecto: 9
+- CURRENT_VERSION da migração: 9
+- instalador esperado no Windows: Animals-Planejador-Setup-0.9.0.exe
+
+5. DADOS INICIAIS VALIDADOS
+- 7 mundos, incluindo Coração de Gaia.
+- 60 áreas totais:
+  - 1 hub;
+  - 1 caminho final;
+  - 40 áreas normais;
+  - 6 vilas;
+  - 6 áreas de boss;
+  - 6 Provações de Apolo.
+- 35 formas: Íris Base + 34 animais.
+- 22 itens.
+- 47 mecânicas.
+- 165 ideias.
+- 200 Sussurros: cinco para cada área normal.
+- 6 planos de vila.
+- 83 fichas musicais.
+
+6. JUKEBOX E MELODIAS
+- 40 faixas configuradas como Melodia Selvagem: uma para cada área normal.
+- Todas as 40 possuem melodyId.
+- Nenhuma faixa de Provação de Apolo usa Melodia Selvagem por padrão.
+- 43 faixas são classificadas como trilha base.
+- A migração da 0.8.0 aplica automaticamente a classificação correcta às fichas existentes.
+- O código do jogo filtra cada Melodia individualmente por HasCollectedMelody.
+
+7. VILAS
+- rescuedPopulation e additionalPopulation são campos separados no Planejador.
+- currentPopulation é recalculada como a soma dos dois valores.
+- O estado previsto segue os cinco níveis técnicos:
+  0. Vazia;
+  1. Primeiros Resgates;
+  2. Viva;
+  3. Restaurada;
+  4. Pós-boss.
+- NPCs adicionais não contam automaticamente para os 100% nem para todos os resgates obrigatórios.
+- A migração converte a população antiga em população resgatada e inicia habitantes adicionais em zero.
+
+8. SAVE E MIGRAÇÃO
+- SaveData técnico actual: versão 1.
+- Ecos disponíveis, total histórico e progresso por área são persistidos.
+- collectedMelodyIds é persistido.
+- villagePopulations preserva rescuedCount e additionalPopulation.
+- activeSnapshots é capturado e restaurado.
+- Teste sintético de migração 8 → 9 concluído:
+  - versão final 9;
+  - Ecos corrigidos para countsFor100 = false;
+  - 40 faixas de Melodia preservadas/configuradas;
+  - nenhuma Provação de Apolo classificada como Melodia;
+  - população antiga preservada em rescuedPopulation.
+
+9. LIMITAÇÕES E HONESTIDADE TÉCNICA
+- O Planejador não altera automaticamente os scripts C# nem os assets do Unity.
+- “Implementado” significa que a arquitectura existe no backup; IDs, assets, referências, eventos e objectos de cena ainda precisam ser configurados e testados no Unity.
+- O instalador Tauri/NSIS para Windows não foi compilado neste ambiente Linux, porque Rust, Cargo e as dependências gráficas do Tauri não estão instalados.
+- O pacote inclui o dist validado e o script ATUALIZAR_E_COMPILAR.bat, que instala/verifica as dependências e gera o instalador no Windows.

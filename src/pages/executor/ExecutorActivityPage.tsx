@@ -1,0 +1,18 @@
+import { BookOpen, Braces, Clock3, ExternalLink, History, Star, Trash2, Workflow } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Card, EmptyState, PageHeader, SectionTitle } from '../../components/Ui';
+import { useAsyncContent } from '../../hooks/useAsyncContent';
+import { loadBuildMissions, loadGuideIndex, loadScriptCatalog } from '../../lib/executorContent';
+import { parseBookmark } from '../../lib/executorBookmarks';
+import { useExecutorStore } from '../../store/useExecutorStore';
+
+export function ExecutorActivityPage(){
+  const executor=useExecutorStore(state=>state.executor);const mutate=useExecutorStore(state=>state.mutate);
+  const {data:missions}=useAsyncContent(loadBuildMissions,[]);const {data:guides}=useAsyncContent(loadGuideIndex,[]);const {data:scripts}=useAsyncContent(loadScriptCatalog,[]);
+  const resolved=executor.bookmarks.map(value=>{const parsed=parseBookmark(value);if(!parsed)return undefined;if(parsed.kind==='mission'){const item=missions?.find(m=>m.id===parsed.id);return item&&{value,title:`Missão ${item.number} — ${item.title}`,subtitle:item.phase,route:`/executor/roadmap/${item.id}`,icon:<Workflow/>}}if(parsed.kind==='guide'){const item=guides?.find(g=>g.slug===parsed.id);return item&&{value,title:item.title,subtitle:item.category,route:`/executor/guides/${item.slug}`,icon:<BookOpen/>}}if(parsed.kind==='script'){const item=scripts?.files.find(s=>s.id===parsed.id);return item&&{value,title:item.filename,subtitle:item.category,route:`/executor/scripts/${item.id}`,icon:<Braces/>}}if(parsed.kind==='entity')return{value,title:parsed.id,subtitle:'Entidade integrada',route:'/executor/integration',icon:<ExternalLink/>};return undefined}).filter(Boolean) as Array<{value:string;title:string;subtitle:string;route:string;icon:React.ReactNode}>;
+  return <div><PageHeader title="Favoritos e Recentes" subtitle="Acesso rápido ao conteúdo técnico que você consulta com frequência e ao histórico de navegação do Executor."/>
+    <div className="executor-grid-two activity-grid"><Card><SectionTitle><Star/> Favoritos</SectionTitle>{resolved.length===0?<EmptyState title="Nenhum favorito" text="Use o botão Favoritar nas missões, guias, scripts e entidades."/>:<div className="executor-activity-list">{resolved.map(item=><article key={item.value}>{item.icon}<Link to={item.route}><strong>{item.title}</strong><span>{item.subtitle}</span></Link><button title="Remover favorito" onClick={()=>mutate(draft=>{draft.bookmarks=draft.bookmarks.filter(value=>value!==item.value)})}><Trash2/></button></article>)}</div>}</Card>
+      <Card><SectionTitle><History/> Visitados recentemente</SectionTitle>{executor.recentLocations.length===0?<EmptyState title="Sem histórico" text="As páginas visitadas aparecerão aqui automaticamente."/>:<div className="executor-activity-list recent">{executor.recentLocations.slice(0,20).map(item=><article key={`${item.route}-${item.visitedAt}`}><Clock3/><Link to={item.route}><strong>{label(item.route,item.missionId,item.stepId)}</strong><span>{new Date(item.visitedAt).toLocaleString('pt-BR')}</span></Link></article>)}</div>} {executor.recentLocations.length>0&&<button className="secondary-button" onClick={()=>mutate(draft=>{draft.recentLocations=[]})}><Trash2/>Limpar histórico</button>}</Card></div>
+  </div>;
+}
+function label(route:string,missionId?:string,stepId?:string){if(missionId)return `${missionId.replace('build-mission-','Missão ')}${stepId?' · Step visitado':''}`;if(route.includes('/guides/'))return'Guia consultado';if(route.includes('/scripts/'))return'Script consultado';if(route.includes('/integration'))return'Integração';if(route.includes('/tests'))return'Testes';return route.replace('/executor','Executor')||'Início';}

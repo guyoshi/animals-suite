@@ -1,0 +1,720 @@
+{
+  "path": "Data/SaveData.cs",
+  "filename": "SaveData.cs",
+  "category": "Data",
+  "primary": "SaveData",
+  "kind": "Definição",
+  "summary": "Estrutura serializável (JSON) com todo o estado necessário para reconstruir uma sessão de jogo: progresso do jogador, estado do mundo, variáveis globais e formas desbloqueadas. Cada slot de save (1 autosave + até 30 manuais) corresponde a uma instância desta classe, escrita/lida pelo SaveManager. Não guarda referências diretas a ScriptableObjects (AreaData/WorldData/ AnimalFormData/ItemData) — apenas os respectivos IDs, resolvidos via GameDatabase ao restaurar. Versões: 0 (campo ausente) — sem populacão persistida por IDs, sem EcosPerdidos. 1 — EcosPerdidos no fluxo de save; rescuedNpcIds por área; additionalPopulation separado em VillagePopulation.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "SaveData",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "SnapshotEntry",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "saveVersion",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "slotIndex",
+      "type": "int",
+      "mods": "public",
+      "default": "-1",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isAutosave",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sceneName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playerPosX",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playerPosY",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playerPosZ",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isNewGamePlus",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "currentHearts",
+      "type": "int",
+      "mods": "public",
+      "default": "6",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "maxHearts",
+      "type": "int",
+      "mods": "public",
+      "default": "6",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sementes",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasDeGaia",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalRunasDeGaiaCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "brotosDeVida",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fragmentosVitais",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "runasDeApolo",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ecosPerdidos",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalEcosPerdidosCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "inventory",
+      "type": "List<InventoryEntry>",
+      "mods": "public",
+      "default": "new List<InventoryEntry>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equippedItemId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "collectedSpecialItemIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "defeatedEnemyIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "collectedMelodyIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "completedChallengeIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeRecords",
+      "type": "List<ChallengeRecord>",
+      "mods": "public",
+      "default": "new List<ChallengeRecord>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "collectedPickupIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalSementesCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalFragmentosVitaisCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalBrotosDeVidaCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalSussurrosCollected",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "totalChestsOpenedGlobal",
+      "type": "int",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "freedAnimalIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unlockedUpgradeIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledUpgradeIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "lastCheckpointId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaProgress",
+      "type": "List<AreaProgress>",
+      "mods": "public",
+      "default": "new List<AreaProgress>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "defeatedBossWorldIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "pendingPostBossReturnWorldIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "worldProgress",
+      "type": "List<WorldProgress>",
+      "mods": "public",
+      "default": "new List<WorldProgress>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "timeOfDay",
+      "type": "TimeOfDay",
+      "mods": "public",
+      "default": "TimeOfDay.Manha",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "weather",
+      "type": "WeatherType",
+      "mods": "public",
+      "default": "WeatherType.Limpo",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "manualTimeActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "manualTimeSaved",
+      "type": "TimeOfDay",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "manualWeatherActive",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "manualWeatherSaved",
+      "type": "WeatherType",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "currentWorldId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "currentAreaId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "villagePopulations",
+      "type": "List<VillagePopulation>",
+      "mods": "public",
+      "default": "new List<VillagePopulation>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "globalVariables",
+      "type": "List<GameVariable>",
+      "mods": "public",
+      "default": "new List<GameVariable>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unlockedFormIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "currentFormId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "obtainedClueIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "heardRumorIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "foundRumorIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "activeSnapshots",
+      "type": "List<SnapshotEntry>",
+      "mods": "public",
+      "default": "new List<SnapshotEntry>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "key",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "snapshot",
+      "type": "PlayerSnapshot",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unlockedAreaIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "discoveredBossWorldIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "bossUnlockAnimationPlayedWorldIds",
+      "type": "List<string>",
+      "mods": "public",
+      "default": "new List<string>()",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "apoloAreaUnlockAnimationPlayed",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "AnimalFormData",
+    "AreaData",
+    "AreaProgress",
+    "ChallengeDefinition",
+    "ChallengeRecord",
+    "FormSwitcher",
+    "GameDatabase",
+    "GameVariable",
+    "GameVariables",
+    "InventoryEntry",
+    "ItemData",
+    "PickupBase",
+    "PlayerProgress",
+    "PlayerSnapshot",
+    "RumorData",
+    "SafeHaven",
+    "SaveManager",
+    "TimeOfDay",
+    "UpgradeData",
+    "VillagePopulation",
+    "WeatherType",
+    "WildMelodyData",
+    "WorldData",
+    "WorldProgress",
+    "WorldState"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "ControlsRebindSectionUI",
+    "FormSwitcher",
+    "GameSettings",
+    "GameVariables",
+    "MainMenuController",
+    "PlayerProgress",
+    "SaveManager",
+    "SaveMenuController",
+    "SaveSlotButtonUI",
+    "WorldState"
+  ],
+  "source": "using System;\nusing System.Collections.Generic;\n\n/// <summary>\n/// Estrutura serializável (JSON) com todo o estado necessário para reconstruir\n/// uma sessão de jogo: progresso do jogador, estado do mundo, variáveis globais\n/// e formas desbloqueadas. Cada slot de save (1 autosave + até 30 manuais)\n/// corresponde a uma instância desta classe, escrita/lida pelo SaveManager.\n///\n/// Não guarda referências directas a ScriptableObjects (AreaData/WorldData/\n/// AnimalFormData/ItemData) — apenas os respectivos IDs, resolvidos via\n/// GameDatabase ao restaurar.\n///\n/// Versões:\n///   0 (campo ausente) — sem populacão persistida por IDs, sem EcosPerdidos.\n///   1 — EcosPerdidos no fluxo de save; rescuedNpcIds por área;\n///       additionalPopulation separado em VillagePopulation.\n/// </summary>\n[Serializable]\npublic class SaveData\n{\n    // ---------------- Versão do Save ----------------\n\n    /// <summary>\n    /// Versão da estrutura do save. Usada por <see cref=\"PlayerProgress.RestoreFrom\"/>\n    /// e <see cref=\"WorldState.RestoreFrom\"/> para migrar saves antigos.\n    /// 0 (campo ausente/padrão) = estrutura original sem IDs de NPCs resgatados.\n    /// 1 = EcosPerdidos no fluxo de save; rescuedNpcIds; additionalPopulation.\n    /// </summary>\n    public int saveVersion;\n\n    // ---------------- Metadados do Slot ----------------\n\n    /// <summary>-1 = autosave; 0-29 = slot manual.</summary>\n    public int slotIndex = -1;\n    public bool isAutosave;\n\n    /// <summary>Data/hora do save em formato ISO 8601 (UTC), para mostrar no menu.</summary>\n    public string timestamp;\n\n    /// <summary>Nome da cena activa no momento do save.</summary>\n    public string sceneName;\n\n    /// <summary>Posição do player no momento do save.</summary>\n    public float playerPosX;\n    public float playerPosY;\n    public float playerPosZ;\n\n    // ---------------- PlayerProgress ----------------\n\n    /// <summary>True se este save foi iniciado com StartNewGamePlus (Tarefa #33).</summary>\n    public bool isNewGamePlus;\n\n    public int currentHearts = 6;\n    public int maxHearts = 6;\n\n    public int sementes;\n    public int runasDeGaia;\n\n    /// <summary>Total de Runas de Gaia recolhidas ao longo do jogo (nunca desce). \"runasDeGaia\" é o saldo disponível.</summary>\n    public int totalRunasDeGaiaCollected;\n\n    public int brotosDeVida;\n    public int fragmentosVitais;\n\n    /// <summary>Runas de Apolo recolhidas (0–6 — ao atingir 6 desbloqueia o Emblema de Apolo).</summary>\n    public int runasDeApolo;\n\n    /// <summary>Saldo actual de Ecos Perdidos (nunca negativo).</summary>\n    public int ecosPerdidos;\n\n    /// <summary>Total de Ecos Perdidos recolhidos ao longo do jogo (nunca desce).</summary>\n    public int totalEcosPerdidosCollected;\n\n    public List<InventoryEntry> inventory = new List<InventoryEntry>();\n    public string equippedItemId;\n\n    public List<string> collectedSpecialItemIds = new List<string>();\n    public List<string> defeatedEnemyIds = new List<string>();\n\n    /// <summary>IDs (WildMelodyData.melodyId) de Melodias Selvagens já colectadas — persistência entre sessões.</summary>\n    public List<string> collectedMelodyIds = new List<string>();\n\n    /// <summary>IDs (ChallengeDefinition.challengeId) de desafios já concluídos pelo menos uma vez (Sistema de Missões/Desafios) — controla recompensa primária única vs. secundária em repetições.</summary>\n    public List<string> completedChallengeIds = new List<string>();\n\n    /// <summary>Melhores tempos registados por desafio (apenas para desafios com 'hasTimeLimit' — usados para ranking/recordes pessoais).</summary>\n    public List<ChallengeRecord> challengeRecords = new List<ChallengeRecord>();\n\n    /// <summary>IDs persistentes (PickupBase.pickupId) de coleccionáveis do mundo já recolhidos — anti-duplicação.</summary>\n    public List<string> collectedPickupIds = new List<string>();\n\n    // ---------------- Contadores Globais de Coleccionáveis ----------------\n\n    public int totalSementesCollected;\n    public int totalFragmentosVitaisCollected;\n    public int totalBrotosDeVidaCollected;\n    public int totalSussurrosCollected;\n    public int totalChestsOpenedGlobal;\n\n    public List<string> freedAnimalIds = new List<string>();\n    public List<string> unlockedUpgradeIds = new List<string>();\n\n    /// <summary>IDs de upgrades \"Instinto\" (UpgradeData.toggleable) actualmente ligados.</summary>\n    public List<string> enabledUpgradeIds = new List<string>();\n\n    /// <summary>ID do último Refúgio Seguro (SafeHaven) usado — checkpoint.</summary>\n    public string lastCheckpointId;\n\n    public List<AreaProgress> areaProgress = new List<AreaProgress>();\n    public List<string> defeatedBossWorldIds = new List<string>();\n    public List<string> pendingPostBossReturnWorldIds = new List<string>();\n\n    /// <summary>Progressão por mundo (Menu de Pausa: Progresso — Tarefa #11): se o jogador já descobriu os totais de cada mundo.</summary>\n    public List<WorldProgress> worldProgress = new List<WorldProgress>();\n\n    // ---------------- WorldState ----------------\n\n    public TimeOfDay timeOfDay = TimeOfDay.Manha;\n    public WeatherType weather = WeatherType.Limpo;\n\n    public bool manualTimeActive;\n    public TimeOfDay manualTimeSaved;\n\n    public bool manualWeatherActive;\n    public WeatherType manualWeatherSaved;\n\n    /// <summary>WorldData.worldId / AreaData.areaId actuais (resolvidos via GameDatabase ao carregar).</summary>\n    public string currentWorldId;\n    public string currentAreaId;\n\n    public List<VillagePopulation> villagePopulations = new List<VillagePopulation>();\n\n    // ---------------- GameVariables (globais) ----------------\n\n    public List<GameVariable> globalVariables = new List<GameVariable>();\n\n    // ---------------- FormSwitcher ----------------\n\n    /// <summary>AnimalFormData.formId de cada forma desbloqueada.</summary>\n    public List<string> unlockedFormIds = new List<string>();\n\n    /// <summary>AnimalFormData.formId da forma actual.</summary>\n    public string currentFormId;\n\n    // ---------------- Diário — Pistas de Missão e Rumores ----------------\n\n    /// <summary>IDs combinados (\"&lt;missionId&gt;/&lt;clueId&gt;\") de pistas de missão já obtidas (Diário — sub-secção \"Pistas\").</summary>\n    public List<string> obtainedClueIds = new List<string>();\n\n    /// <summary>IDs (RumorData.rumorId) de rumores já ouvidos (Diário — secção \"Rumores\").</summary>\n    public List<string> heardRumorIds = new List<string>();\n\n    /// <summary>IDs (RumorData.rumorId) de rumores já marcados como \"encontrados\" (ícone de \"Check\").</summary>\n    public List<string> foundRumorIds = new List<string>();\n\n    // ---------------- Mapa-Múndi ----------------\n\n    // ---------------- Snapshots Activos ----------------\n\n    /// <summary>\n    /// Snapshots de estado do player activos no momento do save (ex: missão de\n    /// ladrão em curso — itens roubados ainda não devolvidos). Persistidos para\n    /// que carregar um save a meio de uma sequência de roubo não apague os dados\n    /// necessários para a devolução.\n    ///\n    /// Estrutura paralela a <see cref=\"PlayerProgress._snapshots\"/>:\n    /// cada entrada tem uma chave de texto e um <see cref=\"PlayerSnapshot\"/>.\n    /// Serializado/restaurado por <see cref=\"PlayerProgress.CaptureTo\"/> /\n    /// <see cref=\"PlayerProgress.RestoreFrom\"/>.\n    /// </summary>\n    public List<SnapshotEntry> activeSnapshots = new List<SnapshotEntry>();\n\n    /// <summary>Par (chave, snapshot) para serialização de <see cref=\"activeSnapshots\"/>.</summary>\n    [System.Serializable]\n    public class SnapshotEntry\n    {\n        public string key;\n        public PlayerSnapshot snapshot;\n    }\n\n    /// <summary>AreaData.areaId de cada área já desbloqueada no Mapa-Múndi.</summary>\n    public List<string> unlockedAreaIds = new List<string>();\n\n    /// <summary>WorldData.worldId dos mundos cujo boss já foi encontrado pelo menos uma vez (nome revelado no painel).</summary>\n    public List<string> discoveredBossWorldIds = new List<string>();\n\n    /// <summary>WorldData.worldId dos mundos cuja animação de desbloqueio da área do boss já foi reproduzida.</summary>\n    public List<string> bossUnlockAnimationPlayedWorldIds = new List<string>();\n\n    /// <summary>True quando a animação de desbloqueio da área secreta de Apolo já foi reproduzida (só acontece uma vez, ao obter o Emblema de Apolo).</summary>\n    public bool apoloAreaUnlockAnimationPlayed;\n}\n",
+  "id": "script-data-savedata-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-data-challengedefinition-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-gamedatabase-cs",
+    "script-data-gamevariable-cs",
+    "script-data-gamevariables-cs",
+    "script-data-itemdata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs",
+    "script-data-rumordata-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savemanager-cs",
+    "script-data-upgradedata-cs",
+    "script-data-wildmelodydata-cs",
+    "script-data-worlddata-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-ui-controlsrebindsectionui-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-gamesettings-cs",
+    "script-data-gamevariables-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savemanager-cs",
+    "script-ui-savemenucontroller-cs",
+    "script-ui-saveslotbuttonui-cs",
+    "script-data-worldstate-cs"
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "path": "Abilities/SprintAbility.cs",
+  "filename": "SprintAbility.cs",
+  "category": "Abilities",
+  "primary": "SprintAbility",
+  "kind": "Componente",
+  "summary": "Sprint (Cavalo \"Sprint controlado\", Guepardo \"Sprint extremo\", Avestruz \"Corrida estável\", Orca \"Nado rápido\" — P5): enquanto o botão de habilidade está seguro, multiplica a velocidade horizontal do PlayerMotor2D por \"sprintSpeedMultiplier\" da forma (P1). Ativado via PrimaryAbility.Sprint: AbilityRouter chama StartSprint() em OnAbilityPressed e StopSprint() em OnAbilityReleased.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SprintAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "multiplier",
+      "type": "float",
+      "mods": "private",
+      "default": "1.5f",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sprinting",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsSprinting",
+      "type": "bool",
+      "mods": "public",
+      "default": "> sprinting",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> 0f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> 0f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm && !sprinting && !motor.MovementLocked",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "StartSprint",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StartSprint."
+    },
+    {
+      "name": "StopSprint",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StopSprint."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "PlayerMotor2D",
+    "PrimaryAbility"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "AnimalFormData",
+    "PlayerMotor2D",
+    "WindZone"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Sprint (Cavalo \"Sprint controlado\", Guepardo \"Sprint extremo\", Avestruz\n/// \"Corrida estável\", Orca \"Nado rápido\" — P5): enquanto o botão de habilidade\n/// está seguro, multiplica a velocidade horizontal do PlayerMotor2D por\n/// \"sprintSpeedMultiplier\" da forma (P1).\n///\n/// Activado via PrimaryAbility.Sprint: AbilityRouter chama StartSprint() em\n/// OnAbilityPressed e StopSprint() em OnAbilityReleased.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D))]\npublic class SprintAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private PlayerMotor2D motor;\n\n    private bool enabledForForm;\n    private float multiplier = 1.5f;\n    private bool sprinting;\n\n    /// <summary>true enquanto o sprint está activo.</summary>\n    public bool IsSprinting => sprinting;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.Sprint;\n        multiplier = form != null ? Mathf.Max(1f, form.sprintSpeedMultiplier) : 1.5f;\n\n        // Troca de forma a meio do sprint: o motor já repõe o multiplicador a 1.\n        sprinting = false;\n    }\n\n    public void StartSprint()\n    {\n        if (!enabledForForm || sprinting) return;\n        if (motor.MovementLocked) return;\n\n        sprinting = true;\n        motor.SetSpeedMultiplier(multiplier);\n    }\n\n    public void StopSprint()\n    {\n        if (!sprinting) return;\n\n        sprinting = false;\n        motor.SetSpeedMultiplier(1f);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // \"Hold\": Activate/Release mapeiam para Start/StopSprint; Cancel também\n    // termina o sprint. Sem cooldown.\n    void IAbility.Activate() => StartSprint();\n    void IAbility.Release() => StopSprint();\n    public void Cancel(AbilityCancelReason reason) => StopSprint();\n    public float CooldownRemaining => 0f;\n    bool IAbility.IsActive => sprinting;\n    public float CooldownDuration => 0f;\n    public bool CanActivate => enabledForForm && !sprinting && !motor.MovementLocked;\n\n    /// <summary>AnimalsDebugPanel — sem cooldown próprio (no-op).</summary>\n    public void ResetCooldown() { }\n}\n",
+  "id": "script-abilities-sprintability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-player-playermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-player-playermotor2d-cs",
+    "script-interactables-windzone-cs"
+  ]
+}

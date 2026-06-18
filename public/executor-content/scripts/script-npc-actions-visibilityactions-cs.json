@@ -1,0 +1,92 @@
+{
+  "path": "NPC/Actions/VisibilityActions.cs",
+  "filename": "VisibilityActions.cs",
+  "category": "NPC",
+  "primary": "Action_SetNpcVisible",
+  "kind": "Acção de NPC",
+  "summary": "Mostra ou escode este NPC explicitamente (NpcController.SetVisible) — útil para revelar um NPC a partir de outro evento (ex: depois de falar com o Ancião, um animal escondido aparece numa clareira) ou para o esconder após uma cutscene (ex: foge e desaparece). Nota (Etapa 7): não combinar com \"visibilityConditions\" preenchida no mesmo NPC — a avaliação automática dessas condições sobrepõe-se a esta ação no frame seguinte. Usa um OU o outro mecanismo, não os dois.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Action_SetNpcVisible",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_SetNpcOpacity",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "visible",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"true = mostra o NPC (sprite, colliders de trigger e movimento activos). false = esconde.\")]",
+      "inspector": true,
+      "description": "true = mostra o NPC (sprite, colliders de trigger e movimento ativos). false = esconde."
+    },
+    {
+      "name": "opacity",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "",
+      "attrs": "[Tooltip(\"Opacidade final do sprite (0 = invisível, 1 = totalmente opaco).\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Opacidade final do sprite (0 = invisível, 1 = totalmente opaco)."
+    },
+    {
+      "name": "duration",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "",
+      "attrs": "[Tooltip(\"Duração da transição, em segundos. 0 = aplica imediatamente (sem transição).\")]",
+      "inspector": true,
+      "description": "Duração da transição, em segundos. 0 = aplica imediatamente (sem transição)."
+    },
+    {
+      "name": "waitForCompletion",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, este evento espera a transição terminar antes de avançar para a ação seguinte. Se desactivado (omissão), a transição continua em segundo plano enquanto o evento prossegue (ex: diálogo continua enquanto o NPC se desfaz).\")]",
+      "inspector": true,
+      "description": "Se ativo, este evento espera a transição terminar antes de avançar para a ação seguinte. Se desativado (omissão), a transição continua em segundo plano enquanto o evento prossegue (ex: diálogo continua enquanto o NPC se desfaz)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "NpcAction",
+    "NpcController"
+  ],
+  "used_by": [
+    "Condition_NpcReactionState",
+    "NpcController"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Mostra ou escode este NPC explicitamente (NpcController.SetVisible) — útil\n/// para revelar um NPC a partir de outro evento (ex: depois de falar com o\n/// Ancião, um animal escondido aparece numa clareira) ou para o esconder após\n/// uma cutscene (ex: foge e desaparece).\n///\n/// Nota (Etapa 7): não combinar com \"visibilityConditions\" preenchida no mesmo\n/// NPC — a avaliação automática dessas condições sobrepõe-se a esta acção no\n/// frame seguinte. Usa um OU o outro mecanismo, não os dois.\n/// </summary>\n[System.Serializable]\npublic class Action_SetNpcVisible : NpcAction\n{\n    [Tooltip(\"true = mostra o NPC (sprite, colliders de trigger e movimento activos). false = esconde.\")]\n    public bool visible = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        npc.SetVisible(visible);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Muda a opacidade (alfa do SpriteRenderer) deste NPC, com transição opcional\n/// ao longo de \"duration\" segundos (0 = aplica imediatamente). Permite fazer um\n/// NPC desaparecer gradualmente (opacity = 0), ficar translúcido (ex: 0.5) ou\n/// voltar a ficar totalmente opaco (1) — sem afectar colliders/movimento (para\n/// esconder/mostrar \"a sério\", incluindo colisões, ver Action_SetNpcVisible).\n/// </summary>\n[System.Serializable]\npublic class Action_SetNpcOpacity : NpcAction\n{\n    [Tooltip(\"Opacidade final do sprite (0 = invisível, 1 = totalmente opaco).\")]\n    [Range(0f, 1f)] public float opacity = 1f;\n\n    [Tooltip(\"Duração da transição, em segundos. 0 = aplica imediatamente (sem transição).\")]\n    public float duration = 0f;\n\n    [Tooltip(\"Se activo, este evento espera a transição terminar antes de avançar para a ação seguinte. Se desactivado (omissão), a transição continua em segundo plano enquanto o evento prossegue (ex: diálogo continua enquanto o NPC se desfaz).\")]\n    public bool waitForCompletion = false;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var routine = npc.SetOpacity(opacity, duration);\n        if (waitForCompletion && routine != null)\n            yield return routine;\n    }\n}\n",
+  "id": "script-npc-actions-visibilityactions-cs",
+  "dependencyIds": [
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-npc-conditions-npcstateconditions-cs",
+    "script-npc-npccontroller-cs"
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "path": "Abilities/ChargeAbility.cs",
+  "filename": "ChargeAbility.cs",
+  "category": "Abilities",
+  "primary": "ChargeAbility",
+  "kind": "Componente",
+  "summary": "Habilidade de Investida (CHG do GDD). - Dentro de água, se a forma estiver com WaterMotor2D.IsActive (forma aquática + dentro de água — ex.: Orca), StartCharge() dispara a \"investida aquática\" via WaterMotor2D.StartAquaticCharge(), reutilizando dashSpeed/dashDuration da ficha (AnimalFormData). - Em terra, StartCharge() dispara uma investida horizontal na direção em que o player está virado (chargeSpeed/chargeDuration/chargeCooldown da ficha), bloqueando o movimento normal enquanto dura e activando motor.SetDashing(true) — o dano de contato chega \"de borla\" via PlayerAttack.damageWhileDashing, tal como na investida aquática (Cavalo/Cervo/Elefante/Onça e outros animais com PrimaryAbility.Cha",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ChargeAbility",
+      "kind": "class",
+      "bases": "MonoBehaviour, IFormAbility, IAbility, IActiveAbility",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "enabledForForm",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "form",
+      "type": "AnimalFormData",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "waterMotor",
+      "type": "WaterMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "motor",
+      "type": "PlayerMotor2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "cooldownTimer",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "chargeRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownRemaining",
+      "type": "float",
+      "mods": "public",
+      "default": "> Mathf.Max(0f, cooldownTimer)",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CooldownDuration",
+      "type": "float",
+      "mods": "public",
+      "default": "> form != null ? form.chargeCooldown : 0f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CanActivate",
+      "type": "bool",
+      "mods": "public",
+      "default": "> enabledForForm && cooldownTimer <= 0f && chargeRoutine == null && !motor.MovementLocked",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "ConfigureFromForm",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData newForm",
+      "description": "Executa a operação ConfigureFromForm."
+    },
+    {
+      "name": "StartCharge",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StartCharge."
+    },
+    {
+      "name": "ChargeRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ChargeRoutine."
+    },
+    {
+      "name": "EndCharge",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação EndCharge."
+    },
+    {
+      "name": "StopChargeIfRunning",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação StopChargeIfRunning."
+    },
+    {
+      "name": "ReleaseCharge",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ReleaseCharge."
+    },
+    {
+      "name": "Cancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "AbilityCancelReason reason",
+      "description": "Executa a operação Cancel."
+    },
+    {
+      "name": "ResetCooldown",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetCooldown."
+    }
+  ],
+  "dependencies": [
+    "AbilityCancelReason",
+    "AbilityRouter",
+    "AnimalFormData",
+    "AnimalsDebugPanel",
+    "IAbility",
+    "IActiveAbility",
+    "IFormAbility",
+    "PlayerAttack",
+    "PlayerDeathHandler",
+    "PlayerMotor2D",
+    "PrimaryAbility",
+    "WaterMotor2D"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "AnimalsDebugPanel",
+    "PounceAbility",
+    "RollAbility",
+    "WaterMotor2D"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Habilidade de Investida (CHG do GDD).\n///\n/// - Dentro de água, se a forma estiver com WaterMotor2D.IsActive (forma\n///   aquática + dentro de água — ex.: Orca), StartCharge() dispara a\n///   \"investida aquática\" via WaterMotor2D.StartAquaticCharge(), reutilizando\n///   dashSpeed/dashDuration da ficha (AnimalFormData).\n/// - Em terra, StartCharge() dispara uma investida horizontal na direcção em\n///   que o player está virado (chargeSpeed/chargeDuration/chargeCooldown da\n///   ficha), bloqueando o movimento normal enquanto dura e activando\n///   motor.SetDashing(true) — o dano de contacto chega \"de borla\" via\n///   PlayerAttack.damageWhileDashing, tal como na investida aquática\n///   (Cavalo/Cervo/Elefante/Onça e outros animais com PrimaryAbility.Charge).\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class ChargeAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private bool enabledForForm;\n    private AnimalFormData form;\n    private WaterMotor2D waterMotor;\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    private float cooldownTimer;\n    private Coroutine chargeRoutine;\n\n    private void Awake()\n    {\n        waterMotor = GetComponent<WaterMotor2D>();\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && (form.canCharge || form.primaryAbility == PrimaryAbility.Charge);\n\n        if (!enabledForForm) StopChargeIfRunning();\n    }\n\n    public void StartCharge()\n    {\n        if (!enabledForForm) return;\n\n        // Investida aquática (Orca, Tarefa #14): reutiliza as estatísticas de\n        // Dash da ficha. O dano de contacto vem \"de borla\" via\n        // PlayerAttack.damageWhileDashing (motor.SetDashing(true)).\n        if (waterMotor != null && waterMotor.IsActive)\n        {\n            waterMotor.StartAquaticCharge(form.dashSpeed, form.dashDuration);\n            return;\n        }\n\n        // Investida em terra (Cavalo/Cervo/Elefante/Onça, etc.).\n        if (cooldownTimer > 0f) return;\n        if (chargeRoutine != null) return;\n        if (motor.MovementLocked) return;\n        if (!motor.IsGrounded) return;\n\n        chargeRoutine = StartCoroutine(ChargeRoutine());\n    }\n\n    private IEnumerator ChargeRoutine()\n    {\n        cooldownTimer = form.chargeCooldown;\n\n        motor.SetMovementLocked(true, this);\n        motor.SetDashing(true);\n\n        int dir = motor.FacingSign != 0 ? motor.FacingSign : 1;\n\n        float elapsed = 0f;\n        while (elapsed < form.chargeDuration)\n        {\n            rb.velocity = new Vector2(dir * form.chargeSpeed, rb.velocity.y);\n            elapsed += Time.fixedDeltaTime;\n            yield return new WaitForFixedUpdate();\n        }\n\n        EndCharge();\n    }\n\n    private void EndCharge()\n    {\n        motor.SetDashing(false);\n        motor.SetMovementLocked(false, this);\n        chargeRoutine = null;\n    }\n\n    private void StopChargeIfRunning()\n    {\n        if (chargeRoutine == null) return;\n\n        StopCoroutine(chargeRoutine);\n        EndCharge();\n    }\n\n    public void ReleaseCharge()\n    {\n        if (!enabledForForm) return;\n        if (waterMotor != null && waterMotor.IsActive) return; // investida aquática termina por tempo, não por soltar.\n\n        // Investida em terra também termina por tempo (ChargeRoutine), não por soltar.\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    void IAbility.Activate() => StartCharge();\n    void IAbility.Release() => ReleaseCharge();\n\n    /// <summary>\n    /// Cancela a investida em curso — aquática (WaterMotor2D.EndAquaticCharge)\n    /// ou em terra (pára a ChargeRoutine e restaura movimento). Chamado por\n    /// AbilityRouter.CancelAll (ex.: PlayerDeathHandler na morte,\n    /// transformação a meio da investida).\n    /// </summary>\n    public void Cancel(AbilityCancelReason reason)\n    {\n        if (waterMotor != null) waterMotor.EndAquaticCharge();\n        StopChargeIfRunning();\n    }\n\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => chargeRoutine != null;\n    public float CooldownDuration => form != null ? form.chargeCooldown : 0f;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && chargeRoutine == null && !motor.MovementLocked;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown da investida.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "id": "script-abilities-chargeability-cs",
+  "dependencyIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-forms-animalformdata-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-iability-cs",
+    "script-abilities-iactiveability-cs",
+    "script-abilities-iformability-cs",
+    "script-player-playerattack-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-player-playermotor2d-cs",
+    "script-player-watermotor2d-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-abilities-pounceability-cs",
+    "script-abilities-rollability-cs",
+    "script-player-watermotor2d-cs"
+  ]
+}

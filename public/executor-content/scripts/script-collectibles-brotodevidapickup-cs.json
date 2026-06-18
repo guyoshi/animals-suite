@@ -1,0 +1,63 @@
+{
+  "path": "Collectibles/BrotoDeVidaPickup.cs",
+  "filename": "BrotoDeVidaPickup.cs",
+  "category": "Collectibles",
+  "primary": "BrotoDeVidaPickup",
+  "kind": "Definição",
+  "summary": "Broto de Vida — drop de chão (inimigos, mundo): cura corações IMEDIATAMENTE ao ser apanhado. Não vai para o inventário — a cura é instantânea, como uma erva apanhada no campo. O Broto de Vida que o jogador COMPRA em loja chega ao inventário como ItemData (effectType = CuraInstantanea) e é usado manualmente — ver PlayerItemUser.UseInstantHealItem. A quantidade máxima transportável é configurada em ItemData.maxQuantity do asset correspondente.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "BrotoDeVidaPickup",
+      "kind": "class",
+      "bases": "PickupBase",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "healAmount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Broto de Vida",
+      "attrs": "[Header(\"Broto de Vida\")] [Tooltip(\"Corações recuperados instantaneamente ao apanhar este drop.\")] [Min(1)]",
+      "inspector": true,
+      "description": "Corações recuperados instantaneamente ao coletar este drop."
+    }
+  ],
+  "methods": [
+    {
+      "name": "GrantReward",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação GrantReward."
+    }
+  ],
+  "dependencies": [
+    "ItemData",
+    "PickupBase",
+    "PickupType",
+    "PlayerItemUser",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "EnemyDropTable",
+    "ItemData",
+    "PlayerItemUser"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Broto de Vida — drop de chão (inimigos, mundo): cura <see cref=\"healAmount\"/>\n/// corações IMEDIATAMENTE ao ser apanhado. Não vai para o inventário — a cura é\n/// instantânea, como uma erva apanhada no campo.\n///\n/// O Broto de Vida que o jogador COMPRA em loja chega ao inventário como\n/// ItemData (effectType = CuraInstantanea) e é usado manualmente — ver\n/// PlayerItemUser.UseInstantHealItem. A quantidade máxima transportável é\n/// configurada em ItemData.maxQuantity do asset correspondente.\n/// </summary>\npublic class BrotoDeVidaPickup : PickupBase\n{\n    [Header(\"Broto de Vida\")]\n    [Tooltip(\"Corações recuperados instantaneamente ao apanhar este drop.\")]\n    [Min(1)] public int healAmount = 1;\n\n    public override PickupType Type => PickupType.BrotoDeVida;\n\n    protected override void GrantReward()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress != null) progress.Heal(healAmount);\n    }\n}\n",
+  "id": "script-collectibles-brotodevidapickup-cs",
+  "dependencyIds": [
+    "script-data-itemdata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-player-playeritemuser-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemydroptable-cs",
+    "script-data-itemdata-cs",
+    "script-player-playeritemuser-cs"
+  ]
+}

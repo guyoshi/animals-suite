@@ -1,0 +1,66 @@
+{
+  "path": "Combat/PooledVfxInstance.cs",
+  "filename": "PooledVfxInstance.cs",
+  "category": "Combat",
+  "primary": "PooledVfxInstance",
+  "kind": "Componente",
+  "summary": "Tarefa #29 — componente adicionado automaticamente pelo a cada instância de VFX pooled. Guarda o prefab de origem e devolve a instância à pool ao fim da duração definida por (calculada pelo VfxPoolManager a partir do ParticleSystem do prefab, ou de \"defaultLifetime\").",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PooledVfxInstance",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "_returnRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "BeginLifetime",
+      "ret": "void",
+      "mods": "public",
+      "params": "float duration",
+      "description": "Executa a operação BeginLifetime."
+    },
+    {
+      "name": "ReturnAfter",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação ReturnAfter."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    }
+  ],
+  "dependencies": [
+    "VfxPoolManager"
+  ],
+  "used_by": [
+    "VfxPoolManager"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #29 — componente adicionado automaticamente pelo\n/// <see cref=\"VfxPoolManager\"/> a cada instância de VFX pooled. Guarda o\n/// prefab de origem e devolve a instância à pool ao fim da duração definida\n/// por <see cref=\"BeginLifetime\"/> (calculada pelo VfxPoolManager a partir do\n/// ParticleSystem do prefab, ou de \"defaultLifetime\").\n/// </summary>\n[DisallowMultipleComponent]\npublic class PooledVfxInstance : MonoBehaviour\n{\n    /// <summary>Prefab original usado para repor esta instância na pool correcta.</summary>\n    public GameObject SourcePrefab { get; set; }\n\n    private Coroutine _returnRoutine;\n\n    /// <summary>(Re)inicia o temporizador de retorno à pool. Chamado pelo VfxPoolManager sempre que esta instância é (re)activada.</summary>\n    public void BeginLifetime(float duration)\n    {\n        if (_returnRoutine != null) StopCoroutine(_returnRoutine);\n        _returnRoutine = StartCoroutine(ReturnAfter(duration));\n    }\n\n    private IEnumerator ReturnAfter(float duration)\n    {\n        yield return new WaitForSeconds(duration);\n        _returnRoutine = null;\n        VfxPoolManager.Instance?.ReturnToPool(SourcePrefab, gameObject);\n    }\n\n    private void OnDisable()\n    {\n        if (_returnRoutine != null)\n        {\n            StopCoroutine(_returnRoutine);\n            _returnRoutine = null;\n        }\n    }\n}\n",
+  "id": "script-combat-pooledvfxinstance-cs",
+  "dependencyIds": [
+    "script-combat-vfxpoolmanager-cs"
+  ],
+  "usedByIds": [
+    "script-combat-vfxpoolmanager-cs"
+  ]
+}

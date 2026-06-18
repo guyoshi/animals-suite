@@ -1,0 +1,201 @@
+{
+  "path": "NPC/Actions/MovementActions.cs",
+  "filename": "MovementActions.cs",
+  "category": "NPC",
+  "primary": "NpcFaceMode",
+  "kind": "Acção de NPC",
+  "summary": "Para onde Action_FaceTarget vira o NPC. public enum NpcFaceMode { Vira para \"target\". Target, Vira para o player. Player, Vira para uma direção fixa (ver \"direction\"). Direction } Move o NPC horizontalmente até chegar perto de um alvo (ex: um \"mark\" da cutscene, ou o player). Suspende o comportamento base de movimento enquanto anda e espera chegar antes de continuar para a próxima ação.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "NpcFaceMode",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "Action_MoveToTarget",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_FaceTarget",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_SetMovementMode",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_FleeFromPlayer",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_Jump",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_WaitForPlayerNear",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "target",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Para onde o NPC anda. Se vazio, usa a posição actual do player.\")]",
+      "inspector": true,
+      "description": "Para onde o NPC anda. Se vazio, usa a posição atual do player."
+    },
+    {
+      "name": "targetNpcId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"ID de outro NPC para onde andar (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC). Se definido e encontrado, tem prioridade sobre \\\"target\\\".\")]",
+      "inspector": true,
+      "description": "ID de outro NPC para onde andar (Etapa 8 — ver \"Npc Id\" no NpcController desse NPC). Se definido e encontrado, tem prioridade sobre \"target\"."
+    },
+    {
+      "name": "speed",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "",
+      "attrs": "[Tooltip(\"Velocidade do movimento (usa um valor baixo para \\\"andar\\\" e mais alto para \\\"correr\\\").\")]",
+      "inspector": true,
+      "description": "Velocidade do movimento (usa um valor baixo para \"andar\" e mais alto para \"correr\\"
+    },
+    {
+      "name": "arriveDistance",
+      "type": "float",
+      "mods": "public",
+      "default": "0.1f",
+      "section": "",
+      "attrs": "[Tooltip(\"Distância (eixo X) considerada \\\"chegou\\\".\")]",
+      "inspector": true,
+      "description": "Distância (eixo X) considerada \"chegou\"."
+    },
+    {
+      "name": "timeout",
+      "type": "float",
+      "mods": "public",
+      "default": "5f",
+      "section": "",
+      "attrs": "[Tooltip(\"Tempo máximo de espera, em segundos (segurança, evita ficar preso para sempre se o alvo for inalcançável). 0 = sem limite.\")]",
+      "inspector": true,
+      "description": "Tempo máximo de espera, em segundos (segurança, evita ficar preso para sempre se o alvo for inalcançável). 0 = sem limite."
+    },
+    {
+      "name": "mode",
+      "type": "NpcFaceMode",
+      "mods": "public",
+      "default": "NpcFaceMode.Player",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "direction",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "",
+      "attrs": "[Tooltip(\"Usado apenas quando Mode = Direction. Positivo = direita, negativo = esquerda.\")]",
+      "inspector": true,
+      "description": "Usado apenas quando Mode = Direction. Positivo = direita, negativo = esquerda."
+    },
+    {
+      "name": "mode",
+      "type": "NpcMovementMode",
+      "mods": "public",
+      "default": "NpcMovementMode.Idle",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "duration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "force",
+      "type": "float",
+      "mods": "public",
+      "default": "6f",
+      "section": "",
+      "attrs": "[Tooltip(\"Força vertical do salto (aplicada à velocidade do Rigidbody2D).\")]",
+      "inspector": true,
+      "description": "Força vertical do salto (aplicada à velocidade do Rigidbody2D)."
+    },
+    {
+      "name": "waitToLand",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, espera o NPC voltar a tocar no chão antes de avançar para a próxima ação.\")]",
+      "inspector": true,
+      "description": "Se ativo, espera o NPC voltar a tocar no chão antes de avançar para a próxima ação."
+    },
+    {
+      "name": "distance",
+      "type": "float",
+      "mods": "public",
+      "default": "2f",
+      "section": "",
+      "attrs": "[Tooltip(\"Distância à qual o player é considerado \\\"perto\\\".\")]",
+      "inspector": true,
+      "description": "Distância à qual o player é considerado \"perto\"."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "NpcAction",
+    "NpcController",
+    "NpcMovement",
+    "NpcMovementMode",
+    "NpcRefUtil"
+  ],
+  "used_by": [],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>Para onde Action_FaceTarget vira o NPC.</summary>\npublic enum NpcFaceMode\n{\n    /// <summary>Vira para \"target\".</summary>\n    Target,\n\n    /// <summary>Vira para o player.</summary>\n    Player,\n\n    /// <summary>Vira para uma direção fixa (ver \"direction\").</summary>\n    Direction\n}\n\n/// <summary>\n/// Move o NPC horizontalmente até chegar perto de um alvo (ex: um \"mark\" da\n/// cutscene, ou o player). Suspende o comportamento base de movimento\n/// enquanto anda e espera chegar antes de continuar para a próxima ação.\n/// </summary>\n[System.Serializable]\npublic class Action_MoveToTarget : NpcAction\n{\n    [Tooltip(\"Para onde o NPC anda. Se vazio, usa a posição actual do player.\")]\n    public Transform target;\n\n    [Tooltip(\"ID de outro NPC para onde andar (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC). Se definido e encontrado, tem prioridade sobre \\\"target\\\".\")]\n    public string targetNpcId;\n\n    [Tooltip(\"Velocidade do movimento (usa um valor baixo para \\\"andar\\\" e mais alto para \\\"correr\\\").\")]\n    public float speed = 2f;\n\n    [Tooltip(\"Distância (eixo X) considerada \\\"chegou\\\".\")]\n    public float arriveDistance = 0.1f;\n\n    [Tooltip(\"Tempo máximo de espera, em segundos (segurança, evita ficar preso para sempre se o alvo for inalcançável). 0 = sem limite.\")]\n    public float timeout = 5f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var movement = npc.Movement;\n        if (movement == null)\n        {\n            Debug.LogWarning($\"[{npc.name}] Action_MoveToTarget: NpcMovement não encontrado.\");\n            yield break;\n        }\n\n        Transform fallback = target != null ? target : npc.Player;\n        Transform t = NpcRefUtil.Resolve(targetNpcId, fallback);\n\n        if (t == null)\n        {\n            Debug.LogWarning($\"[{npc.name}] Action_MoveToTarget: nenhum alvo definido e o player não foi encontrado.\");\n            yield break;\n        }\n\n        yield return movement.MoveToPosition(t, speed, arriveDistance, timeout);\n    }\n}\n\n/// <summary>Vira o NPC instantaneamente (flipX) para encarar um alvo, o player, ou uma direção fixa.</summary>\n[System.Serializable]\npublic class Action_FaceTarget : NpcAction\n{\n    public NpcFaceMode mode = NpcFaceMode.Player;\n\n    [Tooltip(\"Usado apenas quando Mode = Target.\")]\n    public Transform target;\n\n    [Tooltip(\"Usado apenas quando Mode = Target (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC). Se definido e encontrado, tem prioridade sobre \\\"target\\\".\")]\n    public string targetNpcId;\n\n    [Tooltip(\"Usado apenas quando Mode = Direction. Positivo = direita, negativo = esquerda.\")]\n    public float direction = 1f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var movement = npc.Movement;\n        if (movement == null) yield break;\n\n        switch (mode)\n        {\n            case NpcFaceMode.Target:\n                var resolved = NpcRefUtil.Resolve(targetNpcId, target);\n                if (resolved != null) movement.FaceTowards(resolved.position);\n                break;\n\n            case NpcFaceMode.Player:\n                if (npc.Player != null) movement.FaceTowards(npc.Player.position);\n                break;\n\n            case NpcFaceMode.Direction:\n                movement.FaceDirection(direction);\n                break;\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Muda o comportamento base de movimento do NPC (Idle/FollowPlayer/FleePlayer/Patrol)\n/// em runtime — útil para, por exemplo, um NPC começar Idle e passar a Patrol\n/// depois de uma cutscene de apresentação.\n/// </summary>\n[System.Serializable]\npublic class Action_SetMovementMode : NpcAction\n{\n    public NpcMovementMode mode = NpcMovementMode.Idle;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var movement = npc.Movement;\n        if (movement != null) movement.DefaultMode = mode;\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Foge do player numa cutscene: corre na direção oposta ao player durante\n/// \"duration\" segundos, recalculando a direção a cada passo de física (funciona\n/// mesmo que o player se mova durante a fuga). Para uma fuga contínua \"de fundo\"\n/// usa Action_SetMovementMode com mode = FleePlayer.\n/// </summary>\n[System.Serializable]\npublic class Action_FleeFromPlayer : NpcAction\n{\n    public float speed = 3f;\n    public float duration = 1f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var movement = npc.Movement;\n        if (movement == null || npc.Player == null) yield break;\n\n        yield return movement.FleeFromTransform(npc.Player, speed, duration);\n    }\n}\n\n/// <summary>Faz o NPC saltar (impulso vertical no Rigidbody2D). Não faz nada se o NPC não estiver no chão.</summary>\n[System.Serializable]\npublic class Action_Jump : NpcAction\n{\n    [Tooltip(\"Força vertical do salto (aplicada à velocidade do Rigidbody2D).\")]\n    public float force = 6f;\n\n    [Tooltip(\"Se activo, espera o NPC voltar a tocar no chão antes de avançar para a próxima ação.\")]\n    public bool waitToLand = true;\n\n    [Tooltip(\"Tempo máximo de espera por aterragem, em segundos (segurança). 0 = sem limite.\")]\n    public float timeout = 3f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var movement = npc.Movement;\n        if (movement == null) yield break;\n\n        if (!movement.Jump(force)) yield break;\n\n        if (waitToLand)\n            yield return movement.WaitUntilGrounded(timeout);\n    }\n}\n\n/// <summary>Espera até o player chegar a \"distance\" do NPC antes de continuar para a próxima ação.</summary>\n[System.Serializable]\npublic class Action_WaitForPlayerNear : NpcAction\n{\n    [Tooltip(\"Distância à qual o player é considerado \\\"perto\\\".\")]\n    public float distance = 2f;\n\n    [Tooltip(\"Tempo máximo de espera, em segundos (segurança). 0 = sem limite.\")]\n    public float timeout = 0f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (npc.Player == null) yield break;\n\n        float elapsed = 0f;\n\n        while (Vector2.Distance(npc.Player.position, npc.transform.position) > distance)\n        {\n            elapsed += Time.deltaTime;\n            if (timeout > 0f && elapsed >= timeout) yield break;\n            yield return null;\n        }\n    }\n}\n",
+  "id": "script-npc-actions-movementactions-cs",
+  "dependencyIds": [
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-npcmovement-cs",
+    "script-npc-npcrefutil-cs"
+  ],
+  "usedByIds": []
+}

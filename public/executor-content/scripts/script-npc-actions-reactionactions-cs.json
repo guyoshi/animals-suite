@@ -1,0 +1,71 @@
+{
+  "path": "NPC/Actions/ReactionActions.cs",
+  "filename": "ReactionActions.cs",
+  "category": "NPC",
+  "primary": "Action_SetReactionState",
+  "kind": "Acção de NPC",
+  "summary": "Muda o estado de reação deste NPC (NpcController.SetReactionState) — atualiza o parâmetro Int do Animator e/ou troca o sprite, conforme configurado no NpcController, e fica disponível para Condition_NpcReactionState (ex: um evento de Touch só ataca se o NPC estiver Hostile, ou só conversa se Friendly).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Action_SetReactionState",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "state",
+      "type": "NpcReactionState",
+      "mods": "public",
+      "default": "NpcReactionState.Idle",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sfx",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Som opcional a tocar ao mudar de estado (ex: um grunhido ao ficar Hostile, ou um \\\"chilrear\\\" ao ficar Surprised).\")]",
+      "inspector": true,
+      "description": "Som opcional a tocar ao mudar de estado (ex: um grunhido ao ficar Hostile, ou um \"chilrear\" ao ficar Surprised)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "Condition_NpcReactionState",
+    "NpcAction",
+    "NpcController",
+    "NpcReactionState"
+  ],
+  "used_by": [
+    "Condition_NpcReactionState",
+    "NpcController"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Muda o estado de reação deste NPC (NpcController.SetReactionState) — actualiza\n/// o parâmetro Int do Animator e/ou troca o sprite, consoante configurado no\n/// NpcController, e fica disponível para Condition_NpcReactionState (ex: um\n/// evento de Touch só ataca se o NPC estiver Hostile, ou só conversa se Friendly).\n/// </summary>\n[System.Serializable]\npublic class Action_SetReactionState : NpcAction\n{\n    public NpcReactionState state = NpcReactionState.Idle;\n\n    [Tooltip(\"Som opcional a tocar ao mudar de estado (ex: um grunhido ao ficar Hostile, ou um \\\"chilrear\\\" ao ficar Surprised).\")]\n    public AudioClip sfx;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        npc.SetReactionState(state);\n\n        if (sfx != null)\n            AudioManager.Instance?.PlaySE(sfx);\n\n        yield break;\n    }\n}\n",
+  "id": "script-npc-actions-reactionactions-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-npc-conditions-npcstateconditions-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-npc-conditions-npcstateconditions-cs",
+    "script-npc-npccontroller-cs"
+  ]
+}

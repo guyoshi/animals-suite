@@ -1,0 +1,232 @@
+{
+  "path": "UI/ChallengeResultUI.cs",
+  "filename": "ChallengeResultUI.cs",
+  "category": "UI",
+  "primary": "ChallengeResultUI",
+  "kind": "Componente",
+  "summary": "Tela de \"SUCESSO!\"/\"FALHOU\" no fim de um Desafio (Sistema de Missões/Desafios, Tarefa #12): overlay full-screen (CanvasGroup, Screen Space - Overlay) com fade in/out, mostrado a partir de . Sem tela para (o jogador saiu da zona/portal de propósito — ver ChallengeManager.AbandonChallenge). Música/SFX: se / estiver definida, este tela toca-a (substitui o BGM) durante o overlay e restaura a música da área (AudioManager.RefreshActiveZones) no fim — caso contrário, ChallengeManager já restaurou a música da área antes deste evento disparar. / tocam sempre como som único (AudioManager.PlaySE), independentemente da música. Singleton com auto-fallback (mesmo padrão de DeathScreenUI/MissionCompleteUI ",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ChallengeResultUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "panelRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[Header(\"Painel\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "titleText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "messageText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "successTitle",
+      "type": "string",
+      "mods": "private",
+      "default": "\"SUCESSO!\"",
+      "section": "Textos Padrão",
+      "attrs": "[Header(\"Textos Padrão\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "failTitle",
+      "type": "string",
+      "mods": "private",
+      "default": "\"FALHOU\"",
+      "section": "Textos Padrão",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "successMessage",
+      "type": "string",
+      "mods": "private",
+      "default": "\"\"",
+      "section": "Textos Padrão",
+      "attrs": "[Tooltip(\"Mensagem mostrada no sucesso (a de falha vem de ChallengeFailCondition.failMessage / \\\"Tempo esgotado!\\\").\")] [SerializeField]",
+      "inspector": true,
+      "description": "Mensagem mostrada no sucesso (a de falha vem de ChallengeFailCondition.failMessage / \"Tempo esgotado!\\"
+    },
+    {
+      "name": "timeFormat",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Tempo: {0}\"",
+      "section": "Tempo (apenas desafios com 'hasTimeLimit')",
+      "attrs": "[Header(\"Tempo (apenas desafios com 'hasTimeLimit')\")] [Tooltip(\"Formato da linha de tempo no sucesso. \\\"{0}\\\" = tempo do desafio (MM:SS).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Formato da linha de tempo no sucesso. \"{0}\" = tempo do desafio (MM:SS)."
+    },
+    {
+      "name": "newRecordMessage",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Novo Recorde!\"",
+      "section": "Tempo (apenas desafios com 'hasTimeLimit')",
+      "attrs": "[Tooltip(\"Linha adicional mostrada quando o tempo bate o recorde pessoal anterior (ChallengeManager.LastCompletionIsNewRecord).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Linha adicional mostrada quando o tempo bate o recorde pessoal anterior (ChallengeManager.LastCompletionIsNewRecord)."
+    },
+    {
+      "name": "fadeDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.3f",
+      "section": "Transição",
+      "attrs": "[Header(\"Transição\")] [Tooltip(\"Duração do fade in/out, em segundos.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração do fade in/out, em segundos."
+    },
+    {
+      "name": "holdDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "2f",
+      "section": "Transição",
+      "attrs": "[Tooltip(\"Tempo (s) com o ecrã totalmente visível, sem contar o fade.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Tempo (s) com o tela totalmente visível, sem contar o fade."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isShowing",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Transição",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "HandleEnded",
+      "ret": "void",
+      "mods": "private",
+      "params": "ChallengeDefinition challenge, ChallengeEndReason reason, string message",
+      "description": "Executa a operação HandleEnded."
+    },
+    {
+      "name": "ShowRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "ChallengeDefinition challenge, ChallengeEndReason reason, string message",
+      "description": "Executa a operação ShowRoutine."
+    },
+    {
+      "name": "WaitUnscaled",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação WaitUnscaled."
+    },
+    {
+      "name": "FadeRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float from, float to",
+      "description": "Executa a operação FadeRoutine."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "ChallengeDefinition",
+    "ChallengeEndReason",
+    "ChallengeFailCondition",
+    "ChallengeManager",
+    "DeathScreenUI",
+    "MissionCompleteUI"
+  ],
+  "used_by": [
+    "ChallengeManager"
+  ],
+  "source": "using System.Collections;\nusing TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Ecrã de \"SUCESSO!\"/\"FALHOU\" no fim de um Desafio (Sistema de\n/// Missões/Desafios, Tarefa #12): overlay full-screen (CanvasGroup, Screen\n/// Space - Overlay) com fade in/out, mostrado a partir de\n/// <see cref=\"ChallengeManager.OnChallengeEnded\"/>.\n///\n/// Sem ecrã para <see cref=\"ChallengeEndReason.Abandonado\"/> (o jogador saiu\n/// da zona/portal de propósito — ver ChallengeManager.AbandonChallenge).\n///\n/// Música/SFX: se <see cref=\"ChallengeDefinition.successMusic\"/>/<see cref=\"ChallengeDefinition.failMusic\"/>\n/// estiver definida, este ecrã toca-a (substitui o BGM) durante o overlay e\n/// restaura a música da área (AudioManager.RefreshActiveZones) no fim — caso\n/// contrário, ChallengeManager já restaurou a música da área antes deste\n/// evento disparar. <see cref=\"ChallengeDefinition.successSfx\"/>/<see cref=\"ChallengeDefinition.failSfx\"/>\n/// tocam sempre como som único (AudioManager.PlaySE), independentemente da música.\n///\n/// Singleton com auto-fallback (mesmo padrão de DeathScreenUI/MissionCompleteUI\n/// — sem UI montada, ainda assim espera \"holdDuration\" e restaura a música,\n/// apenas sem mostrar nada).\n///\n/// Montagem no Editor:\n/// - Canvas (Screen Space - Overlay) com \"panelRoot\" + \"canvasGroup\" no mesmo\n///   GameObject.\n/// - \"titleText\" (TMP_Text): \"SUCESSO!\" / \"FALHOU\" (ou \"successTitle\"/\"failTitle\").\n/// - \"messageText\" (TMP_Text, opcional): mensagem de falha\n///   (ChallengeFailCondition.failMessage / \"Tempo esgotado!\") ou\n///   \"successMessage\" no sucesso.\n/// </summary>\npublic class ChallengeResultUI : MonoBehaviour\n{\n    public static ChallengeResultUI Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private TMP_Text titleText;\n    [SerializeField] private TMP_Text messageText;\n\n    [Header(\"Textos Padrão\")]\n    [SerializeField] private string successTitle = \"SUCESSO!\";\n    [SerializeField] private string failTitle = \"FALHOU\";\n\n    [Tooltip(\"Mensagem mostrada no sucesso (a de falha vem de ChallengeFailCondition.failMessage / \\\"Tempo esgotado!\\\").\")]\n    [SerializeField] private string successMessage = \"\";\n\n    [Header(\"Tempo (apenas desafios com 'hasTimeLimit')\")]\n    [Tooltip(\"Formato da linha de tempo no sucesso. \\\"{0}\\\" = tempo do desafio (MM:SS).\")]\n    [SerializeField] private string timeFormat = \"Tempo: {0}\";\n\n    [Tooltip(\"Linha adicional mostrada quando o tempo bate o recorde pessoal anterior (ChallengeManager.LastCompletionIsNewRecord).\")]\n    [SerializeField] private string newRecordMessage = \"Novo Recorde!\";\n\n    [Header(\"Transição\")]\n    [Tooltip(\"Duração do fade in/out, em segundos.\")]\n    [SerializeField] private float fadeDuration = 0.3f;\n\n    [Tooltip(\"Tempo (s) com o ecrã totalmente visível, sem contar o fade.\")]\n    [SerializeField] private float holdDuration = 2f;\n\n    private bool isAutoFallback;\n    private bool isShowing;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (canvasGroup != null)\n        {\n            canvasGroup.alpha = 0f;\n            canvasGroup.blocksRaycasts = false;\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(ChallengeResultUI) + \" (Fallback)\");\n        var instance = go.AddComponent<ChallengeResultUI>();\n        instance.isAutoFallback = true;\n    }\n\n    private void OnEnable()\n    {\n        ChallengeManager.OnChallengeEnded += HandleEnded;\n    }\n\n    private void OnDisable()\n    {\n        ChallengeManager.OnChallengeEnded -= HandleEnded;\n    }\n\n    private void HandleEnded(ChallengeDefinition challenge, ChallengeEndReason reason, string message)\n    {\n        if (reason == ChallengeEndReason.Abandonado) return;\n        if (isShowing) return;\n\n        StartCoroutine(ShowRoutine(challenge, reason, message));\n    }\n\n    private IEnumerator ShowRoutine(ChallengeDefinition challenge, ChallengeEndReason reason, string message)\n    {\n        isShowing = true;\n\n        bool success = reason == ChallengeEndReason.Sucesso;\n\n        string title = success ? successTitle : failTitle;\n        string body = success ? successMessage : (!string.IsNullOrEmpty(message) ? message : \"\");\n\n        if (success && challenge.hasTimeLimit && ChallengeManager.Instance != null)\n        {\n            var manager = ChallengeManager.Instance;\n            string timeLine = string.Format(timeFormat, ChallengeManager.FormatTime(manager.LastCompletionTimeSeconds));\n\n            body = string.IsNullOrEmpty(body) ? timeLine : $\"{body}\\n{timeLine}\";\n            if (manager.LastCompletionIsNewRecord) body += \"\\n\" + newRecordMessage;\n        }\n\n        var music = success ? challenge.successMusic : challenge.failMusic;\n        var sfx = success ? challenge.successSfx : challenge.failSfx;\n\n        if (music != null) AudioManager.Instance?.PlayBGM(music, fadeTime: fadeDuration, loop: false);\n        if (sfx != null) AudioManager.Instance?.PlaySE(sfx);\n\n        // Sem UI montada (instância \"Fallback\") — apenas espera (e restaura a\n        // música, se aplicável), sem overlay.\n        if (canvasGroup == null)\n        {\n            yield return WaitUnscaled(holdDuration);\n\n            if (music != null) AudioManager.Instance?.RefreshActiveZones();\n\n            isShowing = false;\n            yield break;\n        }\n\n        if (titleText != null) titleText.text = title;\n        if (messageText != null) messageText.text = body;\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n        canvasGroup.blocksRaycasts = true;\n\n        yield return FadeRoutine(0f, 1f);\n        yield return WaitUnscaled(holdDuration);\n        yield return FadeRoutine(1f, 0f);\n\n        canvasGroup.blocksRaycasts = false;\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        if (music != null) AudioManager.Instance?.RefreshActiveZones();\n\n        isShowing = false;\n    }\n\n    private IEnumerator WaitUnscaled(float duration)\n    {\n        float t = 0f;\n        while (t < duration)\n        {\n            t += Time.unscaledDeltaTime;\n            yield return null;\n        }\n    }\n\n    private IEnumerator FadeRoutine(float from, float to)\n    {\n        if (canvasGroup == null) yield break;\n\n        canvasGroup.alpha = from;\n\n        if (fadeDuration <= 0f)\n        {\n            canvasGroup.alpha = to;\n            yield break;\n        }\n\n        float t = 0f;\n        while (t < fadeDuration)\n        {\n            t += Time.unscaledDeltaTime;\n            canvasGroup.alpha = Mathf.Lerp(from, to, t / fadeDuration);\n            yield return null;\n        }\n        canvasGroup.alpha = to;\n    }\n}\n",
+  "id": "script-ui-challengeresultui-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-challengefailcondition-cs",
+    "script-data-challengemanager-cs",
+    "script-ui-deathscreenui-cs",
+    "script-ui-missioncompleteui-cs"
+  ],
+  "usedByIds": [
+    "script-data-challengemanager-cs"
+  ]
+}

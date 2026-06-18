@@ -1,0 +1,180 @@
+{
+  "path": "Data/EmblemData.cs",
+  "filename": "EmblemData.cs",
+  "category": "Data",
+  "primary": "EmblemData",
+  "kind": "Asset de dados",
+  "summary": "Define um emblema mostrado na parte inferior da seção Progresso do Menu de Pausa (Tarefa #11): \"Emblema de Gaia; Emblema de Apolo; Emblema de Zeus; emblemas dos seis mundos\" (9 no total). Estado visual (resolvido por ProgressSectionUI/EmblemNodeUI): - Não obtido E \"heardAboutVariable\" falso (ou vazio) → mostra (\"marca de pedra desconhecida\"), sem texto de condição. - Não obtido E \"heardAboutVariable\" verdadeiro → mostra + (\"Depois de o jogador ouvir falar dele, a condição seria revelada\"). - Obtido (variável \"obtainedVariable\" verdadeira) → mostra . As variáveis referenciadas (heardAboutVariable/obtainedVariable) são bools geridos por GameVariables, tal como MissionData usa StartedVariable/",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "EmblemData",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "emblemId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "world",
+      "type": "WorldData",
+      "mods": "public",
+      "default": "",
+      "section": "Mundo",
+      "attrs": "[Header(\"Mundo\")] [Tooltip(\"Mundo a que este emblema pertence (um dos seis emblemas de mundo). Deixar vazio para os emblemas globais: Gaia, Apolo, Zeus.\")]",
+      "inspector": true,
+      "description": "Mundo a que este emblema pertence (um dos seis emblemas de mundo). Deixar vazio para os emblemas globais: Gaia, Apolo, Zeus."
+    },
+    {
+      "name": "icon",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Ícones",
+      "attrs": "[Header(\"Ícones\")] [Tooltip(\"Ícone mostrado depois de o emblema ser obtido.\")]",
+      "inspector": true,
+      "description": "Ícone mostrado depois de o emblema ser obtido."
+    },
+    {
+      "name": "unknownIcon",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Ícones",
+      "attrs": "[Tooltip(\"\\\"Marca de pedra desconhecida\\\" — ícone mostrado enquanto o emblema não foi obtido.\")]",
+      "inspector": true,
+      "description": "\"Marca de pedra desconhecida\" — ícone mostrado enquanto o emblema não foi obtido."
+    },
+    {
+      "name": "heardAboutVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Condição (Revelação)",
+      "attrs": "[Header(\"Condição (Revelação)\")] [Tooltip(\"Nome da variável bool (GameVariables) que indica que o jogador já ouviu falar deste emblema. Enquanto falsa/vazia, nenhuma condição é mostrada — apenas o ícone desconhecido.\")]",
+      "inspector": true,
+      "description": "Nome da variável bool (GameVariables) que indica que o jogador já ouviu falar deste emblema. Enquanto falsa/vazia, nenhuma condição é mostrada — apenas o ícone desconhecido."
+    },
+    {
+      "name": "conditionDescription",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Condição (Revelação)",
+      "attrs": "[Tooltip(\"Texto da condição para obter este emblema, revelado depois de \\\"heardAboutVariable\\\" ficar verdadeira.\")] [TextArea]",
+      "inspector": true,
+      "description": "Texto da condição para obter este emblema, revelado depois de \"heardAboutVariable\" ficar verdadeira."
+    },
+    {
+      "name": "obtainedVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Obtenção",
+      "attrs": "[Header(\"Obtenção\")] [Tooltip(\"Nome da variável bool (GameVariables) que indica que o jogador obteve este emblema.\")]",
+      "inspector": true,
+      "description": "Nome da variável bool (GameVariables) que indica que o jogador obteve este emblema."
+    },
+    {
+      "name": "isGaiaEmblem",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Papel na Percentagem Total do Save",
+      "attrs": "[Header(\"Papel na Percentagem Total do Save\")] [Tooltip(\"Emblema de Gaia: concedido ao atingir 100% (todo o conteúdo principal completo). NÃO entra no cálculo de % (seria circular). Em conjunto com 'isApoloEmblem', activa o resultado especial 101% — que por sua vez concede o Emblema de Zeus (Tarefa #31).\")]",
+      "inspector": true,
+      "description": "Emblema de Gaia: concedido ao atingir 100% (todo o conteúdo principal completo). NÃO entra no cálculo de % (seria circular). Em conjunto com 'isApoloEmblem', ativa o resultado especial 101% — que por sua vez concede o Emblema de Zeus (Tarefa #31)."
+    },
+    {
+      "name": "isApoloEmblem",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Papel na Percentagem Total do Save",
+      "attrs": "[Tooltip(\"Emblema de Apolo: concedido ao completar a Provação de Apolo (independente da %). NÃO entra no cálculo de %. Em conjunto com 'isGaiaEmblem', activa o resultado especial 101% (Tarefa #31).\")]",
+      "inspector": true,
+      "description": "Emblema de Apolo: concedido ao completar a Provação de Apolo (independente da %). NÃO entra no cálculo de %. Em conjunto com 'isGaiaEmblem', ativa o resultado especial 101% (Tarefa #31)."
+    },
+    {
+      "name": "isBonus",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Papel na Percentagem Total do Save",
+      "attrs": "[Tooltip(\"Emblema bónus/secreto: não entra nem no numerador nem no denominador da percentagem total do save. Use para emblemas que não devem influenciar a % de conclusão (ex: Emblema de Zeus, que é dado pela própria regra Gaia+Apolo). isGaiaEmblem e isApoloEmblem implicam o mesmo comportamento de exclusão.\")]",
+      "inspector": true,
+      "description": "Emblema bónus/secreto: não entra nem no numerador nem no denominador da percentagem total do save. Use para emblemas que não devem influenciar a % de conclusão (ex: Emblema de Zeus, que é dado pela própria regra Gaia+Apolo). isGaiaEmblem e isApoloEmblem implicam o mesmo comportamento de exclusão."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "Action_SetBoolVariable",
+    "Condition_BoolVariable",
+    "EmblemNodeUI",
+    "GameVariables",
+    "MissionData",
+    "ProgressSectionUI",
+    "WorldData"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "ApoloRunaCollectUI",
+    "AreaData",
+    "EmblemManager",
+    "EmblemsSectionUI",
+    "GameDataValidatorWindow",
+    "GameDatabase",
+    "OptionsSectionUI",
+    "PlayerProgress",
+    "PostGameAuraController",
+    "ProgressSectionUI",
+    "WorldData",
+    "WorldMapController",
+    "WorldMapUI"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Define um emblema mostrado na parte inferior da secção Progresso do Menu de\n/// Pausa (Tarefa #11): \"Emblema de Gaia; Emblema de Apolo; Emblema de Zeus;\n/// emblemas dos seis mundos\" (9 no total).\n///\n/// Estado visual (resolvido por ProgressSectionUI/EmblemNodeUI):\n/// - Não obtido E \"heardAboutVariable\" falso (ou vazio) → mostra\n///   <see cref=\"unknownIcon\"/> (\"marca de pedra desconhecida\"), sem texto de\n///   condição.\n/// - Não obtido E \"heardAboutVariable\" verdadeiro → mostra\n///   <see cref=\"unknownIcon\"/> + <see cref=\"conditionDescription\"/> (\"Depois de\n///   o jogador ouvir falar dele, a condição seria revelada\").\n/// - Obtido (variável \"obtainedVariable\" verdadeira) → mostra <see cref=\"icon\"/>.\n///\n/// As variáveis referenciadas (heardAboutVariable/obtainedVariable) são bools\n/// geridos por GameVariables, tal como MissionData usa StartedVariable/\n/// CompletedVariable — reutiliza a infraestrutura de\n/// Action_SetBoolVariable/Condition_BoolVariable já existente, sem novo estado\n/// de save dedicado.\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Emblem Data\", fileName = \"NewEmblem\")]\npublic class EmblemData : ScriptableObject\n{\n    [Header(\"Identidade\")]\n    public string emblemId;\n    public string displayName;\n\n    [Header(\"Mundo\")]\n    [Tooltip(\"Mundo a que este emblema pertence (um dos seis emblemas de mundo). Deixar vazio para os emblemas globais: Gaia, Apolo, Zeus.\")]\n    public WorldData world;\n\n    [Header(\"Ícones\")]\n    [Tooltip(\"Ícone mostrado depois de o emblema ser obtido.\")]\n    public Sprite icon;\n\n    [Tooltip(\"\\\"Marca de pedra desconhecida\\\" — ícone mostrado enquanto o emblema não foi obtido.\")]\n    public Sprite unknownIcon;\n\n    [Header(\"Condição (Revelação)\")]\n    [Tooltip(\"Nome da variável bool (GameVariables) que indica que o jogador já ouviu falar deste emblema. Enquanto falsa/vazia, nenhuma condição é mostrada — apenas o ícone desconhecido.\")]\n    public string heardAboutVariable;\n\n    [Tooltip(\"Texto da condição para obter este emblema, revelado depois de \\\"heardAboutVariable\\\" ficar verdadeira.\")]\n    [TextArea] public string conditionDescription;\n\n    [Header(\"Obtenção\")]\n    [Tooltip(\"Nome da variável bool (GameVariables) que indica que o jogador obteve este emblema.\")]\n    public string obtainedVariable;\n\n    [Header(\"Papel na Percentagem Total do Save\")]\n    [Tooltip(\"Emblema de Gaia: concedido ao atingir 100% (todo o conteúdo principal completo). NÃO entra no cálculo de % (seria circular). Em conjunto com 'isApoloEmblem', activa o resultado especial 101% — que por sua vez concede o Emblema de Zeus (Tarefa #31).\")]\n    public bool isGaiaEmblem;\n\n    [Tooltip(\"Emblema de Apolo: concedido ao completar a Provação de Apolo (independente da %). NÃO entra no cálculo de %. Em conjunto com 'isGaiaEmblem', activa o resultado especial 101% (Tarefa #31).\")]\n    public bool isApoloEmblem;\n\n    [Tooltip(\"Emblema bónus/secreto: não entra nem no numerador nem no denominador da percentagem total do save. Use para emblemas que não devem influenciar a % de conclusão (ex: Emblema de Zeus, que é dado pela própria regra Gaia+Apolo). isGaiaEmblem e isApoloEmblem implicam o mesmo comportamento de exclusão.\")]\n    public bool isBonus;\n}\n",
+  "id": "script-data-emblemdata-cs",
+  "dependencyIds": [
+    "script-npc-conditions-variableconditions-cs",
+    "script-data-gamevariables-cs",
+    "script-data-missiondata-cs",
+    "script-ui-progresssectionui-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-ui-apolorunacollectui-cs",
+    "script-data-areadata-cs",
+    "script-data-emblemmanager-cs",
+    "script-ui-emblemssectionui-cs",
+    "script-data-editor-gamedatavalidatorwindow-cs",
+    "script-data-gamedatabase-cs",
+    "script-ui-optionssectionui-cs",
+    "script-data-playerprogress-cs",
+    "script-player-postgameauracontroller-cs",
+    "script-ui-progresssectionui-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapui-cs"
+  ]
+}

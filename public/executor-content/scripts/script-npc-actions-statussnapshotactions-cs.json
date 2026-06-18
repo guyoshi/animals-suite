@@ -1,0 +1,205 @@
+{
+  "path": "NPC/Actions/StatusSnapshotActions.cs",
+  "filename": "StatusSnapshotActions.cs",
+  "category": "NPC",
+  "primary": "Action_SavePlayerSnapshot",
+  "kind": "Acção de NPC",
+  "summary": "Tira um snapshot do estado atual do player e guarda com a chave indicada. Apenas os campos com o tick ativado são capturados; o resto é ignorado.",
+  "attach": "Consulta a Missão e o guia relacionados para a posição exata.",
+  "types": [
+    {
+      "name": "Action_SavePlayerSnapshot",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_RestorePlayerSnapshot",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "Action_DiscardPlayerSnapshot",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
+      "name": "SnapshotUtil",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "snapshotKey",
+      "type": "string",
+      "mods": "public",
+      "default": "\"snapshot\"",
+      "section": "",
+      "attrs": "[Tooltip(\"Chave única para identificar este snapshot. Use nomes descritivos (ex: \\\"sela_floresta\\\", \\\"roubo_bruxa\\\"). Snapshots com a mesma chave sobrepõem-se.\")]",
+      "inspector": true,
+      "description": "Chave única para identificar este snapshot. Use nomes descritivos (ex: \"sela_floresta\", \"roubo_bruxa\\"
+    },
+    {
+      "name": "saveSementes",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "O que guardar",
+      "attrs": "[Header(\"O que guardar\")] [Tooltip(\"Guarda o número actual de Sementes.\")]",
+      "inspector": true,
+      "description": "Guarda o número atual de Sementes."
+    },
+    {
+      "name": "saveRunasDeGaia",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda as Runas de Gaia disponíveis.\")]",
+      "inspector": true,
+      "description": "Guarda as Runas de Gaia disponíveis."
+    },
+    {
+      "name": "saveEcosPerdidos",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda os Ecos Perdidos disponíveis.\")]",
+      "inspector": true,
+      "description": "Guarda os Ecos Perdidos disponíveis."
+    },
+    {
+      "name": "saveBrotosDeVida",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda os Brotos de Vida em stock.\")]",
+      "inspector": true,
+      "description": "Guarda os Brotos de Vida em stock."
+    },
+    {
+      "name": "saveCurrentHearts",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda os corações actuais (vida actual).\")]",
+      "inspector": true,
+      "description": "Guarda os corações actuais (vida atual)."
+    },
+    {
+      "name": "saveMaxHearts",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda o número máximo de corações (recipientes).\")]",
+      "inspector": true,
+      "description": "Guarda o número máximo de corações (recipientes)."
+    },
+    {
+      "name": "saveInventory",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda todo o inventário de itens (lista completa com quantidades).\")]",
+      "inspector": true,
+      "description": "Guarda todo o inventário de itens (lista completa com quantidades)."
+    },
+    {
+      "name": "saveEquippedItem",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda o ID do item equipado.\")]",
+      "inspector": true,
+      "description": "Guarda o ID do item equipado."
+    },
+    {
+      "name": "saveFreedAnimals",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda a lista de animais desbloqueados (freedAnimalIds).\")]",
+      "inspector": true,
+      "description": "Guarda a lista de animais desbloqueados (freedAnimalIds)."
+    },
+    {
+      "name": "saveLockedForms",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Guarda os bloqueios temporários de formas activos no FormSwitcher (para restaurar quais formas estavam cinzentas).\")]",
+      "inspector": true,
+      "description": "Guarda os bloqueios temporários de formas ativos no FormSwitcher (para restaurar quais formas estavam cinzentas)."
+    },
+    {
+      "name": "discardAfterRestore",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "O que guardar",
+      "attrs": "[Tooltip(\"Se activado, remove o snapshot da memória depois de restaurar (evita restaurar acidentalmente duas vezes).\")]",
+      "inspector": true,
+      "description": "Se ativado, remove o snapshot da memória depois de restaurar (evita restaurar acidentalmente duas vezes)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Execute",
+      "ret": "IEnumerator",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Execute."
+    },
+    {
+      "name": "GetSwitcher",
+      "ret": "FormSwitcher",
+      "mods": "internal static",
+      "params": "",
+      "description": "Executa a operação GetSwitcher."
+    }
+  ],
+  "dependencies": [
+    "Action_ClearFormLocks",
+    "Action_LockAllFormsExceptStart",
+    "FormSwitcher",
+    "GameDatabase",
+    "InventoryEntry",
+    "NpcAction",
+    "NpcController",
+    "PlayerProgress",
+    "PlayerSnapshot",
+    "SaveManager"
+  ],
+  "used_by": [
+    "Action_LockForms",
+    "Action_ShowSementes",
+    "PlayerProgress"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n// ─── Acções NPC — Snapshots do Status do Player ────────────────────────────\n//\n// Permitem que NPCs \"guardem\" e \"restaurem\" partes do estado do player.\n// Útil para mecânicas de \"roubar e devolver\":\n//   - NPC confisca sementes, corações, animais, etc. ao entrar numa área.\n//   - Mais tarde (noutra cena, outro NPC), o estado é restaurado exactamente\n//     como estava.\n//\n// Os snapshots são runtime-only (não persistidos no save file). Se o jogo for\n// fechado entre o Save e o Restore, o snapshot perde-se — design para\n// situações dentro da mesma sessão de jogo ou guardar manualmente via\n// SaveManager antes de viajar entre cenas.\n//\n// Fluxo típico:\n//   [Evento NPC \"Chefe Sela Animais\"]\n//     1. Action_SavePlayerSnapshot  — key=\"sela_floresta\", ticks para o que guardar\n//     2. Action_LockAllFormsExceptStart  — bloqueia roda visualmente\n//     3. [outros passos: remover sementes, diálogo, ...]\n//\n//   [Evento NPC \"Chefe Devolve Tudo\" — mesma ou outra área]\n//     4. Action_RestorePlayerSnapshot — key=\"sela_floresta\"\n//     5. Action_ClearFormLocks        — garante que a roda fica limpa\n//     6. Action_DiscardPlayerSnapshot — key=\"sela_floresta\"  (opcional, limpeza)\n\n/// <summary>\n/// Tira um snapshot do estado actual do player e guarda com a chave indicada.\n/// Apenas os campos com o tick activado são capturados; o resto é ignorado.\n/// </summary>\n[System.Serializable]\npublic class Action_SavePlayerSnapshot : NpcAction\n{\n    [Tooltip(\"Chave única para identificar este snapshot. Use nomes descritivos (ex: \\\"sela_floresta\\\", \\\"roubo_bruxa\\\"). Snapshots com a mesma chave sobrepõem-se.\")]\n    public string snapshotKey = \"snapshot\";\n\n    [Header(\"O que guardar\")]\n    [Tooltip(\"Guarda o número actual de Sementes.\")] public bool saveSementes = true;\n    [Tooltip(\"Guarda as Runas de Gaia disponíveis.\")] public bool saveRunasDeGaia = false;\n    [Tooltip(\"Guarda os Ecos Perdidos disponíveis.\")] public bool saveEcosPerdidos = false;\n    [Tooltip(\"Guarda os Brotos de Vida em stock.\")] public bool saveBrotosDeVida = false;\n    [Tooltip(\"Guarda os corações actuais (vida actual).\")] public bool saveCurrentHearts = true;\n    [Tooltip(\"Guarda o número máximo de corações (recipientes).\")] public bool saveMaxHearts = false;\n    [Tooltip(\"Guarda todo o inventário de itens (lista completa com quantidades).\")] public bool saveInventory = false;\n    [Tooltip(\"Guarda o ID do item equipado.\")] public bool saveEquippedItem = false;\n    [Tooltip(\"Guarda a lista de animais desbloqueados (freedAnimalIds).\")] public bool saveFreedAnimals = false;\n    [Tooltip(\"Guarda os bloqueios temporários de formas activos no FormSwitcher (para restaurar quais formas estavam cinzentas).\")] public bool saveLockedForms = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) yield break;\n\n        var snapshot = new PlayerSnapshot();\n\n        if (saveSementes)        { snapshot.hasSementes = true;      snapshot.sementes = progress.sementes; }\n        if (saveRunasDeGaia)     { snapshot.hasRunasDeGaia = true;   snapshot.runasDeGaia = progress.runasDeGaia; }\n        if (saveEcosPerdidos)    { snapshot.hasEcosPerdidos = true;  snapshot.ecosPerdidos = progress.ecosPerdidos; }\n        if (saveBrotosDeVida)    { snapshot.hasBrotosDeVida = true;  snapshot.brotosDeVida = progress.brotosDeVida; }\n        if (saveCurrentHearts)   { snapshot.hasCurrentHearts = true; snapshot.currentHearts = progress.currentHearts; }\n        if (saveMaxHearts)       { snapshot.hasMaxHearts = true;     snapshot.maxHearts = progress.maxHearts; }\n\n        if (saveInventory)\n        {\n            snapshot.hasInventory = true;\n            snapshot.inventory = new List<InventoryEntry>();\n            foreach (var entry in progress.inventory)\n                snapshot.inventory.Add(new InventoryEntry { itemId = entry.itemId, quantity = entry.quantity });\n        }\n\n        if (saveEquippedItem)\n        {\n            snapshot.hasEquippedItem = true;\n            snapshot.equippedItemId = progress.equippedItemId;\n        }\n\n        if (saveFreedAnimals)\n        {\n            snapshot.hasFreedAnimals = true;\n            snapshot.freedAnimalIds = new List<string>(progress.freedAnimalIds);\n        }\n\n        if (saveLockedForms)\n        {\n            var switcher = SnapshotUtil.GetSwitcher();\n            if (switcher != null)\n            {\n                snapshot.hasLockedForms = true;\n                snapshot.lockedFormIds = switcher.CaptureLockedFormIds();\n            }\n        }\n\n        progress.StoreSnapshot(snapshotKey, snapshot);\n    }\n}\n\n/// <summary>\n/// Restaura o estado do player a partir do snapshot com a chave indicada.\n/// Apenas os campos que foram capturados (flags \"has*\") são restaurados.\n/// O snapshot NÃO é removido automaticamente — use Action_DiscardPlayerSnapshot\n/// para limpar depois de restaurar (ou deixe para ser substituído na próxima\n/// vez que Action_SavePlayerSnapshot for chamado com a mesma chave).\n/// </summary>\n[System.Serializable]\npublic class Action_RestorePlayerSnapshot : NpcAction\n{\n    [Tooltip(\"Chave do snapshot a restaurar (deve corresponder à chave usada em Action_SavePlayerSnapshot).\")]\n    public string snapshotKey = \"snapshot\";\n\n    [Tooltip(\"Se activado, remove o snapshot da memória depois de restaurar (evita restaurar acidentalmente duas vezes).\")]\n    public bool discardAfterRestore = false;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) yield break;\n\n        if (!progress.TryGetSnapshot(snapshotKey, out PlayerSnapshot snapshot))\n        {\n            Debug.LogWarning($\"[Action_RestorePlayerSnapshot] Snapshot \\\"{snapshotKey}\\\" não encontrado.\");\n            yield break;\n        }\n\n        if (snapshot.hasSementes)\n        {\n            int delta = snapshot.sementes - progress.sementes;\n            progress.GiveSementes(delta);\n        }\n\n        if (snapshot.hasRunasDeGaia)\n        {\n            int delta = snapshot.runasDeGaia - progress.runasDeGaia;\n            progress.GiveRunasDeGaia(delta);\n        }\n\n        if (snapshot.hasEcosPerdidos)\n        {\n            int delta = snapshot.ecosPerdidos - progress.ecosPerdidos;\n            progress.GiveEcosPerdidos(delta);\n        }\n\n        if (snapshot.hasBrotosDeVida)\n        {\n            int delta = snapshot.brotosDeVida - progress.brotosDeVida;\n            progress.GiveBrotosDeVida(delta);\n        }\n\n        if (snapshot.hasMaxHearts)\n        {\n            // maxHearts não tem setter directo; ajusta via SetMaxHearts se existir,\n            // ou directamente (PlayerProgress.maxHearts é public).\n            progress.maxHearts = Mathf.Clamp(snapshot.maxHearts, 1, PlayerProgress.MaxHeartsCap);\n        }\n\n        if (snapshot.hasCurrentHearts)\n        {\n            // Aplica após maxHearts (que pode ter sido restaurado acima).\n            progress.currentHearts = Mathf.Clamp(snapshot.currentHearts, 0, progress.maxHearts);\n            progress.HealthChanged?.Invoke(progress.currentHearts, progress.maxHearts);\n        }\n\n        if (snapshot.hasInventory && snapshot.inventory != null)\n        {\n            progress.inventory.Clear();\n            foreach (var entry in snapshot.inventory)\n                progress.inventory.Add(new InventoryEntry { itemId = entry.itemId, quantity = entry.quantity });\n        }\n\n        if (snapshot.hasEquippedItem)\n        {\n            progress.equippedItemId = snapshot.equippedItemId;\n        }\n\n        if (snapshot.hasFreedAnimals && snapshot.freedAnimalIds != null)\n        {\n            progress.freedAnimalIds.Clear();\n            progress.freedAnimalIds.AddRange(snapshot.freedAnimalIds);\n            // Sincroniza FormSwitcher para reflectir a nova lista de animais.\n            var switcher = SnapshotUtil.GetSwitcher();\n            if (switcher != null)\n            {\n                // Limpa e re-sincroniza a partir da lista oficial em PlayerProgress.\n                // (O método SyncFreedAnimalsFromProgress é privado — chamamos RestoreFrom\n                // com dados mínimos para obter o mesmo efeito via API pública existente.)\n                // Alternativa simples: chamar UnlockForm para cada animal na lista.\n                var db = GameDatabase.Instance;\n                if (db != null)\n                {\n                    foreach (var id in progress.freedAnimalIds)\n                    {\n                        var form = db.FindAnimalForm(id);\n                        if (form != null) switcher.UnlockForm(form);\n                    }\n                }\n            }\n        }\n\n        if (snapshot.hasLockedForms)\n        {\n            var switcher = SnapshotUtil.GetSwitcher();\n            if (switcher != null)\n                switcher.RestoreLockedFormIds(snapshot.lockedFormIds);\n        }\n\n        if (discardAfterRestore)\n            progress.DiscardSnapshot(snapshotKey);\n    }\n}\n\n/// <summary>\n/// Remove um snapshot da memória sem restaurar — útil para limpar snapshots\n/// após restauração ou quando o evento \"roubo\" foi cancelado.\n/// </summary>\n[System.Serializable]\npublic class Action_DiscardPlayerSnapshot : NpcAction\n{\n    [Tooltip(\"Chave do snapshot a remover.\")]\n    public string snapshotKey = \"snapshot\";\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        PlayerProgress.Instance?.DiscardSnapshot(snapshotKey);\n        yield break;\n    }\n}\n\n// ─── Utilitário interno ────────────────────────────────────────────────────\n\ninternal static class SnapshotUtil\n{\n    internal static FormSwitcher GetSwitcher()\n    {\n        var playerGo = GameObject.FindWithTag(\"Player\");\n        if (playerGo == null) return null;\n        return playerGo.GetComponent<FormSwitcher>()\n            ?? playerGo.GetComponentInChildren<FormSwitcher>();\n    }\n}\n",
+  "id": "script-npc-actions-statussnapshotactions-cs",
+  "dependencyIds": [
+    "script-forms-formswitcher-cs",
+    "script-data-gamedatabase-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-npccontroller-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savemanager-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-formlockactions-cs",
+    "script-npc-actions-seedsnpcactions-cs",
+    "script-data-playerprogress-cs"
+  ]
+}

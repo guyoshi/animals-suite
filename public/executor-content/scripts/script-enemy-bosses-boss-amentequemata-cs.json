@@ -1,0 +1,74 @@
+{
+  "path": "Enemy/Bosses/Boss_AMenteQueMata.cs",
+  "filename": "Boss_AMenteQueMata.cs",
+  "category": "Enemy",
+  "primary": "Boss_AMenteQueMata",
+  "kind": "Definição",
+  "summary": "Boss 8/8 (GDD 12.3.8, a confirmar) — \"A Mente que Mata\" (boss final alternativo). Preparação/scaffolding apenas (sem moveset implementado): liga-se a BossController (vida, BossHealthBarUI, EnemyMultiPartBoss). A mecânica própria, BEM COMO a condição que determina se este boss alternativo substitui (ou se segue a) o boss final \"normal\", ficam para uma tarefa futura — ver TODOs nos hooks abaixo. Ideias a confirmar com o GDD: \"alternativo\" sugere uma condição de ativação (ex: PlayerProgress.IsHardModeActive, ou alguma escolha/percurso do jogador) que decide qual dos dois bosses finais é enfrentado — essa lógica de seleção pertence à cena/NpcAction que inicia o combate, não a este controller (",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Boss_AMenteQueMata",
+      "kind": "class",
+      "bases": "BossController",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnIntroStart",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnIntroStart."
+    },
+    {
+      "name": "OnPhaseChanged",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "int defeatedParts, int aliveParts",
+      "description": "Executa a operação OnPhaseChanged."
+    },
+    {
+      "name": "OnAllPartsDefeated",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnAllPartsDefeated."
+    },
+    {
+      "name": "OnDefeated",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação OnDefeated."
+    }
+  ],
+  "dependencies": [
+    "Action_SetBossDefeated",
+    "BossController",
+    "BossHealthBarUI",
+    "EnemyMultiPartBoss",
+    "NpcAction",
+    "PlayerProgress"
+  ],
+  "used_by": [],
+  "source": "/// <summary>\n/// Boss 8/8 (GDD 12.3.8, a confirmar) — \"A Mente que Mata\" (boss final\n/// alternativo).\n///\n/// Preparação/scaffolding apenas (sem moveset implementado): liga-se a\n/// BossController (vida, BossHealthBarUI, EnemyMultiPartBoss). A mecânica\n/// própria, BEM COMO a condição que determina se este boss alternativo\n/// substitui (ou se segue a) o boss final \"normal\", ficam para uma tarefa\n/// futura — ver TODOs nos hooks abaixo.\n///\n/// Ideias a confirmar com o GDD: \"alternativo\" sugere uma condição de\n/// activação (ex: PlayerProgress.IsHardModeActive, ou alguma escolha/percurso\n/// do jogador) que decide qual dos dois bosses finais é enfrentado — essa lógica\n/// de selecção pertence à cena/NpcAction que inicia o combate, não a este\n/// controller (este apenas representa o combate em si, uma vez iniciado).\n/// </summary>\npublic class Boss_AMenteQueMata : BossController\n{\n    protected override void Awake()\n    {\n        base.Awake();\n        if (string.IsNullOrEmpty(bossId)) bossId = \"a_mente_que_mata\";\n        if (string.IsNullOrEmpty(displayName)) displayName = \"A Mente que Mata\";\n    }\n\n    protected override void OnIntroStart()\n    {\n        // TODO (moveset): activar ataques iniciais / animação de despertar.\n    }\n\n    protected override void OnPhaseChanged(int defeatedParts, int aliveParts)\n    {\n        // TODO (moveset): trocar de fase ao destruir cada parte.\n    }\n\n    protected override void OnAllPartsDefeated()\n    {\n        // TODO (moveset): fase final / janela de vulnerabilidade total.\n    }\n\n    protected override void OnDefeated()\n    {\n        // TODO (moveset): sequência de derrota (drops, Action_SetBossDefeated\n        // via NpcAction/UnityEvent, animação final / final do jogo).\n    }\n}\n",
+  "id": "script-enemy-bosses-boss-amentequemata-cs",
+  "dependencyIds": [
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-ui-bosshealthbarui-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-npc-npcaction-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": []
+}

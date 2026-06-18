@@ -1,0 +1,125 @@
+{
+  "path": "Interactables/SonarRevealable.cs",
+  "filename": "SonarRevealable.cs",
+  "category": "Interactables",
+  "primary": "SonarRevealable",
+  "kind": "Componente",
+  "summary": "Objeto revelável pelo Sonar (P5 — SonarAbility): segredos, paredes falsas, itens escondidos. Dois modos: - Com \"revealTarget\": o GameObject indicado é ativado durante a revelação (ex: contorno/realce/ícone) e desativado no fim. - Sem \"revealTarget\": o próprio SpriteRenderer alterna entre \"hiddenAlpha\" (escondido) e alpha 1 (revelado).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "SonarRevealable",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "revealTarget",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Modo A — GameObject de realce (opcional)",
+      "attrs": "[Header(\"Modo A — GameObject de realce (opcional)\")] [Tooltip(\"GameObject activado enquanto revelado (contorno, brilho, ícone). Se vazio, usa o modo B (alpha do sprite).\")]",
+      "inspector": true,
+      "description": "GameObject ativado enquanto revelado (contorno, brilho, ícone). Se vazio, usa o modo B (alpha do sprite)."
+    },
+    {
+      "name": "hiddenAlpha",
+      "type": "float",
+      "mods": "public",
+      "default": "0f",
+      "section": "Modo B — Alpha do sprite",
+      "attrs": "[Header(\"Modo B — Alpha do sprite\")] [Tooltip(\"Alpha do sprite enquanto NÃO revelado (0 = invisível).\")] [Range(0f, 1f)]",
+      "inspector": true,
+      "description": "Alpha do sprite enquanto NÃO revelado (0 = invisível)."
+    },
+    {
+      "name": "spriteRenderer",
+      "type": "SpriteRenderer",
+      "mods": "private",
+      "default": "",
+      "section": "Modo B — Alpha do sprite",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onRevealed",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onHidden",
+      "type": "UnityEvent",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_routine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Reveal",
+      "ret": "void",
+      "mods": "public",
+      "params": "float duration",
+      "description": "Executa a operação Reveal."
+    },
+    {
+      "name": "RevealRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação RevealRoutine."
+    },
+    {
+      "name": "ApplyState",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool revealed",
+      "description": "Executa a operação ApplyState."
+    }
+  ],
+  "dependencies": [
+    "SonarAbility"
+  ],
+  "used_by": [
+    "AnimalFormData",
+    "SonarAbility"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Objecto revelável pelo Sonar (P5 — SonarAbility): segredos, paredes falsas,\n/// itens escondidos. Dois modos:\n///\n/// - Com \"revealTarget\": o GameObject indicado é activado durante a revelação\n///   (ex: contorno/realce/ícone) e desactivado no fim.\n/// - Sem \"revealTarget\": o próprio SpriteRenderer alterna entre \"hiddenAlpha\"\n///   (escondido) e alpha 1 (revelado).\n/// </summary>\npublic class SonarRevealable : MonoBehaviour\n{\n    [Header(\"Modo A — GameObject de realce (opcional)\")]\n    [Tooltip(\"GameObject activado enquanto revelado (contorno, brilho, ícone). Se vazio, usa o modo B (alpha do sprite).\")]\n    public GameObject revealTarget;\n\n    [Header(\"Modo B — Alpha do sprite\")]\n    [Tooltip(\"Alpha do sprite enquanto NÃO revelado (0 = invisível).\")]\n    [Range(0f, 1f)] public float hiddenAlpha = 0f;\n\n    [SerializeField] private SpriteRenderer spriteRenderer;\n\n    [Header(\"Eventos\")]\n    public UnityEvent onRevealed;\n    public UnityEvent onHidden;\n\n    private Coroutine _routine;\n\n    /// <summary>true enquanto está revelado.</summary>\n    public bool IsRevealed { get; private set; }\n\n    private void Awake()\n    {\n        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();\n        ApplyState(false);\n    }\n\n    /// <summary>Revela durante \"duration\" segundos (chamado por SonarAbility; renovável).</summary>\n    public void Reveal(float duration)\n    {\n        if (_routine != null) StopCoroutine(_routine);\n        _routine = StartCoroutine(RevealRoutine(duration));\n    }\n\n    private IEnumerator RevealRoutine(float duration)\n    {\n        if (!IsRevealed)\n        {\n            IsRevealed = true;\n            ApplyState(true);\n            onRevealed?.Invoke();\n        }\n\n        yield return new WaitForSeconds(duration);\n\n        IsRevealed = false;\n        ApplyState(false);\n        onHidden?.Invoke();\n        _routine = null;\n    }\n\n    private void ApplyState(bool revealed)\n    {\n        if (revealTarget != null)\n        {\n            revealTarget.SetActive(revealed);\n            return;\n        }\n\n        if (spriteRenderer == null) return;\n\n        var color = spriteRenderer.color;\n        color.a = revealed ? 1f : hiddenAlpha;\n        spriteRenderer.color = color;\n    }\n}\n",
+  "id": "script-interactables-sonarrevealable-cs",
+  "dependencyIds": [
+    "script-abilities-sonarability-cs"
+  ],
+  "usedByIds": [
+    "script-forms-animalformdata-cs",
+    "script-abilities-sonarability-cs"
+  ]
+}

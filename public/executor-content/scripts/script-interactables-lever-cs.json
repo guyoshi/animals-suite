@@ -1,0 +1,196 @@
+{
+  "path": "Interactables/Lever.cs",
+  "filename": "Lever.cs",
+  "category": "Interactables",
+  "primary": "Lever",
+  "kind": "Componente",
+  "summary": "Alavanca genérica on/off (Etapa 6.1). Escreve o seu estado numa variável global (GameVariables) — usada para abrir portas, desligar lasers e desativar inimigos (Condition_GlobalBoolVariable — Etapa 5.4). Exemplo (GDD): alavanca com variableName = \"TorretaSala01Desativada\" — ao ligar, todas as torretas com essa condição de desactivação desligam. Ativação: / (chamável por input de interação, NpcAction, etc) e/ou toque do player (\"toggleOnPlayerTouch\"). Persistência: se estiver ativo, ao reentrar na cena (após morte/saída de área) a alavanca restaura o estado a partir de em vez de começar pelo valor Inspector — o puzzle \"fica resolvido\". Se desactivo (padrão), a alavanca volta ao estado Ins",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "Lever",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "isOn",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Estado",
+      "attrs": "[Header(\"Estado\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "variableName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Variável Global (GameVariables)",
+      "attrs": "[Header(\"Variável Global (GameVariables)\")] [Tooltip(\"Nome da variável global escrita com o estado da alavanca. Vazio = não escreve.\")]",
+      "inspector": true,
+      "description": "Nome da variável global escrita com o estado da alavanca. Vazio = não escreve."
+    },
+    {
+      "name": "writeAsInt",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Variável Global (GameVariables)",
+      "attrs": "[Tooltip(\"Se activo, escreve a variável como INT (1/0) em vez de BOOL — para condições Condition_GlobalIntVariable.\")]",
+      "inspector": true,
+      "description": "Se ativo, escreve a variável como INT (1/0) em vez de BOOL — para condições Condition_GlobalIntVariable."
+    },
+    {
+      "name": "persistState",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Persistência após Morte / Saída de Área",
+      "attrs": "[Header(\"Persistência após Morte / Saída de Área\")] [Tooltip(\"GDD: 'Puzzles concluídos permanecem resolvidos quando configurados como persistentes; puzzles de tentativa ou movimento podem reiniciar.'\\n\\nLigado → ao reentrar na cena, restaura 'isOn' a partir de 'variableName' (GameVariables) — o puzzle mantém-se resolvido.\\nDesligado (padrão) → ao carregar, escreve o valor padrão do Inspector → puzzle reinicia.\")]",
+      "inspector": true,
+      "description": "GDD: 'Puzzles concluídos permanecem resolvidos quando configurados como persistentes; puzzles de tentativa ou movimento podem reiniciar.'\\n\\nLigado → ao reentrar na cena, restaura 'isOn' a partir de 'variableName' (GameVariables) — o puzzle mantém-se resolvido.\\nDesligado (padrão) → ao carregar, escreve o valor padrão do Inspector → puzzle reinicia."
+    },
+    {
+      "name": "toggleOnPlayerTouch",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Activação",
+      "attrs": "[Header(\"Activação\")] [Tooltip(\"O toque do player (trigger) alterna a alavanca.\")]",
+      "inspector": true,
+      "description": "O toque do player (trigger) alterna a alavanca."
+    },
+    {
+      "name": "oneShot",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Activação",
+      "attrs": "[Tooltip(\"Só pode ser alternada uma vez (fica presa no novo estado).\")]",
+      "inspector": true,
+      "description": "Só pode ser alternada uma vez (fica presa no novo estado)."
+    },
+    {
+      "name": "spriteRenderer",
+      "type": "SpriteRenderer",
+      "mods": "public",
+      "default": "",
+      "section": "Visual (opcional)",
+      "attrs": "[Header(\"Visual (opcional)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spriteOn",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Visual (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spriteOff",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Visual (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "onToggled",
+      "type": "UnityEvent<bool>",
+      "mods": "public",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_used",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Eventos",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "Toggle",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Toggle."
+    },
+    {
+      "name": "SetOn",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool value",
+      "description": "Executa a operação SetOn."
+    },
+    {
+      "name": "Apply",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Apply."
+    },
+    {
+      "name": "ApplyVisual",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ApplyVisual."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    }
+  ],
+  "dependencies": [
+    "Condition_GlobalBoolVariable",
+    "Condition_GlobalIntVariable",
+    "GameVariables",
+    "NpcAction"
+  ],
+  "used_by": [
+    "MovingPlatform",
+    "Switch",
+    "TonguePullAbility"
+  ],
+  "source": "using UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Alavanca genérica on/off (Etapa 6.1). Escreve o seu estado numa variável\n/// global (GameVariables) — usada para abrir portas, desligar lasers e\n/// desactivar inimigos (Condition_GlobalBoolVariable — Etapa 5.4).\n///\n/// Exemplo (GDD): alavanca com variableName = \"TorretaSala01Desativada\" —\n/// ao ligar, todas as torretas com essa condição de desactivação desligam.\n///\n/// Activação: <see cref=\"Toggle\"/>/<see cref=\"SetOn\"/> (chamável por input de\n/// interacção, NpcAction, etc) e/ou toque do player (\"toggleOnPlayerTouch\").\n///\n/// Persistência: se <see cref=\"persistState\"/> estiver activo, ao reentrar na\n/// cena (após morte/saída de área) a alavanca restaura o estado a partir de\n/// <see cref=\"variableName\"/> em vez de começar pelo valor Inspector — o puzzle\n/// \"fica resolvido\". Se desactivo (padrão), a alavanca volta ao estado Inspector\n/// ao carregar → puzzle \"de tentativa\" que reinicia.\n/// </summary>\npublic class Lever : MonoBehaviour\n{\n    [Header(\"Estado\")]\n    public bool isOn = false;\n\n    [Header(\"Variável Global (GameVariables)\")]\n    [Tooltip(\"Nome da variável global escrita com o estado da alavanca. Vazio = não escreve.\")]\n    public string variableName = \"\";\n\n    [Tooltip(\"Se activo, escreve a variável como INT (1/0) em vez de BOOL — para condições Condition_GlobalIntVariable.\")]\n    public bool writeAsInt = false;\n\n    [Header(\"Persistência após Morte / Saída de Área\")]\n    [Tooltip(\"GDD: 'Puzzles concluídos permanecem resolvidos quando configurados como persistentes; puzzles de tentativa ou movimento podem reiniciar.'\\n\\nLigado → ao reentrar na cena, restaura 'isOn' a partir de 'variableName' (GameVariables) — o puzzle mantém-se resolvido.\\nDesligado (padrão) → ao carregar, escreve o valor padrão do Inspector → puzzle reinicia.\")]\n    public bool persistState = false;\n\n    [Header(\"Activação\")]\n    [Tooltip(\"O toque do player (trigger) alterna a alavanca.\")]\n    public bool toggleOnPlayerTouch = false;\n\n    [Tooltip(\"Só pode ser alternada uma vez (fica presa no novo estado).\")]\n    public bool oneShot = false;\n\n    [Header(\"Visual (opcional)\")]\n    public SpriteRenderer spriteRenderer;\n    public Sprite spriteOn;\n    public Sprite spriteOff;\n\n    [Header(\"Eventos\")]\n    public UnityEvent<bool> onToggled;\n\n    private bool _used;\n\n    private void Start()\n    {\n        if (persistState && !string.IsNullOrEmpty(variableName) && GameVariables.Instance != null)\n        {\n            // Restaura o estado a partir da variável global persistida — não\n            // sobrescreve com o padrão Inspector (evita apagar o estado guardado\n            // quando a cena recarrega após morte ou saída de área).\n            bool saved = writeAsInt\n                ? GameVariables.Instance.GetInt(variableName) != 0\n                : GameVariables.Instance.GetBool(variableName);\n            isOn = saved;\n            ApplyVisual();\n        }\n        else\n        {\n            // Comportamento padrão (puzzle \"de tentativa\"): escreve o padrão\n            // Inspector na variável global, garantindo que a cena começa no\n            // estado correcto.\n            Apply();\n        }\n    }\n\n    /// <summary>Alterna on/off (respeita \"oneShot\").</summary>\n    public void Toggle() => SetOn(!isOn);\n\n    /// <summary>Define o estado e aplica (variável global + visual + evento).</summary>\n    public void SetOn(bool value)\n    {\n        if (oneShot && _used) return;\n        if (isOn == value) return;\n\n        isOn = value;\n        _used = true;\n        Apply();\n        onToggled?.Invoke(isOn);\n    }\n\n    private void Apply()\n    {\n        if (!string.IsNullOrEmpty(variableName) && GameVariables.Instance != null)\n        {\n            if (writeAsInt) GameVariables.Instance.SetInt(variableName, isOn ? 1 : 0);\n            else GameVariables.Instance.SetBool(variableName, isOn);\n        }\n\n        ApplyVisual();\n    }\n\n    /// <summary>Actualiza apenas o visual (sprite) sem alterar a variável global — usado ao restaurar estado persistido.</summary>\n    private void ApplyVisual()\n    {\n        if (spriteRenderer != null)\n        {\n            var sprite = isOn ? spriteOn : spriteOff;\n            if (sprite != null) spriteRenderer.sprite = sprite;\n        }\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (toggleOnPlayerTouch && other.CompareTag(\"Player\"))\n            Toggle();\n    }\n}\n",
+  "id": "script-interactables-lever-cs",
+  "dependencyIds": [
+    "script-enemy-enemyconditions-variables-cs",
+    "script-data-gamevariables-cs",
+    "script-npc-npcaction-cs"
+  ],
+  "usedByIds": [
+    "script-platforms-movingplatform-cs",
+    "script-interactables-switch-cs",
+    "script-abilities-tonguepullability-cs"
+  ]
+}

@@ -1,0 +1,745 @@
+{
+  "path": "NPC/NpcController.cs",
+  "filename": "NpcController.cs",
+  "category": "NPC",
+  "primary": "NpcController",
+  "kind": "Componente",
+  "summary": "\"Humor\"/estado de reação atual do NPC perante o player (Etapa 7) — definido por Action_SetReactionState e lido por Condition_NpcReactionState. Permite condicionar eventos ao \"humor\" do NPC (ex: um guarda só ataca por Touch se estiver Hostile) e dar feedback visual (Animator/sprite) sobre esse humor.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "NpcReactionState",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "NpcReactionSprite",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "NpcController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "state",
+      "type": "NpcReactionState",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sprite",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "private",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Nome mostrado no balão de diálogo quando este NPC fala (Speaker = Self, ou quando outro NPC o referencia como 'Outro NPC'). Se vazio, usa o nome do GameObject.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Nome mostrado no balão de diálogo quando este NPC fala (Speaker = Self, ou quando outro NPC o referencia como 'Outro NPC'). Se vazio, usa o nome do GameObject."
+    },
+    {
+      "name": "npcId",
+      "type": "string",
+      "mods": "private",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Identificador único deste NPC na cena (opcional, Etapa 8). Permite que ações/condições (deste ou de outros NPCs) o referenciem por ID — ex: 'olhar para', 'mover para um NPC' — em vez de arrastar uma referência directa. Deve ser único; duplicados geram um aviso no Console.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Identificador único deste NPC na cena (opcional, Etapa 8). Permite que ações/condições (deste ou de outros NPCs) o referenciem por ID — ex: 'olhar para', 'mover para um NPC' — em vez de arrastar uma referência direta. Deve ser único; duplicados geram um aviso no Console."
+    },
+    {
+      "name": "events",
+      "type": "List<NpcEvent>",
+      "mods": "public",
+      "default": "new List<NpcEvent>()",
+      "section": "Eventos",
+      "attrs": "[Header(\"Eventos\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "defaultInteractionRange",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "Interação",
+      "attrs": "[Header(\"Interação\")] [Tooltip(\"Alcance usado por eventos Auto/Button cujo 'Interaction Range' seja <= 0.\")]",
+      "inspector": true,
+      "description": "Alcance usado por eventos Auto/Button cujo 'Interaction Range' seja <= 0."
+    },
+    {
+      "name": "player",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[Header(\"Referências (auto-detectadas se vazias)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "spriteRenderer",
+      "type": "SpriteRenderer",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "movement",
+      "type": "NpcMovement",
+      "mods": "private",
+      "default": "",
+      "section": "Referências (auto-detectadas se vazias)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "dialogueDisplay",
+      "type": "MonoBehaviour",
+      "mods": "private",
+      "default": "",
+      "section": "Diálogo / Escolhas (Etapa 2 - opcional)",
+      "attrs": "[Header(\"Diálogo / Escolhas (Etapa 2 - opcional)\")] [Tooltip(\"Componente que implementa INpcDialogueDisplay. Se vazio, Action_Dialogue usa Debug.Log.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Componente que implementa INpcDialogueDisplay. Se vazio, Action_Dialogue usa Debug.Log."
+    },
+    {
+      "name": "choiceMenu",
+      "type": "MonoBehaviour",
+      "mods": "private",
+      "default": "",
+      "section": "Diálogo / Escolhas (Etapa 2 - opcional)",
+      "attrs": "[Tooltip(\"Componente que implementa INpcChoiceMenu. Necessário para Action_ShowChoices.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Componente que implementa INpcChoiceMenu. Necessário para Action_ShowChoices."
+    },
+    {
+      "name": "visibilityConditions",
+      "type": "List<NpcCondition>",
+      "mods": "public",
+      "default": "new List<NpcCondition>()",
+      "section": "Visibilidade Condicional (Etapa 7)",
+      "attrs": "[Header(\"Visibilidade Condicional (Etapa 7)\")] [Tooltip(\"Se vazia, o NPC está sempre visível/activo (comportamento por omissão). Caso contrário, estas condições são avaliadas continuamente: enquanto TODAS forem verdadeiras o NPC fica visível e activo, caso contrário fica escondido (sprite desligado, colliders de trigger desligados, NpcMovement suspenso e nenhum evento é avaliado). Não combinar com Action_SetNpcVisible no mesmo NPC — a avaliação automática sobrepõe-se à acção no frame seguinte.\")] [SerializeReference]",
+      "inspector": true,
+      "description": "Se vazia, o NPC está sempre visível/ativo (comportamento por omissão). Caso contrário, estas condições são avaliadas continuamente: enquanto TODAS forem verdadeiras o NPC fica visível e ativo, caso contrário fica escondido (sprite desligado, colliders de trigger desligados, NpcMovement suspenso e nenhum evento é avaliado). Não combinar com Action_SetNpcVisible no mesmo NPC — a avaliação automática sobrepõe-se à ação no frame seguinte."
+    },
+    {
+      "name": "animator",
+      "type": "Animator",
+      "mods": "private",
+      "default": "",
+      "section": "Estados de Reação (Etapa 7)",
+      "attrs": "[Header(\"Estados de Reação (Etapa 7)\")] [Tooltip(\"Auto-detectado se vazio. Recebe (int)ReactionState no parâmetro abaixo, se definido.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Auto-detectado se vazio. Recebe (int)ReactionState no parâmetro abaixo, se definido."
+    },
+    {
+      "name": "reactionStateAnimParam",
+      "type": "string",
+      "mods": "private",
+      "default": "\"ReactionState\"",
+      "section": "Estados de Reação (Etapa 7)",
+      "attrs": "[Tooltip(\"Nome do parâmetro Int do Animator actualizado por SetReactionState. Vazio = não actualiza o Animator.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Nome do parâmetro Int do Animator atualizado por SetReactionState. Vazio = não atualiza o Animator."
+    },
+    {
+      "name": "reactionSprites",
+      "type": "List<NpcReactionSprite>",
+      "mods": "private",
+      "default": "new List<NpcReactionSprite>()",
+      "section": "Estados de Reação (Etapa 7)",
+      "attrs": "[Tooltip(\"Sprite a usar para cada estado de reação (opcional). Se não houver entrada para o estado, o sprite não é alterado.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Sprite a usar para cada estado de reação (opcional). Se não houver entrada para o estado, o sprite não é alterado."
+    },
+    {
+      "name": "localVariables",
+      "type": "List<GameVariable>",
+      "mods": "private",
+      "default": "new List<GameVariable>()",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "[Header(\"Variáveis Locais (Etapa 8)\")] [Tooltip(\"Variáveis próprias deste NPC (bool/int/float/string). Lidas e escritas por Action_Set*Variable / Condition_*Variable com 'scope = Local' — só os eventos deste NPC as veem. Para variáveis partilhadas por todo o jogo usa 'scope = Global' (ver GameVariables).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Variáveis próprias deste NPC (bool/int/float/string). Lidas e escritas por Action_Set*Variable / Condition_*Variable com 'scope = Local' — só os eventos deste NPC as veem. Para variáveis partilhadas por todo o jogo usa 'scope = Global' (ver GameVariables)."
+    },
+    {
+      "name": "_playerInput",
+      "type": "PlayerInputRouter",
+      "mods": "private",
+      "default": "",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_isRunningEvent",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_activeEvent",
+      "type": "NpcEvent",
+      "mods": "private",
+      "default": "",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_pendingButtonEvent",
+      "type": "NpcEvent",
+      "mods": "private",
+      "default": "",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_visible",
+      "type": "bool",
+      "mods": "private",
+      "default": "true",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_reactionState",
+      "type": "NpcReactionState",
+      "mods": "private",
+      "default": "NpcReactionState.Idle",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_reactionStateAnimHash",
+      "type": "int",
+      "mods": "private",
+      "default": "-1",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_opacityRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "DisplayName",
+      "type": "string",
+      "mods": "public",
+      "default": "> string.IsNullOrEmpty(displayName) ? name : displayName",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "NpcId",
+      "type": "string",
+      "mods": "public",
+      "default": "> npcId",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Player",
+      "type": "Transform",
+      "mods": "public",
+      "default": "> player",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Movement",
+      "type": "NpcMovement",
+      "mods": "public",
+      "default": "> movement",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "DialogueDisplay",
+      "type": "INpcDialogueDisplay",
+      "mods": "public",
+      "default": "> dialogueDisplay as INpcDialogueDisplay",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ChoiceMenu",
+      "type": "INpcChoiceMenu",
+      "mods": "public",
+      "default": "> choiceMenu as INpcChoiceMenu",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ActiveEvent",
+      "type": "NpcEvent",
+      "mods": "public",
+      "default": "> _activeEvent",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsVisible",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _visible",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "ReactionState",
+      "type": "NpcReactionState",
+      "mods": "public",
+      "default": "> _reactionState",
+      "section": "Variáveis Locais (Etapa 8)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "FindById",
+      "ret": "NpcController",
+      "mods": "public static",
+      "params": "string id",
+      "description": "Executa a operação FindById."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "HandleInteractPressed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleInteractPressed."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnCollisionEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionEnter2D."
+    },
+    {
+      "name": "HandleTouch",
+      "ret": "void",
+      "mods": "private",
+      "params": "Transform other",
+      "description": "Executa a operação HandleTouch."
+    },
+    {
+      "name": "FindBestEvent",
+      "ret": "NpcEvent",
+      "mods": "private",
+      "params": "NpcInteractionType type",
+      "description": "Executa a operação FindBestEvent."
+    },
+    {
+      "name": "EvaluateConditions",
+      "ret": "bool",
+      "mods": "private",
+      "params": "NpcEvent ev",
+      "description": "Executa a operação EvaluateConditions."
+    },
+    {
+      "name": "EvaluateConditionList",
+      "ret": "bool",
+      "mods": "private",
+      "params": "List<NpcCondition> conditions",
+      "description": "Executa a operação EvaluateConditionList."
+    },
+    {
+      "name": "IsPlayerInRange",
+      "ret": "bool",
+      "mods": "private",
+      "params": "NpcEvent ev",
+      "description": "Executa a operação IsPlayerInRange."
+    },
+    {
+      "name": "TriggerEvent",
+      "ret": "void",
+      "mods": "private",
+      "params": "NpcEvent ev",
+      "description": "Executa a operação TriggerEvent."
+    },
+    {
+      "name": "TriggerEventById",
+      "ret": "void",
+      "mods": "public",
+      "params": "string eventId",
+      "description": "Executa a operação TriggerEventById."
+    },
+    {
+      "name": "RunEvent",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "NpcEvent ev",
+      "description": "Executa a operação RunEvent."
+    },
+    {
+      "name": "FindEventById",
+      "ret": "NpcEvent",
+      "mods": "public",
+      "params": "string eventId",
+      "description": "Executa a operação FindEventById."
+    },
+    {
+      "name": "ActivateEventById",
+      "ret": "void",
+      "mods": "public",
+      "params": "string eventId",
+      "description": "Executa a operação ActivateEventById."
+    },
+    {
+      "name": "DeactivateEventById",
+      "ret": "void",
+      "mods": "public",
+      "params": "string eventId",
+      "description": "Executa a operação DeactivateEventById."
+    },
+    {
+      "name": "UpdateVisibility",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação UpdateVisibility."
+    },
+    {
+      "name": "SetVisible",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool visible",
+      "description": "Executa a operação SetVisible."
+    },
+    {
+      "name": "ApplyVisibility",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool visible",
+      "description": "Executa a operação ApplyVisibility."
+    },
+    {
+      "name": "SetOpacity",
+      "ret": "Coroutine",
+      "mods": "public",
+      "params": "float targetAlpha, float duration",
+      "description": "Executa a operação SetOpacity."
+    },
+    {
+      "name": "FadeOpacityRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float targetAlpha, float duration",
+      "description": "Executa a operação FadeOpacityRoutine."
+    },
+    {
+      "name": "SetReactionState",
+      "ret": "void",
+      "mods": "public",
+      "params": "NpcReactionState state",
+      "description": "Executa a operação SetReactionState."
+    },
+    {
+      "name": "OnValidate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnValidate."
+    },
+    {
+      "name": "GetLocalBool",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string varName, bool defaultValue = false",
+      "description": "Executa a operação GetLocalBool."
+    },
+    {
+      "name": "GetLocalInt",
+      "ret": "int",
+      "mods": "public",
+      "params": "string varName, int defaultValue = 0",
+      "description": "Executa a operação GetLocalInt."
+    },
+    {
+      "name": "GetLocalFloat",
+      "ret": "float",
+      "mods": "public",
+      "params": "string varName, float defaultValue = 0f",
+      "description": "Executa a operação GetLocalFloat."
+    },
+    {
+      "name": "GetLocalString",
+      "ret": "string",
+      "mods": "public",
+      "params": "string varName, string defaultValue = \"\"",
+      "description": "Executa a operação GetLocalString."
+    },
+    {
+      "name": "SetLocalBool",
+      "ret": "void",
+      "mods": "public",
+      "params": "string varName, bool value",
+      "description": "Executa a operação SetLocalBool."
+    },
+    {
+      "name": "SetLocalInt",
+      "ret": "void",
+      "mods": "public",
+      "params": "string varName, int value",
+      "description": "Executa a operação SetLocalInt."
+    },
+    {
+      "name": "SetLocalFloat",
+      "ret": "void",
+      "mods": "public",
+      "params": "string varName, float value",
+      "description": "Executa a operação SetLocalFloat."
+    },
+    {
+      "name": "SetLocalString",
+      "ret": "void",
+      "mods": "public",
+      "params": "string varName, string value",
+      "description": "Executa a operação SetLocalString."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "Action_Dialogue",
+    "Action_SetNpcOpacity",
+    "Action_SetNpcVisible",
+    "Action_SetReactionState",
+    "Action_ShowChoices",
+    "ChallengeManager",
+    "Condition_NpcReactionState",
+    "GameVariable",
+    "GameVariableListUtil",
+    "GameVariables",
+    "INpcChoiceMenu",
+    "INpcDialogueDisplay",
+    "NpcCondition",
+    "NpcEvent",
+    "NpcInteractionType",
+    "NpcMovement",
+    "PlayerInputRouter"
+  ],
+  "used_by": [
+    "AbilityRouter",
+    "Action_Dialogue",
+    "Action_Heal",
+    "Action_LockForms",
+    "Action_OpenShop",
+    "Action_PauseNearbyNpcs",
+    "Action_PlaySE",
+    "Action_RemoveItem",
+    "Action_RescueNpc",
+    "Action_RevealAnimalForm",
+    "Action_SavePlayerSnapshot",
+    "Action_SetManualWeather",
+    "Action_SetNpcVisible",
+    "Action_SetReactionState",
+    "Action_ShowFullscreenImage",
+    "Action_ShowSementes",
+    "Action_StartChallenge",
+    "AreaDiscoveryType",
+    "CameraFocusMode",
+    "ChallengeDefinition",
+    "ChallengeManager",
+    "Condition_BoolVariable",
+    "Condition_HasClue",
+    "Condition_HasItemQuantity",
+    "Condition_NpcReactionState",
+    "Condition_TimeOfDay",
+    "DialogueLine",
+    "EnemyController",
+    "FullscreenImageUI",
+    "GamePauseUtil",
+    "GameVariable",
+    "GameVariableListDrawer",
+    "GameVariables",
+    "INpcDialogueDisplay",
+    "InteractionPromptUI",
+    "MusicZoneEditor",
+    "NpcAction",
+    "NpcChoiceMenuUI",
+    "NpcCondition",
+    "NpcConditionUtil",
+    "NpcControllerEditor",
+    "NpcDialogueBalloon",
+    "NpcEvent",
+    "NpcFaceMode",
+    "NpcMovement",
+    "NpcPlayerConditionUtil",
+    "NpcRefUtil",
+    "PlayerResourceType",
+    "VariableNumberOp"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// \"Humor\"/estado de reação actual do NPC perante o player (Etapa 7) — definido\n/// por Action_SetReactionState e lido por Condition_NpcReactionState. Permite\n/// condicionar eventos ao \"humor\" do NPC (ex: um guarda só ataca por Touch se\n/// estiver Hostile) e dar feedback visual (Animator/sprite) sobre esse humor.\n/// </summary>\npublic enum NpcReactionState\n{\n    Idle,\n    Alert,\n    Friendly,\n    Hostile,\n    Fleeing,\n    Surprised,\n    Sleeping\n}\n\n/// <summary>Associa um sprite a um estado de reação, para SetReactionState trocar o visual do NPC.</summary>\n[System.Serializable]\npublic class NpcReactionSprite\n{\n    public NpcReactionState state;\n    public Sprite sprite;\n}\n\n/// <summary>\n/// Controlador principal de um NPC: gere a lista de eventos configuráveis no\n/// Inspector, detecta o player, decide qual evento disparar (Auto/Touch/Button)\n/// consoante prioridade, condições e alcance, e corre as suas ações em sequência.\n/// </summary>\npublic class NpcController : MonoBehaviour\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Nome mostrado no balão de diálogo quando este NPC fala (Speaker = Self, ou quando outro NPC o referencia como 'Outro NPC'). Se vazio, usa o nome do GameObject.\")]\n    [SerializeField] private string displayName;\n\n    [Tooltip(\"Identificador único deste NPC na cena (opcional, Etapa 8). Permite que ações/condições (deste ou de outros NPCs) o referenciem por ID — ex: 'olhar para', 'mover para um NPC' — em vez de arrastar uma referência directa. Deve ser único; duplicados geram um aviso no Console.\")]\n    [SerializeField] private string npcId;\n\n    [Header(\"Eventos\")]\n    public List<NpcEvent> events = new List<NpcEvent>();\n\n    [Header(\"Interação\")]\n    [Tooltip(\"Alcance usado por eventos Auto/Button cujo 'Interaction Range' seja <= 0.\")]\n    public float defaultInteractionRange = 1.5f;\n\n    [Header(\"Referências (auto-detectadas se vazias)\")]\n    [SerializeField] private Transform player;\n    [SerializeField] private SpriteRenderer spriteRenderer;\n    [SerializeField] private NpcMovement movement;\n\n    [Header(\"Diálogo / Escolhas (Etapa 2 - opcional)\")]\n    [Tooltip(\"Componente que implementa INpcDialogueDisplay. Se vazio, Action_Dialogue usa Debug.Log.\")]\n    [SerializeField] private MonoBehaviour dialogueDisplay;\n\n    [Tooltip(\"Componente que implementa INpcChoiceMenu. Necessário para Action_ShowChoices.\")]\n    [SerializeField] private MonoBehaviour choiceMenu;\n\n    [Header(\"Visibilidade Condicional (Etapa 7)\")]\n    [Tooltip(\"Se vazia, o NPC está sempre visível/activo (comportamento por omissão). Caso contrário, estas condições são avaliadas continuamente: enquanto TODAS forem verdadeiras o NPC fica visível e activo, caso contrário fica escondido (sprite desligado, colliders de trigger desligados, NpcMovement suspenso e nenhum evento é avaliado). Não combinar com Action_SetNpcVisible no mesmo NPC — a avaliação automática sobrepõe-se à acção no frame seguinte.\")]\n    [SerializeReference] public List<NpcCondition> visibilityConditions = new List<NpcCondition>();\n\n    [Header(\"Estados de Reação (Etapa 7)\")]\n    [Tooltip(\"Auto-detectado se vazio. Recebe (int)ReactionState no parâmetro abaixo, se definido.\")]\n    [SerializeField] private Animator animator;\n\n    [Tooltip(\"Nome do parâmetro Int do Animator actualizado por SetReactionState. Vazio = não actualiza o Animator.\")]\n    [SerializeField] private string reactionStateAnimParam = \"ReactionState\";\n\n    [Tooltip(\"Sprite a usar para cada estado de reação (opcional). Se não houver entrada para o estado, o sprite não é alterado.\")]\n    [SerializeField] private List<NpcReactionSprite> reactionSprites = new List<NpcReactionSprite>();\n\n    [Header(\"Variáveis Locais (Etapa 8)\")]\n    [Tooltip(\"Variáveis próprias deste NPC (bool/int/float/string). Lidas e escritas por Action_Set*Variable / Condition_*Variable com 'scope = Local' — só os eventos deste NPC as veem. Para variáveis partilhadas por todo o jogo usa 'scope = Global' (ver GameVariables).\")]\n    [SerializeField] private List<GameVariable> localVariables = new List<GameVariable>();\n\n    /// <summary>Regista todos os NpcController activos pelo seu \"npcId\" (ver NpcId / FindById).</summary>\n    private static readonly Dictionary<string, NpcController> _registry = new Dictionary<string, NpcController>();\n\n    private PlayerInputRouter _playerInput;\n    private bool _isRunningEvent;\n    private NpcEvent _activeEvent;\n    private NpcEvent _pendingButtonEvent;\n\n    private bool _visible = true;\n    private NpcReactionState _reactionState = NpcReactionState.Idle;\n    private int _reactionStateAnimHash = -1;\n    private Coroutine _opacityRoutine;\n\n    /// <summary>Nome mostrado no balão de diálogo. Se \"displayName\" estiver vazio, usa o nome do GameObject.</summary>\n    public string DisplayName => string.IsNullOrEmpty(displayName) ? name : displayName;\n\n    /// <summary>Identificador único deste NPC (ver campo \"Npc Id\" no Inspector). Pode estar vazio.</summary>\n    public string NpcId => npcId;\n\n    public Transform Player => player;\n    public NpcMovement Movement => movement;\n    public INpcDialogueDisplay DialogueDisplay => dialogueDisplay as INpcDialogueDisplay;\n    public INpcChoiceMenu ChoiceMenu => choiceMenu as INpcChoiceMenu;\n    public NpcEvent ActiveEvent => _activeEvent;\n\n    /// <summary>True enquanto o NPC está visível e activo (ver \"visibilityConditions\" e SetVisible).</summary>\n    public bool IsVisible => _visible;\n\n    /// <summary>Estado de reação actual (ver SetReactionState / Action_SetReactionState).</summary>\n    public NpcReactionState ReactionState => _reactionState;\n\n    private void Awake()\n    {\n        foreach (var ev in events)\n            if (ev != null) ev.isActive = ev.startActive;\n\n        if (player == null)\n        {\n            var playerGo = GameObject.FindGameObjectWithTag(\"Player\");\n            if (playerGo != null) player = playerGo.transform;\n        }\n\n        if (player != null)\n            _playerInput = player.GetComponent<PlayerInputRouter>();\n\n        if (spriteRenderer == null)\n            spriteRenderer = GetComponent<SpriteRenderer>();\n\n        if (movement == null)\n            movement = GetComponent<NpcMovement>();\n\n        if (animator == null)\n            animator = GetComponent<Animator>();\n\n        if (animator != null && !string.IsNullOrEmpty(reactionStateAnimParam))\n            _reactionStateAnimHash = Animator.StringToHash(reactionStateAnimParam);\n\n        // Visibilidade inicial: se houver condições de visibilidade e não se cumprirem\n        // já no arranque, o NPC começa escondido (ex: um NPC que só aparece depois de\n        // um certo progresso, colocado na cena desde o início).\n        if (visibilityConditions != null && visibilityConditions.Count > 0 && !EvaluateConditionList(visibilityConditions))\n            ApplyVisibility(false);\n    }\n\n    private void OnEnable()\n    {\n        if (_playerInput != null)\n            _playerInput.InteractPressed += HandleInteractPressed;\n\n        if (!string.IsNullOrEmpty(npcId))\n            _registry[npcId] = this;\n    }\n\n    private void OnDisable()\n    {\n        if (_playerInput != null)\n            _playerInput.InteractPressed -= HandleInteractPressed;\n\n        if (!string.IsNullOrEmpty(npcId) && _registry.TryGetValue(npcId, out var registered) && registered == this)\n            _registry.Remove(npcId);\n    }\n\n    /// <summary>Procura, entre os NPCs activos, aquele cujo \"Npc Id\" seja \"id\". Devolve null se vazio ou não encontrado.</summary>\n    public static NpcController FindById(string id)\n    {\n        if (string.IsNullOrEmpty(id)) return null;\n        return _registry.TryGetValue(id, out var npc) ? npc : null;\n    }\n\n    private void Update()\n    {\n        if (_isRunningEvent) return;\n\n        UpdateVisibility();\n\n        if (!_visible)\n        {\n            _pendingButtonEvent = null;\n            return;\n        }\n\n        // Auto: dispara assim que o player está no alcance e as condições são cumpridas.\n        var autoEvent = FindBestEvent(NpcInteractionType.Auto);\n        if (autoEvent != null)\n        {\n            TriggerEvent(autoEvent);\n            return;\n        }\n\n        // Button: guarda o melhor evento elegível para o player disparar com o botão de interação.\n        _pendingButtonEvent = FindBestEvent(NpcInteractionType.Button);\n    }\n\n    private void HandleInteractPressed()\n    {\n        if (_isRunningEvent) return;\n        if (_pendingButtonEvent == null) return;\n\n        // Mitigação do conflito de InteractPressed (pedido \"InteractionManager\"):\n        // se outro sistema já reagiu a este toque (ex.: diálogo activo), não\n        // disparamos também o evento deste NPC.\n        if (_playerInput != null && _playerInput.InteractConsumed) return;\n\n        TriggerEvent(_pendingButtonEvent);\n\n        if (_playerInput != null) _playerInput.InteractConsumed = true;\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        HandleTouch(other.transform);\n    }\n\n    private void OnCollisionEnter2D(Collision2D collision)\n    {\n        HandleTouch(collision.transform);\n    }\n\n    private void HandleTouch(Transform other)\n    {\n        if (_isRunningEvent) return;\n        if (player == null || other != player) return;\n\n        var touchEvent = FindBestEvent(NpcInteractionType.Touch);\n        if (touchEvent != null)\n            TriggerEvent(touchEvent);\n    }\n\n    /// <summary>Devolve o evento activo, deste tipo de interação, com maior prioridade cujo alcance e condições sejam cumpridos.</summary>\n    private NpcEvent FindBestEvent(NpcInteractionType type)\n    {\n        NpcEvent best = null;\n\n        foreach (var ev in events)\n        {\n            if (ev == null || !ev.isActive) continue;\n            if (ev.interactionType != type) continue;\n            if (best != null && ev.priority <= best.priority) continue;\n\n            if ((type == NpcInteractionType.Auto || type == NpcInteractionType.Button) && !IsPlayerInRange(ev))\n                continue;\n\n            if (!EvaluateConditions(ev)) continue;\n\n            best = ev;\n        }\n\n        return best;\n    }\n\n    private bool EvaluateConditions(NpcEvent ev)\n    {\n        return EvaluateConditionList(ev.conditions);\n    }\n\n    /// <summary>Avalia uma lista de condições (AND lógico). Lista vazia ou nula = verdadeiro.</summary>\n    private bool EvaluateConditionList(List<NpcCondition> conditions)\n    {\n        if (conditions == null) return true;\n\n        foreach (var condition in conditions)\n        {\n            if (condition == null) continue;\n            if (!condition.Evaluate(this)) return false;\n        }\n\n        return true;\n    }\n\n    private bool IsPlayerInRange(NpcEvent ev)\n    {\n        if (player == null) return false;\n\n        float range = ev.interactionRange > 0f ? ev.interactionRange : defaultInteractionRange;\n        return Vector2.Distance(player.position, transform.position) <= range;\n    }\n\n    private void TriggerEvent(NpcEvent ev)\n    {\n        StartCoroutine(RunEvent(ev));\n    }\n\n    /// <summary>\n    /// Dispara imediatamente o evento cujo <see cref=\"NpcEvent.eventId\"/> seja\n    /// \"eventId\", sem aguardar input do player nem verificar condições.\n    /// Útil para sistemas externos (ex: <see cref=\"ChallengeManager\"/> ao\n    /// conceder uma recompensa com cena de NPC).\n    /// Se o NPC já estiver a correr um evento, o novo é ignorado; o chamador\n    /// deve aguardar ou usar <see cref=\"ActivateEventById\"/> para que o evento\n    /// dispare naturalmente no próximo ciclo de Update.\n    /// </summary>\n    public void TriggerEventById(string eventId)\n    {\n        if (_isRunningEvent) return;\n        var ev = FindEventById(eventId);\n        if (ev != null) TriggerEvent(ev);\n    }\n\n    private IEnumerator RunEvent(NpcEvent ev)\n    {\n        _isRunningEvent = true;\n        _activeEvent = ev;\n\n        if (ev.overrideSprite != null && spriteRenderer != null)\n            spriteRenderer.sprite = ev.overrideSprite;\n\n        if (ev.actions != null)\n        {\n            foreach (var action in ev.actions)\n            {\n                if (action == null) continue;\n                yield return action.Execute(this);\n            }\n        }\n\n        if (ev.deactivateOnComplete)\n            ev.isActive = false;\n\n        if (!string.IsNullOrEmpty(ev.activateEventIdOnComplete))\n            ActivateEventById(ev.activateEventIdOnComplete);\n\n        _activeEvent = null;\n        _isRunningEvent = false;\n    }\n\n    /// <summary>Procura um evento deste NPC pelo seu eventId.</summary>\n    public NpcEvent FindEventById(string eventId)\n    {\n        if (string.IsNullOrEmpty(eventId)) return null;\n\n        foreach (var ev in events)\n            if (ev != null && ev.eventId == eventId) return ev;\n\n        return null;\n    }\n\n    /// <summary>\n    /// Activa um evento pelo seu eventId (define isActive = true). Não dispara\n    /// o evento de imediato — o disparo natural acontece no próximo Update/Touch/Button,\n    /// evitando reentrância enquanto outra ação ainda está a correr.\n    /// </summary>\n    public void ActivateEventById(string eventId)\n    {\n        var ev = FindEventById(eventId);\n        if (ev != null) ev.isActive = true;\n    }\n\n    /// <summary>Desactiva um evento pelo seu eventId (define isActive = false).</summary>\n    public void DeactivateEventById(string eventId)\n    {\n        var ev = FindEventById(eventId);\n        if (ev != null) ev.isActive = false;\n    }\n\n    /// <summary>Re-avalia \"visibilityConditions\" e aplica a visibilidade se tiver mudado. Sem efeito se a lista estiver vazia.</summary>\n    private void UpdateVisibility()\n    {\n        if (visibilityConditions == null || visibilityConditions.Count == 0) return;\n\n        bool shouldBeVisible = EvaluateConditionList(visibilityConditions);\n        if (shouldBeVisible == _visible) return;\n\n        ApplyVisibility(shouldBeVisible);\n    }\n\n    /// <summary>\n    /// Mostra ou escode este NPC explicitamente (Action_SetNpcVisible). Não usar\n    /// no mesmo NPC que tenha \"visibilityConditions\" preenchida — a avaliação\n    /// automática sobrepõe-se a esta chamada no frame seguinte.\n    /// </summary>\n    public void SetVisible(bool visible)\n    {\n        if (visible == _visible) return;\n        ApplyVisibility(visible);\n    }\n\n    /// <summary>\n    /// Aplica o estado de visibilidade: liga/desliga o SpriteRenderer, os\n    /// colliders de trigger (interação/Touch) e o NpcMovement. Colliders\n    /// sólidos (não-trigger, ex: chão) não são tocados, para o NPC não cair\n    /// ou \"perder\" física enquanto está escondido.\n    /// </summary>\n    private void ApplyVisibility(bool visible)\n    {\n        _visible = visible;\n\n        if (spriteRenderer != null)\n            spriteRenderer.enabled = visible;\n\n        foreach (var col in GetComponents<Collider2D>())\n        {\n            if (col.isTrigger) col.enabled = visible;\n        }\n\n        if (movement != null)\n            movement.enabled = visible;\n    }\n\n    /// <summary>\n    /// Muda a opacidade (alfa do SpriteRenderer) deste NPC — Action_SetNpcOpacity.\n    /// Se \"duration\" for 0, aplica de imediato; caso contrário interpola ao\n    /// longo de \"duration\" segundos. Permite fazer o NPC desaparecer\n    /// gradualmente (targetAlpha = 0), ficar translúcido (ex: 0.5) ou voltar a\n    /// ficar opaco (1), sem afectar colliders/movimento (para isso ver\n    /// SetVisible/Action_SetNpcVisible). Cancela qualquer transição de\n    /// opacidade em curso. Devolve a Coroutine iniciada (ou null se aplicada\n    /// de imediato ou se não houver SpriteRenderer), para quem quiser aguardar\n    /// a conclusão.\n    /// </summary>\n    public Coroutine SetOpacity(float targetAlpha, float duration)\n    {\n        if (spriteRenderer == null) return null;\n\n        if (_opacityRoutine != null)\n        {\n            StopCoroutine(_opacityRoutine);\n            _opacityRoutine = null;\n        }\n\n        targetAlpha = Mathf.Clamp01(targetAlpha);\n\n        if (duration <= 0f)\n        {\n            var c = spriteRenderer.color;\n            c.a = targetAlpha;\n            spriteRenderer.color = c;\n            return null;\n        }\n\n        _opacityRoutine = StartCoroutine(FadeOpacityRoutine(targetAlpha, duration));\n        return _opacityRoutine;\n    }\n\n    private IEnumerator FadeOpacityRoutine(float targetAlpha, float duration)\n    {\n        float startAlpha = spriteRenderer.color.a;\n        float t = 0f;\n\n        while (t < duration)\n        {\n            t += Time.deltaTime;\n            var c = spriteRenderer.color;\n            c.a = Mathf.Lerp(startAlpha, targetAlpha, Mathf.Clamp01(t / duration));\n            spriteRenderer.color = c;\n            yield return null;\n        }\n\n        var finalColor = spriteRenderer.color;\n        finalColor.a = targetAlpha;\n        spriteRenderer.color = finalColor;\n\n        _opacityRoutine = null;\n    }\n\n    /// <summary>\n    /// Define o estado de reação actual (Action_SetReactionState). Actualiza o\n    /// parâmetro Int do Animator (se configurado) e troca o sprite caso haja\n    /// uma entrada em \"reactionSprites\" para este estado.\n    /// </summary>\n    public void SetReactionState(NpcReactionState state)\n    {\n        _reactionState = state;\n\n        if (animator != null && _reactionStateAnimHash != -1)\n            animator.SetInteger(_reactionStateAnimHash, (int)state);\n\n        if (spriteRenderer != null && reactionSprites != null)\n        {\n            foreach (var entry in reactionSprites)\n            {\n                if (entry != null && entry.state == state && entry.sprite != null)\n                {\n                    spriteRenderer.sprite = entry.sprite;\n                    break;\n                }\n            }\n        }\n    }\n\n    private void OnValidate()\n    {\n        if (dialogueDisplay != null && !(dialogueDisplay is INpcDialogueDisplay))\n        {\n            Debug.LogWarning($\"[{name}] '{dialogueDisplay.GetType().Name}' não implementa INpcDialogueDisplay. A referência foi removida.\", this);\n            dialogueDisplay = null;\n        }\n\n        if (choiceMenu != null && !(choiceMenu is INpcChoiceMenu))\n        {\n            Debug.LogWarning($\"[{name}] '{choiceMenu.GetType().Name}' não implementa INpcChoiceMenu. A referência foi removida.\", this);\n            choiceMenu = null;\n        }\n\n        if (!string.IsNullOrEmpty(npcId))\n        {\n            foreach (var other in FindObjectsOfType<NpcController>())\n            {\n                if (other == this || other.npcId != npcId) continue;\n                Debug.LogWarning($\"[{name}] Npc Id '{npcId}' já está em uso por '{other.name}'. Escolhe um ID único.\", this);\n                break;\n            }\n        }\n    }\n\n    // ---------------- Variáveis Locais (Etapa 8) ----------------\n\n    public bool GetLocalBool(string varName, bool defaultValue = false) => GameVariableListUtil.GetBool(localVariables, varName, defaultValue);\n    public int GetLocalInt(string varName, int defaultValue = 0) => GameVariableListUtil.GetInt(localVariables, varName, defaultValue);\n    public float GetLocalFloat(string varName, float defaultValue = 0f) => GameVariableListUtil.GetFloat(localVariables, varName, defaultValue);\n    public string GetLocalString(string varName, string defaultValue = \"\") => GameVariableListUtil.GetString(localVariables, varName, defaultValue);\n\n    public void SetLocalBool(string varName, bool value) => GameVariableListUtil.SetBool(localVariables, varName, value);\n    public void SetLocalInt(string varName, int value) => GameVariableListUtil.SetInt(localVariables, varName, value);\n    public void SetLocalFloat(string varName, float value) => GameVariableListUtil.SetFloat(localVariables, varName, value);\n    public void SetLocalString(string varName, string value) => GameVariableListUtil.SetString(localVariables, varName, value);\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = Color.cyan;\n\n        foreach (var ev in events)\n        {\n            if (ev == null) continue;\n            if (ev.interactionType != NpcInteractionType.Auto && ev.interactionType != NpcInteractionType.Button) continue;\n\n            float range = ev.interactionRange > 0f ? ev.interactionRange : defaultInteractionRange;\n            Gizmos.DrawWireSphere(transform.position, range);\n        }\n    }\n}\n",
+  "id": "script-npc-npccontroller-cs",
+  "dependencyIds": [
+    "script-npc-actions-coreactions-cs",
+    "script-npc-actions-visibilityactions-cs",
+    "script-npc-actions-reactionactions-cs",
+    "script-data-challengemanager-cs",
+    "script-npc-conditions-npcstateconditions-cs",
+    "script-data-gamevariable-cs",
+    "script-data-gamevariables-cs",
+    "script-npc-npcinterfaces-cs",
+    "script-npc-npccondition-cs",
+    "script-npc-npcevent-cs",
+    "script-npc-npcmovement-cs",
+    "script-input-playerinputrouter-cs"
+  ],
+  "usedByIds": [
+    "script-abilities-abilityrouter-cs",
+    "script-npc-actions-coreactions-cs",
+    "script-npc-actions-playeractions-cs",
+    "script-npc-actions-formlockactions-cs",
+    "script-npc-actions-shopactions-cs",
+    "script-npc-actions-pauseactions-cs",
+    "script-npc-actions-audioactions-cs",
+    "script-npc-actions-missionactions-cs",
+    "script-npc-actions-villageactions-cs",
+    "script-npc-actions-formactions-cs",
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-npc-actions-worldstateactions-cs",
+    "script-npc-actions-visibilityactions-cs",
+    "script-npc-actions-reactionactions-cs",
+    "script-npc-actions-journalactions-cs",
+    "script-npc-actions-seedsnpcactions-cs",
+    "script-npc-actions-challengeactions-cs",
+    "script-npc-actions-areaactions-cs",
+    "script-npc-actions-cameraactions-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-challengemanager-cs",
+    "script-npc-conditions-variableconditions-cs",
+    "script-npc-conditions-journalconditions-cs",
+    "script-npc-conditions-missionconditions-cs",
+    "script-npc-conditions-npcstateconditions-cs",
+    "script-npc-conditions-worldconditions-cs",
+    "script-npc-dialogue-dialogueline-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-ui-fullscreenimageui-cs",
+    "script-npc-pauseutil-cs",
+    "script-data-gamevariable-cs",
+    "script-data-editor-gamevariablelistdrawer-cs",
+    "script-data-gamevariables-cs",
+    "script-npc-npcinterfaces-cs",
+    "script-ui-interactionpromptui-cs",
+    "script-audio-editor-musiczoneeditor-cs",
+    "script-npc-npcaction-cs",
+    "script-npc-dialogue-npcchoicemenuui-cs",
+    "script-npc-npccondition-cs",
+    "script-npc-npcconditionutil-cs",
+    "script-npc-editor-npccontrollereditor-cs",
+    "script-npc-dialogue-npcdialogueballoon-cs",
+    "script-npc-npcevent-cs",
+    "script-npc-actions-movementactions-cs",
+    "script-npc-npcmovement-cs",
+    "script-npc-conditions-playerconditions-cs",
+    "script-npc-npcrefutil-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-npc-actions-variableactions-cs"
+  ]
+}

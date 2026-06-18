@@ -1,0 +1,103 @@
+{
+  "path": "Collectibles/PickupMagnet.cs",
+  "filename": "PickupMagnet.cs",
+  "category": "Collectibles",
+  "primary": "PickupMagnet",
+  "kind": "Componente",
+  "summary": "\"Íman de pickups\" (item da auditoria de Colecionáveis): colocado no player, procura periodicamente colecionáveis próximos com ativo e desloca-os gradualmente para a posição do player. A coleta em si continua a acontecer pelo OnTriggerEnter2D normal de quando o colecionável chega suficientemente perto — este script não concede recompensas diretamente.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PickupMagnet",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "range",
+      "type": "float",
+      "mods": "public",
+      "default": "2.5f",
+      "section": "",
+      "attrs": "[Tooltip(\"Raio de detecção de coleccionáveis (PickupBase.canBeMagnetized).\")]",
+      "inspector": true,
+      "description": "Raio de detecção de colecionáveis (PickupBase.canBeMagnetized)."
+    },
+    {
+      "name": "pullSpeed",
+      "type": "float",
+      "mods": "public",
+      "default": "8f",
+      "section": "",
+      "attrs": "[Tooltip(\"Velocidade com que os coleccionáveis atraídos se aproximam do player (unidades/seg).\")]",
+      "inspector": true,
+      "description": "Velocidade com que os colecionáveis atraídos se aproximam do player (unidades/seg)."
+    },
+    {
+      "name": "pickupLayer",
+      "type": "LayerMask",
+      "mods": "public",
+      "default": "~0",
+      "section": "",
+      "attrs": "[Tooltip(\"Layer(s) onde procurar coleccionáveis. Vazio (Everything) = todas as layers.\")]",
+      "inspector": true,
+      "description": "Layer(s) onde procurar colecionáveis. Vazio (Everything) = todas as layers."
+    },
+    {
+      "name": "MaxResults",
+      "type": "int",
+      "mods": "private const",
+      "default": "16",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_buffer",
+      "type": "Collider2D[]",
+      "mods": "private readonly",
+      "default": "new Collider2D[MaxResults]",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "PickupBase",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "PickupBase",
+    "PlayerProgress"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// \"Íman de pickups\" (item da auditoria de Coleccionáveis): colocado no\n/// player, procura periodicamente coleccionáveis próximos com\n/// <see cref=\"PickupBase.canBeMagnetized\"/> activo e desloca-os gradualmente\n/// para a posição do player. A recolha em si continua a acontecer pelo\n/// <c>OnTriggerEnter2D</c> normal de <see cref=\"PickupBase\"/> quando o\n/// coleccionável chega suficientemente perto — este script não concede\n/// recompensas directamente.\n/// </summary>\npublic class PickupMagnet : MonoBehaviour\n{\n    [Tooltip(\"Raio de detecção de coleccionáveis (PickupBase.canBeMagnetized).\")]\n    public float range = 2.5f;\n\n    [Tooltip(\"Velocidade com que os coleccionáveis atraídos se aproximam do player (unidades/seg).\")]\n    public float pullSpeed = 8f;\n\n    [Tooltip(\"Layer(s) onde procurar coleccionáveis. Vazio (Everything) = todas as layers.\")]\n    public LayerMask pickupLayer = ~0;\n\n    private const int MaxResults = 16;\n    private readonly Collider2D[] _buffer = new Collider2D[MaxResults];\n\n    private void Update()\n    {\n        // Tarefa #3: o Íman só atrai coleccionáveis enquanto o Instinto\n        // \"Íman de Sementes\" estiver desbloqueado E ligado — sem isto, o\n        // íman funcionava sempre, mesmo sem o jogador ter o upgrade.\n        if (PlayerProgress.Instance == null || !PlayerProgress.Instance.IsImanDeSementesActive)\n            return;\n\n        int count = Physics2D.OverlapCircleNonAlloc(transform.position, range, _buffer, pickupLayer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var col = _buffer[i];\n            if (col == null) continue;\n\n            var pickup = col.GetComponent<PickupBase>();\n            if (pickup == null || pickup.Collected || !pickup.canBeMagnetized) continue;\n\n            pickup.transform.position = Vector3.MoveTowards(\n                pickup.transform.position,\n                transform.position,\n                pullSpeed * Time.deltaTime);\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = Color.cyan;\n        Gizmos.DrawWireSphere(transform.position, range);\n    }\n}\n",
+  "id": "script-collectibles-pickupmagnet-cs",
+  "dependencyIds": [
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs"
+  ]
+}

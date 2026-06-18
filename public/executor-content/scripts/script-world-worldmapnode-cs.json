@@ -1,0 +1,210 @@
+{
+  "path": "World/WorldMapNode.cs",
+  "filename": "WorldMapNode.cs",
+  "category": "World",
+  "primary": "WorldMapNode",
+  "kind": "Componente",
+  "summary": "Mapa-Múndi (GDD \"Nós e Painel Automático\" / \"Ramificações\"): representa UM nó do mapa-múndi — uma área ( ) ou, para o caso especial marcado por , o Coração de Gaia. Cada nó (excepto o Coração de Gaia) tem exatamente UMA ligação de origem ( , vinda do nó mais próximo de Gaia) e zero ou mais ligações de saída ( , para os próximos nós/ramificações). Esta estrutura em árvore, com o Coração de Gaia na raiz, é a base de toda a lógica de \"revelação de áreas e raízes\" — ver para a regra completa.",
+  "attach": "Ferramenta do Unity Editor; não adicionar a GameObjects de gameplay.",
+  "types": [
+    {
+      "name": "WorldMapNode",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "area",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Área representada por este nó. Deixar vazio APENAS para o Coração de Gaia (marcar 'isGaiaHub').\")]",
+      "inspector": true,
+      "description": "Área representada por este nó. Deixar vazio APENAS para o Coração de Gaia (marcar 'isGaiaHub')."
+    },
+    {
+      "name": "isGaiaHub",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Marca este nó como o Coração de Gaia — hub central, sempre 'desbloqueado', sem painel de área normal (usa o HUD do Coração de Gaia em WorldMapUI).\")]",
+      "inspector": true,
+      "description": "Marca este nó como o Coração de Gaia — hub central, sempre 'desbloqueado', sem painel de área normal (usa o HUD do Coração de Gaia em WorldMapUI)."
+    },
+    {
+      "name": "parentConnection",
+      "type": "WorldMapConnection",
+      "mods": "public",
+      "default": "",
+      "section": "Ligação de Origem",
+      "attrs": "[Header(\"Ligação de Origem\")] [Tooltip(\"Ligação (ramo) que vem do nó-pai, mais próximo do Coração de Gaia. Deixar vazio APENAS para o Coração de Gaia.\")]",
+      "inspector": true,
+      "description": "Ligação (ramo) que vem do nó-pai, mais próximo do Coração de Gaia. Deixar vazio APENAS para o Coração de Gaia."
+    },
+    {
+      "name": "childConnections",
+      "type": "List<WorldMapConnection>",
+      "mods": "public",
+      "default": "new List<WorldMapConnection>()",
+      "section": "Ligações de Saída",
+      "attrs": "[Header(\"Ligações de Saída\")] [Tooltip(\"Ramos que partem deste nó para os próximos nós (filhos/ramificações). A ordem é usada como prioridade de desempate ao escolher a direcção com o analógico esquerdo quando há mais de uma opção igualmente alinhada.\")]",
+      "inspector": true,
+      "description": "Ramos que partem deste nó para os próximos nós (filhos/ramificações). A ordem é usada como prioridade de desempate ao escolher a direção com o analógico esquerdo quando há mais de uma opção igualmente alinhada."
+    },
+    {
+      "name": "unlockedVisuals",
+      "type": "GameObject[]",
+      "mods": "public",
+      "default": "",
+      "section": "Visual — Estado do Nó",
+      "attrs": "[Header(\"Visual — Estado do Nó\")] [Tooltip(\"Activados quando a área está DESBLOQUEADA (ícone iluminado, cor do mundo, brilho, etc.).\")]",
+      "inspector": true,
+      "description": "Ativados quando a área está DESBLOQUEADA (ícone iluminado, cor do mundo, brilho, etc.)."
+    },
+    {
+      "name": "lockedVisuals",
+      "type": "GameObject[]",
+      "mods": "public",
+      "default": "",
+      "section": "Visual — Estado do Nó",
+      "attrs": "[Tooltip(\"Activados quando a área está BLOQUEADA mas ALCANÇÁVEL (cadeado/ícone escuro com custo visível — \\\"dá para chegar até aqui, mas não para atravessar\\\").\")]",
+      "inspector": true,
+      "description": "Ativados quando a área está BLOQUEADA mas ALCANÇÁVEL (cadeado/ícone escuro com custo visível — \"dá para chegar até aqui, mas não para atravessar\\"
+    },
+    {
+      "name": "hiddenVisuals",
+      "type": "GameObject[]",
+      "mods": "public",
+      "default": "",
+      "section": "Visual — Estado do Nó",
+      "attrs": "[Tooltip(\"Activados apenas enquanto este nó NÃO for alcançável (nem o ramo de origem está iluminado) — totalmente escondido/sombrio, sem nome nem custo visíveis.\")]",
+      "inspector": true,
+      "description": "Ativados apenas enquanto este nó NÃO for alcançável (nem o ramo de origem está iluminado) — totalmente escondido/sombrio, sem nome nem custo visíveis."
+    },
+    {
+      "name": "nameLabel",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Rótulos (opcional)",
+      "attrs": "[Header(\"Rótulos (opcional)\")] [Tooltip(\"Texto com o nome da área. Mostra \\\"?????????????\\\" enquanto bloqueada (a não ser que 'forceRevealName' esteja activo — Visão do Mapa-Múndi).\")]",
+      "inspector": true,
+      "description": "Texto com o nome da área. Mostra \"?????????????\" enquanto bloqueada (a não ser que 'forceRevealName' esteja ativo — Visão do Mapa-Múndi)."
+    },
+    {
+      "name": "costLabel",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Rótulos (opcional)",
+      "attrs": "[Tooltip(\"Texto com o custo de desbloqueio (\\\"Custo: X Runas de Gaia\\\"). Visível apenas quando o nó está bloqueado mas alcançável (ou sempre, com 'forceRevealName').\")]",
+      "inspector": true,
+      "description": "Texto com o custo de desbloqueio (\"Custo: X Runas de Gaia\\"
+    },
+    {
+      "name": "revealedInfoLabel",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Rótulos (opcional)",
+      "attrs": "[Tooltip(\"Texto opcional usado pela 'Visão do Mapa-Múndi' para mostrar totais (\\\"Runas: X/Y\\\", \\\"NPCs: X/Y\\\", etc.) de uma área bloqueada, normalmente preenchido por WorldMapUI.\")]",
+      "inspector": true,
+      "description": "Texto opcional usado pela 'Visão do Mapa-Múndi' para mostrar totais (\"Runas: X/Y\", \"NPCs: X/Y\", etc.) de uma área bloqueada, normalmente preenchido por WorldMapUI."
+    },
+    {
+      "name": "IsReachable",
+      "type": "bool",
+      "mods": "public",
+      "default": "> isGaiaHub || IsUnlocked || (parentConnection != null && parentConnection.IsLit)",
+      "section": "Rótulos (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "UnlockCost",
+      "type": "int",
+      "mods": "public",
+      "default": "> (area != null && area.mapNodeType == AreaData.MapNodeType.Normal) ? Mathf.Max(0, area.unlockCost) : 0",
+      "section": "Rótulos (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "DisplayName",
+      "type": "string",
+      "mods": "public",
+      "default": "> isGaiaHub ? \"Coração de Gaia\" : (area != null ? area.displayName : \"\")",
+      "section": "Rótulos (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "RefreshVisual",
+      "ret": "void",
+      "mods": "public",
+      "params": "bool forceRevealName = false",
+      "description": "Executa a operação RefreshVisual."
+    },
+    {
+      "name": "SetActiveAll",
+      "ret": "void",
+      "mods": "private static",
+      "params": "GameObject[] objs, bool active",
+      "description": "Executa a operação SetActiveAll."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "MapNodeType",
+    "PlayerProgress",
+    "WorldMapConnection",
+    "WorldMapUI"
+  ],
+  "used_by": [
+    "LightBallController",
+    "PlayerProgress",
+    "WorldMapCameraRig",
+    "WorldMapConnection",
+    "WorldMapController",
+    "WorldMapUI"
+  ],
+  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Mapa-Múndi (GDD \"Nós e Painel Automático\" / \"Ramificações\"): representa UM\n/// nó do mapa-múndi — uma área (<see cref=\"area\"/>) ou, para o caso especial\n/// marcado por <see cref=\"isGaiaHub\"/>, o Coração de Gaia.\n///\n/// Cada nó (excepto o Coração de Gaia) tem exactamente UMA ligação de origem\n/// (<see cref=\"parentConnection\"/>, vinda do nó mais próximo de Gaia) e zero ou\n/// mais ligações de saída (<see cref=\"childConnections\"/>, para os próximos\n/// nós/ramificações). Esta estrutura em árvore, com o Coração de Gaia na raiz,\n/// é a base de toda a lógica de \"revelação de áreas e raízes\" — ver\n/// <see cref=\"WorldMapConnection\"/> para a regra completa.\n/// </summary>\npublic class WorldMapNode : MonoBehaviour\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Área representada por este nó. Deixar vazio APENAS para o Coração de Gaia (marcar 'isGaiaHub').\")]\n    public AreaData area;\n\n    [Tooltip(\"Marca este nó como o Coração de Gaia — hub central, sempre 'desbloqueado', sem painel de área normal (usa o HUD do Coração de Gaia em WorldMapUI).\")]\n    public bool isGaiaHub;\n\n    [Header(\"Ligação de Origem\")]\n    [Tooltip(\"Ligação (ramo) que vem do nó-pai, mais próximo do Coração de Gaia. Deixar vazio APENAS para o Coração de Gaia.\")]\n    public WorldMapConnection parentConnection;\n\n    [Header(\"Ligações de Saída\")]\n    [Tooltip(\"Ramos que partem deste nó para os próximos nós (filhos/ramificações). A ordem é usada como prioridade de desempate ao escolher a direcção com o analógico esquerdo quando há mais de uma opção igualmente alinhada.\")]\n    public List<WorldMapConnection> childConnections = new List<WorldMapConnection>();\n\n    [Header(\"Visual — Estado do Nó\")]\n    [Tooltip(\"Activados quando a área está DESBLOQUEADA (ícone iluminado, cor do mundo, brilho, etc.).\")]\n    public GameObject[] unlockedVisuals;\n\n    [Tooltip(\"Activados quando a área está BLOQUEADA mas ALCANÇÁVEL (cadeado/ícone escuro com custo visível — \\\"dá para chegar até aqui, mas não para atravessar\\\").\")]\n    public GameObject[] lockedVisuals;\n\n    [Tooltip(\"Activados apenas enquanto este nó NÃO for alcançável (nem o ramo de origem está iluminado) — totalmente escondido/sombrio, sem nome nem custo visíveis.\")]\n    public GameObject[] hiddenVisuals;\n\n    [Header(\"Rótulos (opcional)\")]\n    [Tooltip(\"Texto com o nome da área. Mostra \\\"?????????????\\\" enquanto bloqueada (a não ser que 'forceRevealName' esteja activo — Visão do Mapa-Múndi).\")]\n    public TMP_Text nameLabel;\n\n    [Tooltip(\"Texto com o custo de desbloqueio (\\\"Custo: X Runas de Gaia\\\"). Visível apenas quando o nó está bloqueado mas alcançável (ou sempre, com 'forceRevealName').\")]\n    public TMP_Text costLabel;\n\n    [Tooltip(\"Texto opcional usado pela 'Visão do Mapa-Múndi' para mostrar totais (\\\"Runas: X/Y\\\", \\\"NPCs: X/Y\\\", etc.) de uma área bloqueada, normalmente preenchido por WorldMapUI.\")]\n    public TMP_Text revealedInfoLabel;\n\n    // -------------------- Estado --------------------\n\n    /// <summary>Esta área já está desbloqueada (ou é o Coração de Gaia / um nó sem AreaData).</summary>\n    public bool IsUnlocked\n    {\n        get\n        {\n            if (isGaiaHub || area == null) return true;\n\n            var pp = PlayerProgress.Instance;\n            return pp != null && pp.IsAreaUnlocked(area);\n        }\n    }\n\n    /// <summary>\n    /// O ramo até este nó está iluminado (nó-pai desbloqueado) — a bola PODE\n    /// viajar até aqui mesmo que este nó continue bloqueado. O Coração de Gaia\n    /// e nós já desbloqueados são sempre alcançáveis.\n    /// </summary>\n    public bool IsReachable => isGaiaHub || IsUnlocked || (parentConnection != null && parentConnection.IsLit);\n\n    /// <summary>Custo em Runas de Gaia para desbloquear esta área (0 para Vilas, Boss, Coração de Gaia ou áreas já desbloqueadas).</summary>\n    public int UnlockCost => (area != null && area.mapNodeType == AreaData.MapNodeType.Normal) ? Mathf.Max(0, area.unlockCost) : 0;\n\n    /// <summary>Nome a mostrar quando desbloqueado/revelado.</summary>\n    public string DisplayName => isGaiaHub ? \"Coração de Gaia\" : (area != null ? area.displayName : \"\");\n\n    // -------------------- Visual --------------------\n\n    /// <summary>\n    /// Actualiza os objectos visuais e rótulos deste nó. \"forceRevealName\" é\n    /// usado pela Visão do Mapa-Múndi (GDD): enquanto activo, mesmo nós\n    /// bloqueados mostram o nome real e o custo (mas continuam bloqueados —\n    /// esta visão não abre caminhos nem substitui o pagamento de Runas).\n    /// </summary>\n    public void RefreshVisual(bool forceRevealName = false)\n    {\n        bool unlocked = IsUnlocked;\n        bool reachable = IsReachable;\n\n        SetActiveAll(unlockedVisuals, unlocked);\n        SetActiveAll(lockedVisuals, !unlocked && (reachable || forceRevealName));\n        SetActiveAll(hiddenVisuals, !reachable && !forceRevealName);\n\n        bool revealName = unlocked || forceRevealName;\n\n        if (nameLabel != null)\n            nameLabel.text = revealName ? DisplayName : \"?????????????\";\n\n        if (costLabel != null)\n        {\n            bool showCost = !unlocked && (reachable || forceRevealName)\n                            && area != null && area.mapNodeType == AreaData.MapNodeType.Normal;\n\n            costLabel.gameObject.SetActive(showCost);\n            if (showCost) costLabel.text = $\"Custo: {UnlockCost} Runas de Gaia\";\n        }\n\n        if (parentConnection != null) parentConnection.RefreshRootVisual();\n        foreach (var conn in childConnections)\n            if (conn != null) conn.RefreshRootVisual();\n    }\n\n    private static void SetActiveAll(GameObject[] objs, bool active)\n    {\n        if (objs == null) return;\n\n        foreach (var go in objs)\n            if (go != null) go.SetActive(active);\n    }\n\n    private void OnEnable() => RefreshVisual();\n\n#if UNITY_EDITOR\n    private void OnDrawGizmosSelected()\n    {\n        UnityEditor.Handles.Label(transform.position + Vector3.up * 0.5f, DisplayName);\n    }\n#endif\n}\n",
+  "id": "script-world-worldmapnode-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-data-playerprogress-cs",
+    "script-world-worldmapconnection-cs",
+    "script-world-worldmapui-cs"
+  ],
+  "usedByIds": [
+    "script-world-lightballcontroller-cs",
+    "script-data-playerprogress-cs",
+    "script-world-worldmapcamerarig-cs",
+    "script-world-worldmapconnection-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapui-cs"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "path": "Camera/CameraZone.cs",
+  "filename": "CameraZone.cs",
+  "category": "Camera",
+  "primary": "CameraZone",
+  "kind": "Componente",
+  "summary": "Script do projeto Animals.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "CameraZone",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "zoneType",
+      "type": "CameraManager.ZoneType",
+      "mods": "public",
+      "default": "CameraManager.ZoneType.Corridor",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnTriggerExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerExit2D."
+    }
+  ],
+  "dependencies": [
+    "CameraManager",
+    "ZoneType"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n[RequireComponent(typeof(BoxCollider2D))]\npublic class CameraZone : MonoBehaviour\n{\n    public CameraManager.ZoneType zoneType = CameraManager.ZoneType.Corridor;\n\n    private void Awake()\n    {\n        var col = GetComponent<BoxCollider2D>();\n        col.isTrigger = true;\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (CameraManager.Instance != null)\n            CameraManager.Instance.PushZone(zoneType);\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (CameraManager.Instance != null)\n            CameraManager.Instance.PopZone(zoneType);\n    }\n}\n",
+  "id": "script-camera-camerazone-cs",
+  "dependencyIds": [
+    "script-camera-cameramanager-cs"
+  ],
+  "usedByIds": []
+}

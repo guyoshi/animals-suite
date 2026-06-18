@@ -1,0 +1,55 @@
+{
+  "path": "UI/IPauseMenuSection.cs",
+  "filename": "IPauseMenuSection.cs",
+  "category": "UI",
+  "primary": "IPauseMenuSection",
+  "kind": "Interface",
+  "summary": "Contrato comum a todas as seções do Menu de Pausa (Área Atual, Diário, Formas, Itens e Instintos, Progresso, Opções — Tarefas #7-12). O mantém uma lista ordenada destas seções (uma por \"página\"), ativa apenas a selecionada e chama sempre que o menu abre ou o jogador navega para essa seção (L/R). Cada implementação deve popular o seu próprio conteúdo a partir de PlayerProgress/WorldState/AreaData, etc.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "IPauseMenuSection",
+      "kind": "interface",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [],
+  "dependencies": [
+    "AreaData",
+    "PauseMenuController",
+    "PlayerProgress",
+    "WorldState"
+  ],
+  "used_by": [
+    "AreaSectionUI",
+    "DiarySectionUI",
+    "EmblemsSectionUI",
+    "FormsSectionUI",
+    "ItemsInstinctsSectionUI",
+    "OptionsSectionUI",
+    "PauseMenuController",
+    "ProgressSectionUI",
+    "SecondaryMenuController"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Contrato comum a todas as secções do Menu de Pausa (Área Atual, Diário,\n/// Formas, Itens e Instintos, Progresso, Opções — Tarefas #7-12).\n///\n/// O <see cref=\"PauseMenuController\"/> mantém uma lista ordenada destas\n/// secções (uma por \"página\"), activa apenas a seleccionada e chama\n/// <see cref=\"Refresh\"/> sempre que o menu abre ou o jogador navega para essa\n/// secção (L/R). Cada implementação deve popular o seu próprio conteúdo a\n/// partir de PlayerProgress/WorldState/AreaData, etc.\n/// </summary>\npublic interface IPauseMenuSection\n{\n    /// <summary>Nome da secção mostrado na barra de navegação (ex: \"ÁREA\", \"DIÁRIO\").</summary>\n    string SectionName { get; }\n\n    /// <summary>GameObject raiz da secção — activado quando seleccionada, desactivado nas restantes.</summary>\n    GameObject Root { get; }\n\n    /// <summary>\n    /// Chamado sempre que a secção passa a estar visível (abertura do menu ou\n    /// navegação L/R até ela). Deve repopular o conteúdo a partir do estado\n    /// actual do jogo.\n    /// </summary>\n    void Refresh();\n\n    /// <summary>Chamado quando a secção deixa de estar visível (navegação para outra secção, ou fecho do menu).</summary>\n    void OnHide();\n}\n",
+  "id": "script-ui-ipausemenusection-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-data-playerprogress-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-ui-areasectionui-cs",
+    "script-ui-diarysectionui-cs",
+    "script-ui-emblemssectionui-cs",
+    "script-ui-formssectionui-cs",
+    "script-ui-itemsinstinctssectionui-cs",
+    "script-ui-optionssectionui-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-ui-progresssectionui-cs",
+    "script-ui-secondarymenucontroller-cs"
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "path": "Enemy/EnemyRespawn.cs",
+  "filename": "EnemyRespawn.cs",
+  "category": "Enemy",
+  "primary": "EnemyRespawn",
+  "kind": "Componente",
+  "summary": "Política de respawn de um inimigo (Etapa 7.3). public enum EnemyRespawnMode { Inimigo comum: volta quando o player sai e reentra na área (EnemyRespawnZone). Não volta enquanto o player permanecer na área. Comum, Inimigo especial: NUNCA volta depois de derrotado (registado permanentemente em PlayerProgress.defeatedEnemyIds). Especial, Mini-boss: não respawna após derrotado, salvo \"miniBossCanRespawn\". MiniBoss } Respawn e persistência de um inimigo (Enemy Creator — Etapa 7.3): - Comum: (chamado por EnemyRespawnZone quando o player reentra na área) faz reset completo — vida, drops comuns, posição, estado. Enquanto o player está na mesma área, mortos não voltam. - Especial / MiniBoss (sem \"mini",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyRespawnMode",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "EnemyRespawn",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "All",
+      "type": "List<EnemyRespawn>",
+      "mods": "public static readonly",
+      "default": "new List<EnemyRespawn>()",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mode",
+      "type": "EnemyRespawnMode",
+      "mods": "public",
+      "default": "EnemyRespawnMode.Comum",
+      "section": "Política de Respawn (Etapa 7.3)",
+      "attrs": "[Header(\"Política de Respawn (Etapa 7.3)\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "miniBossCanRespawn",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Política de Respawn (Etapa 7.3)",
+      "attrs": "[Tooltip(\"Só para MiniBoss: permite respawnar mesmo depois de derrotado (configuração contrária ao padrão).\")]",
+      "inspector": true,
+      "description": "Só para MiniBoss: permite respawnar mesmo depois de derrotado (configuração contrária ao padrão)."
+    },
+    {
+      "name": "persistenceId",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Política de Respawn (Etapa 7.3)",
+      "attrs": "[Tooltip(\"ID usado no registo permanente de derrotados (Especial/MiniBoss). Vazio = usa o Enemy Instance Id do EnemyController.\")]",
+      "inspector": true,
+      "description": "ID usado no registro permanente de derrotados (Especial/MiniBoss). Vazio = usa o Enemy Instance Id do EnemyController."
+    },
+    {
+      "name": "_controller",
+      "type": "EnemyController",
+      "mods": "private",
+      "default": "",
+      "section": "Política de Respawn (Etapa 7.3)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_health",
+      "type": "EnemyHealth",
+      "mods": "private",
+      "default": "",
+      "section": "Política de Respawn (Etapa 7.3)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_dropTable",
+      "type": "EnemyDropTable",
+      "mods": "private",
+      "default": "",
+      "section": "Política de Respawn (Etapa 7.3)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PersistenceId",
+      "type": "string",
+      "mods": "public",
+      "default": "> !string.IsNullOrEmpty(persistenceId) ? persistenceId : _controller.EnemyInstanceId",
+      "section": "Política de Respawn (Etapa 7.3)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "HandleStateChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyState oldState, EnemyState newState",
+      "description": "Executa a operação HandleStateChanged."
+    },
+    {
+      "name": "TryRespawn",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação TryRespawn."
+    },
+    {
+      "name": "ResetEnemy",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetEnemy."
+    }
+  ],
+  "dependencies": [
+    "EnemyController",
+    "EnemyDropTable",
+    "EnemyHealth",
+    "EnemyRespawnZone",
+    "EnemyState",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "AnimalsDebugPanel",
+    "EnemyMultiPartBoss",
+    "EnemyRespawnZone",
+    "Objective_DefeatSpecificEnemy",
+    "PlayerDeathHandler",
+    "PlayerProgress"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>Política de respawn de um inimigo (Etapa 7.3).</summary>\npublic enum EnemyRespawnMode\n{\n    /// <summary>Inimigo comum: volta quando o player sai e reentra na área (EnemyRespawnZone). Não volta enquanto o player permanecer na área.</summary>\n    Comum,\n\n    /// <summary>Inimigo especial: NUNCA volta depois de derrotado (registado permanentemente em PlayerProgress.defeatedEnemyIds).</summary>\n    Especial,\n\n    /// <summary>Mini-boss: não respawna após derrotado, salvo \"miniBossCanRespawn\".</summary>\n    MiniBoss\n}\n\n/// <summary>\n/// Respawn e persistência de um inimigo (Enemy Creator — Etapa 7.3):\n///\n/// - Comum: <see cref=\"TryRespawn\"/> (chamado por EnemyRespawnZone quando o\n///   player reentra na área) faz reset completo — vida, drops comuns, posição,\n///   estado. Enquanto o player está na mesma área, mortos não voltam.\n/// - Especial / MiniBoss (sem \"miniBossCanRespawn\"): ao morrer/desactivar por\n///   dano, é registado permanentemente em PlayerProgress.defeatedEnemyIds e\n///   nunca volta (desactiva o GameObject em Start nas próximas visitas).\n/// - Desactivado por variável global (Etapa 5.4): mesmo após reset, a condição\n///   continua verdadeira e volta a desactivá-lo — permanece desactivado.\n/// - Drops únicos: bloqueados pelo registo em PlayerProgress (Etapa 4.3),\n///   mesmo que o inimigo respawne.\n/// </summary>\n[DisallowMultipleComponent]\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyRespawn : MonoBehaviour\n{\n    /// <summary>Todas as instâncias activas (usado por EnemyRespawnZone para encontrar inimigos da sua área).</summary>\n    public static readonly List<EnemyRespawn> All = new List<EnemyRespawn>();\n\n    [Header(\"Política de Respawn (Etapa 7.3)\")]\n    public EnemyRespawnMode mode = EnemyRespawnMode.Comum;\n\n    [Tooltip(\"Só para MiniBoss: permite respawnar mesmo depois de derrotado (configuração contrária ao padrão).\")]\n    public bool miniBossCanRespawn = false;\n\n    [Tooltip(\"ID usado no registo permanente de derrotados (Especial/MiniBoss). Vazio = usa o Enemy Instance Id do EnemyController.\")]\n    public string persistenceId = \"\";\n\n    private EnemyController _controller;\n    private EnemyHealth _health;\n    private EnemyDropTable _dropTable;\n\n    /// <summary>ID efectivo de persistência (persistenceId, ou o Enemy Instance Id).</summary>\n    public string PersistenceId => !string.IsNullOrEmpty(persistenceId) ? persistenceId : _controller.EnemyInstanceId;\n\n    /// <summary>True se este inimigo nunca deve voltar depois de derrotado.</summary>\n    public bool IsPermanent => mode == EnemyRespawnMode.Especial ||\n                               (mode == EnemyRespawnMode.MiniBoss && !miniBossCanRespawn);\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n        _health = GetComponent<EnemyHealth>();\n        _dropTable = GetComponent<EnemyDropTable>();\n    }\n\n    private void OnEnable()\n    {\n        All.Add(this);\n        _controller.OnStateChanged += HandleStateChanged;\n    }\n\n    private void OnDisable()\n    {\n        All.Remove(this);\n        _controller.OnStateChanged -= HandleStateChanged;\n    }\n\n    private void Start()\n    {\n        // Derrotado permanentemente numa visita anterior: não volta a aparecer.\n        if (IsPermanent && PlayerProgress.Instance != null && PlayerProgress.Instance.HasDefeatedEnemy(PersistenceId))\n            gameObject.SetActive(false);\n    }\n\n    private void HandleStateChanged(EnemyState oldState, EnemyState newState)\n    {\n        if (newState != EnemyState.Morto && newState != EnemyState.Desactivado) return;\n        if (!IsPermanent) return;\n\n        // Só conta como \"derrotado para sempre\" se tiver ID de persistência.\n        string id = PersistenceId;\n        if (string.IsNullOrEmpty(id))\n        {\n            Debug.LogWarning($\"[{name}] EnemyRespawn (modo {mode}) sem 'persistenceId' nem 'Enemy Instance Id' — a derrota não fica registada permanentemente.\", this);\n            return;\n        }\n\n        PlayerProgress.Instance?.MarkEnemyDefeated(id);\n    }\n\n    /// <summary>\n    /// Tenta respawnar este inimigo (chamado por EnemyRespawnZone quando o\n    /// player reentra na área). Derrotados permanentes não voltam; os restantes\n    /// fazem reset completo (posição/vida/drops comuns/estado).\n    /// </summary>\n    public void TryRespawn()\n    {\n        if (IsPermanent && PlayerProgress.Instance != null && PlayerProgress.Instance.HasDefeatedEnemy(PersistenceId))\n        {\n            gameObject.SetActive(false);\n            return;\n        }\n\n        ResetEnemy();\n    }\n\n    /// <summary>Reset completo: HomePosition, vida, drops comuns (únicos continuam bloqueados pelo registo no PlayerProgress) e estado (ResetState → Idle).</summary>\n    public void ResetEnemy()\n    {\n        if (!gameObject.activeSelf) gameObject.SetActive(true);\n\n        transform.position = _controller.HomePosition;\n\n        if (_controller.Rb != null)\n            _controller.Rb.velocity = Vector2.zero;\n\n        if (_health != null) _health.ResetHealth();\n        if (_dropTable != null) _dropTable.ResetDrops();\n\n        _controller.Target = null;\n        _controller.ResetState(EnemyState.Idle);\n    }\n}\n",
+  "id": "script-enemy-enemyrespawn-cs",
+  "dependencyIds": [
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-enemyrespawnzone-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-enemy-enemyrespawnzone-cs",
+    "script-data-objectives-challengeobjectives-enemy-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-data-playerprogress-cs"
+  ]
+}

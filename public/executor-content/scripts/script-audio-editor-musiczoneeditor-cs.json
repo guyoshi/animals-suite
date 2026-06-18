@@ -1,0 +1,47 @@
+{
+  "path": "Audio/Editor/MusicZoneEditor.cs",
+  "filename": "MusicZoneEditor.cs",
+  "category": "Audio",
+  "primary": "MusicZoneEditor",
+  "kind": "Editor",
+  "summary": "Editor customizado do MusicZone: mostra a lista \"conditions\" (Etapa 8) com o mesmo botão \"+ Adicionar Condição\" usado pelo NpcController, permitindo escolher qualquer subclasse de NpcCondition (incluindo as de variáveis e de estado de NPC) sem precisar de tocar neste editor.",
+  "attach": "Ferramenta do Unity Editor; não adicionar a GameObjects de gameplay.",
+  "types": [
+    {
+      "name": "MusicZoneEditor",
+      "kind": "class",
+      "bases": "Editor",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "OnInspectorGUI",
+      "ret": "void",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação OnInspectorGUI."
+    }
+  ],
+  "dependencies": [
+    "MusicZone",
+    "NpcCondition",
+    "NpcController",
+    "PolymorphicListDrawer"
+  ],
+  "used_by": [
+    "PolymorphicListDrawer"
+  ],
+  "source": "#if UNITY_EDITOR\nusing UnityEditor;\n\n/// <summary>\n/// Editor customizado do MusicZone: mostra a lista \"conditions\" (Etapa 8) com\n/// o mesmo botão \"+ Adicionar Condição\" usado pelo NpcController, permitindo\n/// escolher qualquer subclasse de NpcCondition (incluindo as de variáveis e\n/// de estado de NPC) sem precisar de tocar neste editor.\n/// </summary>\n[CustomEditor(typeof(MusicZone))]\npublic class MusicZoneEditor : Editor\n{\n    public override void OnInspectorGUI()\n    {\n        serializedObject.Update();\n\n        DrawPropertiesExcluding(serializedObject, \"m_Script\", \"conditions\");\n\n        EditorGUILayout.Space();\n        PolymorphicListDrawer.Draw(serializedObject, serializedObject.FindProperty(\"conditions\"), \"Condições (Etapa 8)\", typeof(NpcCondition), \"Adicionar Condição\");\n\n        serializedObject.ApplyModifiedProperties();\n    }\n}\n#endif\n",
+  "id": "script-audio-editor-musiczoneeditor-cs",
+  "dependencyIds": [
+    "script-audio-musiczone-cs",
+    "script-npc-npccondition-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ]
+}

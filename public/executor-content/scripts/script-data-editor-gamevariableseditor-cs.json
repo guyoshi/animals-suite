@@ -1,0 +1,43 @@
+{
+  "path": "Data/Editor/GameVariablesEditor.cs",
+  "filename": "GameVariablesEditor.cs",
+  "category": "Data",
+  "primary": "GameVariablesEditor",
+  "kind": "Editor",
+  "summary": "/ <summary>Editor customizado de GameVariables — mostra a lista de variáveis globais usando GameVariableListDrawer (Etapa 8).</summary>",
+  "attach": "Ferramenta do Unity Editor; não adicionar a GameObjects de gameplay.",
+  "types": [
+    {
+      "name": "GameVariablesEditor",
+      "kind": "class",
+      "bases": "Editor",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "OnInspectorGUI",
+      "ret": "void",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação OnInspectorGUI."
+    }
+  ],
+  "dependencies": [
+    "GameVariableListDrawer",
+    "GameVariables"
+  ],
+  "used_by": [
+    "GameVariableListDrawer"
+  ],
+  "source": "#if UNITY_EDITOR\nusing UnityEditor;\n\n/// <summary>Editor customizado de GameVariables — mostra a lista de variáveis globais usando GameVariableListDrawer (Etapa 8).</summary>\n[CustomEditor(typeof(GameVariables))]\npublic class GameVariablesEditor : Editor\n{\n    public override void OnInspectorGUI()\n    {\n        serializedObject.Update();\n\n        DrawPropertiesExcluding(serializedObject, \"m_Script\", \"globalVariables\");\n\n        GameVariableListDrawer.Draw(serializedObject.FindProperty(\"globalVariables\"), \"Variáveis Globais\");\n\n        serializedObject.ApplyModifiedProperties();\n    }\n}\n#endif\n",
+  "id": "script-data-editor-gamevariableseditor-cs",
+  "dependencyIds": [
+    "script-data-editor-gamevariablelistdrawer-cs",
+    "script-data-gamevariables-cs"
+  ],
+  "usedByIds": [
+    "script-data-editor-gamevariablelistdrawer-cs"
+  ]
+}

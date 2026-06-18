@@ -1,0 +1,395 @@
+{
+  "path": "Interactables/ChallengeTrigger.cs",
+  "filename": "ChallengeTrigger.cs",
+  "category": "Interactables",
+  "primary": "ChallengeTrigger",
+  "kind": "Componente",
+  "summary": "Portal / activador de Provação de Gaia no mundo: uma zona (Collider2D \"Is Trigger\") que inicia via . ─── Modos de entrada ───────────────────────────────────────────────────────── Modo Normal (requiredForm = null, requireInteraction = true): Ao entrar, mostra prompt \"[E] para iniciar...\"; desafio começa ao pressionar Interagir. Se requireInteraction = false (\"Zona\"), inicia automaticamente. Modo Forma Específica (requiredForm preenchido): - O portal só \"acende\" (pisca/brilha) quando o player está com o animal exato definido em requiredForm. - Se o player não tiver esse animal desbloqueado, o portal permanece bloqueado e sem reação. - O ícone do animal ( ) é mostrado no acima do portal. - Entra",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "ChallengeTrigger",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "challenge",
+      "type": "ChallengeDefinition",
+      "mods": "public",
+      "default": "",
+      "section": "Desafio",
+      "attrs": "[Header(\"Desafio\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "requireInteraction",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Modo Normal (sem Forma Específica)",
+      "attrs": "[Header(\"Modo Normal (sem Forma Específica)\")] [Tooltip(\"true = \\\"Portal\\\" (mostra prompt, inicia ao premir Interagir). false = \\\"Zona\\\" (inicia automaticamente ao entrar). Ignorado quando 'requiredForm' está definido.\")]",
+      "inspector": true,
+      "description": "true = \"Portal\" (mostra prompt, inicia ao pressionar Interagir). false = \"Zona\" (inicia automaticamente ao entrar). Ignorado quando 'requiredForm' está definido."
+    },
+    {
+      "name": "requiredForm",
+      "type": "AnimalFormData",
+      "mods": "public",
+      "default": "",
+      "section": "Forma Específica (Portal Especializado)",
+      "attrs": "[Header(\"Forma Específica (Portal Especializado)\")] [Tooltip(\"Se definido, o desafio SÓ pode ser iniciado com esta forma exacta. O portal acende apenas quando o player está nessa forma, o player não pode trocar de forma durante o desafio, e a entrada é feita premindo cima (não Interagir). O ícone da forma é exibido em 'animalIconRenderer'.\")]",
+      "inspector": true,
+      "description": "Se definido, o desafio SÓ pode ser iniciado com esta forma exata. O portal acende apenas quando o player está nessa forma, o player não pode trocar de forma durante o desafio, e a entrada é feita premindo cima (não Interagir). O ícone da forma é exibido em 'animalIconRenderer'."
+    },
+    {
+      "name": "animalIconRenderer",
+      "type": "SpriteRenderer",
+      "mods": "public",
+      "default": "",
+      "section": "Forma Específica (Portal Especializado)",
+      "attrs": "[Tooltip(\"SpriteRenderer (normalmente filho deste GameObject, posicionado acima do portal) onde é mostrado o ícone do animal exigido. Activado apenas quando 'requiredForm' está definido.\")]",
+      "inspector": true,
+      "description": "SpriteRenderer (normalmente filho deste GameObject, posicionado acima do portal) onde é mostrado o ícone do animal exigido. Ativado apenas quando 'requiredForm' está definido."
+    },
+    {
+      "name": "upEnterThreshold",
+      "type": "float",
+      "mods": "public",
+      "default": "0.55f",
+      "section": "Forma Específica (Portal Especializado)",
+      "attrs": "[Tooltip(\"Eixo Y mínimo do Move para considerar que o player premiu cima (0.5 = metade do stick/D-Pad). Usado apenas no modo Forma Específica.\")] [Range(0.3f, 1f)]",
+      "inspector": true,
+      "description": "Eixo Y mínimo do Move para considerar que o player premiu cima (0.5 = metade do stick/D-Pad). Usado apenas no modo Forma Específica."
+    },
+    {
+      "name": "promptFormat",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Aperta [E] para iniciar \\\"{0}\\\"\"",
+      "section": "Prompts (apenas modo Normal com requireInteraction)",
+      "attrs": "[Header(\"Prompts (apenas modo Normal com requireInteraction)\")] [Tooltip(\"Texto do prompt de interacção. \\\"{0}\\\" é substituído por ChallengeDefinition.displayName.\")]",
+      "inspector": true,
+      "description": "Texto do prompt de interação. \"{0}\" é substituído por ChallengeDefinition.displayName."
+    },
+    {
+      "name": "deniedFormPromptFormat",
+      "type": "string",
+      "mods": "public",
+      "default": "\"Esta forma não pode iniciar \\\"{0}\\\"\"",
+      "section": "Prompts (apenas modo Normal com requireInteraction)",
+      "attrs": "[Tooltip(\"Texto mostrado quando a forma actual não pode iniciar esta Provação de Gaia (modo normal sem requiredForm). \\\"{0}\\\" é substituído por ChallengeDefinition.displayName.\")]",
+      "inspector": true,
+      "description": "Texto mostrado quando a forma atual não pode iniciar esta Provação de Gaia (modo normal sem requiredForm). \"{0}\" é substituído por ChallengeDefinition.displayName."
+    },
+    {
+      "name": "defaultGlowColor",
+      "type": "Color",
+      "mods": "public",
+      "default": "Color.white",
+      "section": "Estado de Conclusão",
+      "attrs": "[Tooltip(\"Cor do glowSprite quando a Provação ainda não foi concluída (estado inicial).\")]",
+      "inspector": true,
+      "description": "Cor do glowSprite quando a Provação ainda não foi concluída (estado inicial)."
+    },
+    {
+      "name": "completedBadge",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "",
+      "section": "Estado de Conclusão",
+      "attrs": "[Tooltip(\"GameObject (ex: estrela, checkmark) activado quando a Provação de Gaia já foi concluída. Opcional — deixar vazio se só usar a cor do glow.\")]",
+      "inspector": true,
+      "description": "GameObject (ex: estrela, checkmark) ativado quando a Provação de Gaia já foi concluída. Opcional — deixar vazio se só usar a cor do glow."
+    },
+    {
+      "name": "challengeTypeLabel",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Info ao Aproximar (opcional — world-space TMP_Text no prefab do portal)",
+      "attrs": "[Header(\"Info ao Aproximar (opcional — world-space TMP_Text no prefab do portal)\")] [Tooltip(\"TMP_Text posicionado acima do portal que mostra o tipo da Provação de Gaia (ex: 'Combate', 'Corrida'). Activado quando o player entra na zona, escondido ao sair. Deixar vazio para desactivar.\")]",
+      "inspector": true,
+      "description": "TMP_Text posicionado acima do portal que mostra o tipo da Provação de Gaia (ex: 'Combate', 'Corrida'). Ativado quando o player entra na zona, escondido ao sair. Deixar vazio para desativar."
+    },
+    {
+      "name": "rewardPreviewLabel",
+      "type": "TMP_Text",
+      "mods": "public",
+      "default": "",
+      "section": "Info ao Aproximar (opcional — world-space TMP_Text no prefab do portal)",
+      "attrs": "[Tooltip(\"TMP_Text posicionado acima do portal que mostra a recompensa principal (ex: '⭐ +5 Sementes · Runa de Gaia'). Activado quando o player entra, escondido ao sair. Deixar vazio para desactivar.\")]",
+      "inspector": true,
+      "description": "TMP_Text posicionado acima do portal que mostra a recompensa principal (ex: '⭐ +5 Sementes · Runa de Gaia'). Ativado quando o player entra, escondido ao sair. Deixar vazio para desativar."
+    },
+    {
+      "name": "entryPoint",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "Posição de Regresso (opcional)",
+      "attrs": "[Header(\"Posição de Regresso (opcional)\")] [Tooltip(\"Se definido, o jogador volta para este ponto no fim do desafio (quando endBehavior = VoltarParaEntrada), em vez da posição que tinha ao iniciar.\")]",
+      "inspector": true,
+      "description": "Se definido, o jogador volta para este ponto no fim do desafio (quando endBehavior = VoltarParaEntrada), em vez da posição que tinha ao iniciar."
+    },
+    {
+      "name": "abandonOnExit",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "Abandono",
+      "attrs": "[Header(\"Abandono\")] [Tooltip(\"Se o jogador saír desta zona enquanto este desafio estiver activo, termina-o como Abandonado.\")]",
+      "inspector": true,
+      "description": "Se o jogador saír desta zona enquanto este desafio estiver ativo, termina-o como Abandonado."
+    },
+    {
+      "name": "glowSprite",
+      "type": "SpriteRenderer",
+      "mods": "public",
+      "default": "",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "[Header(\"Feedback Visual/Sonoro (opcional)\")] [Tooltip(\"Activado/piscado enquanto o player está na zona com a forma correcta (ou sempre, no modo normal). No modo Forma Específica, fica desligado até a forma correcta estar equipada.\")]",
+      "inspector": true,
+      "description": "Ativado/piscado enquanto o player está na zona com a forma correcta (ou sempre, no modo normal). No modo Forma Específica, fica desligado até a forma correcta estar equipada."
+    },
+    {
+      "name": "enterSfx",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "[Tooltip(\"Som ao entrar na zona (e ter a forma correcta, no modo Forma Específica).\")]",
+      "inspector": true,
+      "description": "Som ao entrar na zona (e ter a forma correcta, no modo Forma Específica)."
+    },
+    {
+      "name": "_input",
+      "type": "PlayerInputRouter",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_formSwitcher",
+      "type": "FormSwitcher",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_playerInRange",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_wasUpPressed",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_formReady",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "PlayerInRange",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _playerInRange",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsRequiredFormMode",
+      "type": "bool",
+      "mods": "private",
+      "default": "> requiredForm != null",
+      "section": "Feedback Visual/Sonoro (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Reset",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Reset."
+    },
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnTriggerExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerExit2D."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "Update",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Update."
+    },
+    {
+      "name": "OnFormApplied",
+      "ret": "void",
+      "mods": "private",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação OnFormApplied."
+    },
+    {
+      "name": "EvaluateRequiredForm",
+      "ret": "void",
+      "mods": "private",
+      "params": "AnimalFormData currentForm",
+      "description": "Executa a operação EvaluateRequiredForm."
+    },
+    {
+      "name": "OnInteractPressed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnInteractPressed."
+    },
+    {
+      "name": "TryStartChallenge",
+      "ret": "bool",
+      "mods": "private",
+      "params": "Collider2D playerCollider",
+      "description": "Executa a operação TryStartChallenge."
+    },
+    {
+      "name": "ShowNormalPrompt",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D playerCollider",
+      "description": "Executa a operação ShowNormalPrompt."
+    },
+    {
+      "name": "GetCurrentForm",
+      "ret": "AnimalFormData",
+      "mods": "private static",
+      "params": "Collider2D playerCollider",
+      "description": "Executa a operação GetCurrentForm."
+    },
+    {
+      "name": "RefreshCompletionVisual",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RefreshCompletionVisual."
+    },
+    {
+      "name": "ShowInfoLabels",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ShowInfoLabels."
+    },
+    {
+      "name": "HideInfoLabels",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HideInfoLabels."
+    },
+    {
+      "name": "BuildRewardText",
+      "ret": "string",
+      "mods": "private static",
+      "params": "ChallengeReward reward",
+      "description": "Executa a operação BuildRewardText."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "AudioManager",
+    "ChallengeDefinition",
+    "ChallengeManager",
+    "ChallengeReward",
+    "FormSwitcher",
+    "InteractionPromptUI",
+    "PlayerInputRouter",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "Action_StartChallenge",
+    "ChallengeDefinition",
+    "FormSwitcher",
+    "GameDataValidatorWindow"
+  ],
+  "source": "using TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Portal / activador de Provação de Gaia no mundo:\n/// uma zona (Collider2D \"Is Trigger\") que inicia <see cref=\"challenge\"/> via\n/// <see cref=\"ChallengeManager.StartChallenge\"/>.\n///\n/// ─── Modos de entrada ─────────────────────────────────────────────────────────\n///\n/// <b>Modo Normal</b> (requiredForm = null, requireInteraction = true):\n///   Ao entrar, mostra prompt \"[E] para iniciar...\"; desafio começa ao premir\n///   Interagir. Se requireInteraction = false (\"Zona\"), inicia automaticamente.\n///\n/// <b>Modo Forma Específica</b> (requiredForm preenchido):\n///   - O portal só \"acende\" (pisca/brilha) quando o player está com o animal\n///     exacto definido em requiredForm.\n///   - Se o player não tiver esse animal desbloqueado, o portal permanece\n///     bloqueado e sem reacção.\n///   - O ícone do animal (<see cref=\"AnimalFormData.icon\"/>) é mostrado no\n///     <see cref=\"animalIconRenderer\"/> acima do portal.\n///   - Entrada via cima (Move.y ≥ upEnterThreshold) — NÃO via Interagir.\n///   - Durante o desafio, o player não pode trocar de forma\n///     (<see cref=\"ChallengeDefinition.lockFormDuringChallenge\"/> é forçado\n///     a true ao iniciar o desafio).\n///   - requireInteraction é ignorado (sempre modo \"portal com Up\").\n///\n/// ─── Outros campos ────────────────────────────────────────────────────────────\n///\n/// Posição de regresso: define <see cref=\"entryPoint\"/> para usar um ponto\n/// fixo em vez da posição do player ao entrar.\n///\n/// Abandono: se o jogador saír desta zona enquanto ESTE desafio estiver activo,\n/// termina-o como Abandonado (ver <see cref=\"abandonOnExit\"/>).\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class ChallengeTrigger : MonoBehaviour\n{\n    [Header(\"Desafio\")]\n    public ChallengeDefinition challenge;\n\n    [Header(\"Modo Normal (sem Forma Específica)\")]\n    [Tooltip(\"true = \\\"Portal\\\" (mostra prompt, inicia ao premir Interagir). false = \\\"Zona\\\" (inicia automaticamente ao entrar). Ignorado quando 'requiredForm' está definido.\")]\n    public bool requireInteraction = true;\n\n    [Header(\"Forma Específica (Portal Especializado)\")]\n    [Tooltip(\"Se definido, o desafio SÓ pode ser iniciado com esta forma exacta. O portal acende apenas quando o player está nessa forma, o player não pode trocar de forma durante o desafio, e a entrada é feita premindo cima (não Interagir). O ícone da forma é exibido em 'animalIconRenderer'.\")]\n    public AnimalFormData requiredForm;\n\n    [Tooltip(\"SpriteRenderer (normalmente filho deste GameObject, posicionado acima do portal) onde é mostrado o ícone do animal exigido. Activado apenas quando 'requiredForm' está definido.\")]\n    public SpriteRenderer animalIconRenderer;\n\n    [Tooltip(\"Eixo Y mínimo do Move para considerar que o player premiu cima (0.5 = metade do stick/D-Pad). Usado apenas no modo Forma Específica.\")]\n    [Range(0.3f, 1f)]\n    public float upEnterThreshold = 0.55f;\n\n    [Header(\"Prompts (apenas modo Normal com requireInteraction)\")]\n    [Tooltip(\"Texto do prompt de interacção. \\\"{0}\\\" é substituído por ChallengeDefinition.displayName.\")]\n    public string promptFormat = \"Aperta [E] para iniciar \\\"{0}\\\"\";\n\n    [Tooltip(\"Texto mostrado quando a forma actual não pode iniciar esta Provação de Gaia (modo normal sem requiredForm). \\\"{0}\\\" é substituído por ChallengeDefinition.displayName.\")]\n    public string deniedFormPromptFormat = \"Esta forma não pode iniciar \\\"{0}\\\"\";\n\n    [Header(\"Estado de Conclusão\")]\n    [Tooltip(\"Cor do glowSprite quando esta Provação de Gaia já foi concluída pelo menos uma vez. Dá ao portal uma aparência dourada/verde para indicar conclusão.\")]\n    public Color completedGlowColor = new Color(1f, 0.84f, 0f, 1f);   // dourado\n    [Tooltip(\"Cor do glowSprite quando a Provação ainda não foi concluída (estado inicial).\")]\n    public Color defaultGlowColor = Color.white;\n    [Tooltip(\"GameObject (ex: estrela, checkmark) activado quando a Provação de Gaia já foi concluída. Opcional — deixar vazio se só usar a cor do glow.\")]\n    public GameObject completedBadge;\n\n    [Header(\"Info ao Aproximar (opcional — world-space TMP_Text no prefab do portal)\")]\n    [Tooltip(\"TMP_Text posicionado acima do portal que mostra o tipo da Provação de Gaia (ex: 'Combate', 'Corrida'). Activado quando o player entra na zona, escondido ao sair. Deixar vazio para desactivar.\")]\n    public TMP_Text challengeTypeLabel;\n    [Tooltip(\"TMP_Text posicionado acima do portal que mostra a recompensa principal (ex: '⭐ +5 Sementes · Runa de Gaia'). Activado quando o player entra, escondido ao sair. Deixar vazio para desactivar.\")]\n    public TMP_Text rewardPreviewLabel;\n\n    [Header(\"Posição de Regresso (opcional)\")]\n    [Tooltip(\"Se definido, o jogador volta para este ponto no fim do desafio (quando endBehavior = VoltarParaEntrada), em vez da posição que tinha ao iniciar.\")]\n    public Transform entryPoint;\n\n    [Header(\"Abandono\")]\n    [Tooltip(\"Se o jogador saír desta zona enquanto este desafio estiver activo, termina-o como Abandonado.\")]\n    public bool abandonOnExit = true;\n\n    [Header(\"Feedback Visual/Sonoro (opcional)\")]\n    [Tooltip(\"Activado/piscado enquanto o player está na zona com a forma correcta (ou sempre, no modo normal). No modo Forma Específica, fica desligado até a forma correcta estar equipada.\")]\n    public SpriteRenderer glowSprite;\n\n    [Tooltip(\"Som ao entrar na zona (e ter a forma correcta, no modo Forma Específica).\")]\n    public AudioClip enterSfx;\n\n    // ── Estado interno ──────────────────────────────────────────────────────\n\n    private PlayerInputRouter _input;\n    private FormSwitcher _formSwitcher;\n    private bool _playerInRange;\n\n    // Para detecção de \"rising edge\" do eixo Up (evita disparo contínuo).\n    private bool _wasUpPressed;\n\n    // Indica se, com a forma actual, o player pode entrar neste portal\n    // (só relevante no modo Forma Específica — no modo normal é sempre true\n    // se IsFormAllowed).\n    private bool _formReady;\n\n    /// <summary>True enquanto o player está dentro desta zona/portal.</summary>\n    public bool PlayerInRange => _playerInRange;\n\n    // ── Configuração ────────────────────────────────────────────────────────\n\n    private bool IsRequiredFormMode => requiredForm != null;\n\n    private void Reset()\n    {\n        var col = GetComponent<Collider2D>();\n        if (col != null) col.isTrigger = true;\n    }\n\n    private void Start()\n    {\n        // Aplica o estado de conclusão logo no início da cena (antes de\n        // qualquer interacção do player).\n        RefreshCompletionVisual();\n\n        // Info labels escondidas por defeito — só aparecem quando o player entra.\n        if (challengeTypeLabel != null) challengeTypeLabel.gameObject.SetActive(false);\n        if (rewardPreviewLabel != null) rewardPreviewLabel.gameObject.SetActive(false);\n    }\n\n    private void Awake()\n    {\n        // Configura o ícone do animal (visível apenas no modo Forma Específica).\n        if (animalIconRenderer != null)\n        {\n            if (IsRequiredFormMode && requiredForm.icon != null)\n            {\n                animalIconRenderer.sprite = requiredForm.icon;\n                animalIconRenderer.enabled = true;\n            }\n            else\n            {\n                animalIconRenderer.enabled = false;\n            }\n        }\n\n        // Glow começa desligado no modo Forma Específica (acende quando a forma correta é equipada).\n        if (glowSprite != null && IsRequiredFormMode)\n            glowSprite.enabled = false;\n    }\n\n    // ── Trigger ────────────────────────────────────────────────────────────\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        _playerInRange = true;\n        _wasUpPressed = false;\n\n        _input = other.GetComponent<PlayerInputRouter>();\n        _formSwitcher = other.GetComponent<FormSwitcher>()\n                     ?? other.GetComponentInParent<FormSwitcher>();\n\n        if (IsRequiredFormMode)\n        {\n            // Subscreve às mudanças de forma para actualizar o estado do portal em tempo real.\n            if (_formSwitcher != null)\n                _formSwitcher.OnFormApplied += OnFormApplied;\n\n            // Avalia a forma actual imediatamente.\n            EvaluateRequiredForm(_formSwitcher != null ? _formSwitcher.CurrentForm : null);\n        }\n        else\n        {\n            // Modo normal: glow sempre ligado ao entrar.\n            if (glowSprite != null) glowSprite.enabled = true;\n            if (enterSfx != null) AudioManager.Instance?.PlaySE(enterSfx);\n\n            if (requireInteraction)\n            {\n                if (_input != null) _input.InteractPressed += OnInteractPressed;\n                ShowNormalPrompt(other);\n            }\n            else\n            {\n                TryStartChallenge(other);\n            }\n        }\n\n        // Mostra tipo da Provação e pré-visualização da recompensa ao aproximar.\n        ShowInfoLabels();\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        _playerInRange = false;\n        _formReady = false;\n        _wasUpPressed = false;\n\n        // Desinscreve de todos os eventos.\n        if (_input != null) _input.InteractPressed -= OnInteractPressed;\n        _input = null;\n\n        if (_formSwitcher != null)\n            _formSwitcher.OnFormApplied -= OnFormApplied;\n        _formSwitcher = null;\n\n        // Apaga glow ao sair.\n        if (glowSprite != null) glowSprite.enabled = false;\n\n        // Esconde prompt normal ao sair.\n        if (!IsRequiredFormMode && requireInteraction && InteractionPromptUI.Instance != null)\n            InteractionPromptUI.Instance.Hide();\n\n        // Abandona a Provação se o player saiu da zona.\n        if (abandonOnExit && challenge != null && ChallengeManager.Instance != null\n            && ChallengeManager.Instance.IsActive && ChallengeManager.Instance.CurrentChallenge == challenge)\n        {\n            ChallengeManager.Instance.AbandonChallenge();\n        }\n\n        // Esconde labels de info ao sair da zona.\n        HideInfoLabels();\n    }\n\n    private void OnDisable()\n    {\n        if (_input != null) _input.InteractPressed -= OnInteractPressed;\n        _input = null;\n\n        if (_formSwitcher != null)\n            _formSwitcher.OnFormApplied -= OnFormApplied;\n        _formSwitcher = null;\n    }\n\n    // ── Update (detecção de \"Up\" no modo Forma Específica) ─────────────────\n\n    private void Update()\n    {\n        if (!_playerInRange || !IsRequiredFormMode || !_formReady) return;\n        if (_input == null) return;\n\n        bool upNow = _input.Move.y >= upEnterThreshold;\n\n        if (upNow && !_wasUpPressed)\n        {\n            // Rising edge de \"cima\" — tenta iniciar o desafio.\n            var playerGo = _input.gameObject;\n            var col = playerGo.GetComponent<Collider2D>()\n                   ?? playerGo.GetComponentInChildren<Collider2D>();\n            TryStartChallenge(col);\n        }\n\n        _wasUpPressed = upNow;\n    }\n\n    // ── Callbacks ──────────────────────────────────────────────────────────\n\n    /// <summary>Chamado quando o player troca de forma (subscrito em OnTriggerEnter2D, modo Forma Específica).</summary>\n    private void OnFormApplied(AnimalFormData form)\n    {\n        EvaluateRequiredForm(form);\n    }\n\n    /// <summary>\n    /// Avalia se a forma actual permite entrar neste portal (modo Forma Específica).\n    /// Actualiza <see cref=\"_formReady\"/>, o glow e o som de entrada.\n    /// </summary>\n    private void EvaluateRequiredForm(AnimalFormData currentForm)\n    {\n        bool hasUnlocked = _formSwitcher != null\n                           && _formSwitcher.unlockedForms.Contains(requiredForm);\n\n        bool isCorrectForm = currentForm == requiredForm;\n\n        bool wasReady = _formReady;\n        _formReady = hasUnlocked && isCorrectForm;\n\n        // Actualiza o glow: acende/apaga conforme a forma.\n        if (glowSprite != null)\n            glowSprite.enabled = _formReady;\n\n        // Toca som de entrada apenas quando o estado muda de \"não pronto\" → \"pronto\".\n        if (_formReady && !wasReady && enterSfx != null)\n            AudioManager.Instance?.PlaySE(enterSfx);\n    }\n\n    private void OnInteractPressed()\n    {\n        if (!_playerInRange) return;\n        if (_input != null && _input.InteractConsumed) return;\n\n        var playerGo = _input != null ? _input.gameObject : GameObject.FindWithTag(\"Player\");\n        if (playerGo == null) return;\n\n        var col = playerGo.GetComponent<Collider2D>()\n               ?? playerGo.GetComponentInChildren<Collider2D>();\n\n        if (TryStartChallenge(col))\n            if (_input != null) _input.InteractConsumed = true;\n    }\n\n    // ── Iniciar desafio ────────────────────────────────────────────────────\n\n    /// <summary>\n    /// Tenta iniciar o desafio. No modo Forma Específica, verifica que a forma\n    /// actual == requiredForm e que o player a tem desbloqueada; no modo Normal,\n    /// verifica <see cref=\"ChallengeDefinition.IsFormAllowed\"/>.\n    /// Devolve true se o desafio foi iniciado.\n    /// </summary>\n    private bool TryStartChallenge(Collider2D playerCollider)\n    {\n        if (challenge == null || ChallengeManager.Instance == null || playerCollider == null)\n            return false;\n\n        var form = GetCurrentForm(playerCollider);\n\n        if (IsRequiredFormMode)\n        {\n            // Porta bloqueada se o animal não está desbloqueado.\n            if (_formSwitcher == null || !_formSwitcher.unlockedForms.Contains(requiredForm))\n                return false;\n\n            // Porta fechada se não está com o animal certo.\n            if (form != requiredForm)\n                return false;\n\n            // Força lockFormDuringChallenge na definição ao iniciar.\n            challenge.lockFormDuringChallenge = true;\n        }\n        else\n        {\n            if (!challenge.IsFormAllowed(form)) return false;\n        }\n\n        Vector3 entryPos = entryPoint != null ? entryPoint.position : playerCollider.transform.position;\n        return ChallengeManager.Instance.StartChallenge(challenge, form, entryPos);\n    }\n\n    // ── Prompt (modo Normal) ───────────────────────────────────────────────\n\n    private void ShowNormalPrompt(Collider2D playerCollider)\n    {\n        if (challenge == null || InteractionPromptUI.Instance == null) return;\n        if (ChallengeManager.Instance != null && ChallengeManager.Instance.IsActive) return;\n\n        var form = GetCurrentForm(playerCollider);\n        string text = challenge.IsFormAllowed(form)\n            ? string.Format(promptFormat, challenge.displayName)\n            : string.Format(deniedFormPromptFormat, challenge.displayName);\n\n        InteractionPromptUI.Instance.Show(text);\n    }\n\n    // ── Utilitários ────────────────────────────────────────────────────────\n\n    private static AnimalFormData GetCurrentForm(Collider2D playerCollider)\n    {\n        if (playerCollider == null) return null;\n        var switcher = playerCollider.GetComponent<FormSwitcher>()\n                    ?? playerCollider.GetComponentInParent<FormSwitcher>();\n        return switcher != null ? switcher.CurrentForm : null;\n    }\n\n    // ── Visuais de Conclusão ───────────────────────────────────────────────\n\n    /// <summary>\n    /// Actualiza a cor do glow e o badge de conclusão conforme o estado actual\n    /// do desafio em PlayerProgress. Chamado em Start() e pode ser chamado\n    /// manualmente após concluir a Provação (ex: pelo ChallengeManager).\n    /// </summary>\n    public void RefreshCompletionVisual()\n    {\n        bool isCompleted = challenge != null\n            && PlayerProgress.Instance != null\n            && PlayerProgress.Instance.HasCompletedChallenge(challenge.challengeId);\n\n        if (glowSprite != null)\n            glowSprite.color = isCompleted ? completedGlowColor : defaultGlowColor;\n\n        if (completedBadge != null)\n            completedBadge.SetActive(isCompleted);\n    }\n\n    // ── Labels de Info (tipo + recompensa) ────────────────────────────────\n\n    private void ShowInfoLabels()\n    {\n        if (challenge == null) return;\n\n        // Tipo da Provação de Gaia (ex: \"Combate\", \"Corrida\").\n        if (challengeTypeLabel != null)\n        {\n            challengeTypeLabel.text = challenge.TypeDisplayName;\n            challengeTypeLabel.gameObject.SetActive(true);\n        }\n\n        // Pré-visualização da recompensa.\n        if (rewardPreviewLabel != null)\n        {\n            bool completed = PlayerProgress.Instance != null\n                && PlayerProgress.Instance.HasCompletedChallenge(challenge.challengeId);\n\n            // Na primeira vez mostra a recompensa primária; nas repetições, a secundária.\n            var reward = (!completed || !challenge.hasSecondaryReward)\n                ? challenge.primaryReward\n                : challenge.secondaryReward;\n\n            string text = BuildRewardText(reward);\n            if (!string.IsNullOrEmpty(text))\n            {\n                rewardPreviewLabel.text = text;\n                rewardPreviewLabel.gameObject.SetActive(true);\n            }\n        }\n    }\n\n    private void HideInfoLabels()\n    {\n        if (challengeTypeLabel != null) challengeTypeLabel.gameObject.SetActive(false);\n        if (rewardPreviewLabel != null)  rewardPreviewLabel.gameObject.SetActive(false);\n    }\n\n    /// <summary>\n    /// Constrói uma string de uma linha resumindo a recompensa (ex:\n    /// \"⭐ +3 Sementes · +1 Runa de Gaia · Espada\"). Devolve vazio se não\n    /// houver nenhuma recompensa ou a recompensa for nula.\n    /// </summary>\n    private static string BuildRewardText(ChallengeReward reward)\n    {\n        if (reward == null || !reward.HasAnything) return string.Empty;\n\n        var parts = new System.Collections.Generic.List<string>();\n\n        if (reward.sementes > 0)    parts.Add($\"+{reward.sementes} Sementes\");\n        if (reward.runasDeGaia > 0) parts.Add($\"+{reward.runasDeGaia} Runa{(reward.runasDeGaia > 1 ? \"s\" : \"\")} de Gaia\");\n        if (reward.runasDeApolo > 0) parts.Add($\"+{reward.runasDeApolo} Runa{(reward.runasDeApolo > 1 ? \"s\" : \"\")} de Apolo\");\n\n        if (reward.itemRewards != null)\n            foreach (var entry in reward.itemRewards)\n                if (entry?.item != null)\n                    parts.Add(entry.amount > 1\n                        ? $\"{entry.item.displayName} ×{entry.amount}\"\n                        : entry.item.displayName);\n\n        return parts.Count > 0 ? string.Join(\"  ·  \", parts) : string.Empty;\n    }\n}\n",
+  "id": "script-interactables-challengetrigger-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-audio-audiomanager-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-challengemanager-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-interactionpromptui-cs",
+    "script-input-playerinputrouter-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-challengeactions-cs",
+    "script-data-challengedefinition-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-editor-gamedatavalidatorwindow-cs"
+  ]
+}

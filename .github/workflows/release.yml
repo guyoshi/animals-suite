@@ -1,0 +1,40 @@
+name: Publicar Animals Suite
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'app-v*'
+permissions:
+  contents: write
+jobs:
+  publish-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+      - run: npm ci
+      - run: npm run validate:final
+      - uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          ANIMALS_UPDATE_PUBKEY: ${{ secrets.TAURI_UPDATER_PUBLIC_KEY }}
+          ANIMALS_UPDATE_ENDPOINT: https://github.com/${{ github.repository }}/releases/latest/download/latest.json
+        with:
+          tagName: app-v__VERSION__
+          releaseName: 'Animals Suite v__VERSION__'
+          releaseBody: 'Instalador, atualização automática e arquivos desta versão.'
+          releaseDraft: false
+          prerelease: false
+          generateReleaseNotes: true
+          uploadUpdaterJson: true
+          updaterJsonPreferNsis: true
+          args: --config src-tauri/tauri.updater.conf.json

@@ -1,0 +1,54 @@
+{
+  "path": "Collectibles/RunaDeGaiaPickup.cs",
+  "filename": "RunaDeGaiaPickup.cs",
+  "category": "Collectibles",
+  "primary": "RunaDeGaiaPickup",
+  "kind": "Definição",
+  "summary": "Runa de Gaia — concede ao saldo/total de Runas ( PlayerProgress.GiveRunasDeGaia ) e regista \"encontrada\" na área ( AreaProgress.runasFound / AreaData.totalRunas ) uma vez por unidade concedida.",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "RunaDeGaiaPickup",
+      "kind": "class",
+      "bases": "PickupBase",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "Runa de Gaia",
+      "attrs": "[Header(\"Runa de Gaia\")] [Tooltip(\"Quantidade de Runas de Gaia concedidas (normalmente 1).\")] [Min(1)]",
+      "inspector": true,
+      "description": "Quantidade de Runas de Gaia concedidas (normalmente 1)."
+    }
+  ],
+  "methods": [
+    {
+      "name": "GrantReward",
+      "ret": "void",
+      "mods": "protected override",
+      "params": "",
+      "description": "Executa a operação GrantReward."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AreaProgress",
+    "PickupBase",
+    "PickupType",
+    "PlayerProgress"
+  ],
+  "used_by": [],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Runa de Gaia — concede <see cref=\"amount\"/> ao saldo/total de Runas\n/// (<c>PlayerProgress.GiveRunasDeGaia</c>) e regista \"encontrada\" na área\n/// (<c>AreaProgress.runasFound</c> / <c>AreaData.totalRunas</c>) uma vez por\n/// unidade concedida.\n/// </summary>\npublic class RunaDeGaiaPickup : PickupBase\n{\n    [Header(\"Runa de Gaia\")]\n    [Tooltip(\"Quantidade de Runas de Gaia concedidas (normalmente 1).\")]\n    [Min(1)] public int amount = 1;\n\n    public override PickupType Type => PickupType.RunaDeGaia;\n\n    protected override void GrantReward()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return;\n\n        progress.GiveRunasDeGaia(amount);\n\n        if (area != null)\n            for (int i = 0; i < amount; i++) progress.AddRunaFound(area);\n    }\n}\n",
+  "id": "script-collectibles-runadegaiapickup-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": []
+}

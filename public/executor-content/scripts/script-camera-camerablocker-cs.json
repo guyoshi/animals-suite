@@ -1,0 +1,90 @@
+{
+  "path": "Camera/CameraBlocker.cs",
+  "filename": "CameraBlocker.cs",
+  "category": "Camera",
+  "primary": "CameraBlocker",
+  "kind": "Componente",
+  "summary": "Script do projeto Animals.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "CameraBlocker",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "triggerZone",
+      "type": "BoxCollider2D",
+      "mods": "private",
+      "default": "",
+      "section": "Trigger (where it activates)",
+      "attrs": "[Header(\"Trigger (where it activates)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "allowedBounds",
+      "type": "BoxCollider2D",
+      "mods": "private",
+      "default": "",
+      "section": "Allowed bounds (what camera is allowed to show while inside)",
+      "attrs": "[Header(\"Allowed bounds (what camera is allowed to show while inside)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Reset",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Reset."
+    },
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnTriggerEnter2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerEnter2D."
+    },
+    {
+      "name": "OnTriggerExit2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerExit2D."
+    },
+    {
+      "name": "OnDrawGizmosSelected",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDrawGizmosSelected."
+    }
+  ],
+  "dependencies": [
+    "CameraManager"
+  ],
+  "used_by": [
+    "CameraManager"
+  ],
+  "source": "using UnityEngine;\n\npublic class CameraBlocker : MonoBehaviour\n{\n    [Header(\"Trigger (where it activates)\")]\n    [SerializeField] private BoxCollider2D triggerZone;\n\n    [Header(\"Allowed bounds (what camera is allowed to show while inside)\")]\n    [SerializeField] private BoxCollider2D allowedBounds;\n\n    private void Reset()\n    {\n        triggerZone = GetComponent<BoxCollider2D>();\n    }\n\n    private void Awake()\n    {\n        if (triggerZone == null) triggerZone = GetComponent<BoxCollider2D>();\n        if (triggerZone != null) triggerZone.isTrigger = true;\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (CameraManager.Instance != null)\n            CameraManager.Instance.AddBlocker(allowedBounds);\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (CameraManager.Instance != null)\n            CameraManager.Instance.RemoveBlocker(allowedBounds);\n    }\n\n#if UNITY_EDITOR\n    private void OnDrawGizmosSelected()\n    {\n        if (allowedBounds == null) return;\n        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.25f);\n        Gizmos.DrawCube(allowedBounds.bounds.center, allowedBounds.bounds.size);\n        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.9f);\n        Gizmos.DrawWireCube(allowedBounds.bounds.center, allowedBounds.bounds.size);\n    }\n#endif\n}\n",
+  "id": "script-camera-camerablocker-cs",
+  "dependencyIds": [
+    "script-camera-cameramanager-cs"
+  ],
+  "usedByIds": [
+    "script-camera-cameramanager-cs"
+  ]
+}

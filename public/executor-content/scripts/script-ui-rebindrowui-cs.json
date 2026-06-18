@@ -1,0 +1,177 @@
+{
+  "path": "UI/RebindRowUI.cs",
+  "filename": "RebindRowUI.cs",
+  "category": "UI",
+  "primary": "RebindRowUI",
+  "kind": "Componente",
+  "summary": "Uma linha de \"Mudar controles\" (Menu de Pausa: Opções, Tarefa #12): mostra o nome da ação e a tecla/botão atualmente associado, com um botão \"Mudar\" que entra em modo de escuta ( ) e regista o próximo input do jogador como novo binding. \"bindingIndex\" identifica qual binding desta ação esta linha controla — 0 para ações simples; para composites 2D (Move/Look: Up/Down/Left/Right) usa o índice do binding composite (1=Up, 2=Down, 3=Left, 4=Right, pela ordem típica do Input System). Não persiste nada por si só — grava todos os overrides do asset de uma vez, depois de qualquer linha terminar um rebind.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "RebindRowUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "action",
+      "type": "InputActionReference",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "bindingIndex",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Índice do binding dentro da acção. 0 para acções simples; para composites 2D, o índice da parte (Up/Down/Left/Right).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Índice do binding dentro da ação. 0 para ações simples; para composites 2D, o índice da parte (Up/Down/Left/Right)."
+    },
+    {
+      "name": "actionNameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "bindingDisplayText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rebindButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "waitingIndicator",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Mostrado enquanto o botão está à espera do próximo input do jogador.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Mostrado enquanto o botão está à espera do próximo input do jogador."
+    },
+    {
+      "name": "waitingText",
+      "type": "string",
+      "mods": "private",
+      "default": "\"Prima uma tecla/botão...\"",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "displayNameOverride",
+      "type": "string",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "rebindOperation",
+      "type": "InputActionRebindingExtensions.RebindingOperation",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "RebindCompleted",
+      "type": "System.Action<RebindRowUI>",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "RefreshDisplay",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RefreshDisplay."
+    },
+    {
+      "name": "StartRebind",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StartRebind."
+    },
+    {
+      "name": "FinishRebind",
+      "ret": "void",
+      "mods": "private",
+      "params": "InputAction inputAction",
+      "description": "Executa a operação FinishRebind."
+    },
+    {
+      "name": "ResetToDefault",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ResetToDefault."
+    }
+  ],
+  "dependencies": [
+    "ControlsRebindSectionUI"
+  ],
+  "used_by": [
+    "ControlsRebindSectionUI"
+  ],
+  "source": "using TMPro;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Uma linha de \"Mudar controles\" (Menu de Pausa: Opções, Tarefa #12): mostra o\n/// nome da acção e a tecla/botão actualmente associado, com um botão \"Mudar\"\n/// que entra em modo de escuta (<see cref=\"InputActionRebindingExtensions.PerformInteractiveRebinding\"/>)\n/// e regista o próximo input do jogador como novo binding.\n///\n/// \"bindingIndex\" identifica qual binding desta acção esta linha controla —\n/// 0 para acções simples; para composites 2D (Move/Look: Up/Down/Left/Right)\n/// usa o índice do binding composite (1=Up, 2=Down, 3=Left, 4=Right, pela ordem\n/// típica do Input System).\n///\n/// Não persiste nada por si só — <see cref=\"ControlsRebindSectionUI\"/> grava\n/// todos os overrides do asset de uma vez, depois de qualquer linha terminar um rebind.\n/// </summary>\npublic class RebindRowUI : MonoBehaviour\n{\n    [SerializeField] private InputActionReference action;\n\n    [Tooltip(\"Índice do binding dentro da acção. 0 para acções simples; para composites 2D, o índice da parte (Up/Down/Left/Right).\")]\n    [SerializeField] private int bindingIndex;\n\n    [SerializeField] private TMP_Text actionNameText;\n    [SerializeField] private TMP_Text bindingDisplayText;\n    [SerializeField] private Button rebindButton;\n\n    [Tooltip(\"Mostrado enquanto o botão está à espera do próximo input do jogador.\")]\n    [SerializeField] private GameObject waitingIndicator;\n\n    [SerializeField] private string waitingText = \"Prima uma tecla/botão...\";\n    [SerializeField] private string displayNameOverride;\n\n    private InputActionRebindingExtensions.RebindingOperation rebindOperation;\n\n    /// <summary>Disparado quando um rebind termina com sucesso — ControlsRebindSectionUI usa isto para gravar os overrides.</summary>\n    public System.Action<RebindRowUI> RebindCompleted;\n\n    private void Awake()\n    {\n        if (rebindButton != null) rebindButton.onClick.AddListener(StartRebind);\n        RefreshDisplay();\n    }\n\n    private void OnDisable()\n    {\n        rebindOperation?.Cancel();\n    }\n\n    public void RefreshDisplay()\n    {\n        if (action == null || action.action == null) return;\n\n        if (actionNameText != null)\n            actionNameText.text = !string.IsNullOrEmpty(displayNameOverride) ? displayNameOverride : action.action.name;\n\n        if (bindingDisplayText != null)\n            bindingDisplayText.text = action.action.GetBindingDisplayString(bindingIndex);\n\n        if (waitingIndicator != null) waitingIndicator.SetActive(false);\n    }\n\n    public void StartRebind()\n    {\n        if (action == null || action.action == null) return;\n\n        var inputAction = action.action;\n\n        if (waitingIndicator != null) waitingIndicator.SetActive(true);\n        if (bindingDisplayText != null) bindingDisplayText.text = waitingText;\n        if (rebindButton != null) rebindButton.interactable = false;\n\n        inputAction.Disable();\n\n        rebindOperation = inputAction.PerformInteractiveRebinding(bindingIndex)\n            .WithControlsExcluding(\"Mouse\")\n            .WithCancelingThrough(\"<Keyboard>/escape\")\n            .OnMatchWaitForAnother(0.1f)\n            .OnComplete(_ => FinishRebind(inputAction))\n            .OnCancel(_ => FinishRebind(inputAction))\n            .Start();\n    }\n\n    private void FinishRebind(InputAction inputAction)\n    {\n        rebindOperation?.Dispose();\n        rebindOperation = null;\n\n        inputAction.Enable();\n\n        if (rebindButton != null) rebindButton.interactable = true;\n\n        RefreshDisplay();\n        RebindCompleted?.Invoke(this);\n    }\n\n    /// <summary>Remove o override desta linha, voltando ao binding original.</summary>\n    public void ResetToDefault()\n    {\n        if (action == null || action.action == null) return;\n\n        action.action.RemoveBindingOverride(bindingIndex);\n        RefreshDisplay();\n    }\n}\n",
+  "id": "script-ui-rebindrowui-cs",
+  "dependencyIds": [
+    "script-ui-controlsrebindsectionui-cs"
+  ],
+  "usedByIds": [
+    "script-ui-controlsrebindsectionui-cs"
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "path": "Enemy/Bosses/BossController.cs",
+  "filename": "BossController.cs",
+  "category": "Enemy",
+  "primary": "BossController",
+  "kind": "Componente",
+  "summary": "Base comum para os controllers específicos de cada um dos 8 bosses do GDD 12.3 (Guardião do Ferro Enraizado, Sol de Plástico, Garganta do Fogo, Gigante do Degelo, Maré de Rede, Sino do Ruído, A Mão que Fere, A Mente que Mata). Item da auditoria: \"Bosses têm apenas estrutura genérica\" — EnemyMultiPartBoss/EnemyHealth/EnemyAttackController já dão a base (vida, partes destrutíveis, janela de vulnerabilidade, ataques), mas faltava um ponto de extensão próprio para CADA boss. Esta classe NÃO implementa nenhum moveset — apenas liga os sistemas genéricos já existentes (BossHealthBarUI, AudioManager, EnemyMultiPartBoss) e expõe hooks virtuais que cada subclasse (ver arquivos Boss_*.cs nesta pasta) ",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "BossController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "bossId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Header(\"Identidade\")] [Tooltip(\"Identificador deste boss (chave estável — usar em WorldData.bossId, condições, saves, etc).\")]",
+      "inspector": true,
+      "description": "Identificador deste boss (chave estável — usar em WorldData.bossId, condições, saves, etc)."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Nome mostrado na BossHealthBarUI ao iniciar o combate.\")]",
+      "inspector": true,
+      "description": "Nome mostrado na BossHealthBarUI ao iniciar o combate."
+    },
+    {
+      "name": "bossBgm",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Música (opcional)",
+      "attrs": "[Header(\"Música (opcional)\")] [Tooltip(\"BGM tocada (AudioManager.PlayBGM) ao iniciar o combate via StartBossFight(). Deixar vazio se a música já for tratada por Action_PlayBGM no evento de entrada na arena.\")]",
+      "inspector": true,
+      "description": "BGM tocada (AudioManager.PlayBGM) ao iniciar o combate via StartBossFight(). Deixar vazio se a música já for tratada por Action_PlayBGM no evento de entrada na arena."
+    },
+    {
+      "name": "_fightStarted",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Música (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_defeated",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Música (opcional)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "FightStarted",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _fightStarted",
+      "section": "Música (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Defeated",
+      "type": "bool",
+      "mods": "public",
+      "default": "> _defeated",
+      "section": "Música (opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "StartBossFight",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação StartBossFight."
+    },
+    {
+      "name": "HandleHealthChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "int current, int max",
+      "description": "Executa a operação HandleHealthChanged."
+    },
+    {
+      "name": "HandleStateChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyState oldState, EnemyState newState",
+      "description": "Executa a operação HandleStateChanged."
+    },
+    {
+      "name": "HandlePartDefeated",
+      "ret": "void",
+      "mods": "private",
+      "params": "int alivePartCount",
+      "description": "Executa a operação HandlePartDefeated."
+    },
+    {
+      "name": "HandleAllPartsDefeated",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleAllPartsDefeated."
+    },
+    {
+      "name": "OnIntroStart",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "",
+      "description": "Executa a operação OnIntroStart."
+    },
+    {
+      "name": "OnPhaseChanged",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "int defeatedParts, int aliveParts",
+      "description": "Executa a operação OnPhaseChanged."
+    },
+    {
+      "name": "OnAllPartsDefeated",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "",
+      "description": "Executa a operação OnAllPartsDefeated."
+    },
+    {
+      "name": "OnDefeated",
+      "ret": "void",
+      "mods": "protected virtual",
+      "params": "",
+      "description": "Executa a operação OnDefeated."
+    }
+  ],
+  "dependencies": [
+    "Action_PlayBGM",
+    "Action_SetBossDefeated",
+    "AudioManager",
+    "BossHealthBarUI",
+    "EnemyAttackController",
+    "EnemyController",
+    "EnemyHealth",
+    "EnemyMultiPartBoss",
+    "EnemyState",
+    "NpcAction",
+    "WorldData"
+  ],
+  "used_by": [
+    "Boss_AMaoQueFere",
+    "Boss_AMenteQueMata",
+    "Boss_GargantaDoFogo",
+    "Boss_GiganteDoDegelo",
+    "Boss_GuardiaoDoFerroEnraizado",
+    "Boss_MareDeRede",
+    "Boss_SinoDoRuido",
+    "Boss_SolDePlastico",
+    "EnemyStatusEffectReceiver"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Base comum para os controllers específicos de cada um dos 8 bosses do GDD\n/// 12.3 (Guardião do Ferro Enraizado, Sol de Plástico, Garganta do Fogo,\n/// Gigante do Degelo, Maré de Rede, Sino do Ruído, A Mão que Fere, A Mente que\n/// Mata). Item da auditoria: \"Bosses têm apenas estrutura genérica\" —\n/// EnemyMultiPartBoss/EnemyHealth/EnemyAttackController já dão a base\n/// (vida, partes destrutíveis, janela de vulnerabilidade, ataques), mas faltava\n/// um ponto de extensão próprio para CADA boss.\n///\n/// Esta classe NÃO implementa nenhum moveset — apenas liga os sistemas\n/// genéricos já existentes (BossHealthBarUI, AudioManager, EnemyMultiPartBoss)\n/// e expõe hooks virtuais que cada subclasse (ver ficheiros Boss_*.cs nesta\n/// pasta) deve preencher com a sua mecânica própria (fases, ataques especiais,\n/// janelas de vulnerabilidade específicas, VFX, etc — trabalho futuro,\n/// propositadamente fora do âmbito desta preparação).\n///\n/// Colocar no corpo principal do boss (mesmo GameObject que EnemyController +\n/// EnemyHealth). EnemyMultiPartBoss é opcional (bosses sem partes\n/// destrutíveis próprias podem não o ter).\n/// </summary>\n[DisallowMultipleComponent]\n[RequireComponent(typeof(EnemyController), typeof(EnemyHealth))]\npublic abstract class BossController : MonoBehaviour\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Identificador deste boss (chave estável — usar em WorldData.bossId, condições, saves, etc).\")]\n    public string bossId;\n\n    [Tooltip(\"Nome mostrado na BossHealthBarUI ao iniciar o combate.\")]\n    public string displayName;\n\n    [Header(\"Música (opcional)\")]\n    [Tooltip(\"BGM tocada (AudioManager.PlayBGM) ao iniciar o combate via StartBossFight(). Deixar vazio se a música já for tratada por Action_PlayBGM no evento de entrada na arena.\")]\n    public AudioClip bossBgm;\n\n    /// <summary>EnemyController do corpo principal do boss.</summary>\n    protected EnemyController Controller { get; private set; }\n\n    /// <summary>EnemyHealth do corpo principal do boss.</summary>\n    protected EnemyHealth Health { get; private set; }\n\n    /// <summary>EnemyMultiPartBoss (partes destrutíveis/fases), se existir neste boss.</summary>\n    protected EnemyMultiPartBoss MultiPart { get; private set; }\n\n    private bool _fightStarted;\n    private bool _defeated;\n\n    /// <summary>True depois de StartBossFight ter sido chamado (combate em curso ou terminado).</summary>\n    public bool FightStarted => _fightStarted;\n\n    /// <summary>True depois do boss morrer/desactivar (OnDefeated já disparado).</summary>\n    public bool Defeated => _defeated;\n\n    protected virtual void Awake()\n    {\n        Controller = GetComponent<EnemyController>();\n        Health = GetComponent<EnemyHealth>();\n        MultiPart = GetComponent<EnemyMultiPartBoss>();\n    }\n\n    protected virtual void OnEnable()\n    {\n        if (Health != null) Health.OnHealthChanged += HandleHealthChanged;\n        if (Controller != null) Controller.OnStateChanged += HandleStateChanged;\n\n        if (MultiPart != null)\n        {\n            MultiPart.onPartDefeated.AddListener(HandlePartDefeated);\n            MultiPart.onAllPartsDefeated.AddListener(HandleAllPartsDefeated);\n        }\n    }\n\n    protected virtual void OnDisable()\n    {\n        if (Health != null) Health.OnHealthChanged -= HandleHealthChanged;\n        if (Controller != null) Controller.OnStateChanged -= HandleStateChanged;\n\n        if (MultiPart != null)\n        {\n            MultiPart.onPartDefeated.RemoveListener(HandlePartDefeated);\n            MultiPart.onAllPartsDefeated.RemoveListener(HandleAllPartsDefeated);\n        }\n    }\n\n    /// <summary>\n    /// Chamar ao entrar na arena do boss (trigger dedicado, ou NpcAction no\n    /// início do encontro): mostra a BossHealthBarUI, toca \"bossBgm\" (se\n    /// definida) e dispara <see cref=\"OnIntroStart\"/>. Sem efeito se já tiver\n    /// sido chamado.\n    /// </summary>\n    public void StartBossFight()\n    {\n        if (_fightStarted) return;\n        _fightStarted = true;\n\n        if (Health != null)\n            BossHealthBarUI.Instance?.Show(string.IsNullOrEmpty(displayName) ? name : displayName, Health.MaxHealth);\n\n        if (bossBgm != null)\n            AudioManager.Instance?.PlayBGM(bossBgm);\n\n        OnIntroStart();\n    }\n\n    private void HandleHealthChanged(int current, int max)\n    {\n        BossHealthBarUI.Instance?.SetHealth(current);\n    }\n\n    private void HandleStateChanged(EnemyState oldState, EnemyState newState)\n    {\n        if (_defeated) return;\n        if (newState != EnemyState.Morto && newState != EnemyState.Desactivado) return;\n\n        _defeated = true;\n        BossHealthBarUI.Instance?.Hide();\n        OnDefeated();\n    }\n\n    private void HandlePartDefeated(int alivePartCount)\n    {\n        OnPhaseChanged(MultiPart != null ? MultiPart.DefeatedPartCount : 0, alivePartCount);\n    }\n\n    private void HandleAllPartsDefeated()\n    {\n        OnAllPartsDefeated();\n    }\n\n    // ==================== Hooks (preenchidos por cada Boss_*.cs) ====================\n\n    /// <summary>\n    /// Início do combate (StartBossFight) — câmara, diálogo de abertura,\n    /// activar partes/ataques iniciais, etc. Sem implementação por omissão.\n    /// </summary>\n    protected virtual void OnIntroStart() { }\n\n    /// <summary>\n    /// Uma parte destrutível foi derrotada (EnemyMultiPartBoss.onPartDefeated)\n    /// — \"defeatedParts\"/\"aliveParts\" referem-se ao total de partes\n    /// registadas em EnemyMultiPartBoss.parts. Usar para avançar de fase,\n    /// trocar ataques disponíveis, mudar VFX/Animator, etc.\n    /// </summary>\n    protected virtual void OnPhaseChanged(int defeatedParts, int aliveParts) { }\n\n    /// <summary>\n    /// Todas as partes destrutíveis caíram (EnemyMultiPartBoss.onAllPartsDefeated)\n    /// — geralmente a última fase / abertura da janela de vulnerabilidade total.\n    /// </summary>\n    protected virtual void OnAllPartsDefeated() { }\n\n    /// <summary>\n    /// O corpo principal do boss morreu/desactivou — sequência de derrota\n    /// (drops, NpcAction de Action_SetBossDefeated, animação final, etc, fora\n    /// do âmbito desta preparação).\n    /// </summary>\n    protected virtual void OnDefeated() { }\n}\n",
+  "id": "script-enemy-bosses-bosscontroller-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-ui-bosshealthbarui-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-enemymultipartboss-cs",
+    "script-npc-npcaction-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-bosses-boss-amaoquefere-cs",
+    "script-enemy-bosses-boss-amentequemata-cs",
+    "script-enemy-bosses-boss-gargantadofogo-cs",
+    "script-enemy-bosses-boss-gigantedodegelo-cs",
+    "script-enemy-bosses-boss-guardiaodoferroenraizado-cs",
+    "script-enemy-bosses-boss-marederede-cs",
+    "script-enemy-bosses-boss-sinodoruido-cs",
+    "script-enemy-bosses-boss-soldeplastico-cs",
+    "script-enemy-enemystatuseffectreceiver-cs"
+  ]
+}

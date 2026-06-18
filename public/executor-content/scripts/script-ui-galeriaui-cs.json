@@ -1,0 +1,257 @@
+{
+  "path": "UI/GaleriaUI.cs",
+  "filename": "GaleriaUI.cs",
+  "category": "UI",
+  "primary": "GaleriaUI",
+  "kind": "Componente",
+  "summary": "Sub-painel \"Galeria\" do Menu Principal (Tarefa #39) — mostra ilustrações/artes conceptuais desbloqueadas pelo jogador. Cada entrada é um : imagem, título e condição de desbloqueio (variável bool em GameVariables; vazio = sempre visível). Entradas bloqueadas aparecem como silhueta (sprite ). Navegação: - Grelha de miniaturas com botões — ao selecionar uma, abre o com a imagem em grande + título. - \"Fechar viewer\": volta à grelha. - \"Voltar\" (ou B/Escape): fecha o painel e dispara . Montagem no Editor: - \"root\": GameObject raiz (escondido por defeito). - \"thumbnailContainer\": Transform pai dos botões de miniatura (usar Grid Layout Group). - \"thumbnailPrefab\": prefab com Image + Button + TMP_T",
+  "attach": "GameObject/asset indicado pelo sistema; consulta a Missão ou o guia relacionado para a posição exata.",
+  "types": [
+    {
+      "name": "GaleriaUI",
+      "kind": "class",
+      "bases": "MonoBehaviour, ICancelHandler",
+      "attrs": ""
+    },
+    {
+      "name": "GaleriaEntry",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "root",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[Header(\"Framework\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "firstSelectable",
+      "type": "Selectable",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "backButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Framework",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "thumbnailContainer",
+      "type": "Transform",
+      "mods": "private",
+      "default": "",
+      "section": "Grelha de Miniaturas",
+      "attrs": "[Header(\"Grelha de Miniaturas\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "thumbnailPrefab",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Grelha de Miniaturas",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "lockedSprite",
+      "type": "Sprite",
+      "mods": "private",
+      "default": "",
+      "section": "Sprite de Bloqueado",
+      "attrs": "[Header(\"Sprite de Bloqueado\")] [Tooltip(\"Sprite mostrado no lugar de entradas ainda não desbloqueadas.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Sprite mostrado no lugar de entradas ainda não desbloqueadas."
+    },
+    {
+      "name": "viewerPanel",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Viewer (imagem em grande)",
+      "attrs": "[Header(\"Viewer (imagem em grande)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "viewerImage",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Viewer (imagem em grande)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "viewerTitle",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Viewer (imagem em grande)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "closeViewerButton",
+      "type": "Button",
+      "mods": "private",
+      "default": "",
+      "section": "Viewer (imagem em grande)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "entries",
+      "type": "List<GaleriaEntry>",
+      "mods": "public",
+      "default": "new List<GaleriaEntry>()",
+      "section": "Entradas da Galeria",
+      "attrs": "[Header(\"Entradas da Galeria\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "Root",
+      "type": "GameObject",
+      "mods": "public",
+      "default": "> root != null ? root : gameObject",
+      "section": "Entradas da Galeria",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_spawnedThumbs",
+      "type": "List<GameObject>",
+      "mods": "private readonly",
+      "default": "new List<GameObject>()",
+      "section": "Entradas da Galeria",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "artwork",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Entradas da Galeria",
+      "attrs": "[Tooltip(\"Sprite da ilustração/arte conceptual.\")]",
+      "inspector": true,
+      "description": "Sprite da ilustração/arte conceptual."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Entradas da Galeria",
+      "attrs": "[Tooltip(\"Título mostrado abaixo da miniatura e no viewer.\")]",
+      "inspector": true,
+      "description": "Título mostrado abaixo da miniatura e no viewer."
+    },
+    {
+      "name": "unlockVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Entradas da Galeria",
+      "attrs": "[Tooltip(\"Variável bool em GameVariables que indica se esta arte está desbloqueada. Vazio = sempre visível.\")]",
+      "inspector": true,
+      "description": "Variável bool em GameVariables que indica se esta arte está desbloqueada. Vazio = sempre visível."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Open",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Open."
+    },
+    {
+      "name": "Close",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Close."
+    },
+    {
+      "name": "OnCancel",
+      "ret": "void",
+      "mods": "public",
+      "params": "BaseEventData eventData",
+      "description": "Executa a operação OnCancel."
+    },
+    {
+      "name": "BuildGrid",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação BuildGrid."
+    },
+    {
+      "name": "OpenViewer",
+      "ret": "void",
+      "mods": "private",
+      "params": "GaleriaEntry entry",
+      "description": "Executa a operação OpenViewer."
+    },
+    {
+      "name": "CloseViewer",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação CloseViewer."
+    },
+    {
+      "name": "SelectFirst",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação SelectFirst."
+    }
+  ],
+  "dependencies": [
+    "GameVariables"
+  ],
+  "used_by": [
+    "MainMenuController"
+  ],
+  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Sub-painel \"Galeria\" do Menu Principal (Tarefa #39) — mostra ilustrações/artes\n/// conceptuais desbloqueadas pelo jogador.\n///\n/// Cada entrada é um <see cref=\"GaleriaEntry\"/>: imagem, título e condição de\n/// desbloqueio (variável bool em GameVariables; vazio = sempre visível).\n/// Entradas bloqueadas aparecem como silhueta (sprite <see cref=\"lockedSprite\"/>).\n///\n/// Navegação:\n/// - Grelha de miniaturas com botões — ao seleccionar uma, abre o <see cref=\"viewerPanel\"/>\n///   com a imagem em grande + título.\n/// - \"Fechar viewer\": volta à grelha.\n/// - \"Voltar\" (ou B/Escape): fecha o painel e dispara <see cref=\"Closed\"/>.\n///\n/// Montagem no Editor:\n/// - \"root\": GameObject raiz (escondido por defeito).\n/// - \"thumbnailContainer\": Transform pai dos botões de miniatura (usar Grid Layout Group).\n/// - \"thumbnailPrefab\": prefab com Image + Button + TMP_Text (título abaixo).\n/// - \"viewerPanel\"/\"viewerImage\"/\"viewerTitle\"/\"closeViewerButton\": painel de visualização.\n/// - \"backButton\"/\"firstSelectable\": controlo de fecho e primeiro foco.\n/// - \"lockedSprite\": sprite mostrado quando entrada está bloqueada.\n/// - \"entries\": lista configurada no Inspector.\n/// </summary>\npublic class GaleriaUI : MonoBehaviour, ICancelHandler\n{\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject root;\n    [SerializeField] private Selectable firstSelectable;\n    [SerializeField] private Button backButton;\n\n    [Header(\"Grelha de Miniaturas\")]\n    [SerializeField] private Transform thumbnailContainer;\n    [SerializeField] private GameObject thumbnailPrefab;\n\n    [Header(\"Sprite de Bloqueado\")]\n    [Tooltip(\"Sprite mostrado no lugar de entradas ainda não desbloqueadas.\")]\n    [SerializeField] private Sprite lockedSprite;\n\n    [Header(\"Viewer (imagem em grande)\")]\n    [SerializeField] private GameObject viewerPanel;\n    [SerializeField] private Image viewerImage;\n    [SerializeField] private TMP_Text viewerTitle;\n    [SerializeField] private Button closeViewerButton;\n\n    [Header(\"Entradas da Galeria\")]\n    public List<GaleriaEntry> entries = new List<GaleriaEntry>();\n\n    /// <summary>Disparado ao fechar o painel (botão Voltar ou B/Escape).</summary>\n    public event System.Action Closed;\n\n    public GameObject Root => root != null ? root : gameObject;\n\n    private readonly List<GameObject> _spawnedThumbs = new List<GameObject>();\n\n    private void Awake()\n    {\n        if (backButton != null) backButton.onClick.AddListener(Close);\n        if (closeViewerButton != null) closeViewerButton.onClick.AddListener(CloseViewer);\n        if (root != null) root.SetActive(false);\n        if (viewerPanel != null) viewerPanel.SetActive(false);\n    }\n\n    // ---------------- Abrir / Fechar ----------------\n\n    public void Open()\n    {\n        if (root != null) root.SetActive(true);\n        BuildGrid();\n        CloseViewer();\n        SelectFirst();\n    }\n\n    public void Close()\n    {\n        CloseViewer();\n        if (root != null) root.SetActive(false);\n        Closed?.Invoke();\n    }\n\n    public void OnCancel(BaseEventData eventData)\n    {\n        if (viewerPanel != null && viewerPanel.activeSelf)\n            CloseViewer();\n        else\n            Close();\n    }\n\n    // ---------------- Grelha ----------------\n\n    private void BuildGrid()\n    {\n        // Limpa miniaturas anteriores.\n        foreach (var go in _spawnedThumbs)\n            if (go != null) Destroy(go);\n        _spawnedThumbs.Clear();\n\n        if (thumbnailContainer == null || thumbnailPrefab == null) return;\n\n        var vars = GameVariables.Instance;\n\n        for (int i = 0; i < entries.Count; i++)\n        {\n            var entry = entries[i];\n            if (entry == null) continue;\n\n            bool unlocked = string.IsNullOrEmpty(entry.unlockVariable)\n                || (vars != null && vars.GetBool(entry.unlockVariable));\n\n            var go = Instantiate(thumbnailPrefab, thumbnailContainer);\n            _spawnedThumbs.Add(go);\n\n            // Imagem da miniatura.\n            var img = go.GetComponentInChildren<Image>();\n            if (img != null)\n                img.sprite = unlocked ? entry.artwork : lockedSprite;\n\n            // Título.\n            var label = go.GetComponentInChildren<TMP_Text>();\n            if (label != null)\n                label.text = unlocked ? entry.title : \"???\";\n\n            // Botão — só funciona se desbloqueado.\n            var btn = go.GetComponentInChildren<Button>();\n            if (btn != null)\n            {\n                btn.interactable = unlocked;\n                if (unlocked)\n                {\n                    var captured = entry;\n                    btn.onClick.AddListener(() => OpenViewer(captured));\n                }\n            }\n        }\n    }\n\n    // ---------------- Viewer ----------------\n\n    private void OpenViewer(GaleriaEntry entry)\n    {\n        if (viewerPanel == null) return;\n\n        if (viewerImage != null) viewerImage.sprite = entry.artwork;\n        if (viewerTitle != null) viewerTitle.text = entry.title;\n\n        viewerPanel.SetActive(true);\n\n        if (EventSystem.current != null && closeViewerButton != null)\n            EventSystem.current.SetSelectedGameObject(closeViewerButton.gameObject);\n    }\n\n    private void CloseViewer()\n    {\n        if (viewerPanel != null) viewerPanel.SetActive(false);\n        SelectFirst();\n    }\n\n    // ---------------- Utilitários ----------------\n\n    private void SelectFirst()\n    {\n        if (EventSystem.current != null && firstSelectable != null)\n            EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);\n    }\n}\n\n/// <summary>\n/// Uma entrada na galeria: arte conceptual, título e condição de desbloqueio.\n/// </summary>\n[System.Serializable]\npublic class GaleriaEntry\n{\n    [Tooltip(\"Sprite da ilustração/arte conceptual.\")]\n    public Sprite artwork;\n\n    [Tooltip(\"Título mostrado abaixo da miniatura e no viewer.\")]\n    public string title;\n\n    [Tooltip(\"Variável bool em GameVariables que indica se esta arte está desbloqueada. Vazio = sempre visível.\")]\n    public string unlockVariable;\n}\n",
+  "id": "script-ui-galeriaui-cs",
+  "dependencyIds": [
+    "script-data-gamevariables-cs"
+  ],
+  "usedByIds": [
+    "script-ui-mainmenucontroller-cs"
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "path": "Interactables/PushableBlock.cs",
+  "filename": "PushableBlock.cs",
+  "category": "Interactables",
+  "primary": "PushableBlock",
+  "kind": "Componente",
+  "summary": "Bloco empurrável/arrastável (P6 — fichas do GDD: \"Pode empurrar blocos?\" graduado; + correcção \"puxar\"). O bloco fica travado em X até: - EMPURRAR (toque): qualquer player cuja forma tenha PushStrength suficiente (AnimalFormData.pushStrength; dentro de água usa o maior entre pushStrength e pushStrengthInWater — ex: Polvo \"médios só em água\") desloca o bloco só por lhe encostar (OnCollisionStay2D). - PUXAR (NOVO): formas com 'canPull' (e força suficiente) podem, ao segurar Interagir junto ao bloco e andar para trás, arrastá-lo — ver , chamado por PullAbility. Mais lento que andar normalmente (\"com dificuldade\"). Inimigos com 'canBePushed'... não empurram blocos; para inimigos usa-se física no",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PushableBlock",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "requiredStrength",
+      "type": "PushStrength",
+      "mods": "public",
+      "default": "PushStrength.Leves",
+      "section": "Peso do Bloco",
+      "attrs": "[Header(\"Peso do Bloco\")] [Tooltip(\"Força mínima de empurrão/puxão (da forma do player) para mover este bloco: Leves/Médios/Pesados/Grandes.\")]",
+      "inspector": true,
+      "description": "Força mínima de empurrão/puxão (da forma do player) para mover este bloco: Leves/Médios/Pesados/Grandes."
+    },
+    {
+      "name": "unlockGraceTime",
+      "type": "float",
+      "mods": "public",
+      "default": "0.15f",
+      "section": "Peso do Bloco",
+      "attrs": "[Tooltip(\"Tempo (segundos) que o bloco continua 'solto' depois do último contacto/puxão válido (evita trancar a meio do movimento).\")] [Min(0.05f)]",
+      "inspector": true,
+      "description": "Tempo (segundos) que o bloco continua 'solto' depois do último contato/puxão válido (evita trancar a meio do movimento)."
+    },
+    {
+      "name": "pullSlowFactor",
+      "type": "float",
+      "mods": "public",
+      "default": "0.4f",
+      "section": "Puxar (canPull)",
+      "attrs": "[Header(\"Puxar (canPull)\")] [Tooltip(\"Fracção da velocidade do player aplicada ao bloco quando é puxado (ex: 0.4 = bem mais lento/'com dificuldade').\")] [Range(0.05f, 1f)]",
+      "inspector": true,
+      "description": "Fração da velocidade do player aplicada ao bloco quando é puxado (ex: 0.4 = bem mais lento/'com dificuldade')."
+    },
+    {
+      "name": "_rb",
+      "type": "Rigidbody2D",
+      "mods": "private",
+      "default": "",
+      "section": "Puxar (canPull)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_unlockedUntil",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "Puxar (canPull)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "FixedUpdate",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação FixedUpdate."
+    },
+    {
+      "name": "OnCollisionStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionStay2D."
+    },
+    {
+      "name": "GetEffectiveStrength",
+      "ret": "PushStrength",
+      "mods": "public static",
+      "params": "AnimalFormData form, bool inWater",
+      "description": "Executa a operação GetEffectiveStrength."
+    },
+    {
+      "name": "CanBeMoved",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData form, bool inWater",
+      "description": "Executa a operação CanBeMoved."
+    },
+    {
+      "name": "Pull",
+      "ret": "void",
+      "mods": "public",
+      "params": "Vector2 desiredVelocity",
+      "description": "Executa a operação Pull."
+    },
+    {
+      "name": "IsInWater",
+      "ret": "bool",
+      "mods": "private static",
+      "params": "Collider2D playerCollider",
+      "description": "Executa a operação IsInWater."
+    },
+    {
+      "name": "GetCurrentForm",
+      "ret": "AnimalFormData",
+      "mods": "private static",
+      "params": "Collider2D playerCollider",
+      "description": "Executa a operação GetCurrentForm."
+    },
+    {
+      "name": "Lock",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Lock."
+    },
+    {
+      "name": "Unlock",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Unlock."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "FormSwitcher",
+    "PullAbility",
+    "PushStrength",
+    "WaterDetector"
+  ],
+  "used_by": [
+    "AnimalFormData",
+    "PullAbility",
+    "RollAbility"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Bloco empurrável/arrastável (P6 — fichas do GDD: \"Pode empurrar blocos?\"\n/// graduado; + correcção \"puxar\"). O bloco fica travado em X até:\n///\n/// - EMPURRAR (toque): qualquer player cuja forma tenha PushStrength\n///   suficiente (AnimalFormData.pushStrength; dentro de água usa o maior\n///   entre pushStrength e pushStrengthInWater — ex: Polvo \"médios só em\n///   água\") desloca o bloco só por lhe encostar (OnCollisionStay2D).\n/// - PUXAR (NOVO): formas com 'canPull' (e força suficiente) podem, ao\n///   segurar Interagir junto ao bloco e andar para trás, arrastá-lo —\n///   ver <see cref=\"Pull\"/>, chamado por PullAbility. Mais lento que andar\n///   normalmente (\"com dificuldade\").\n///\n/// Inimigos com 'canBePushed'... não empurram blocos; para inimigos usa-se\n/// física normal. Este componente é para o puzzle de empurrar/puxar do player.\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]\npublic class PushableBlock : MonoBehaviour\n{\n    [Header(\"Peso do Bloco\")]\n    [Tooltip(\"Força mínima de empurrão/puxão (da forma do player) para mover este bloco: Leves/Médios/Pesados/Grandes.\")]\n    public PushStrength requiredStrength = PushStrength.Leves;\n\n    [Tooltip(\"Tempo (segundos) que o bloco continua 'solto' depois do último contacto/puxão válido (evita trancar a meio do movimento).\")]\n    [Min(0.05f)] public float unlockGraceTime = 0.15f;\n\n    [Header(\"Puxar (canPull)\")]\n    [Tooltip(\"Fracção da velocidade do player aplicada ao bloco quando é puxado (ex: 0.4 = bem mais lento/'com dificuldade').\")]\n    [Range(0.05f, 1f)] public float pullSlowFactor = 0.4f;\n\n    private Rigidbody2D _rb;\n    private float _unlockedUntil;\n\n    private void Awake()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n        Lock();\n    }\n\n    private void FixedUpdate()\n    {\n        if (Time.time > _unlockedUntil && (_rb.constraints & RigidbodyConstraints2D.FreezePositionX) == 0)\n            Lock();\n    }\n\n    private void OnCollisionStay2D(Collision2D collision)\n    {\n        if (!collision.collider.CompareTag(\"Player\")) return;\n\n        var form = GetCurrentForm(collision.collider);\n        if (form == null) return;\n\n        bool inWater = IsInWater(collision.collider);\n\n        if (CanBeMoved(form, inWater))\n            Unlock();\n    }\n\n    /// <summary>\n    /// Devolve a PushStrength efectiva da forma (considera pushStrengthInWater\n    /// se \"inWater\" e for maior — ex: Polvo \"médios só em água\").\n    /// </summary>\n    public static PushStrength GetEffectiveStrength(AnimalFormData form, bool inWater)\n    {\n        if (form == null) return PushStrength.Nao;\n\n        PushStrength effective = form.pushStrength;\n        if (inWater && form.pushStrengthInWater > effective)\n            effective = form.pushStrengthInWater;\n\n        return effective;\n    }\n\n    /// <summary>true se a força efectiva da forma chega para mover este bloco (empurrar ou puxar).</summary>\n    public bool CanBeMoved(AnimalFormData form, bool inWater)\n    {\n        var effective = GetEffectiveStrength(form, inWater);\n        return effective >= requiredStrength && effective != PushStrength.Nao;\n    }\n\n    /// <summary>\n    /// Arrasta o bloco a \"desiredVelocity\" reduzida por 'pullSlowFactor'\n    /// (chamado continuamente por PullAbility enquanto o player puxa).\n    /// Mantém a velocidade vertical actual (não voa nem cai mais rápido).\n    /// </summary>\n    public void Pull(Vector2 desiredVelocity)\n    {\n        Unlock();\n        _rb.velocity = new Vector2(desiredVelocity.x * pullSlowFactor, _rb.velocity.y);\n    }\n\n    private static bool IsInWater(Collider2D playerCollider)\n    {\n        var wd = playerCollider.GetComponent<WaterDetector>();\n        return wd != null && wd.IsInWater;\n    }\n\n    private static AnimalFormData GetCurrentForm(Collider2D playerCollider)\n    {\n        var switcher = playerCollider.GetComponent<FormSwitcher>();\n        return switcher != null ? switcher.CurrentForm : null;\n    }\n\n    private void Lock()\n    {\n        _rb.velocity = new Vector2(0f, _rb.velocity.y);\n        _rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;\n    }\n\n    private void Unlock()\n    {\n        _unlockedUntil = Time.time + unlockGraceTime;\n        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;\n    }\n}\n",
+  "id": "script-interactables-pushableblock-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-forms-formswitcher-cs",
+    "script-abilities-pullability-cs",
+    "script-player-waterdetector-cs"
+  ],
+  "usedByIds": [
+    "script-forms-animalformdata-cs",
+    "script-abilities-pullability-cs",
+    "script-abilities-rollability-cs"
+  ]
+}

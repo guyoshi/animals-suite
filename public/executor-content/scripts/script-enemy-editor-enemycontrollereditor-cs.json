@@ -1,0 +1,118 @@
+{
+  "path": "Enemy/Editor/EnemyControllerEditor.cs",
+  "filename": "EnemyControllerEditor.cs",
+  "category": "Enemy",
+  "primary": "EnemyControllerEditor",
+  "kind": "Editor",
+  "summary": "Editor customizado do EnemyController (Enemy Creator — Etapa 1.6). - Inspector: desenha os campos normais e, para , usa PolymorphicListDrawer (mesmo utilitário do NpcControllerEditor) para listar/adicionar subclasses de EnemyCondition — vazio até à Etapa 5.4. - Scene View: desenha gizmos editáveis (arrastáveis) para a área de detecção (EnemyDetection — Etapa 1.4) e os pontos de patrulha (EnemyMovement — Etapa 1.5), se esses componentes existirem no mesmo GameObject.",
+  "attach": "Ferramenta do Unity Editor; não adicionar a GameObjects de gameplay.",
+  "types": [
+    {
+      "name": "EnemyControllerEditor",
+      "kind": "class",
+      "bases": "Editor",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "_deactivationConditionsProp",
+      "type": "SerializedProperty",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnInspectorGUI",
+      "ret": "void",
+      "mods": "public override",
+      "params": "",
+      "description": "Executa a operação OnInspectorGUI."
+    },
+    {
+      "name": "OnSceneGUI",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnSceneGUI."
+    },
+    {
+      "name": "DrawAttackHandles",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyController controller",
+      "description": "Executa a operação DrawAttackHandles."
+    },
+    {
+      "name": "DrawDetectionHandles",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyController controller",
+      "description": "Executa a operação DrawDetectionHandles."
+    },
+    {
+      "name": "SizeHandle",
+      "ret": "float",
+      "mods": "private",
+      "params": "Vector3 origin, Vector3 dir, float size, Color color",
+      "description": "Executa a operação SizeHandle."
+    },
+    {
+      "name": "DrawPatrolHandles",
+      "ret": "void",
+      "mods": "private",
+      "params": "EnemyController controller",
+      "description": "Executa a operação DrawPatrolHandles."
+    }
+  ],
+  "dependencies": [
+    "DetectionShape",
+    "EnemyAttackController",
+    "EnemyCondition",
+    "EnemyController",
+    "EnemyDetection",
+    "EnemyMovement",
+    "EnemyMovementType",
+    "NpcControllerEditor",
+    "PolymorphicListDrawer"
+  ],
+  "used_by": [
+    "EnemyAttackController",
+    "EnemyAttackControllerEditor",
+    "EnemyCondition",
+    "EnemyController",
+    "EnemyHealthEditor",
+    "EnemyMovement"
+  ],
+  "source": "#if UNITY_EDITOR\nusing UnityEditor;\nusing UnityEngine;\n\n/// <summary>\n/// Editor customizado do EnemyController (Enemy Creator — Etapa 1.6).\n///\n/// - Inspector: desenha os campos normais e, para\n///   <see cref=\"EnemyController.deactivationConditions\"/>, usa\n///   PolymorphicListDrawer (mesmo utilitário do NpcControllerEditor) para\n///   listar/adicionar subclasses de EnemyCondition — vazio até à Etapa 5.4.\n/// - Scene View: desenha gizmos editáveis (arrastáveis) para a área de\n///   detecção (EnemyDetection — Etapa 1.4) e os pontos de patrulha\n///   (EnemyMovement — Etapa 1.5), se esses componentes existirem no mesmo\n///   GameObject.\n/// </summary>\n[CustomEditor(typeof(EnemyController))]\npublic class EnemyControllerEditor : Editor\n{\n    private SerializedProperty _deactivationConditionsProp;\n\n    private void OnEnable()\n    {\n        _deactivationConditionsProp = serializedObject.FindProperty(\"deactivationConditions\");\n    }\n\n    public override void OnInspectorGUI()\n    {\n        serializedObject.Update();\n\n        DrawPropertiesExcluding(serializedObject, \"m_Script\", \"deactivationConditions\");\n\n        EditorGUILayout.Space();\n        PolymorphicListDrawer.Draw(serializedObject, _deactivationConditionsProp, \"Condições de Desactivação (Etapa 5.4)\", typeof(EnemyCondition), \"Adicionar Condição de Desactivação\");\n\n        serializedObject.ApplyModifiedProperties();\n    }\n\n    private void OnSceneGUI()\n    {\n        var controller = (EnemyController)target;\n\n        DrawDetectionHandles(controller);\n        DrawPatrolHandles(controller);\n        DrawAttackHandles(controller);\n    }\n\n    /// <summary>\n    /// Handles para o alcance (\"range\") de cada ataque do EnemyAttackController\n    /// (Etapa 7.2). Cada ataque tem o seu handle numa direcção ligeiramente\n    /// diferente, com o nome do ataque como etiqueta, para não se sobreporem.\n    /// </summary>\n    private void DrawAttackHandles(EnemyController controller)\n    {\n        var attackController = controller.GetComponent<EnemyAttackController>();\n        if (attackController == null || attackController.attacks == null) return;\n\n        Vector3 origin = controller.transform.position;\n\n        for (int i = 0; i < attackController.attacks.Count; i++)\n        {\n            var attack = attackController.attacks[i];\n            if (attack == null) continue;\n\n            // Espalha os handles: -30°, -50°, -70°, ... a partir da horizontal.\n            float angle = (-30f - 20f * i) * Mathf.Deg2Rad;\n            Vector3 dir = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);\n\n            Handles.Label(origin + dir * attack.range, $\"{attack.attackName} ({attack.range:0.0})\");\n\n            EditorGUI.BeginChangeCheck();\n            float newRange = SizeHandle(origin, dir, attack.range, new Color(1f, 0.2f, 0.2f));\n            if (EditorGUI.EndChangeCheck())\n            {\n                Undo.RecordObject(attackController, \"Alterar Alcance do Ataque\");\n                attack.range = Mathf.Max(0f, newRange);\n                EditorUtility.SetDirty(attackController);\n            }\n\n            if (attack.minRange > 0f)\n            {\n                EditorGUI.BeginChangeCheck();\n                float newMin = SizeHandle(origin, dir, attack.minRange, new Color(1f, 0.6f, 0.1f));\n                if (EditorGUI.EndChangeCheck())\n                {\n                    Undo.RecordObject(attackController, \"Alterar Alcance Mínimo do Ataque\");\n                    attack.minRange = Mathf.Clamp(newMin, 0f, attack.range);\n                    EditorUtility.SetDirty(attackController);\n                }\n            }\n        }\n    }\n\n    /// <summary>Handles para o alcance de detecção (range) e o raio de proximidade (proximityRadius) do EnemyDetection, se presente.</summary>\n    private void DrawDetectionHandles(EnemyController controller)\n    {\n        var detection = controller.GetComponent<EnemyDetection>();\n        if (detection == null) return;\n\n        Vector3 origin = controller.transform.position;\n\n        if (detection.shape == DetectionShape.Circular || detection.shape == DetectionShape.ConeFrontal\n            || detection.shape == DetectionShape.LinhaRecta || detection.shape == DetectionShape.AreaRectangular)\n        {\n            EditorGUI.BeginChangeCheck();\n            float newRange = SizeHandle(origin, Vector3.right, detection.range, Color.cyan);\n            if (EditorGUI.EndChangeCheck())\n            {\n                Undo.RecordObject(detection, \"Alterar Alcance de Detecção\");\n                detection.range = Mathf.Max(0f, newRange);\n            }\n        }\n\n        if (detection.proximityRadius > 0f)\n        {\n            EditorGUI.BeginChangeCheck();\n            float newProx = SizeHandle(origin, Vector3.up, detection.proximityRadius, Color.yellow);\n            if (EditorGUI.EndChangeCheck())\n            {\n                Undo.RecordObject(detection, \"Alterar Raio de Proximidade\");\n                detection.proximityRadius = Mathf.Max(0f, newProx);\n            }\n        }\n    }\n\n    /// <summary>Desenha um handle arrastável a \"dir * size\" de \"origin\" e devolve a nova distância ao soltar.</summary>\n    private float SizeHandle(Vector3 origin, Vector3 dir, float size, Color color)\n    {\n        Vector3 handlePos = origin + dir * size;\n\n        var oldColor = Handles.color;\n        Handles.color = color;\n\n        float handleSize = HandleUtility.GetHandleSize(handlePos) * 0.1f;\n        Vector3 newPos = Handles.FreeMoveHandle(handlePos, handleSize, Vector3.zero, Handles.SphereHandleCap);\n\n        Handles.color = oldColor;\n\n        return Vector3.Distance(origin, newPos);\n    }\n\n    /// <summary>Handles arrastáveis para cada ponto de patrulha do EnemyMovement, se presente.</summary>\n    private void DrawPatrolHandles(EnemyController controller)\n    {\n        var movement = controller.GetComponent<EnemyMovement>();\n        if (movement == null) return;\n        if (movement.movementType == EnemyMovementType.Estatico) return;\n        if (movement.patrolPoints == null) return;\n\n        Vector3 basePos = Application.isPlaying ? controller.HomePosition : controller.transform.position;\n        bool freeMovement = EnemyMovement.IsFreeMovementType(movement.movementType);\n\n        Handles.color = Color.green;\n\n        for (int i = 0; i < movement.patrolPoints.Count; i++)\n        {\n            Vector3 worldPos = basePos + (Vector3)movement.patrolPoints[i];\n\n            EditorGUI.BeginChangeCheck();\n            float size = HandleUtility.GetHandleSize(worldPos) * 0.12f;\n            Vector3 newWorldPos = Handles.FreeMoveHandle(worldPos, size, Vector3.zero, Handles.CubeHandleCap);\n\n            if (EditorGUI.EndChangeCheck())\n            {\n                Undo.RecordObject(movement, \"Mover Ponto de Patrulha\");\n\n                Vector2 newOffset = (Vector2)(newWorldPos - basePos);\n                if (!freeMovement)\n                    newOffset.y = 0f;\n\n                movement.patrolPoints[i] = newOffset;\n            }\n        }\n    }\n}\n#endif\n",
+  "id": "script-enemy-editor-enemycontrollereditor-cs",
+  "dependencyIds": [
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemycondition-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydetection-cs",
+    "script-enemy-enemymovement-cs",
+    "script-npc-editor-npccontrollereditor-cs",
+    "script-npc-editor-polymorphiclistdrawer-cs"
+  ],
+  "usedByIds": [
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-editor-enemyattackcontrollereditor-cs",
+    "script-enemy-enemycondition-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-editor-enemyhealtheditor-cs",
+    "script-enemy-enemymovement-cs"
+  ]
+}

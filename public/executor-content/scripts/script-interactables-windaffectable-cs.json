@@ -1,0 +1,54 @@
+{
+  "path": "Interactables/WindAffectable.cs",
+  "filename": "WindAffectable.cs",
+  "category": "Interactables",
+  "primary": "WindAffectable",
+  "kind": "Componente",
+  "summary": "Marca um inimigo/NPC (ou qualquer GameObject com Rigidbody2D que não seja o player) como \"afectado pelo vento\" (Tarefa #6 — WindZone). O player é sempre afectado pelo vento (ver PlayerMotor2D.ApplyWind). Objetos soltos com (caixas, pedras, o ovo, etc.) também são sempre afectados enquanto não estiverem a ser carregados — não precisam deste componente. Para tudo o resto (inimigos, NPCs, decorações com Rigidbody2D dinâmico), adicionar este componente marca explicitamente que devem reagir ao vento. O peso usado para calcular a força é resolvido por GameWeightUtil.GetWindWeightOf (ObjectWeight > EnemyData.stats.weight > Rigidbody2D.mass > 1).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "WindAffectable",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "affectedByWind",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Liga/desliga o efeito do vento neste objecto sem remover o componente (ex.: inimigos pesados/ancorados que NÃO devem ser empurrados por vento).\")]",
+      "inspector": true,
+      "description": "Liga/desliga o efeito do vento neste objeto sem remover o componente (ex.: inimigos pesados/ancorados que NÃO devem ser empurrados por vento)."
+    }
+  ],
+  "methods": [],
+  "dependencies": [
+    "Carryable",
+    "EnemyData",
+    "GameWeightUtil",
+    "ObjectWeight",
+    "PlayerMotor2D",
+    "WindZone"
+  ],
+  "used_by": [
+    "WindZone"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Marca um inimigo/NPC (ou qualquer GameObject com Rigidbody2D que não seja o\n/// player) como \"afectado pelo vento\" (Tarefa #6 — WindZone).\n///\n/// O player é sempre afectado pelo vento (ver PlayerMotor2D.ApplyWind).\n/// Objectos soltos com <see cref=\"Carryable\"/> (caixas, pedras, o ovo, etc.)\n/// também são sempre afectados enquanto não estiverem a ser carregados — não\n/// precisam deste componente.\n///\n/// Para tudo o resto (inimigos, NPCs, decorações com Rigidbody2D dinâmico),\n/// adicionar este componente marca explicitamente que devem reagir ao vento.\n/// O peso usado para calcular a força é resolvido por\n/// GameWeightUtil.GetWindWeightOf (ObjectWeight > EnemyData.stats.weight >\n/// Rigidbody2D.mass > 1).\n/// </summary>\n[DisallowMultipleComponent]\npublic class WindAffectable : MonoBehaviour\n{\n    [Tooltip(\"Liga/desliga o efeito do vento neste objecto sem remover o componente (ex.: inimigos pesados/ancorados que NÃO devem ser empurrados por vento).\")]\n    public bool affectedByWind = true;\n}\n",
+  "id": "script-interactables-windaffectable-cs",
+  "dependencyIds": [
+    "script-interactables-carryable-cs",
+    "script-enemy-enemydata-cs",
+    "script-interactables-gameweightutil-cs",
+    "script-interactables-objectweight-cs",
+    "script-player-playermotor2d-cs",
+    "script-interactables-windzone-cs"
+  ],
+  "usedByIds": [
+    "script-interactables-windzone-cs"
+  ]
+}

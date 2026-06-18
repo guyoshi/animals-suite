@@ -1,0 +1,122 @@
+{
+  "path": "Combat/RumbleManager.cs",
+  "filename": "RumbleManager.cs",
+  "category": "Combat",
+  "primary": "RumbleManager",
+  "kind": "Componente",
+  "summary": "Tarefa #29 — vibração do comando (gamepad rumble) para feedback de combate: aplica motores baixo/alto (Gamepad.SetMotorSpeeds) durante \"duration\" segundos e repõe a 0 no fim. Respeita — se desligado (ou alterado para desligado a meio de um pulso), os motores são imediatamente postos a 0 e nenhum pulso novo é iniciado. Segue o mesmo padrão de singleton de AudioManager/GameSettings (Instance, DontDestroyOnLoad, EnsureExists/isAutoFallback).",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "RumbleManager",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "_pulseRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isAutoFallback",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "EnsureExists",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação EnsureExists."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "Pulse",
+      "ret": "void",
+      "mods": "public",
+      "params": "float lowFrequency, float highFrequency, float duration",
+      "description": "Executa a operação Pulse."
+    },
+    {
+      "name": "StopAfter",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "float duration",
+      "description": "Executa a operação StopAfter."
+    },
+    {
+      "name": "HandleSettingsChanged",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação HandleSettingsChanged."
+    },
+    {
+      "name": "StopRumble",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação StopRumble."
+    },
+    {
+      "name": "StopMotors",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação StopMotors."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "GameSettings",
+    "PlayerProgress"
+  ],
+  "used_by": [
+    "PlayerFeedback"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\n\n/// <summary>\n/// Tarefa #29 — vibração do comando (gamepad rumble) para feedback de\n/// combate: aplica motores baixo/alto (Gamepad.SetMotorSpeeds) durante\n/// \"duration\" segundos e repõe a 0 no fim. Respeita\n/// <see cref=\"GameSettings.VibrationEnabled\"/> — se desligado (ou alterado\n/// para desligado a meio de um pulso), os motores são imediatamente postos a\n/// 0 e nenhum pulso novo é iniciado.\n///\n/// Segue o mesmo padrão de singleton de AudioManager/GameSettings (Instance,\n/// DontDestroyOnLoad, EnsureExists/isAutoFallback).\n/// </summary>\npublic class RumbleManager : MonoBehaviour\n{\n    public static RumbleManager Instance { get; private set; }\n\n    private Coroutine _pulseRoutine;\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\").\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(RumbleManager) + \" (Fallback)\");\n        var instance = go.AddComponent<RumbleManager>();\n        instance.isAutoFallback = true;\n    }\n\n    private void OnEnable()\n    {\n        if (GameSettings.Instance != null) GameSettings.Instance.SettingsChanged += HandleSettingsChanged;\n    }\n\n    private void OnDisable()\n    {\n        if (GameSettings.Instance != null) GameSettings.Instance.SettingsChanged -= HandleSettingsChanged;\n        StopRumble();\n    }\n\n    /// <summary>\n    /// Aplica um pulso de vibração no gamepad activo (motores baixo/alto,\n    /// 0-1) durante \"duration\" segundos. Sem efeito se a vibração estiver\n    /// desligada nas Opções (GameSettings.VibrationEnabled) ou se não houver\n    /// gamepad ligado. Um novo pulso substitui o anterior.\n    /// </summary>\n    public void Pulse(float lowFrequency, float highFrequency, float duration)\n    {\n        if (GameSettings.Instance != null && !GameSettings.Instance.VibrationEnabled) return;\n\n        var gamepad = Gamepad.current;\n        if (gamepad == null) return;\n\n        if (_pulseRoutine != null) StopCoroutine(_pulseRoutine);\n\n        gamepad.SetMotorSpeeds(Mathf.Clamp01(lowFrequency), Mathf.Clamp01(highFrequency));\n        _pulseRoutine = StartCoroutine(StopAfter(duration));\n    }\n\n    private IEnumerator StopAfter(float duration)\n    {\n        yield return new WaitForSeconds(duration);\n        StopMotors();\n        _pulseRoutine = null;\n    }\n\n    private void HandleSettingsChanged()\n    {\n        if (GameSettings.Instance != null && !GameSettings.Instance.VibrationEnabled) StopRumble();\n    }\n\n    private void StopRumble()\n    {\n        if (_pulseRoutine != null)\n        {\n            StopCoroutine(_pulseRoutine);\n            _pulseRoutine = null;\n        }\n\n        StopMotors();\n    }\n\n    private void StopMotors()\n    {\n        Gamepad.current?.SetMotorSpeeds(0f, 0f);\n    }\n}\n",
+  "id": "script-combat-rumblemanager-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-data-gamesettings-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-player-playerfeedback-cs"
+  ]
+}

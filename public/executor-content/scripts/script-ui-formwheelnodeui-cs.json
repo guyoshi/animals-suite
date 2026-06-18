@@ -1,0 +1,108 @@
+{
+  "path": "UI/FormWheelNodeUI.cs",
+  "filename": "FormWheelNodeUI.cs",
+  "category": "UI",
+  "primary": "FormWheelNodeUI",
+  "kind": "Componente",
+  "summary": "Um \"nó\" (ícone) da Roda de Formas ( ): representa uma forma desbloqueada ( ). Estados visuais: - Normal: ícone a cores, sem marcadores. - Forma atual: ativo (ex: anel/contorno). - Selecionada na roda: ativo (destaque do nó sob o cursor/analógico). - Indisponível agora (FormSwitcher.CanSwitchTo == false — ex: no ar, submerso, cooldown): ícone acinzentado ( ) + ativo (cadeado — GDD \"feedback de animal bloqueado na roda\").",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "FormWheelNodeUI",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "icon",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Header(\"Visual\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "lockIcon",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"Cadeado/aviso mostrado sobre o ícone quando a forma não pode ser seleccionada agora (CanSwitchTo == false).\")]",
+      "inspector": true,
+      "description": "Cadeado/aviso mostrado sobre o ícone quando a forma não pode ser selecionada agora (CanSwitchTo == false)."
+    },
+    {
+      "name": "selectionHighlight",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"Destaque (anel/glow) activo quando este nó é o seleccionado na roda.\")]",
+      "inspector": true,
+      "description": "Destaque (anel/glow) ativo quando este nó é o selecionado na roda."
+    },
+    {
+      "name": "currentMarker",
+      "type": "Image",
+      "mods": "public",
+      "default": "",
+      "section": "Visual",
+      "attrs": "[Tooltip(\"Marcador pequeno activo quando este nó representa a forma actualmente equipada.\")]",
+      "inspector": true,
+      "description": "Marcador pequeno ativo quando este nó representa a forma atualmente equipada."
+    },
+    {
+      "name": "availableColor",
+      "type": "Color",
+      "mods": "public",
+      "default": "Color.white",
+      "section": "Cores",
+      "attrs": "[Header(\"Cores\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "unavailableColor",
+      "type": "Color",
+      "mods": "public",
+      "default": "new Color(1f, 1f, 1f, 0.35f)",
+      "section": "Cores",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Setup",
+      "ret": "void",
+      "mods": "public",
+      "params": "AnimalFormData form, bool isCurrent, bool isSelected, bool available",
+      "description": "Executa a operação Setup."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "FormSwitcher",
+    "FormWheelUI"
+  ],
+  "used_by": [
+    "FormWheelUI",
+    "HUDController"
+  ],
+  "source": "using UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Um \"nó\" (ícone) da Roda de Formas (<see cref=\"FormWheelUI\"/>): representa\n/// uma forma desbloqueada (<see cref=\"FormSwitcher.unlockedForms\"/>).\n///\n/// Estados visuais:\n/// - Normal: ícone a cores, sem marcadores.\n/// - Forma actual: <see cref=\"currentMarker\"/> activo (ex: anel/contorno).\n/// - Seleccionada na roda: <see cref=\"selectionHighlight\"/> activo (destaque\n///   do nó sob o cursor/analógico).\n/// - Indisponível agora (FormSwitcher.CanSwitchTo == false — ex: no ar,\n///   submerso, cooldown): ícone acinzentado (<see cref=\"unavailableColor\"/>)\n///   + <see cref=\"lockIcon\"/> activo (cadeado — GDD \"feedback de animal\n///   bloqueado na roda\").\n/// </summary>\npublic class FormWheelNodeUI : MonoBehaviour\n{\n    [Header(\"Visual\")]\n    public Image icon;\n\n    [Tooltip(\"Cadeado/aviso mostrado sobre o ícone quando a forma não pode ser seleccionada agora (CanSwitchTo == false).\")]\n    public Image lockIcon;\n\n    [Tooltip(\"Destaque (anel/glow) activo quando este nó é o seleccionado na roda.\")]\n    public Image selectionHighlight;\n\n    [Tooltip(\"Marcador pequeno activo quando este nó representa a forma actualmente equipada.\")]\n    public Image currentMarker;\n\n    [Header(\"Cores\")]\n    public Color availableColor = Color.white;\n    public Color unavailableColor = new Color(1f, 1f, 1f, 0.35f);\n\n    /// <summary>Forma representada por este nó (para o FormWheelUI ler ao confirmar/seleccionar).</summary>\n    public AnimalFormData Form { get; private set; }\n\n    public void Setup(AnimalFormData form, bool isCurrent, bool isSelected, bool available)\n    {\n        Form = form;\n\n        if (icon != null)\n        {\n            icon.sprite = form != null ? form.icon : null;\n            icon.color = available ? availableColor : unavailableColor;\n        }\n\n        if (lockIcon != null) lockIcon.enabled = !available;\n        if (selectionHighlight != null) selectionHighlight.enabled = isSelected;\n        if (currentMarker != null) currentMarker.enabled = isCurrent;\n    }\n}\n",
+  "id": "script-ui-formwheelnodeui-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-formwheelui-cs"
+  ],
+  "usedByIds": [
+    "script-ui-formwheelui-cs",
+    "script-ui-hudcontroller-cs"
+  ]
+}

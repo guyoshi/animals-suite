@@ -1,0 +1,560 @@
+{
+  "path": "Data/ChallengeDefinition.cs",
+  "filename": "ChallengeDefinition.cs",
+  "category": "Data",
+  "primary": "ChallengeDefinition",
+  "kind": "Asset de dados",
+  "summary": "Tipo de Provação de Gaia (apenas informativo/HUD — o comportamento real vem dos e configurados). Serve para o pré-tela, o portal de entrada e para escolher ícones/texto por defeito. Para obter o nome de exibição em português, usar .",
+  "attach": "Criar como asset pelo menu Create e adicionar ao GameDatabase quando aplicável.",
+  "types": [
+    {
+      "name": "ChallengeType",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ChallengeEndBehavior",
+      "kind": "enum",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "NpcEventRewardEntry",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ChallengeReward",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ChallengeRecord",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ApoloTrialPhase",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "ChallengeDefinition",
+      "kind": "class",
+      "bases": "ScriptableObject",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "npcId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"NpcController.npcId do NPC que deve disparar o evento. Tem de estar na cena e activo quando a recompensa for concedida.\")]",
+      "inspector": true,
+      "description": "NpcController.npcId do NPC que deve disparar o evento. Tem de estar na cena e ativo quando a recompensa for concedida."
+    },
+    {
+      "name": "npcEventId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"NpcEvent.eventId dentro desse NPC a disparar. Se o NPC já estiver a correr outro evento, este é ignorado (usar 'ActivateEventById' via Action no evento anterior em alternativa).\")]",
+      "inspector": true,
+      "description": "NpcEvent.eventId dentro desse NPC a disparar. Se o NPC já estiver a correr outro evento, este é ignorado (usar 'ActivateEventById' via Action no evento anterior em alternativa)."
+    },
+    {
+      "name": "itemRewards",
+      "type": "PickupLootEntry[]",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Itens concedidos ao receber esta recompensa (respeita ItemData.maxQuantity / savedAsCollected).\")]",
+      "inspector": true,
+      "description": "Itens concedidos ao receber esta recompensa (respeita ItemData.maxQuantity / savedAsCollected)."
+    },
+    {
+      "name": "sementes",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "",
+      "attrs": "[Tooltip(\"Sementes concedidas (0 = nenhuma).\")] [Min(0)]",
+      "inspector": true,
+      "description": "Sementes concedidas (0 = nenhuma)."
+    },
+    {
+      "name": "runasDeGaia",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "",
+      "attrs": "[Tooltip(\"Runas de Gaia concedidas (0 = nenhuma).\")] [Min(0)]",
+      "inspector": true,
+      "description": "Runas de Gaia concedidas (0 = nenhuma)."
+    },
+    {
+      "name": "runasDeApolo",
+      "type": "int",
+      "mods": "public",
+      "default": "0",
+      "section": "",
+      "attrs": "[Tooltip(\"Runas de Apolo concedidas (0 = nenhuma). Recompensa exclusiva da Provação de Apolo (isApoloTrial). Ao acumular 6 Runas de Apolo em PlayerProgress.runasDeApolo, o Emblema de Apolo é desbloqueado.\")] [Min(0)]",
+      "inspector": true,
+      "description": "Runas de Apolo concedidas (0 = nenhuma). Recompensa exclusiva da Provação de Apolo (isApoloTrial). Ao acumular 6 Runas de Apolo em PlayerProgress.runasDeApolo, o Emblema de Apolo é desbloqueado."
+    },
+    {
+      "name": "npcEventRewards",
+      "type": "NpcEventRewardEntry[]",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Eventos de NPC disparados após conceder os itens/recursos. Útil para cenas de libertação de animal, animação de NPC, ou qualquer mudança narrativa que exija mais do que sementes/runas/itens.\\n\\nCada entrada identifica um NPC por 'npcId' e um evento por 'npcEventId'. Os eventos são disparados em sequência (cada um inicia logo que o NPC o aceitar, sem aguardar conclusão do anterior).\")]",
+      "inspector": true,
+      "description": "Eventos de NPC disparados após conceder os itens/recursos. Útil para cenas de libertação de animal, animação de NPC, ou qualquer mudança narrativa que exija mais do que sementes/runas/itens.\\n\\nCada entrada identifica um NPC por 'npcId' e um evento por 'npcEventId'. Os eventos são disparados em sequência (cada um inicia logo que o NPC o aceitar, sem aguardar conclusão do anterior)."
+    },
+    {
+      "name": "challengeId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "bestTimeSeconds",
+      "type": "float",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "phaseName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Nome desta fase, mostrado no HUD (ex: 'Fase 1 — O Salto Infinito', 'Fase 3 — O Guardião'). Opcional.\")]",
+      "inspector": true,
+      "description": "Nome desta fase, mostrado no HUD (ex: 'Fase 1 — O Salto Infinito', 'Fase 3 — O Guardião'). Opcional."
+    },
+    {
+      "name": "hasTimeLimit",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, esta fase tem o seu próprio limite de tempo (independente do 'timeLimitSeconds' do desafio raiz). Se o tempo desta fase esgotar, o desafio falha (e reinicia, se isApoloTrial).\")]",
+      "inspector": true,
+      "description": "Se ativo, esta fase tem o seu próprio limite de tempo (independente do 'timeLimitSeconds' do desafio raiz). Se o tempo desta fase esgotar, o desafio falha (e reinicia, se isApoloTrial)."
+    },
+    {
+      "name": "timeLimitSeconds",
+      "type": "float",
+      "mods": "public",
+      "default": "30f",
+      "section": "",
+      "attrs": "[Tooltip(\"Limite de tempo desta fase, em segundos (apenas se 'hasTimeLimit').\")] [Min(1f)]",
+      "inspector": true,
+      "description": "Limite de tempo desta fase, em segundos (apenas se 'hasTimeLimit')."
+    },
+    {
+      "name": "objectives",
+      "type": "List<ChallengeObjective>",
+      "mods": "public",
+      "default": "new List<ChallengeObjective>()",
+      "section": "",
+      "attrs": "[Tooltip(\"Objectivos que têm de ser cumpridos para avançar para a próxima fase. Todos os marcados como 'required' têm de estar completos.\")] [SerializeReference]",
+      "inspector": true,
+      "description": "Objetivos que têm de ser cumpridos para avançar para a próxima fase. Todos os marcados como 'required' têm de estar completos."
+    },
+    {
+      "name": "failConditions",
+      "type": "List<ChallengeFailCondition>",
+      "mods": "public",
+      "default": "new List<ChallengeFailCondition>()",
+      "section": "",
+      "attrs": "[Tooltip(\"Condições de falha específicas desta fase. Se alguma for accionada, o desafio falha (e reinicia, se isApoloTrial).\")] [SerializeReference]",
+      "inspector": true,
+      "description": "Condições de falha específicas desta fase. Se alguma for accionada, o desafio falha (e reinicia, se isApoloTrial)."
+    },
+    {
+      "name": "phaseSpawnPoint",
+      "type": "Transform",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se definido, o player é teleportado para esta posição ao INICIAR esta fase. Útil para fases em zonas diferentes do mapa. Deixar vazio para permanecer onde está.\")]",
+      "inspector": true,
+      "description": "Se definido, o player é teleportado para esta posição ao INICIAR esta fase. Útil para fases em zonas diferentes do mapa. Deixar vazio para permanecer onde está."
+    },
+    {
+      "name": "phaseMusic",
+      "type": "UnityEngine.AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Música tocada durante esta fase (substitui a música do desafio raiz enquanto esta fase estiver activa). Vazio = continua com a música do desafio.\")]",
+      "inspector": true,
+      "description": "Música tocada durante esta fase (substitui a música do desafio raiz enquanto esta fase estiver ativa). Vazio = continua com a música do desafio."
+    },
+    {
+      "name": "displayName",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[TextArea]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "challengeType",
+      "type": "ChallengeType",
+      "mods": "public",
+      "default": "ChallengeType.Combinado",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Apenas informativo/HUD — o comportamento real é definido por \\\"Objectivos\\\" e \\\"Condições de Falha\\\" abaixo.\")]",
+      "inspector": true,
+      "description": "Apenas informativo/HUD — o comportamento real é definido por \"Objetivos\" e \"Condições de Falha\" abaixo."
+    },
+    {
+      "name": "icon",
+      "type": "Sprite",
+      "mods": "public",
+      "default": "",
+      "section": "Identidade",
+      "attrs": "[Tooltip(\"Ícone mostrado no pré-ecrã e no HUD do desafio (opcional).\")]",
+      "inspector": true,
+      "description": "Ícone mostrado no pré-tela e no HUD do desafio (opcional)."
+    },
+    {
+      "name": "allowedCategories",
+      "type": "AnimalCategory",
+      "mods": "public",
+      "default": "AnimalCategory.None",
+      "section": "Restrições de Forma/Categoria",
+      "attrs": "[Header(\"Restrições de Forma/Categoria\")] [Tooltip(\"Categorias do GDD (Flags, combine várias) que podem iniciar este desafio. 'None' = sem restrição por categoria.\")]",
+      "inspector": true,
+      "description": "Categorias do GDD (Flags, combine várias) que podem iniciar este desafio. 'None' = sem restrição por categoria."
+    },
+    {
+      "name": "allowedForms",
+      "type": "List<AnimalFormData>",
+      "mods": "public",
+      "default": "new List<AnimalFormData>()",
+      "section": "Restrições de Forma/Categoria",
+      "attrs": "[Tooltip(\"Formas específicas adicionalmente permitidas (além de qualquer forma que tenha uma das 'allowedCategories'). Vazio = não adiciona formas extra.\")]",
+      "inspector": true,
+      "description": "Formas específicas adicionalmente permitidas (além de qualquer forma que tenha uma das 'allowedCategories'). Vazio = não adiciona formas extra."
+    },
+    {
+      "name": "restrictItemUsage",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Restrições Durante o Desafio",
+      "attrs": "[Header(\"Restrições Durante o Desafio\")] [Tooltip(\"IMPORTANTE: só tem efeito se 'hasTimeLimit' estiver activo — garante que o jogador nunca fica permanentemente sem poder usar itens caso o desafio não seja resolvido (timeout sempre termina o desafio e restaura o uso normal). Se 'hasTimeLimit' estiver desligado, esta opção é ignorada pelo ChallengeManager (aviso no editor).\")]",
+      "inspector": true,
+      "description": "IMPORTANTE: só tem efeito se 'hasTimeLimit' estiver ativo — garante que o jogador nunca fica permanentemente sem poder usar itens caso o desafio não seja resolvido (timeout sempre termina o desafio e restaura o uso normal). Se 'hasTimeLimit' estiver desligado, esta opção é ignorada pelo ChallengeManager (aviso no editor)."
+    },
+    {
+      "name": "restrictedAbilities",
+      "type": "List<PrimaryAbility>",
+      "mods": "public",
+      "default": "new List<PrimaryAbility>()",
+      "section": "Restrições Durante o Desafio",
+      "attrs": "[Tooltip(\"Habilidades primárias bloqueadas durante o desafio (botão de Habilidade não faz nada para estas). Mesma ressalva: só tem efeito se 'hasTimeLimit' estiver activo.\")]",
+      "inspector": true,
+      "description": "Habilidades primárias bloqueadas durante o desafio (botão de Habilidade não faz nada para estas). Mesma ressalva: só tem efeito se 'hasTimeLimit' estiver ativo."
+    },
+    {
+      "name": "lockFormDuringChallenge",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Restrições Durante o Desafio",
+      "attrs": "[Tooltip(\"Se activo, o player não pode trocar de forma durante este desafio. Aplicado automaticamente pelo ChallengeTrigger quando 'requiredForm' está definido — o designer pode também activar manualmente em desafios onde trocar de animal quebraria a mecânica.\")]",
+      "inspector": true,
+      "description": "Se ativo, o player não pode trocar de forma durante este desafio. Aplicado automaticamente pelo ChallengeTrigger quando 'requiredForm' está definido — o designer pode também ativar manualmente em desafios onde trocar de animal quebraria a mecânica."
+    },
+    {
+      "name": "activeVariableName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Variáveis Globais (GameVariables)",
+      "attrs": "[Header(\"Variáveis Globais (GameVariables)\")] [Tooltip(\"Nome da variável bool definida como TRUE enquanto o desafio está activo (e FALSE ao terminar — sucesso, falha ou abandono). Vazio = usa \\\"Desafio_<challengeId>_Ativo\\\". Útil para condicionar objectos no nível (ex: barreiras que bloqueiam fuga).\")]",
+      "inspector": true,
+      "description": "Nome da variável bool definida como TRUE enquanto o desafio está ativo (e FALSE ao terminar — sucesso, falha ou abandono). Vazio = usa \"Desafio_<challengeId>_Ativo\". Útil para condicionar objetos no nível (ex: barreiras que bloqueiam fuga)."
+    },
+    {
+      "name": "completedVariableName",
+      "type": "string",
+      "mods": "public",
+      "default": "\"\"",
+      "section": "Variáveis Globais (GameVariables)",
+      "attrs": "[Tooltip(\"Nome da variável bool definida como TRUE na primeira vez que o desafio é concluído com sucesso. Vazio = usa \\\"Desafio_<challengeId>_Concluido\\\".\")]",
+      "inspector": true,
+      "description": "Nome da variável bool definida como TRUE na primeira vez que o desafio é concluído com sucesso. Vazio = usa \"Desafio_<challengeId>_Concluido\"."
+    },
+    {
+      "name": "endBehavior",
+      "type": "ChallengeEndBehavior",
+      "mods": "public",
+      "default": "ChallengeEndBehavior.PermanecerNoLocal",
+      "section": "Comportamento ao Terminar",
+      "attrs": "[Header(\"Comportamento ao Terminar\")] [Tooltip(\"PermanecerNoLocal: o player continua onde está (NPC/outros). VoltarParaEntrada: o player volta para a posição registada pelo activador, ex: fora do portal (Portal/Provação de Apolo).\")]",
+      "inspector": true,
+      "description": "PermanecerNoLocal: o player continua onde está (NPC/outros). VoltarParaEntrada: o player volta para a posição registada pelo activador, ex: fora do portal (Portal/Provação de Apolo)."
+    },
+    {
+      "name": "isApoloTrial",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Provação de Apolo",
+      "attrs": "[Header(\"Provação de Apolo\")] [Tooltip(\"Se activo: morrer durante este desafio NÃO é tratada como morte normal (sem checkpoint/registo) — reinicia o desafio todo a partir do início, com vida cheia.\")]",
+      "inspector": true,
+      "description": "Se ativo: morrer durante este desafio NÃO é tratada como morte normal (sem checkpoint/registro) — reinicia o desafio todo a partir do início, com vida cheia."
+    },
+    {
+      "name": "primaryReward",
+      "type": "ChallengeReward",
+      "mods": "public",
+      "default": "",
+      "section": "Recompensas",
+      "attrs": "[Header(\"Recompensas\")] [Tooltip(\"Recompensa concedida apenas na PRIMEIRA conclusão com sucesso.\")]",
+      "inspector": true,
+      "description": "Recompensa concedida apenas na PRIMEIRA conclusão com sucesso."
+    },
+    {
+      "name": "hasSecondaryReward",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "Recompensas",
+      "attrs": "[Tooltip(\"Se activo, concede 'secondaryReward' em TODAS as conclusões com sucesso seguintes à primeira (repetições). Se inactivo, repetições não concedem nenhuma recompensa adicional.\")]",
+      "inspector": true,
+      "description": "Se ativo, concede 'secondaryReward' em TODAS as conclusões com sucesso seguintes à primeira (repetições). Se inactivo, repetições não concedem nenhuma recompensa adicional."
+    },
+    {
+      "name": "secondaryReward",
+      "type": "ChallengeReward",
+      "mods": "public",
+      "default": "",
+      "section": "Recompensas",
+      "attrs": "[Tooltip(\"Recompensa concedida em cada repetição (apenas se 'hasSecondaryReward').\")]",
+      "inspector": true,
+      "description": "Recompensa concedida em cada repetição (apenas se 'hasSecondaryReward')."
+    },
+    {
+      "name": "challengeMusic",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "[Header(\"Áudio\")] [Tooltip(\"Música tocada enquanto o desafio está activo (substitui a música da área).\")]",
+      "inspector": true,
+      "description": "Música tocada enquanto o desafio está ativo (substitui a música da área)."
+    },
+    {
+      "name": "successMusic",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "[Tooltip(\"Música tocada no ecrã de SUCESSO (opcional — se vazio, mantém 'challengeMusic' até o fade terminar).\")]",
+      "inspector": true,
+      "description": "Música tocada no tela de SUCESSO (opcional — se vazio, mantém 'challengeMusic' até o fade terminar)."
+    },
+    {
+      "name": "failMusic",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "[Tooltip(\"Música tocada no ecrã de FALHA (opcional).\")]",
+      "inspector": true,
+      "description": "Música tocada no tela de FALHA (opcional)."
+    },
+    {
+      "name": "successSfx",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "failSfx",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "Áudio",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "apoloPhases",
+      "type": "List<ApoloTrialPhase>",
+      "mods": "public",
+      "default": "new List<ApoloTrialPhase>()",
+      "section": "Provação de Apolo — Fases (isApoloTrial = true)",
+      "attrs": "[Header(\"Provação de Apolo — Fases (isApoloTrial = true)\")] [Tooltip(\"Fases da Provação de Apolo, executadas em sequência. Cada fase tem os seus próprios objectivos, condições de falha e limite de tempo.\\n\\nDeixar vazio para usar o sistema normal de objectivos (acima) — adequado para Provações simples ou outros desafios com isApoloTrial = true.\\n\\nQuando preenchido, os 'Objectivos' e 'Condições de Falha' do nível raiz são ignorados; cada fase usa os seus próprios.\")]",
+      "inspector": true,
+      "description": "Fases da Provação de Apolo, executadas em sequência. Cada fase tem os seus próprios objetivos, condições de falha e limite de tempo.\\n\\nDeixar vazio para usar o sistema normal de objetivos (acima) — adequado para Provações simples ou outros desafios com isApoloTrial = true.\\n\\nQuando preenchido, os 'Objetivos' e 'Condições de Falha' do nível raiz são ignorados; cada fase usa os seus próprios."
+    },
+    {
+      "name": "optionalChallengeArea",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "Integração com Área (Provação Opcional)",
+      "attrs": "[Header(\"Integração com Área (Provação Opcional)\")] [Tooltip(\"Se definida, o ChallengeManager marca automaticamente esta área como \\\"provação descoberta\\\" ao iniciar e \\\"provação concluída\\\" ao terminar com sucesso (PlayerProgress.MarkChallengeDiscovered/MarkChallengeCompleted) — usado pela % de conclusão da área e pela secção \\\"Área Atual\\\" (AreaData.hasOptionalChallenge). Deixar vazio se esta Provação de Gaia não corresponde ao desafio opcional de nenhuma área.\")]",
+      "inspector": true,
+      "description": "Se definida, o ChallengeManager marca automaticamente esta área como \"provação descoberta\" ao iniciar e \"provação concluída\" ao terminar com sucesso (PlayerProgress.MarkChallengeDiscovered/MarkChallengeCompleted) — usado pela % de conclusão da área e pela seção \"Área Atual\" (AreaData.hasOptionalChallenge). Deixar vazio se esta Provação de Gaia não corresponde ao desafio opcional de nenhuma área."
+    },
+    {
+      "name": "ActiveVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "> !string.IsNullOrEmpty(activeVariableName) ? activeVariableName : $\"Provacao_{challengeId}_Ativa\"",
+      "section": "Integração com Área (Provação Opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "CompletedVariable",
+      "type": "string",
+      "mods": "public",
+      "default": "> !string.IsNullOrEmpty(completedVariableName) ? completedVariableName : $\"Provacao_{challengeId}_Concluida\"",
+      "section": "Integração com Área (Provação Opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "TypeDisplayName",
+      "type": "string",
+      "mods": "public",
+      "default": "> GetTypeName(challengeType)",
+      "section": "Integração com Área (Provação Opcional)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "GetTypeName",
+      "ret": "string",
+      "mods": "public static",
+      "params": "ChallengeType type",
+      "description": "Executa a operação GetTypeName."
+    },
+    {
+      "name": "IsFormAllowed",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AnimalFormData form",
+      "description": "Executa a operação IsFormAllowed."
+    }
+  ],
+  "dependencies": [
+    "Action_SetBoolVariable",
+    "AnimalCategory",
+    "AnimalFormData",
+    "AreaData",
+    "ChallengeEndReason",
+    "ChallengeFailCondition",
+    "ChallengeManager",
+    "ChallengeObjective",
+    "ChallengeTrigger",
+    "Condition_BoolVariable",
+    "GameVariables",
+    "ItemData",
+    "MissionData",
+    "MissionManager",
+    "NpcController",
+    "NpcEvent",
+    "PickupLootEntry",
+    "PlayerProgress",
+    "PrimaryAbility"
+  ],
+  "used_by": [
+    "Action_StartChallenge",
+    "ChallengeDefinitionEditor",
+    "ChallengeFailCondition",
+    "ChallengeHudUI",
+    "ChallengeManager",
+    "ChallengeObjective",
+    "ChallengeResultUI",
+    "ChallengeTrigger",
+    "EmblemManager",
+    "FormSwitcher",
+    "GameDataValidatorWindow",
+    "PlayerProgress",
+    "SaveData"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Tipo de Provação de Gaia (apenas informativo/HUD — o comportamento real vem dos\n/// <see cref=\"ChallengeDefinition.objectives\"/> e <see cref=\"ChallengeDefinition.failConditions\"/>\n/// configurados). Serve para o pré-ecrã, o portal de entrada e para escolher\n/// ícones/texto por defeito.\n///\n/// Para obter o nome de exibição em português, usar\n/// <see cref=\"ChallengeDefinition.GetTypeName\"/>.\n/// </summary>\npublic enum ChallengeType\n{\n    Corrida,\n    ColetaCronometrada,\n    QuebraCabecaCronometrado,\n    Combate,\n    Sobrevivencia,\n    DefesaDeNpc,\n    ProvacaoDeApolo,\n    Combinado,\n}\n\n/// <summary>\n/// O que acontece ao player quando o desafio termina (sucesso OU falha):\n///\n/// - <see cref=\"PermanecerNoLocal\"/>: o player continua onde está (desafios de\n///   NPC e outros que acontecem \"no meio do mundo normal\" — confirmado pelo\n///   utilizador para desafios de defesa de NPC/outros).\n/// - <see cref=\"VoltarParaEntrada\"/>: o player é teleportado para a posição de\n///   entrada registada pelo activador (fora do portal) — usado por desafios de\n///   Portal e pela Provação de Apolo.\n/// </summary>\npublic enum ChallengeEndBehavior\n{\n    PermanecerNoLocal,\n    VoltarParaEntrada,\n}\n\n/// <summary>\n/// Entrada de \"evento de NPC como recompensa\": identifica o NPC e o evento a\n/// disparar ao conceder a recompensa. Usado por <see cref=\"ChallengeReward.npcEventRewards\"/>.\n///\n/// O NPC é encontrado em runtime via <see cref=\"NpcController.FindById\"/> (registo\n/// automático de NPCs activos). O evento é disparado via\n/// <see cref=\"NpcController.TriggerEventById\"/> — ignora condições e interacção\n/// do player, permitindo cenas de libertação/animação automáticas.\n/// </summary>\n[System.Serializable]\npublic class NpcEventRewardEntry\n{\n    [Tooltip(\"NpcController.npcId do NPC que deve disparar o evento. Tem de estar na cena e activo quando a recompensa for concedida.\")]\n    public string npcId;\n\n    [Tooltip(\"NpcEvent.eventId dentro desse NPC a disparar. Se o NPC já estiver a correr outro evento, este é ignorado (usar 'ActivateEventById' via Action no evento anterior em alternativa).\")]\n    public string npcEventId;\n}\n\n/// <summary>\n/// Recompensa concedida por um <see cref=\"ChallengeDefinition\"/> (itens,\n/// Sementes, Runas de Gaia, e/ou eventos de NPC para cenas narrativas).\n/// </summary>\n[System.Serializable]\npublic class ChallengeReward\n{\n    [Tooltip(\"Itens concedidos ao receber esta recompensa (respeita ItemData.maxQuantity / savedAsCollected).\")]\n    public PickupLootEntry[] itemRewards;\n\n    [Tooltip(\"Sementes concedidas (0 = nenhuma).\")]\n    [Min(0)] public int sementes = 0;\n\n    [Tooltip(\"Runas de Gaia concedidas (0 = nenhuma).\")]\n    [Min(0)] public int runasDeGaia = 0;\n\n    [Tooltip(\"Runas de Apolo concedidas (0 = nenhuma). Recompensa exclusiva da Provação de Apolo (isApoloTrial). Ao acumular 6 Runas de Apolo em PlayerProgress.runasDeApolo, o Emblema de Apolo é desbloqueado.\")]\n    [Min(0)] public int runasDeApolo = 0;\n\n    [Tooltip(\"Eventos de NPC disparados após conceder os itens/recursos. Útil para cenas de libertação de animal, animação de NPC, ou qualquer mudança narrativa que exija mais do que sementes/runas/itens.\\n\\nCada entrada identifica um NPC por 'npcId' e um evento por 'npcEventId'. Os eventos são disparados em sequência (cada um inicia logo que o NPC o aceitar, sem aguardar conclusão do anterior).\")]\n    public NpcEventRewardEntry[] npcEventRewards;\n\n    /// <summary>True se esta recompensa concede pelo menos alguma coisa.</summary>\n    public bool HasAnything =>\n        sementes > 0 || runasDeGaia > 0 || runasDeApolo > 0\n        || (itemRewards != null && itemRewards.Length > 0)\n        || (npcEventRewards != null && npcEventRewards.Length > 0);\n}\n\n/// <summary>\n/// Melhor tempo registado para um desafio (PlayerProgress.challengeRecords —\n/// Sistema de Missões/Desafios, Tarefa #13). Apenas relevante para desafios com\n/// 'hasTimeLimit'.\n/// </summary>\n[System.Serializable]\npublic class ChallengeRecord\n{\n    public string challengeId;\n\n    /// <summary>Melhor (menor) tempo de conclusão registado, em segundos.</summary>\n    public float bestTimeSeconds;\n}\n\n/// <summary>\n/// Uma fase (secção) da Provação de Apolo. Cada fase tem os seus próprios\n/// objectivos, condições de falha, limite de tempo opcional e ponto de spawn\n/// opcional para o player.\n///\n/// O <see cref=\"ChallengeManager\"/> avança para a fase seguinte automaticamente\n/// quando todos os objectivos \"required\" desta fase estão cumpridos. Se a fase\n/// falhar (failCondition ou tempo esgotado), o <see cref=\"ChallengeManager\"/>\n/// trata como <see cref=\"ChallengeEndReason.Falha\"/> do desafio todo (para a\n/// Provação de Apolo com isApoloTrial = true, isso reinicia do início).\n/// </summary>\n[System.Serializable]\npublic class ApoloTrialPhase\n{\n    [Tooltip(\"Nome desta fase, mostrado no HUD (ex: 'Fase 1 — O Salto Infinito', 'Fase 3 — O Guardião'). Opcional.\")]\n    public string phaseName;\n\n    [Tooltip(\"Se activo, esta fase tem o seu próprio limite de tempo (independente do 'timeLimitSeconds' do desafio raiz). Se o tempo desta fase esgotar, o desafio falha (e reinicia, se isApoloTrial).\")]\n    public bool hasTimeLimit = false;\n\n    [Tooltip(\"Limite de tempo desta fase, em segundos (apenas se 'hasTimeLimit').\")]\n    [Min(1f)] public float timeLimitSeconds = 30f;\n\n    [Tooltip(\"Objectivos que têm de ser cumpridos para avançar para a próxima fase. Todos os marcados como 'required' têm de estar completos.\")]\n    [SerializeReference] public List<ChallengeObjective> objectives = new List<ChallengeObjective>();\n\n    [Tooltip(\"Condições de falha específicas desta fase. Se alguma for accionada, o desafio falha (e reinicia, se isApoloTrial).\")]\n    [SerializeReference] public List<ChallengeFailCondition> failConditions = new List<ChallengeFailCondition>();\n\n    [Tooltip(\"Se definido, o player é teleportado para esta posição ao INICIAR esta fase. Útil para fases em zonas diferentes do mapa. Deixar vazio para permanecer onde está.\")]\n    public Transform phaseSpawnPoint;\n\n    [Tooltip(\"Música tocada durante esta fase (substitui a música do desafio raiz enquanto esta fase estiver activa). Vazio = continua com a música do desafio.\")]\n    public UnityEngine.AudioClip phaseMusic;\n}\n\n/// <summary>\n/// Define um Desafio/Missão Opcional (Sistema de Missões/Desafios): identidade,\n/// objectivos, condições de falha, restrições, recompensas, HUD e áudio.\n/// Não guarda estado próprio — todo o estado em runtime (timer, progresso,\n/// activador actual, etc.) vive em <c>ChallengeManager</c>, tal como\n/// <see cref=\"MissionData\"/> não guarda estado (delegado em\n/// <c>MissionManager</c>/<c>GameVariables</c>).\n///\n/// Ao iniciar, <c>ChallengeManager</c> define <see cref=\"ActiveVariable\"/> = true\n/// em GameVariables (e false ao terminar) — permite que o nível use\n/// Condition_BoolVariable/Action_SetBoolVariable já existentes para, por\n/// exemplo, fazer barreiras aparecerem enquanto o desafio estiver activo\n/// (pedido do utilizador, Sistema de Missões/Desafios).\n///\n/// Ao completar com sucesso por PRIMEIRA vez, <c>ChallengeManager</c> também\n/// define <see cref=\"CompletedVariable\"/> = true (tal como\n/// MissionData.CompletedVariable) — útil para condições de diálogo (\"já\n/// completaste este desafio?\"), independentemente do registo em\n/// PlayerProgress.completedChallengeIds (usado para a recompensa\n/// única/ranking — Tarefa #13).\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Challenge Definition\", fileName = \"NewChallenge\")]\npublic class ChallengeDefinition : ScriptableObject\n{\n    [Header(\"Identidade\")]\n    [Tooltip(\"Identificador único do desafio (usado para persistência, variáveis derivadas e ranking).\")]\n    public string challengeId;\n\n    public string displayName;\n\n    [TextArea] public string description;\n\n    [Tooltip(\"Apenas informativo/HUD — o comportamento real é definido por \\\"Objectivos\\\" e \\\"Condições de Falha\\\" abaixo.\")]\n    public ChallengeType challengeType = ChallengeType.Combinado;\n\n    [Tooltip(\"Ícone mostrado no pré-ecrã e no HUD do desafio (opcional).\")]\n    public Sprite icon;\n\n    [Header(\"Restrições de Forma/Categoria\")]\n    [Tooltip(\"Categorias do GDD (Flags, combine várias) que podem iniciar este desafio. 'None' = sem restrição por categoria.\")]\n    public AnimalCategory allowedCategories = AnimalCategory.None;\n\n    [Tooltip(\"Formas específicas adicionalmente permitidas (além de qualquer forma que tenha uma das 'allowedCategories'). Vazio = não adiciona formas extra.\")]\n    public List<AnimalFormData> allowedForms = new List<AnimalFormData>();\n\n    [Header(\"Tempo\")]\n    [Tooltip(\"Se activo, o desafio falha automaticamente ao fim de 'timeLimitSeconds' (FailCondition_TimeExpired implícita). Necessário para activar as 'Restrições Durante o Desafio' abaixo.\")]\n    public bool hasTimeLimit = false;\n\n    [Tooltip(\"Limite de tempo, em segundos (apenas se 'hasTimeLimit').\")]\n    [Min(0f)] public float timeLimitSeconds = 60f;\n\n    [Header(\"Objectivos\")]\n    [Tooltip(\"Condições de vitória — todas as marcadas como \\\"obrigatório\\\" têm de estar cumpridas para o desafio ter sucesso.\")]\n    [SerializeReference] public List<ChallengeObjective> objectives = new List<ChallengeObjective>();\n\n    [Header(\"Condições de Falha Adicionais\")]\n    [Tooltip(\"Além do tempo esgotado (se 'hasTimeLimit'): dano recebido, NPC defendido derrotado, variável específica, etc.\")]\n    [SerializeReference] public List<ChallengeFailCondition> failConditions = new List<ChallengeFailCondition>();\n\n    [Header(\"Restrições Durante o Desafio\")]\n    [Tooltip(\"IMPORTANTE: só tem efeito se 'hasTimeLimit' estiver activo — garante que o jogador nunca fica permanentemente sem poder usar itens caso o desafio não seja resolvido (timeout sempre termina o desafio e restaura o uso normal). Se 'hasTimeLimit' estiver desligado, esta opção é ignorada pelo ChallengeManager (aviso no editor).\")]\n    public bool restrictItemUsage = false;\n\n    [Tooltip(\"Habilidades primárias bloqueadas durante o desafio (botão de Habilidade não faz nada para estas). Mesma ressalva: só tem efeito se 'hasTimeLimit' estiver activo.\")]\n    public List<PrimaryAbility> restrictedAbilities = new List<PrimaryAbility>();\n\n    [Tooltip(\"Se activo, o player não pode trocar de forma durante este desafio. Aplicado automaticamente pelo ChallengeTrigger quando 'requiredForm' está definido — o designer pode também activar manualmente em desafios onde trocar de animal quebraria a mecânica.\")]\n    public bool lockFormDuringChallenge = false;\n\n    [Header(\"Variáveis Globais (GameVariables)\")]\n    [Tooltip(\"Nome da variável bool definida como TRUE enquanto o desafio está activo (e FALSE ao terminar — sucesso, falha ou abandono). Vazio = usa \\\"Desafio_<challengeId>_Ativo\\\". Útil para condicionar objectos no nível (ex: barreiras que bloqueiam fuga).\")]\n    public string activeVariableName = \"\";\n\n    [Tooltip(\"Nome da variável bool definida como TRUE na primeira vez que o desafio é concluído com sucesso. Vazio = usa \\\"Desafio_<challengeId>_Concluido\\\".\")]\n    public string completedVariableName = \"\";\n\n    [Header(\"Comportamento ao Terminar\")]\n    [Tooltip(\"PermanecerNoLocal: o player continua onde está (NPC/outros). VoltarParaEntrada: o player volta para a posição registada pelo activador, ex: fora do portal (Portal/Provação de Apolo).\")]\n    public ChallengeEndBehavior endBehavior = ChallengeEndBehavior.PermanecerNoLocal;\n\n    [Header(\"Provação de Apolo\")]\n    [Tooltip(\"Se activo: morrer durante este desafio NÃO é tratada como morte normal (sem checkpoint/registo) — reinicia o desafio todo a partir do início, com vida cheia.\")]\n    public bool isApoloTrial = false;\n\n    [Header(\"Recompensas\")]\n    [Tooltip(\"Recompensa concedida apenas na PRIMEIRA conclusão com sucesso.\")]\n    public ChallengeReward primaryReward;\n\n    [Tooltip(\"Se activo, concede 'secondaryReward' em TODAS as conclusões com sucesso seguintes à primeira (repetições). Se inactivo, repetições não concedem nenhuma recompensa adicional.\")]\n    public bool hasSecondaryReward = false;\n\n    [Tooltip(\"Recompensa concedida em cada repetição (apenas se 'hasSecondaryReward').\")]\n    public ChallengeReward secondaryReward;\n\n    [Header(\"Áudio\")]\n    [Tooltip(\"Música tocada enquanto o desafio está activo (substitui a música da área).\")]\n    public AudioClip challengeMusic;\n\n    [Tooltip(\"Música tocada no ecrã de SUCESSO (opcional — se vazio, mantém 'challengeMusic' até o fade terminar).\")]\n    public AudioClip successMusic;\n\n    [Tooltip(\"Música tocada no ecrã de FALHA (opcional).\")]\n    public AudioClip failMusic;\n\n    public AudioClip successSfx;\n    public AudioClip failSfx;\n\n    [Header(\"Provação de Apolo — Fases (isApoloTrial = true)\")]\n    [Tooltip(\"Fases da Provação de Apolo, executadas em sequência. Cada fase tem os seus próprios objectivos, condições de falha e limite de tempo.\\n\\nDeixar vazio para usar o sistema normal de objectivos (acima) — adequado para Provações simples ou outros desafios com isApoloTrial = true.\\n\\nQuando preenchido, os 'Objectivos' e 'Condições de Falha' do nível raiz são ignorados; cada fase usa os seus próprios.\")]\n    public List<ApoloTrialPhase> apoloPhases = new List<ApoloTrialPhase>();\n\n    [Header(\"Integração com Área (Provação Opcional)\")]\n    [Tooltip(\"Se definida, o ChallengeManager marca automaticamente esta área como \\\"provação descoberta\\\" ao iniciar e \\\"provação concluída\\\" ao terminar com sucesso (PlayerProgress.MarkChallengeDiscovered/MarkChallengeCompleted) — usado pela % de conclusão da área e pela secção \\\"Área Atual\\\" (AreaData.hasOptionalChallenge). Deixar vazio se esta Provação de Gaia não corresponde ao desafio opcional de nenhuma área.\")]\n    public AreaData optionalChallengeArea;\n\n    /// <summary>Nome efectivo da variável \"provação activa\" (derivado de challengeId se 'activeVariableName' estiver vazio).</summary>\n    public string ActiveVariable => !string.IsNullOrEmpty(activeVariableName) ? activeVariableName : $\"Provacao_{challengeId}_Ativa\";\n\n    /// <summary>Nome efectivo da variável \"provação concluída\" (derivado de challengeId se 'completedVariableName' estiver vazio).</summary>\n    public string CompletedVariable => !string.IsNullOrEmpty(completedVariableName) ? completedVariableName : $\"Provacao_{challengeId}_Concluida\";\n\n    /// <summary>\n    /// Devolve o nome de exibição em português para cada tipo de Provação de Gaia\n    /// — usado no portal de entrada, HUD e pré-ecrã.\n    /// </summary>\n    public static string GetTypeName(ChallengeType type) => type switch\n    {\n        ChallengeType.Corrida                  => \"Corrida\",\n        ChallengeType.ColetaCronometrada       => \"Coleta Cronometrada\",\n        ChallengeType.QuebraCabecaCronometrado => \"Quebra-Cabeça\",\n        ChallengeType.Combate                  => \"Combate\",\n        ChallengeType.Sobrevivencia            => \"Sobrevivência\",\n        ChallengeType.DefesaDeNpc              => \"Defesa de Aliado\",\n        ChallengeType.ProvacaoDeApolo          => \"Provação de Apolo\",\n        ChallengeType.Combinado                => \"Misto\",\n        _                                      => \"Provação de Gaia\",\n    };\n\n    /// <summary>Nome de exibição do tipo desta Provação de Gaia (ver <see cref=\"GetTypeName\"/>).</summary>\n    public string TypeDisplayName => GetTypeName(challengeType);\n\n    /// <summary>\n    /// True se a forma indicada pode iniciar esta Provação de Gaia: sem restrições\n    /// configuradas (allowedCategories == None e allowedForms vazio), OU a\n    /// forma está em 'allowedForms', OU partilha pelo menos uma categoria com\n    /// 'allowedCategories'.\n    /// </summary>\n    public bool IsFormAllowed(AnimalFormData form)\n    {\n        bool noRestriction = allowedCategories == AnimalCategory.None && (allowedForms == null || allowedForms.Count == 0);\n        if (noRestriction) return true;\n        if (form == null) return false;\n\n        if (allowedForms != null && allowedForms.Contains(form)) return true;\n\n        return allowedCategories != AnimalCategory.None && (form.categories & allowedCategories) != 0;\n    }\n}\n",
+  "id": "script-data-challengedefinition-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-data-challengefailcondition-cs",
+    "script-data-challengemanager-cs",
+    "script-data-challengeobjective-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-npc-conditions-variableconditions-cs",
+    "script-data-gamevariables-cs",
+    "script-data-itemdata-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-npcevent-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-challengeactions-cs",
+    "script-data-editor-challengedefinitioneditor-cs",
+    "script-data-challengefailcondition-cs",
+    "script-ui-challengehudui-cs",
+    "script-data-challengemanager-cs",
+    "script-data-challengeobjective-cs",
+    "script-ui-challengeresultui-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-data-emblemmanager-cs",
+    "script-forms-formswitcher-cs",
+    "script-data-editor-gamedatavalidatorwindow-cs",
+    "script-data-playerprogress-cs",
+    "script-data-savedata-cs"
+  ]
+}

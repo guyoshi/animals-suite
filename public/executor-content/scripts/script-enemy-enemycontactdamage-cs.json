@@ -1,0 +1,109 @@
+{
+  "path": "Enemy/EnemyContactDamage.cs",
+  "filename": "EnemyContactDamage.cs",
+  "category": "Enemy",
+  "primary": "EnemyContactDamage",
+  "kind": "Componente",
+  "summary": "Dano por contato de um inimigo (P3 — consome EnemyData.stats.contactDamage, que até aqui nunca era lido): tocar no corpo do inimigo fere o player, mesmo sem ser um ataque. Funciona com collider sólido (OnCollisionStay2D) ou trigger (OnTriggerStay2D). Passa por PlayerCombat.TryDamagePlayer (P2): respeita i-frames, aplica a Defesa da forma e dá knockback. \"tickInterval\" evita dano contínuo a cada frame (além dos i-frames do próprio player). Não aplica dano em estados terminais (Morto/Desativado) nem Atordoado.",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "EnemyContactDamage",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "tickInterval",
+      "type": "float",
+      "mods": "public",
+      "default": "0.6f",
+      "section": "",
+      "attrs": "[Tooltip(\"Intervalo mínimo (segundos) entre danos de contacto.\")] [Min(0.1f)]",
+      "inspector": true,
+      "description": "Intervalo mínimo (segundos) entre danos de contato."
+    },
+    {
+      "name": "contactKnockback",
+      "type": "float",
+      "mods": "public",
+      "default": "6f",
+      "section": "",
+      "attrs": "[Tooltip(\"Força de empurrão aplicada ao player no contacto.\")] [Min(0f)]",
+      "inspector": true,
+      "description": "Força de empurrão aplicada ao player no contato."
+    },
+    {
+      "name": "_controller",
+      "type": "EnemyController",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_nextDamageTime",
+      "type": "float",
+      "mods": "private",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnCollisionStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collision2D collision",
+      "description": "Executa a operação OnCollisionStay2D."
+    },
+    {
+      "name": "OnTriggerStay2D",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação OnTriggerStay2D."
+    },
+    {
+      "name": "TryHit",
+      "ret": "void",
+      "mods": "private",
+      "params": "Collider2D other",
+      "description": "Executa a operação TryHit."
+    }
+  ],
+  "dependencies": [
+    "EnemyController",
+    "EnemyData",
+    "EnemyState",
+    "PlayerCombat",
+    "State"
+  ],
+  "used_by": [
+    "PlayerCombat"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Dano por contacto de um inimigo (P3 — consome EnemyData.stats.contactDamage,\n/// que até aqui nunca era lido): tocar no corpo do inimigo fere o player,\n/// mesmo sem ser um ataque.\n///\n/// Funciona com collider sólido (OnCollisionStay2D) ou trigger\n/// (OnTriggerStay2D). Passa por PlayerCombat.TryDamagePlayer (P2): respeita\n/// i-frames, aplica a Defesa da forma e dá knockback. \"tickInterval\" evita\n/// dano contínuo a cada frame (além dos i-frames do próprio player).\n///\n/// Não aplica dano em estados terminais (Morto/Desactivado) nem Atordoado.\n/// </summary>\n[DisallowMultipleComponent]\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyContactDamage : MonoBehaviour\n{\n    [Tooltip(\"Intervalo mínimo (segundos) entre danos de contacto.\")]\n    [Min(0.1f)] public float tickInterval = 0.6f;\n\n    [Tooltip(\"Força de empurrão aplicada ao player no contacto.\")]\n    [Min(0f)] public float contactKnockback = 6f;\n\n    private EnemyController _controller;\n    private float _nextDamageTime;\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n    }\n\n    private void OnCollisionStay2D(Collision2D collision) => TryHit(collision.collider);\n    private void OnTriggerStay2D(Collider2D other) => TryHit(other);\n\n    private void TryHit(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (_controller.IsTerminal || _controller.State == EnemyState.Atordoado) return;\n        if (Time.time < _nextDamageTime) return;\n\n        int damage = _controller.Data != null ? _controller.Data.stats.contactDamage : 0;\n        if (damage <= 0) return;\n\n        if (PlayerCombat.TryDamagePlayer(other.transform, damage, transform.position, contactKnockback))\n            _nextDamageTime = Time.time + tickInterval;\n    }\n}\n",
+  "id": "script-enemy-enemycontactdamage-cs",
+  "dependencyIds": [
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs",
+    "script-player-playercombat-cs"
+  ],
+  "usedByIds": [
+    "script-player-playercombat-cs"
+  ]
+}

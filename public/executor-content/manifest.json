@@ -1,0 +1,22 @@
+{
+  "version": "2026.06.18-stage3",
+  "generatedAt": "2026-06-18T12:00:00.000Z",
+  "sourceVersion": "18-06-att",
+  "desktopOnly": true,
+  "counts": {
+    "stages": 8,
+    "missions": 96,
+    "detailedMissions": 49,
+    "plannedMissions": 47,
+    "tasks": 277,
+    "steps": 1099,
+    "guides": 26,
+    "scripts": 278
+  },
+  "validation": {
+    "missingGuideRefs": [],
+    "duplicateScriptIds": [],
+    "missionIdsUnique": true,
+    "stepIdsUnique": true
+  }
+}

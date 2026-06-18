@@ -1,0 +1,414 @@
+{
+  "path": "UI/PauseMenuController.cs",
+  "filename": "PauseMenuController.cs",
+  "category": "UI",
+  "primary": "PauseMenuController",
+  "kind": "Componente",
+  "summary": "Menu de Pausa (\"+\" — Tarefa #35 restructurado): atalho direto para . Abre com \"+\" ( ), pausa via . Após a restructuração (#35), \"+\" abre apenas Opções . Todas as outras seções (Área, Diário, Formas, Itens, Progresso, Emblemas, Upgrades) estão no (\"-\"). O framework de múltiplas seções mantém-se intacto (é extensível), mas em produção sectionBehaviours deve conter apenas OptionsSectionUI — a navegação L/R fica inactiva com uma única seção. - Cabeçalho: nome do mundo, nome da área, % de conclusão, ícone do animal. - \"B\"/Escape e \"+\" fecham. - Animação escala+fade (~0.25-0.35s). - Enquanto aberto: BGM abafado (SetBgmMuffled). Montagem no Editor: - \"panelRoot\"/\"canvasGroup\"/\"animatedRoot\": pa",
+  "attach": "GameObject indicado pelo sistema; consulta o guia ligado à Missão para a posição exata.",
+  "types": [
+    {
+      "name": "PauseMenuController",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "panelRoot",
+      "type": "GameObject",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[Header(\"Painel\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "canvasGroup",
+      "type": "CanvasGroup",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "animatedRoot",
+      "type": "RectTransform",
+      "mods": "private",
+      "default": "",
+      "section": "Painel",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "animDuration",
+      "type": "float",
+      "mods": "private",
+      "default": "0.3f",
+      "section": "Animação de Abertura/Fecho",
+      "attrs": "[Header(\"Animação de Abertura/Fecho\")] [Tooltip(\"Duração da animação de abrir/fechar, em segundos (GDD: 0.25 a 0.35s).\")] [SerializeField]",
+      "inspector": true,
+      "description": "Duração da animação de abrir/fechar, em segundos (GDD: 0.25 a 0.35s)."
+    },
+    {
+      "name": "closedScale",
+      "type": "float",
+      "mods": "private",
+      "default": "0.85f",
+      "section": "Animação de Abertura/Fecho",
+      "attrs": "[Tooltip(\"Escala inicial (ao abrir) / final (ao fechar) do painel — efeito de \\\"abrir como uma folha/pedra rúnica\\\".\")] [SerializeField]",
+      "inspector": true,
+      "description": "Escala inicial (ao abrir) / final (ao fechar) do painel — efeito de \"abrir como uma folha/pedra rúnica\"."
+    },
+    {
+      "name": "worldNameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Cabeçalho",
+      "attrs": "[Header(\"Cabeçalho\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaNameText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Cabeçalho",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "areaPercentText",
+      "type": "TMP_Text",
+      "mods": "private",
+      "default": "",
+      "section": "Cabeçalho",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "equippedAnimalIcon",
+      "type": "Image",
+      "mods": "private",
+      "default": "",
+      "section": "Cabeçalho",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sectionLabels",
+      "type": "List<TMP_Text>",
+      "mods": "private",
+      "default": "new List<TMP_Text>()",
+      "section": "Navegação de Secções",
+      "attrs": "[Header(\"Navegação de Secções\")] [Tooltip(\"Um TMP_Text por secção (mesma ordem que \\\"sectionBehaviours\\\"), usado para realçar a secção actual.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Um TMP_Text por seção (mesma ordem que \"sectionBehaviours\\"
+    },
+    {
+      "name": "sectionInactiveColor",
+      "type": "Color",
+      "mods": "private",
+      "default": "new Color(1f, 1f, 1f, 0.5f)",
+      "section": "Navegação de Secções",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sectionActiveColor",
+      "type": "Color",
+      "mods": "private",
+      "default": "Color.white",
+      "section": "Navegação de Secções",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sectionBehaviours",
+      "type": "List<MonoBehaviour>",
+      "mods": "private",
+      "default": "new List<MonoBehaviour>()",
+      "section": "Secções (ordem: Área, Diário, Formas, Itens, Progresso, Opções)",
+      "attrs": "[Header(\"Secções (ordem: Área, Diário, Formas, Itens, Progresso, Opções)\")] [Tooltip(\"Cada elemento deve ser um componente que implementa IPauseMenuSection.\")] [SerializeField]",
+      "inspector": true,
+      "description": "Cada elemento deve ser um componente que implementa IPauseMenuSection."
+    },
+    {
+      "name": "openSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Som (orgânico — folhas/madeira/sino)",
+      "attrs": "[Header(\"Som (orgânico — folhas/madeira/sino)\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "closeSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Som (orgânico — folhas/madeira/sino)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "pageChangeSfx",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Som (orgânico — folhas/madeira/sino)",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "input",
+      "type": "PlayerInputRouter",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[Header(\"Referências\")] [SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "playerFormSwitcher",
+      "type": "FormSwitcher",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "[SerializeField]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "sections",
+      "type": "List<IPauseMenuSection>",
+      "mods": "private readonly",
+      "default": "new List<IPauseMenuSection>()",
+      "section": "Referências",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "currentSectionIndex",
+      "type": "int",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "isOpen",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "animRoutine",
+      "type": "Coroutine",
+      "mods": "private",
+      "default": "",
+      "section": "Referências",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "IsOpen",
+      "type": "bool",
+      "mods": "public",
+      "default": "> isOpen",
+      "section": "Referências",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "Start",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Start."
+    },
+    {
+      "name": "OnEnable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnEnable."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
+      "name": "OnPausePressed",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnPausePressed."
+    },
+    {
+      "name": "Open",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Open."
+    },
+    {
+      "name": "Close",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Close."
+    },
+    {
+      "name": "OnPrevSection",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnPrevSection."
+    },
+    {
+      "name": "OnNextSection",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnNextSection."
+    },
+    {
+      "name": "ChangeSection",
+      "ret": "void",
+      "mods": "private",
+      "params": "int delta",
+      "description": "Executa a operação ChangeSection."
+    },
+    {
+      "name": "ShowSection",
+      "ret": "void",
+      "mods": "private",
+      "params": "int index, bool refresh",
+      "description": "Executa a operação ShowSection."
+    },
+    {
+      "name": "RefreshHeader",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação RefreshHeader."
+    },
+    {
+      "name": "RefreshHeader_External",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação RefreshHeader_External."
+    },
+    {
+      "name": "OpenToSection",
+      "ret": "void",
+      "mods": "public",
+      "params": "MonoBehaviour sectionBehaviour",
+      "description": "Executa a operação OpenToSection."
+    },
+    {
+      "name": "PlaySfx",
+      "ret": "void",
+      "mods": "public",
+      "params": "AudioClip clip",
+      "description": "Executa a operação PlaySfx."
+    },
+    {
+      "name": "PlayAnimation",
+      "ret": "void",
+      "mods": "private",
+      "params": "bool opening",
+      "description": "Executa a operação PlayAnimation."
+    },
+    {
+      "name": "AnimateRoutine",
+      "ret": "IEnumerator",
+      "mods": "private",
+      "params": "bool opening",
+      "description": "Executa a operação AnimateRoutine."
+    }
+  ],
+  "dependencies": [
+    "AudioManager",
+    "FormSwitcher",
+    "GamePauseUtil",
+    "IPauseMenuSection",
+    "OptionsSectionUI",
+    "PlayerInputRouter",
+    "PlayerProgress",
+    "SecondaryMenuController",
+    "WorldState"
+  ],
+  "used_by": [
+    "AreaDiscoveryType",
+    "FormSwitcher",
+    "FormsSectionUI",
+    "IPauseMenuSection",
+    "ItemsInstinctsSectionUI",
+    "OptionsSectionUI",
+    "SaveMenuController",
+    "SecondaryMenuController"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Menu de Pausa (\"+\" — Tarefa #35 restructurado): atalho directo para\n/// <see cref=\"OptionsSectionUI\"/>. Abre com \"+\"\n/// (<see cref=\"PlayerInputRouter.PausePressed\"/>), pausa via\n/// <see cref=\"GamePauseUtil\"/>.\n///\n/// Após a restructuração (#35), \"+\" abre <b>apenas Opções</b>. Todas as outras\n/// secções (Área, Diário, Formas, Itens, Progresso, Emblemas, Upgrades) estão\n/// no <see cref=\"SecondaryMenuController\"/> (\"-\").\n///\n/// O framework de múltiplas secções mantém-se intacto (é extensível), mas em\n/// produção <c>sectionBehaviours</c> deve conter <b>apenas</b>\n/// <c>OptionsSectionUI</c> — a navegação L/R fica inactiva com uma única secção.\n///\n/// - Cabeçalho: nome do mundo, nome da área, % de conclusão, ícone do animal.\n/// - \"B\"/Escape e \"+\" fecham.\n/// - Animação escala+fade (~0.25-0.35s).\n/// - Enquanto aberto: BGM abafado (SetBgmMuffled).\n///\n/// Montagem no Editor:\n/// - \"panelRoot\"/\"canvasGroup\"/\"animatedRoot\": painel e animação.\n/// - Cabeçalho: \"worldNameText\", \"areaNameText\", \"areaPercentText\", \"equippedAnimalIcon\".\n/// - \"sectionBehaviours\": colocar apenas <c>OptionsSectionUI</c>.\n/// - \"sectionLabels\": pode ter um único label \"OPÇÕES\", ou ficar vazio.\n/// </summary>\npublic class PauseMenuController : MonoBehaviour\n{\n    public static PauseMenuController Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private RectTransform animatedRoot;\n\n    [Header(\"Animação de Abertura/Fecho\")]\n    [Tooltip(\"Duração da animação de abrir/fechar, em segundos (GDD: 0.25 a 0.35s).\")]\n    [SerializeField] private float animDuration = 0.3f;\n\n    [Tooltip(\"Escala inicial (ao abrir) / final (ao fechar) do painel — efeito de \\\"abrir como uma folha/pedra rúnica\\\".\")]\n    [SerializeField] private float closedScale = 0.85f;\n\n    [Header(\"Cabeçalho\")]\n    [SerializeField] private TMP_Text worldNameText;\n    [SerializeField] private TMP_Text areaNameText;\n    [SerializeField] private TMP_Text areaPercentText;\n    [SerializeField] private Image equippedAnimalIcon;\n\n    [Header(\"Navegação de Secções\")]\n    [Tooltip(\"Um TMP_Text por secção (mesma ordem que \\\"sectionBehaviours\\\"), usado para realçar a secção actual.\")]\n    [SerializeField] private List<TMP_Text> sectionLabels = new List<TMP_Text>();\n    [SerializeField] private Color sectionInactiveColor = new Color(1f, 1f, 1f, 0.5f);\n    [SerializeField] private Color sectionActiveColor = Color.white;\n\n    [Header(\"Secções (ordem: Área, Diário, Formas, Itens, Progresso, Opções)\")]\n    [Tooltip(\"Cada elemento deve ser um componente que implementa IPauseMenuSection.\")]\n    [SerializeField] private List<MonoBehaviour> sectionBehaviours = new List<MonoBehaviour>();\n\n    [Header(\"Som (orgânico — folhas/madeira/sino)\")]\n    [SerializeField] private AudioClip openSfx;\n    [SerializeField] private AudioClip closeSfx;\n    [SerializeField] private AudioClip pageChangeSfx;\n\n    [Header(\"Referências\")]\n    [SerializeField] private PlayerInputRouter input;\n    [SerializeField] private FormSwitcher playerFormSwitcher;\n\n    private readonly List<IPauseMenuSection> sections = new List<IPauseMenuSection>();\n    private int currentSectionIndex;\n    private bool isOpen;\n    private Coroutine animRoutine;\n\n    public bool IsOpen => isOpen;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            Destroy(gameObject);\n            return;\n        }\n\n        Instance = this;\n\n        sections.Clear();\n        foreach (var mb in sectionBehaviours)\n        {\n            if (mb is IPauseMenuSection section)\n            {\n                sections.Add(section);\n                if (section.Root != null) section.Root.SetActive(false);\n            }\n            else\n            {\n                Debug.LogError($\"[PauseMenuController] '{(mb != null ? mb.name : \"null\")}' não implementa IPauseMenuSection — ignorado.\");\n            }\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n        if (canvasGroup != null) canvasGroup.alpha = 0f;\n    }\n\n    private void Start()\n    {\n        if (input == null) input = FindObjectOfType<PlayerInputRouter>();\n        if (playerFormSwitcher == null) playerFormSwitcher = FindObjectOfType<FormSwitcher>();\n    }\n\n    private void OnEnable()\n    {\n        if (input == null) input = FindObjectOfType<PlayerInputRouter>();\n        if (input == null) return;\n\n        input.PausePressed += OnPausePressed;\n        input.PrevFormTapped += OnPrevSection;\n        input.NextFormTapped += OnNextSection;\n    }\n\n    private void OnDisable()\n    {\n        if (input == null) return;\n\n        input.PausePressed -= OnPausePressed;\n        input.PrevFormTapped -= OnPrevSection;\n        input.NextFormTapped -= OnNextSection;\n    }\n\n    // ---------------- Abrir / Fechar ----------------\n\n    private void OnPausePressed()\n    {\n        if (isOpen) Close();\n        else Open();\n    }\n\n    public void Open()\n    {\n        if (isOpen) return;\n        if (sections.Count == 0)\n        {\n            Debug.LogWarning(\"[PauseMenuController] Nenhuma secção configurada — menu não abre.\");\n            return;\n        }\n\n        isOpen = true;\n\n        GamePauseUtil.Pause();\n        AudioManager.Instance?.SetBgmMuffled(true);\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        RefreshHeader();\n        ShowSection(currentSectionIndex, true);\n\n        PlayAnimation(opening: true);\n        AudioManager.Instance?.PlaySE(openSfx);\n    }\n\n    public void Close()\n    {\n        if (!isOpen) return;\n\n        isOpen = false;\n\n        if (currentSectionIndex < sections.Count)\n            sections[currentSectionIndex].OnHide();\n\n        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);\n\n        PlayAnimation(opening: false);\n        AudioManager.Instance?.PlaySE(closeSfx);\n    }\n\n    // ---------------- Navegação de Secções ----------------\n\n    private void OnPrevSection()\n    {\n        if (!isOpen) return;\n        ChangeSection(-1);\n    }\n\n    private void OnNextSection()\n    {\n        if (!isOpen) return;\n        ChangeSection(1);\n    }\n\n    private void ChangeSection(int delta)\n    {\n        if (sections.Count <= 1) return;\n\n        int next = (currentSectionIndex + delta + sections.Count) % sections.Count;\n        if (next == currentSectionIndex) return;\n\n        sections[currentSectionIndex].OnHide();\n        ShowSection(next, refresh: true);\n\n        AudioManager.Instance?.PlaySE(pageChangeSfx);\n    }\n\n    private void ShowSection(int index, bool refresh)\n    {\n        currentSectionIndex = index;\n\n        for (int i = 0; i < sections.Count; i++)\n        {\n            bool active = i == index;\n\n            if (sections[i].Root != null) sections[i].Root.SetActive(active);\n\n            if (i < sectionLabels.Count && sectionLabels[i] != null)\n                sectionLabels[i].color = active ? sectionActiveColor : sectionInactiveColor;\n        }\n\n        if (refresh) sections[index].Refresh();\n    }\n\n    // ---------------- Cabeçalho ----------------\n\n    private void RefreshHeader()\n    {\n        var world = WorldState.Instance != null ? WorldState.Instance.CurrentWorld : null;\n        var area = WorldState.Instance != null ? WorldState.Instance.CurrentArea : null;\n\n        if (worldNameText != null) worldNameText.text = world != null ? world.displayName : string.Empty;\n        if (areaNameText != null) areaNameText.text = area != null ? area.displayName : string.Empty;\n\n        int percent = (area != null && PlayerProgress.Instance != null)\n            ? PlayerProgress.Instance.GetAreaCompletionPercent(area)\n            : 0;\n        if (areaPercentText != null) areaPercentText.text = $\"{percent}%\";\n\n        var form = playerFormSwitcher != null ? playerFormSwitcher.CurrentForm : null;\n        if (equippedAnimalIcon != null)\n        {\n            equippedAnimalIcon.sprite = form != null ? form.icon : null;\n            equippedAnimalIcon.enabled = form != null && form.icon != null;\n        }\n    }\n\n    /// <summary>\n    /// Chamado pelas secções (ex: Área Atual, depois de recolher algo) quando o\n    /// progresso muda de forma que afecte o cabeçalho (percentagem da área).\n    /// </summary>\n    public void RefreshHeader_External() => RefreshHeader();\n\n    /// <summary>\n    /// Abre o Menu de Pausa (se ainda fechado) directamente numa secção\n    /// específica — ex: a secção Formas, quando uma nova transformação é\n    /// libertada (Tarefa #9, \"essa tela abre, e aparece a animação do animal\n    /// sendo revelado no ramo\"). \"sectionBehaviour\" deve ser um dos elementos\n    /// de \"sectionBehaviours\".\n    /// </summary>\n    public void OpenToSection(MonoBehaviour sectionBehaviour)\n    {\n        int index = sectionBehaviours.IndexOf(sectionBehaviour);\n        if (index < 0)\n        {\n            Open();\n            return;\n        }\n\n        bool wasOpen = isOpen;\n        if (!wasOpen) Open();\n\n        if (index != currentSectionIndex)\n        {\n            sections[currentSectionIndex].OnHide();\n            ShowSection(index, refresh: true);\n            if (wasOpen) AudioManager.Instance?.PlaySE(pageChangeSfx);\n        }\n    }\n\n    /// <summary>Toca um som orgânico curto através do AudioManager (ex: madeira ao confirmar, sino ao seleccionar) — usado pelas secções.</summary>\n    public void PlaySfx(AudioClip clip) => AudioManager.Instance?.PlaySE(clip);\n\n    // ---------------- Animação ----------------\n\n    private void PlayAnimation(bool opening)\n    {\n        if (animRoutine != null) StopCoroutine(animRoutine);\n        animRoutine = StartCoroutine(AnimateRoutine(opening));\n    }\n\n    private IEnumerator AnimateRoutine(bool opening)\n    {\n        float from = opening ? closedScale : 1f;\n        float to = opening ? 1f : closedScale;\n        float fromAlpha = opening ? 0f : 1f;\n        float toAlpha = opening ? 1f : 0f;\n\n        float t = 0f;\n        float duration = Mathf.Max(0.01f, animDuration);\n\n        while (t < duration)\n        {\n            // Tempo real: o jogo já está pausado (Time.timeScale = 0) enquanto o menu está aberto.\n            t += Time.unscaledDeltaTime;\n            float p = Mathf.Clamp01(t / duration);\n            float eased = 1f - Mathf.Pow(1f - p, 3f); // ease-out cúbico\n\n            if (animatedRoot != null) animatedRoot.localScale = Vector3.one * Mathf.Lerp(from, to, eased);\n            if (canvasGroup != null) canvasGroup.alpha = Mathf.Lerp(fromAlpha, toAlpha, eased);\n\n            yield return null;\n        }\n\n        if (animatedRoot != null) animatedRoot.localScale = Vector3.one * to;\n        if (canvasGroup != null) canvasGroup.alpha = toAlpha;\n\n        if (!opening)\n        {\n            if (panelRoot != null) panelRoot.SetActive(false);\n\n            // Só retoma o jogo (e o BGM normal) depois da animação de fecho terminar.\n            GamePauseUtil.Resume();\n            AudioManager.Instance?.SetBgmMuffled(false);\n        }\n    }\n}\n",
+  "id": "script-ui-pausemenucontroller-cs",
+  "dependencyIds": [
+    "script-audio-audiomanager-cs",
+    "script-forms-formswitcher-cs",
+    "script-npc-pauseutil-cs",
+    "script-ui-ipausemenusection-cs",
+    "script-ui-optionssectionui-cs",
+    "script-input-playerinputrouter-cs",
+    "script-data-playerprogress-cs",
+    "script-ui-secondarymenucontroller-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-areaactions-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-formssectionui-cs",
+    "script-ui-ipausemenusection-cs",
+    "script-ui-itemsinstinctssectionui-cs",
+    "script-ui-optionssectionui-cs",
+    "script-ui-savemenucontroller-cs",
+    "script-ui-secondarymenucontroller-cs"
+  ]
+}

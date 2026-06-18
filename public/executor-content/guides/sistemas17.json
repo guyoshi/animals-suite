@@ -1,0 +1,57 @@
+{
+  "slug": "sistemas17",
+  "title": "Sistemas e decisões — 17/06",
+  "category": "Histórico técnico",
+  "source": "ALTERACOES_17-06_REV2.txt",
+  "summary": "Registro histórico da atualização de 17/06.",
+  "html": "<h1 id=\"sistemas-e-decisoes-aprovadas-17-06\">Sistemas e decisões aprovadas — 17/06</h1>\n<div class=\"success\"><b>Fonte de verdade:</b> scripts do backup 17/06 e decisões confirmadas nesta atualização.</div>\n<h2 id=\"ecos-perdidos-e-sussurros-da-terra\">Ecos Perdidos e Sussurros da Terra</h2><p>O colectável físico é o <b>Eco Perdido</b>. Cada área de exploração possui 15; vilas e áreas de boss possuem 0. O Contador de Histórias vende pelo menos cinco Sussurros sobre cada área, com preços 1, 2, 3, 4 e 5 Ecos. Sussurros são mensagens/lore compradas, não pickups.</p>\n<h2 id=\"cura\">Cura</h2><p><b>Broto de Vida</b> fica no cenário e cura imediatamente. <b>Seiva Vital</b> é comprada, guardada no inventário e usada manualmente.</p>\n<h2 id=\"agua-e-animais\">Água e animais</h2><p>Configure cada AnimalFormData como: nadador de superfície, mergulhador nativo, terrestre que mergulha com oxigénio, flutuante sem mergulho, ou não-nadador que afunda e morre. Não-nadadores devem obrigatoriamente ter aviso tutorial. A Bolha de Ar restaura oxigénio.</p>\n<h2 id=\"provacoes-de-gaia-e-apolo\">Provações de Gaia e Apolo</h2><p>Desafios passam a chamar-se Provações de Gaia. Podem exigir animal/categoria, bloquear troca, coletar Sementes ou item específico, tempo, inimigos, sobrevivência e combinações. A Provação de Apolo é uma área própria por mundo, desbloqueada no 100% daquele mundo, não conta para percentagem e entrega uma Runa de Apolo.</p>\n<h2 id=\"jukebox-e-melodias-selvagens\">Jukebox e Melodias Selvagens</h2><p>A Jukebox é compra global única, disponível em lojas de todos os mundos até ser comprada. Depois fica cinzenta e vai para o fim da lista. Cada área possui uma Melodia Selvagem, também possível como recompensa, e ela conta para 100%.</p>\n<h2 id=\"tutoriais\">Tutoriais</h2><p>Importante: centro, confirmação, imagem opcional. Médio: ancorado perto do elemento, confirmação. Não importante: popup superior sem confirmação. Texto longo continua por páginas e nunca deve cobrir HUD crítica.</p>\n<h2 id=\"localizacao\">Localização</h2><p>Infraestrutura pronta para Inglês, Português, Espanhol, Francês e Japonês. Apenas Português fica habilitado nesta fase. Primeira inicialização: usa idioma do sistema quando suportado; sistema não suportado cai para Inglês. Enquanto a tradução inglesa ainda não existir, a configuração de desenvolvimento pode iniciar em Português. A escolha do jogador é persistida.</p>\n<h2 id=\"populacao-da-vila-revisao-2\">População da vila — revisão 2</h2><p><b>Implementado:</b> <code>Action_RescueNpc</code>, sincronização por mundo, gravação em <code>WorldState</code> e correcção de saves antigos ao carregar. <b>A configurar:</b> refresh imediato do HUD e listeners de música, lojas e decoração. <b>A validar:</b> habitantes adicionados manualmente podem ser substituídos pelo recálculo dos resgates durante o load.</p>",
+  "toc": [
+    {
+      "id": "sistemas-e-decisoes-aprovadas-17-06",
+      "level": 1,
+      "label": "Sistemas e decisões aprovadas — 17/06"
+    },
+    {
+      "id": "ecos-perdidos-e-sussurros-da-terra",
+      "level": 2,
+      "label": "Ecos Perdidos e Sussurros da Terra"
+    },
+    {
+      "id": "cura",
+      "level": 2,
+      "label": "Cura"
+    },
+    {
+      "id": "agua-e-animais",
+      "level": 2,
+      "label": "Água e animais"
+    },
+    {
+      "id": "provacoes-de-gaia-e-apolo",
+      "level": 2,
+      "label": "Provações de Gaia e Apolo"
+    },
+    {
+      "id": "jukebox-e-melodias-selvagens",
+      "level": 2,
+      "label": "Jukebox e Melodias Selvagens"
+    },
+    {
+      "id": "tutoriais",
+      "level": 2,
+      "label": "Tutoriais"
+    },
+    {
+      "id": "localizacao",
+      "level": 2,
+      "label": "Localização"
+    },
+    {
+      "id": "populacao-da-vila-revisao-2",
+      "level": 2,
+      "label": "População da vila — revisão 2"
+    }
+  ],
+  "searchText": "Sistemas e decisões aprovadas — 17/06 Fonte de verdade: scripts do backup 17/06 e decisões confirmadas nesta atualização. Ecos Perdidos e Sussurros da Terra O colectável físico é o Eco Perdido . Cada área de exploração possui 15; vilas e áreas de boss possuem 0. O Contador de Histórias vende pelo menos cinco Sussurros sobre cada área, com preços 1, 2, 3, 4 e 5 Ecos. Sussurros são mensagens/lore compradas, não pickups. Cura Broto de Vida fica no cenário e cura imediatamente. Seiva Vital é comprada, guardada no inventário e usada manualmente. Água e animais Configure cada AnimalFormData como: nadador de superfície, mergulhador nativo, terrestre que mergulha com oxigénio, flutuante sem mergulho, ou não-nadador que afunda e morre. Não-nadadores devem obrigatoriamente ter aviso tutorial. A Bolha de Ar restaura oxigénio. Provações de Gaia e Apolo Desafios passam a chamar-se Provações de Gaia. Podem exigir animal/categoria, bloquear troca, coletar Sementes ou item específico, tempo, inimigos, sobrevivência e combinações. A Provação de Apolo é uma área própria por mundo, desbloqueada no 100% daquele mundo, não conta para percentagem e entrega uma Runa de Apolo. Jukebox e Melodias Selvagens A Jukebox é compra global única, disponível em lojas de todos os mundos até ser comprada. Depois fica cinzenta e vai para o fim da lista. Cada área possui uma Melodia Selvagem, também possível como recompensa, e ela conta para 100%. Tutoriais Importante: centro, confirmação, imagem opcional. Médio: ancorado perto do elemento, confirmação. Não importante: popup superior sem confirmação. Texto longo continua por páginas e nunca deve cobrir HUD crítica. Localização Infraestrutura pronta para Inglês, Português, Espanhol, Francês e Japonês. Apenas Português fica habilitado nesta fase. Primeira inicialização: usa idioma do sistema quando suportado; sistema não suportado cai para Inglês. Enquanto a tradução inglesa ainda não existir, a configuração de desenvolvimento pode iniciar em Português. A escolha do jogador é persistida. População da vila — revisão 2 Implementado: Action_RescueNpc , sincronização por mundo, gravação em WorldState e correcção de saves antigos ao carregar. A configurar: refresh imediato do HUD e listeners de música, lojas e decoração. A validar: habitantes adicionados manualmente podem ser substituídos pelo recálculo dos resgates durante o load.",
+  "historical": true
+}

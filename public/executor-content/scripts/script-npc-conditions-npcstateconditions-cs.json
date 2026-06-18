@@ -1,0 +1,119 @@
+{
+  "path": "NPC/Conditions/NpcStateConditions.cs",
+  "filename": "NpcStateConditions.cs",
+  "category": "NPC",
+  "primary": "Condition_NpcReactionState",
+  "kind": "Condição de NPC",
+  "summary": "O estado de reação atual de um NPC é (ou não é) \"state\" (ver Action_SetReactionState).",
+  "attach": "Usado internamente por outros scripts; normalmente não vai diretamente no Inspector.",
+  "types": [
+    {
+      "name": "Condition_NpcReactionState",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    },
+    {
+      "name": "Condition_NpcVisible",
+      "kind": "class",
+      "bases": "NpcCondition",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "state",
+      "type": "NpcReactionState",
+      "mods": "public",
+      "default": "NpcReactionState.Idle",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "mustMatch",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"true = condição cumpre-se quando o estado É este; false = quando NÃO é.\")]",
+      "inspector": true,
+      "description": "true = condição cumpre-se quando o estado É este; false = quando NÃO é."
+    },
+    {
+      "name": "targetNpcId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"ID de outro NPC (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC) cujo estado de reação é verificado. Vazio = este próprio NPC. Necessário para usar esta condição fora do contexto de um NPC (ex: MusicZone), onde \\\"este próprio NPC\\\" não existe — nesse caso, sem um ID definido a condição nunca se cumpre.\")]",
+      "inspector": true,
+      "description": "ID de outro NPC (Etapa 8 — ver \"Npc Id\" no NpcController desse NPC) cujo estado de reação é verificado. Vazio = este próprio NPC. Necessário para usar esta condição fora do contexto de um NPC (ex: MusicZone), onde \"este próprio NPC\" não existe — nesse caso, sem um ID definido a condição nunca se cumpre."
+    },
+    {
+      "name": "otherNpc",
+      "type": "NpcController",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Vazio = este próprio NPC (ver \\\"otherNpcId\\\" abaixo para referenciar por ID, incluindo fora do contexto de um NPC).\")]",
+      "inspector": true,
+      "description": "Vazio = este próprio NPC (ver \"otherNpcId\" abaixo para referenciar por ID, incluindo fora do contexto de um NPC)."
+    },
+    {
+      "name": "otherNpcId",
+      "type": "string",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"ID de outro NPC (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC). Se definido e encontrado, tem prioridade sobre \\\"otherNpc\\\".\")]",
+      "inspector": true,
+      "description": "ID de outro NPC (Etapa 8 — ver \"Npc Id\" no NpcController desse NPC). Se definido e encontrado, tem prioridade sobre \"otherNpc\"."
+    },
+    {
+      "name": "mustBeVisible",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"true = condição cumpre-se se ESTIVER visível; false = se NÃO estiver.\")]",
+      "inspector": true,
+      "description": "true = condição cumpre-se se ESTIVER visível; false = se NÃO estiver."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Evaluate",
+      "ret": "bool",
+      "mods": "public override",
+      "params": "NpcController npc",
+      "description": "Executa a operação Evaluate."
+    }
+  ],
+  "dependencies": [
+    "Action_SetNpcVisible",
+    "Action_SetReactionState",
+    "MusicZone",
+    "NpcCondition",
+    "NpcController",
+    "NpcReactionState"
+  ],
+  "used_by": [
+    "Action_SetReactionState",
+    "NpcController"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// O estado de reação actual de um NPC é (ou não é) \"state\" (ver\n/// Action_SetReactionState).\n/// </summary>\n[System.Serializable]\npublic class Condition_NpcReactionState : NpcCondition\n{\n    public NpcReactionState state = NpcReactionState.Idle;\n\n    [Tooltip(\"true = condição cumpre-se quando o estado É este; false = quando NÃO é.\")]\n    public bool mustMatch = true;\n\n    [Tooltip(\"ID de outro NPC (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC) cujo estado de reação é verificado. Vazio = este próprio NPC. Necessário para usar esta condição fora do contexto de um NPC (ex: MusicZone), onde \\\"este próprio NPC\\\" não existe — nesse caso, sem um ID definido a condição nunca se cumpre.\")]\n    public string targetNpcId;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        NpcController target = NpcController.FindById(targetNpcId);\n        if (target == null) target = npc;\n        if (target == null) return false;\n\n        return (target.ReactionState == state) == mustMatch;\n    }\n}\n\n/// <summary>\n/// Um NPC — este, outro via \"otherNpc\"/\"otherNpcId\", ou, fora do contexto de um\n/// NPC (ex: MusicZone), apenas via \"otherNpcId\" — está actualmente\n/// visível/activo (ver NpcController.IsVisible, \"visibilityConditions\" e\n/// Action_SetNpcVisible). Útil para condicionar o evento de um NPC ao estado de\n/// visibilidade de outro (ex: NPC B só fala depois de NPC A ter aparecido), ou\n/// para uma MusicZone só tocar enquanto um NPC estiver visível.\n/// </summary>\n[System.Serializable]\npublic class Condition_NpcVisible : NpcCondition\n{\n    [Tooltip(\"Vazio = este próprio NPC (ver \\\"otherNpcId\\\" abaixo para referenciar por ID, incluindo fora do contexto de um NPC).\")]\n    public NpcController otherNpc;\n\n    [Tooltip(\"ID de outro NPC (Etapa 8 — ver \\\"Npc Id\\\" no NpcController desse NPC). Se definido e encontrado, tem prioridade sobre \\\"otherNpc\\\".\")]\n    public string otherNpcId;\n\n    [Tooltip(\"true = condição cumpre-se se ESTIVER visível; false = se NÃO estiver.\")]\n    public bool mustBeVisible = true;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        NpcController target = NpcController.FindById(otherNpcId);\n        if (target == null) target = otherNpc != null ? otherNpc : npc;\n        if (target == null) return false;\n\n        return target.IsVisible == mustBeVisible;\n    }\n}\n",
+  "id": "script-npc-conditions-npcstateconditions-cs",
+  "dependencyIds": [
+    "script-npc-actions-visibilityactions-cs",
+    "script-npc-actions-reactionactions-cs",
+    "script-audio-musiczone-cs",
+    "script-npc-npccondition-cs",
+    "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-reactionactions-cs",
+    "script-npc-npccontroller-cs"
+  ]
+}
