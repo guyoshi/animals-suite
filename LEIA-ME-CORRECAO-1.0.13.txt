@@ -1,0 +1,14 @@
+CORREÇÃO DA PUBLICAÇÃO DO ANIMALS SUITE
+
+Problema corrigido:
+- o build criava o executável, mas falhava ao gerar os artefactos do atualizador porque a configuração plugins.updater não existia;
+- o workflow estava a usar uma versão antiga da tauri-action.
+
+Como aplicar:
+1. Copie todo o conteúdo desta pasta para a pasta principal Animals Suite Installer.
+2. Confirme a substituição dos ficheiros existentes.
+3. Execute PUBLICAR_ATUALIZACAO_GITHUB.bat.
+4. Use a versão 1.0.13, porque a tag app-v1.0.12 já aponta para a tentativa anterior.
+5. Confirme com S.
+
+Não elimine nem altere os Secrets do GitHub.

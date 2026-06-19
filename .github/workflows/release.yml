@@ -1,27 +1,50 @@
 name: Publicar Animals Suite
+
 on:
   workflow_dispatch:
   push:
     tags:
       - 'app-v*'
+
 permissions:
   contents: write
+
 jobs:
   publish-windows:
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Obter código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: '24'
           cache: npm
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: swatinem/rust-cache@v2
+
+      - name: Configurar Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Restaurar cache do Rust
+        uses: swatinem/rust-cache@v2
         with:
           workspaces: './src-tauri -> target'
-      - run: npm ci
-      - run: npm run validate:final
-      - uses: tauri-apps/tauri-action@v0.6.2
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Validar Animals Suite
+        run: npm run validate:final
+
+      - name: Gerar configuração segura do atualizador
+        env:
+          ANIMALS_UPDATE_PUBKEY: ${{ secrets.TAURI_UPDATER_PUBLIC_KEY }}
+          ANIMALS_UPDATE_ENDPOINT: https://github.com/${{ github.repository }}/releases/latest/download/latest.json
+        run: node scripts/generate-updater-config.mjs
+
+      - name: Compilar e publicar instalador
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
@@ -37,4 +60,4 @@ jobs:
           generateReleaseNotes: true
           uploadUpdaterJson: true
           updaterJsonPreferNsis: true
-          args: --config src-tauri/tauri.updater.conf.json
+          args: --config src-tauri/tauri.updater.generated.conf.json

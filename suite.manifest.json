@@ -1,56 +1,56 @@
 {
-  "suiteId": "animals-suite",
-  "suiteName": "Animals Suite",
-  "version": "1.0.12",
-  "releaseDate": "2026-06-19",
-  "locale": "pt-BR",
-  "contentVersion": "2026.06.19-1.0.12",
-  "schemas": {
-    "project": 11,
-    "executor": 5,
-    "database": 4,
-    "portableBundle": 1
-  },
-  "applications": [
-    {
-      "id": "planner",
-      "name": "Animals — Planejador",
-      "description": "Planejamento, design e organização do conteúdo do jogo.",
-      "route": "/",
-      "launchArgument": "--mode=planner"
-    },
-    {
-      "id": "executor",
-      "name": "Animals — Executor",
-      "description": "Roteiro de produção, configuração, testes e acompanhamento no Unity.",
-      "route": "/executor",
-      "launchArgument": "--mode=executor"
-    }
-  ],
-  "sources": {
-    "technicalBackup": "Scripts backup 18-06 att.rar",
-    "gdd": "Animals GDD.docx — 18/06/2026",
-    "plannerBaseline": "Animals-Planejador-Tauri-v0.9.1.zip",
-    "guideBaseline": "Animals - Guia.rar"
-  },
-  "authorityOrder": [
-    "Decisões mais recentes confirmadas pelo diretor do projeto",
-    "Scripts do backup técnico 18-06 att",
-    "GDD vigente de 18/06/2026",
-    "Dados estruturados do Planejador",
-    "Conteúdo do guia interativo"
-  ],
-  "executorContent": {
-    "expectedBuildMissions": 96,
-    "expectedTasks": 277,
-    "expectedSteps": 1099,
-    "expectedGuides": 26,
-    "expectedScripts": 278,
-    "importedBuildMissions": 96,
-    "importedTasks": 277,
-    "importedSteps": 1099,
-    "importedGuides": 26,
-    "importedScripts": 278,
-    "migrationStatus": "complete-gamified-music-github-ready-planner-attachments-only"
-  }
+    "suiteId":  "animals-suite",
+    "suiteName":  "Animals Suite",
+    "version":  "1.0.13",
+    "releaseDate":  "2026-06-19",
+    "locale":  "pt-BR",
+    "contentVersion":  "2026.06.19-1.0.13",
+    "schemas":  {
+                    "project":  11,
+                    "executor":  5,
+                    "database":  4,
+                    "portableBundle":  1
+                },
+    "applications":  [
+                         {
+                             "id":  "planner",
+                             "name":  "Animals — Planejador",
+                             "description":  "Planejamento, design e organização do conteúdo do jogo.",
+                             "route":  "/",
+                             "launchArgument":  "--mode=planner"
+                         },
+                         {
+                             "id":  "executor",
+                             "name":  "Animals — Executor",
+                             "description":  "Roteiro de produção, configuração, testes e acompanhamento no Unity.",
+                             "route":  "/executor",
+                             "launchArgument":  "--mode=executor"
+                         }
+                     ],
+    "sources":  {
+                    "technicalBackup":  "Scripts backup 18-06 att.rar",
+                    "gdd":  "Animals GDD.docx — 18/06/2026",
+                    "plannerBaseline":  "Animals-Planejador-Tauri-v0.9.1.zip",
+                    "guideBaseline":  "Animals - Guia.rar"
+                },
+    "authorityOrder":  [
+                           "Decisões mais recentes confirmadas pelo diretor do projeto",
+                           "Scripts do backup técnico 18-06 att",
+                           "GDD vigente de 18/06/2026",
+                           "Dados estruturados do Planejador",
+                           "Conteúdo do guia interativo"
+                       ],
+    "executorContent":  {
+                            "expectedBuildMissions":  96,
+                            "expectedTasks":  277,
+                            "expectedSteps":  1099,
+                            "expectedGuides":  26,
+                            "expectedScripts":  278,
+                            "importedBuildMissions":  96,
+                            "importedTasks":  277,
+                            "importedSteps":  1099,
+                            "importedGuides":  26,
+                            "importedScripts":  278,
+                            "migrationStatus":  "complete-gamified-music-github-ready-planner-attachments-only"
+                        }
 }

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const read = (...parts) => fs.readFileSync(path.join(root, ...parts), 'utf8').replace(/^\uFEFF/, '');
+const read = (...parts) => fs.readFileSync(path.join(root, ...parts), 'utf8');
 const exists = (...parts) => fs.existsSync(path.join(root, ...parts));
 const suite = JSON.parse(read('suite.manifest.json'));
 const pkg = JSON.parse(read('package.json'));
@@ -17,6 +17,7 @@ const journey = read('src', 'pages', 'executor', 'ExecutorJourneyPage.tsx');
 const types = read('src', 'types', 'executor.ts');
 const seed = read('src', 'data', 'executorSeed.ts');
 const workflow = read('.github', 'workflows', 'release.yml');
+const updaterConfigGenerator = read('scripts', 'generate-updater-config.mjs');
 const gitignore = read('.gitignore');
 const semver = /^\d+\.\d+\.\d+$/;
 
@@ -30,7 +31,8 @@ const checks = [
   ['modo aleatório por missão', music.includes("mode==='por_missao'") && music.includes('missionTrackAssignments') && types.includes("'por_missao'")],
   ['músicas somente por anexo do Planejador', music.includes('hasPlannerMusicAttachment') && musicPage.includes('Anexar áudio ao Planejador') && musicAttachments.includes("source: 'planner_upload'") && migration.includes('migrateLegacyMusicAttachment')],
   ['preferências musicais migráveis', types.includes('musicPlayerEnabled') && types.includes('musicVolume') && seed.includes("musicMode: 'sequencial'")],
-  ['atualizador GitHub', workflow.includes('tauri-apps/tauri-action@v0.6.2') && workflow.includes('uploadUpdaterJson: true') && workflow.includes('latest.json')],
+  ['atualizador GitHub', workflow.includes('tauri-apps/tauri-action@v1') && workflow.includes('uploadUpdaterJson: true') && workflow.includes('latest.json') && workflow.includes('generate-updater-config.mjs') && workflow.includes('tauri.updater.generated.conf.json')],
+  ['configuração segura do updater', updaterConfigGenerator.includes('plugins') && updaterConfigGenerator.includes('updater') && updaterConfigGenerator.includes('TAURI_UPDATER_PUBLIC_KEY') && updaterConfigGenerator.includes('createUpdaterArtifacts')],
   ['validação final no workflow', workflow.includes('npm run validate:final')],
   ['guia GitHub passo a passo', exists('GUIA_GITHUB_ATUALIZACOES_PASSO_A_PASSO.md')],
   ['assistentes de primeira configuração', exists('CONFIGURAR_GITHUB_PRIMEIRA_VEZ.bat') && exists('scripts', 'Configurar-GitHub-Primeira-Vez.ps1')],

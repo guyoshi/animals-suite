@@ -36,3 +36,6 @@ signing/
 # Builds locais do Tauri
 src-tauri/target/
 Instalador/
+
+# Configuração temporária gerada pelo GitHub Actions
+src-tauri/tauri.updater.generated.conf.json

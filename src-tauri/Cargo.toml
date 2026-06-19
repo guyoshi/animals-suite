@@ -1,6 +1,6 @@
 [package]
 name = "animals-suite"
-version = "1.0.12"
+version = "1.0.13"
 description = "Suite integrada de planejamento e execução do projeto Animals"
 authors = ["Guilherme"]
 edition = "2021"
