@@ -1,0 +1,16 @@
+CORREÇÃO DA PUBLICAÇÃO DA ANIMALS SUITE 1.0.12
+
+1. Feche a janela de publicação que apresentou erro.
+2. Copie todo o conteúdo deste pacote para a pasta principal "Animals Suite Installer".
+3. Confirme a substituição dos arquivos existentes.
+4. Execute novamente PUBLICAR_ATUALIZACAO_GITHUB.bat.
+5. Digite 1.0.12 para publicar a versão que já ficou registada no manifesto.
+
+O pacote corrige:
+- leitura e gravação UTF-8 sem BOM do suite.manifest.json;
+- textos corrompidos como AtualizaÃ§Ã£o e organizaÃ§Ã£o;
+- tolerância defensiva a BOM no sincronizador Node;
+- validação do Tauri GitHub Action alinhada com a versão publicada v0.6.2;
+- erro TypeScript no upload de várias imagens em WorldPage.tsx.
+
+A falha ocorreu antes da criação da tag e do envio da versão, portanto normalmente basta repetir a publicação.

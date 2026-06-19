@@ -1,7 +1,7 @@
 {
   "name": "animals-suite",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.12",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory = $false)]
   [string]$Version
 )
@@ -50,7 +50,9 @@ $Version = $Version.Trim()
 if ($Version -notmatch '^\d+\.\d+\.\d+$') { Fail 'Use o formato X.Y.Z, por exemplo 1.0.2.' }
 
 $manifestPath = Join-Path (Get-Location) 'suite.manifest.json'
-$manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+$manifestJson = [System.IO.File]::ReadAllText($manifestPath, [System.Text.Encoding]::UTF8)
+$manifest = $manifestJson | ConvertFrom-Json
 $current = [string]$manifest.version
 $tag = "app-v$Version"
 
@@ -75,7 +77,8 @@ if ($current -ne $Version) {
   $manifest.version = $Version
   $manifest.releaseDate = (Get-Date).ToString('yyyy-MM-dd')
   $manifest.contentVersion = "$(Get-Date -Format 'yyyy.MM.dd')-$Version"
-  $manifest | ConvertTo-Json -Depth 20 | Set-Content $manifestPath -Encoding utf8
+  $updatedManifestJson = $manifest | ConvertTo-Json -Depth 20
+  [System.IO.File]::WriteAllText($manifestPath, $updatedManifestJson + [Environment]::NewLine, $utf8NoBom)
 } else {
   Write-Host "Publicando a versão atual $Version pela primeira vez." -ForegroundColor DarkGray
 }
