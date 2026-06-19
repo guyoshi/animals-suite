@@ -44,13 +44,11 @@ jobs:
         run: node scripts/generate-updater-config.mjs
 
       - name: Compilar e publicar instalador
-        uses: tauri-apps/tauri-action@v1
+        uses: tauri-apps/tauri-action@v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          ANIMALS_UPDATE_PUBKEY: ${{ secrets.TAURI_UPDATER_PUBLIC_KEY }}
-          ANIMALS_UPDATE_ENDPOINT: https://github.com/${{ github.repository }}/releases/latest/download/latest.json
         with:
           tagName: app-v__VERSION__
           releaseName: 'Animals Suite v__VERSION__'
@@ -58,6 +56,6 @@ jobs:
           releaseDraft: false
           prerelease: false
           generateReleaseNotes: true
-          uploadUpdaterJson: true
+          includeUpdaterJson: true
           updaterJsonPreferNsis: true
           args: --config src-tauri/tauri.updater.generated.conf.json

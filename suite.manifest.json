@@ -1,10 +1,10 @@
 {
     "suiteId":  "animals-suite",
     "suiteName":  "Animals Suite",
-    "version":  "1.0.13",
+    "version":  "1.0.14",
     "releaseDate":  "2026-06-19",
     "locale":  "pt-BR",
-    "contentVersion":  "2026.06.19-1.0.13",
+    "contentVersion":  "2026.06.19-1.0.14",
     "schemas":  {
                     "project":  11,
                     "executor":  5,

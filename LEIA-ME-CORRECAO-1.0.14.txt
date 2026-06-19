@@ -1,0 +1,20 @@
+CORREÇÃO DE PUBLICAÇÃO — ANIMALS SUITE 1.0.14
+
+Esta correção resolve o erro:
+Unable to resolve action `tauri-apps/tauri-action@v1`
+
+O que foi alterado:
+- usa a versão publicada e existente tauri-apps/tauri-action@v0.6.2;
+- usa o nome de entrada correto dessa versão: includeUpdaterJson;
+- mantém a geração segura da configuração completa do updater;
+- mantém a preferência pelo instalador NSIS no latest.json;
+- ajusta a validação final para impedir regressão para @v1 enquanto essa tag não existir.
+
+COMO APLICAR
+1. Copie todo o conteúdo interno desta pasta para a raiz de Animals Suite Installer.
+2. Confirme a substituição dos ficheiros.
+3. Execute PUBLICAR_ATUALIZACAO_GITHUB.bat.
+4. Publique como 1.0.14.
+5. Confirme com S.
+
+Não use Re-run no job anterior, porque ele continuará a usar o workflow antigo da tag 1.0.13.
