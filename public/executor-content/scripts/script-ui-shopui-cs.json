@@ -28,186 +28,6 @@
   ],
   "fields": [
     {
-      "name": "panelRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Framework",
-      "attrs": "[Header(\"Framework\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "shopNameText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Framework",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "closeButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Framework",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sementesText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Sementes",
-      "attrs": "[Header(\"Sementes\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sementesFormat",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Sementes: {0}\"",
-      "section": "Sementes",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "buyContainer",
-      "type": "Transform",
-      "mods": "private",
-      "default": "",
-      "section": "Comprar",
-      "attrs": "[Header(\"Comprar\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "buyRowPrefab",
-      "type": "ShopBuyRowUI",
-      "mods": "private",
-      "default": "",
-      "section": "Comprar",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "buyEmptyState",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Comprar",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "buyEmptyText",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Sem itens à venda agora.\"",
-      "section": "Comprar",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sellSectionRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Vender",
-      "attrs": "[Header(\"Vender\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sellContainer",
-      "type": "Transform",
-      "mods": "private",
-      "default": "",
-      "section": "Vender",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sellRowPrefab",
-      "type": "ShopSellRowUI",
-      "mods": "private",
-      "default": "",
-      "section": "Vender",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sellEmptyState",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Vender",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sellEmptyText",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Não tens nada para vender.\"",
-      "section": "Vender",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "allSellableItems",
-      "type": "List<ItemData>",
-      "mods": "private",
-      "default": "new List<ItemData>()",
-      "section": "Vender",
-      "attrs": "[Tooltip(\"Todos os ItemData do jogo com 'sellable' = true candidatos a aparecer na lista de venda (filtrados pelo inventário do jogador).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Todos os ItemData do jogo com 'sellable' = true candidatos a aparecer na lista de venda (filtrados pelo inventário do jogador)."
-    },
-    {
-      "name": "buySfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[Header(\"Sons\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sellSfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "errorSfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "currentShop",
       "type": "ShopData",
       "mods": "private",
@@ -228,76 +48,6 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "spawnedBuy",
-      "type": "List<GameObject>",
-      "mods": "private readonly",
-      "default": "new List<GameObject>()",
-      "section": "Sons",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "spawnedSell",
-      "type": "List<GameObject>",
-      "mods": "private readonly",
-      "default": "new List<GameObject>()",
-      "section": "Sons",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "iconImage",
-      "type": "Image",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "nameText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "priceText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "promoMarker",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "alreadyOwnedLabel",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Adquirido\"",
-      "section": "Sons",
-      "attrs": "[Tooltip(\"Texto exibido no campo de preço quando o item já foi comprado (onlyBuyOnce). Ex: 'Adquirido'.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Texto exibido no campo de preço quando o item já foi comprado (onlyBuyOnce). Ex: 'Adquirido'."
-    },
-    {
       "name": "entry",
       "type": "ShopEntry",
       "mods": "private",
@@ -315,16 +65,6 @@
       "section": "Sons",
       "attrs": "",
       "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "quantityText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
       "description": "Referência/configuração usada por este comportamento."
     },
     {
@@ -434,6 +174,13 @@
       "description": "Executa a operação Buy."
     },
     {
+      "name": "ResetStaticEvents",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação ResetStaticEvents."
+    },
+    {
       "name": "Sell",
       "ret": "void",
       "mods": "private",
@@ -477,11 +224,9 @@
     }
   ],
   "dependencies": [
-    "Action_OpenShop",
     "AudioManager",
     "GamePauseUtil",
     "ItemData",
-    "JukeboxShopHandler",
     "PlayerProgress",
     "ShopData",
     "ShopEntry"
@@ -491,15 +236,14 @@
     "JukeboxShopHandler",
     "ShopData"
   ],
-  "source": "using System;\nusing System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.InputSystem;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Tarefa #35 — UI da Loja (Sistema de Loja): painel com duas listas,\n/// \"Comprar\" (itens da ShopData, respeitando preços/promoções/horários) e\n/// \"Vender\" (itens \"sellable\" do inventário do jogador, recomprados pelo\n/// vendedor se ShopData.merchantBuysItems estiver activo — sempre por\n/// ShopData.buybackMultiplier × ItemData.sellPrice, por omissão metade).\n///\n/// Aberta por <see cref=\"Action_OpenShop\"/> (Eventos de NPC) via\n/// <see cref=\"OpenAndWait\"/>, que pausa o jogo (GamePauseUtil) enquanto o\n/// painel estiver aberto — mesma lógica do diálogo/menu de escolhas.\n///\n/// Montagem no Editor:\n/// - \"panelRoot\": GameObject raiz do painel (activado/desactivado ao abrir/fechar).\n/// - \"buyContainer\"/\"buyRowPrefab\": lista de compra (ShopBuyRowUI).\n/// - \"sellContainer\"/\"sellRowPrefab\": lista de venda (ShopSellRowUI) — só\n///   aparece se a loja actual tiver \"merchantBuysItems\" activo.\n/// - \"allSellableItems\": todos os ItemData do jogo com \"sellable\" = true que\n///   podem aparecer na lista de venda (filtra automaticamente pelo\n///   inventário do jogador — só mostra os que ele possui).\n/// - \"closeButton\": botão \"Fechar\" (opcional — Esc/B do gamepad também fecham).\n/// </summary>\npublic class ShopUI : MonoBehaviour\n{\n    public static ShopUI Instance { get; private set; }\n\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private TMP_Text shopNameText;\n    [SerializeField] private Button closeButton;\n\n    [Header(\"Sementes\")]\n    [SerializeField] private TMP_Text sementesText;\n    [SerializeField] private string sementesFormat = \"Sementes: {0}\";\n\n    [Header(\"Comprar\")]\n    [SerializeField] private Transform buyContainer;\n    [SerializeField] private ShopBuyRowUI buyRowPrefab;\n    [SerializeField] private GameObject buyEmptyState;\n    [SerializeField] private string buyEmptyText = \"Sem itens à venda agora.\";\n\n    [Header(\"Vender\")]\n    [SerializeField] private GameObject sellSectionRoot;\n    [SerializeField] private Transform sellContainer;\n    [SerializeField] private ShopSellRowUI sellRowPrefab;\n    [SerializeField] private GameObject sellEmptyState;\n    [SerializeField] private string sellEmptyText = \"Não tens nada para vender.\";\n\n    [Tooltip(\"Todos os ItemData do jogo com 'sellable' = true candidatos a aparecer na lista de venda (filtrados pelo inventário do jogador).\")]\n    [SerializeField] private List<ItemData> allSellableItems = new List<ItemData>();\n\n    [Header(\"Sons\")]\n    [SerializeField] private AudioClip buySfx;\n    [SerializeField] private AudioClip sellSfx;\n    [SerializeField] private AudioClip errorSfx;\n\n    private ShopData currentShop;\n    private bool closeRequested;\n\n    private readonly List<GameObject> spawnedBuy = new List<GameObject>();\n    private readonly List<GameObject> spawnedSell = new List<GameObject>();\n\n    private void Awake()\n    {\n        Instance = this;\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    private void OnEnable()\n    {\n        if (closeButton != null) closeButton.onClick.AddListener(RequestClose);\n\n        var progress = PlayerProgress.Instance;\n        if (progress != null) progress.SeedsChanged += HandleSeedsChanged;\n    }\n\n    private void OnDisable()\n    {\n        if (closeButton != null) closeButton.onClick.RemoveListener(RequestClose);\n\n        var progress = PlayerProgress.Instance;\n        if (progress != null) progress.SeedsChanged -= HandleSeedsChanged;\n    }\n\n    /// <summary>Abre a loja \"shop\" e só devolve o controlo quando o jogador a fechar (botão \"Fechar\", Esc ou B/Círculo do gamepad).</summary>\n    public IEnumerator OpenAndWait(ShopData shop)\n    {\n        if (shop == null) yield break;\n\n        currentShop = shop;\n        closeRequested = false;\n\n        GamePauseUtil.Pause();\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n        if (shopNameText != null) shopNameText.text = shop.shopName;\n\n        Refresh();\n\n        while (!closeRequested)\n        {\n            PollCloseInput();\n            yield return null;\n        }\n\n        ClearSpawned();\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        GamePauseUtil.Resume();\n        currentShop = null;\n    }\n\n    /// <summary>Pede o fecho da loja no fim do frame actual. Pode ser ligado a um botão \"Fechar\".</summary>\n    public void RequestClose() => closeRequested = true;\n\n    private void PollCloseInput()\n    {\n        var keyboard = Keyboard.current;\n        if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame) RequestClose();\n\n        var gamepad = Gamepad.current;\n        if (gamepad != null && (gamepad.buttonEast.wasPressedThisFrame || gamepad.buttonSouth.wasPressedThisFrame))\n        {\n            // Só fecha com \"Sul\"/\"A\" se nenhum elemento estiver focado, para não\n            // entrar em conflito com a confirmação de compra/venda dos botões.\n            bool nothingSelected = EventSystem.current == null || EventSystem.current.currentSelectedGameObject == null;\n            if (gamepad.buttonEast.wasPressedThisFrame || nothingSelected) RequestClose();\n        }\n    }\n\n    // ==================== Refresh ====================\n\n    private void Refresh()\n    {\n        ClearSpawned();\n        RefreshSementes();\n        RefreshBuyList();\n        RefreshSellList();\n\n        if (EventSystem.current != null && spawnedBuy.Count > 0)\n            EventSystem.current.SetSelectedGameObject(spawnedBuy[0]);\n    }\n\n    private void RefreshSementes()\n    {\n        if (sementesText == null) return;\n\n        int sementes = PlayerProgress.Instance != null ? PlayerProgress.Instance.sementes : 0;\n        sementesText.text = string.Format(sementesFormat, sementes);\n    }\n\n    private void RefreshBuyList()\n    {\n        if (currentShop == null || buyContainer == null || buyRowPrefab == null) return;\n\n        var progress = PlayerProgress.Instance;\n\n        // Itens normais primeiro, depois itens de compra única já adquiridos\n        // (aparecem no final, cinza/bloqueados — GDD: \"itens bloqueados ficam\n        // no final da lista para não atrapalhar o foco dos itens importantes\").\n        var normalEntries    = new System.Collections.Generic.List<ShopEntry>();\n        var onceOwnedEntries = new System.Collections.Generic.List<ShopEntry>();\n\n        foreach (var entry in currentShop.entries)\n        {\n            if (entry == null || entry.item == null) continue;\n            if (!entry.IsAvailableNow()) continue;\n\n            bool isOnce    = entry.item.onlyBuyOnce;\n            bool alreadyHad = isOnce && progress != null && progress.HasCollectedSpecialItem(entry.item.itemId);\n\n            if (isOnce && alreadyHad)\n                onceOwnedEntries.Add(entry);\n            else\n                normalEntries.Add(entry);\n        }\n\n        // Exibir itens normais.\n        foreach (var entry in normalEntries)\n        {\n            var row = Instantiate(buyRowPrefab, buyContainer);\n            row.gameObject.SetActive(true);\n            row.Setup(entry, Buy);\n            spawnedBuy.Add(row.gameObject);\n        }\n\n        // Exibir itens de compra única já adquiridos (bloqueados, no final).\n        foreach (var entry in onceOwnedEntries)\n        {\n            var row = Instantiate(buyRowPrefab, buyContainer);\n            row.gameObject.SetActive(true);\n            row.SetupLocked(entry); // visual cinza, sem callback de compra.\n            spawnedBuy.Add(row.gameObject);\n        }\n\n        if (buyEmptyState != null)\n        {\n            bool empty = spawnedBuy.Count == 0;\n            buyEmptyState.SetActive(empty);\n\n            if (empty)\n            {\n                var label = buyEmptyState.GetComponentInChildren<TMP_Text>();\n                if (label != null) label.text = buyEmptyText;\n            }\n        }\n    }\n\n    private void RefreshSellList()\n    {\n        bool canSell = currentShop != null && currentShop.merchantBuysItems;\n        if (sellSectionRoot != null) sellSectionRoot.SetActive(canSell);\n        if (!canSell || sellContainer == null || sellRowPrefab == null) return;\n\n        var progress = PlayerProgress.Instance;\n\n        foreach (var item in allSellableItems)\n        {\n            if (item == null || !item.sellable) continue;\n\n            int quantity = progress != null ? progress.GetItemQuantity(item) : 0;\n            if (quantity <= 0) continue;\n\n            int price = currentShop.GetBuybackPrice(item);\n\n            var row = Instantiate(sellRowPrefab, sellContainer);\n            row.gameObject.SetActive(true);\n            row.Setup(item, quantity, price, Sell);\n            spawnedSell.Add(row.gameObject);\n        }\n\n        if (sellEmptyState != null)\n        {\n            bool empty = spawnedSell.Count == 0;\n            sellEmptyState.SetActive(empty);\n\n            if (empty)\n            {\n                var label = sellEmptyState.GetComponentInChildren<TMP_Text>();\n                if (label != null) label.text = sellEmptyText;\n            }\n        }\n    }\n\n    private void ClearSpawned()\n    {\n        foreach (var go in spawnedBuy)\n            if (go != null) Destroy(go);\n        spawnedBuy.Clear();\n\n        foreach (var go in spawnedSell)\n            if (go != null) Destroy(go);\n        spawnedSell.Clear();\n    }\n\n    // ==================== Transacções ====================\n\n    private void Buy(ShopEntry entry)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || entry == null || entry.item == null) return;\n\n        // Bloqueio de compra única: não permite comprar de novo se já foi adquirido.\n        if (entry.item.onlyBuyOnce && progress.HasCollectedSpecialItem(entry.item.itemId))\n        {\n            PlaySfx(errorSfx);\n            return;\n        }\n\n        int price = entry.GetCurrentPrice();\n        if (!progress.HasSementes(price))\n        {\n            PlaySfx(errorSfx);\n            return;\n        }\n\n        progress.GiveSementes(-price);\n        progress.AddItem(entry.item, 1);\n\n        // Para itens de compra única: marcar como adquirido (usa o mesmo sistema\n        // de collectedSpecialItemIds — requer savedAsCollected = true no ItemData).\n        if (entry.item.onlyBuyOnce)\n            progress.MarkSpecialItemCollected(entry.item.itemId);\n\n        PlaySfx(buySfx);\n\n        // Callback de pós-compra: permite que sistemas externos reajam à compra\n        // de itens especiais (ex: abrir o Jukebox automaticamente na 1ª compra).\n        OnItemPurchased?.Invoke(entry.item);\n\n        Refresh();\n    }\n\n    /// <summary>\n    /// Evento disparado após cada compra bem-sucedida na loja.\n    /// Parâmetro: o <see cref=\"ItemData\"/> comprado.\n    /// Usado por sistemas externos (ex: JukeboxShopHandler) para reagir à\n    /// compra de itens específicos (Jukebox, etc.) sem acoplar diretamente\n    /// à ShopUI.\n    /// </summary>\n    public static event System.Action<ItemData> OnItemPurchased;\n\n    private void Sell(ItemData item)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || currentShop == null || item == null) return;\n        if (!currentShop.merchantBuysItems || !item.sellable) return;\n        if (progress.GetItemQuantity(item) <= 0) return;\n\n        int price = currentShop.GetBuybackPrice(item);\n\n        progress.RemoveItem(item, 1);\n        progress.GiveSementes(price);\n\n        PlaySfx(sellSfx);\n        Refresh();\n    }\n\n    // ==================== Helpers ====================\n\n    private void HandleSeedsChanged(int sementes) => RefreshSementes();\n\n    private void PlaySfx(AudioClip clip)\n    {\n        if (clip == null) return;\n        if (AudioManager.Instance != null) AudioManager.Instance.PlaySE(clip);\n        else AudioSource.PlayClipAtPoint(clip, transform.position);\n    }\n}\n\n/// <summary>\n/// Linha da lista \"Comprar\" da ShopUI: ícone, nome, preço (já com promoções\n/// aplicadas) e indicador de promoção activa.\n/// </summary>\npublic class ShopBuyRowUI : MonoBehaviour\n{\n    [SerializeField] private Image iconImage;\n    [SerializeField] private TMP_Text nameText;\n    [SerializeField] private TMP_Text priceText;\n    [SerializeField] private GameObject promoMarker;\n    [Tooltip(\"Texto exibido no campo de preço quando o item já foi comprado (onlyBuyOnce). Ex: 'Adquirido'.\")]\n    [SerializeField] private string alreadyOwnedLabel = \"Adquirido\";\n\n    private ShopEntry entry;\n    private Action<ShopEntry> onBuy;\n\n    public void Setup(ShopEntry entry, Action<ShopEntry> onBuy)\n    {\n        this.entry = entry;\n        this.onBuy = onBuy;\n\n        var item = entry.item;\n\n        if (nameText != null) nameText.text = item.displayName;\n\n        if (iconImage != null)\n        {\n            iconImage.sprite = item.icon;\n            iconImage.enabled = item.icon != null;\n        }\n\n        if (priceText != null) priceText.text = entry.GetCurrentPrice().ToString();\n        if (promoMarker != null) promoMarker.SetActive(entry.HasActivePromotion());\n\n        var button = GetComponent<Button>();\n        if (button != null)\n        {\n            button.onClick.RemoveAllListeners();\n            button.onClick.AddListener(() => this.onBuy?.Invoke(this.entry));\n            button.interactable = true;\n        }\n    }\n\n    /// <summary>\n    /// Configura a linha como \"bloqueada\" (item de compra única já adquirido):\n    /// visual cinza, preço substituído por \"Adquirido\", botão não-interativo.\n    /// </summary>\n    public void SetupLocked(ShopEntry entry)\n    {\n        this.entry = entry;\n        this.onBuy = null;\n\n        var item = entry.item;\n\n        if (nameText != null) nameText.text = item.displayName;\n\n        if (iconImage != null)\n        {\n            iconImage.sprite = item.icon;\n            iconImage.enabled = item.icon != null;\n            // Tom cinza para indicar item já adquirido.\n            iconImage.color = new Color(0.5f, 0.5f, 0.5f, 1f);\n        }\n\n        if (priceText != null) priceText.text = alreadyOwnedLabel;\n        if (promoMarker != null) promoMarker.SetActive(false);\n\n        var button = GetComponent<Button>();\n        if (button != null)\n        {\n            button.onClick.RemoveAllListeners();\n            button.interactable = false;\n        }\n    }\n}\n\n/// <summary>\n/// Linha da lista \"Vender\" da ShopUI: ícone, nome, quantidade no inventário e\n/// preço de recompra (ShopData.GetBuybackPrice).\n/// </summary>\npublic class ShopSellRowUI : MonoBehaviour\n{\n    [SerializeField] private Image iconImage;\n    [SerializeField] private TMP_Text nameText;\n    [SerializeField] private TMP_Text quantityText;\n    [SerializeField] private TMP_Text priceText;\n\n    private ItemData item;\n    private Action<ItemData> onSell;\n\n    public void Setup(ItemData item, int quantity, int buybackPrice, Action<ItemData> onSell)\n    {\n        this.item = item;\n        this.onSell = onSell;\n\n        if (nameText != null) nameText.text = item.displayName;\n        if (quantityText != null) quantityText.text = quantity.ToString();\n        if (priceText != null) priceText.text = buybackPrice.ToString();\n\n        if (iconImage != null)\n        {\n            iconImage.sprite = item.icon;\n            iconImage.enabled = item.icon != null;\n        }\n\n        var button = GetComponent<Button>();\n        if (button != null)\n        {\n            button.onClick.RemoveAllListeners();\n            button.onClick.AddListener(() => this.onSell?.Invoke(this.item));\n        }\n    }\n}\n",
+  "source": "using System;\nusing System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.InputSystem;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Tarefa #35 — UI da Loja (Sistema de Loja): painel com duas listas,\n/// \"Comprar\" (itens da ShopData, respeitando preços/promoções/horários) e\n/// \"Vender\" (itens \"sellable\" do inventário do jogador, recomprados pelo\n/// vendedor se ShopData.merchantBuysItems estiver activo — sempre por\n/// ShopData.buybackMultiplier × ItemData.sellPrice, por omissão metade).\n///\n/// Aberta por <see cref=\"Action_OpenShop\"/> (Eventos de NPC) via\n/// <see cref=\"OpenAndWait\"/>, que pausa o jogo (GamePauseUtil) enquanto o\n/// painel estiver aberto — mesma lógica do diálogo/menu de escolhas.\n///\n/// Montagem no Editor:\n/// - \"panelRoot\": GameObject raiz do painel (activado/desactivado ao abrir/fechar).\n/// - \"buyContainer\"/\"buyRowPrefab\": lista de compra (ShopBuyRowUI).\n/// - \"sellContainer\"/\"sellRowPrefab\": lista de venda (ShopSellRowUI) — só\n///   aparece se a loja actual tiver \"merchantBuysItems\" activo.\n/// - \"allSellableItems\": todos os ItemData do jogo com \"sellable\" = true que\n///   podem aparecer na lista de venda (filtra automaticamente pelo\n///   inventário do jogador — só mostra os que ele possui).\n/// - \"closeButton\": botão \"Fechar\" (opcional — Esc/B do gamepad também fecham).\n/// </summary>\npublic class ShopUI : MonoBehaviour\n{\n    public static ShopUI Instance { get; private set; }\n\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private TMP_Text shopNameText;\n    [SerializeField] private Button closeButton;\n\n    [Header(\"Sementes\")]\n    [SerializeField] private TMP_Text sementesText;\n    [SerializeField] private string sementesFormat = \"Sementes: {0}\";\n\n    [Header(\"Comprar\")]\n    [SerializeField] private Transform buyContainer;\n    [SerializeField] private ShopBuyRowUI buyRowPrefab;\n    [SerializeField] private GameObject buyEmptyState;\n    [SerializeField] private string buyEmptyText = \"Sem itens à venda agora.\";\n\n    [Header(\"Vender\")]\n    [SerializeField] private GameObject sellSectionRoot;\n    [SerializeField] private Transform sellContainer;\n    [SerializeField] private ShopSellRowUI sellRowPrefab;\n    [SerializeField] private GameObject sellEmptyState;\n    [SerializeField] private string sellEmptyText = \"Não tens nada para vender.\";\n\n    [Tooltip(\"Todos os ItemData do jogo com 'sellable' = true candidatos a aparecer na lista de venda (filtrados pelo inventário do jogador).\")]\n    [SerializeField] private List<ItemData> allSellableItems = new List<ItemData>();\n\n    [Header(\"Sons\")]\n    [SerializeField] private AudioClip buySfx;\n    [SerializeField] private AudioClip sellSfx;\n    [SerializeField] private AudioClip errorSfx;\n\n    private ShopData currentShop;\n    private bool closeRequested;\n\n    private readonly List<GameObject> spawnedBuy = new List<GameObject>();\n    private readonly List<GameObject> spawnedSell = new List<GameObject>();\n\n    private void Awake()\n    {\n        Instance = this;\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    private void OnEnable()\n    {\n        if (closeButton != null) closeButton.onClick.AddListener(RequestClose);\n\n        var progress = PlayerProgress.Instance;\n        if (progress != null) progress.SeedsChanged += HandleSeedsChanged;\n    }\n\n    private void OnDisable()\n    {\n        if (closeButton != null) closeButton.onClick.RemoveListener(RequestClose);\n\n        var progress = PlayerProgress.Instance;\n        if (progress != null) progress.SeedsChanged -= HandleSeedsChanged;\n    }\n\n    /// <summary>Abre a loja \"shop\" e só devolve o controlo quando o jogador a fechar (botão \"Fechar\", Esc ou B/Círculo do gamepad).</summary>\n    public IEnumerator OpenAndWait(ShopData shop)\n    {\n        if (shop == null) yield break;\n\n        currentShop = shop;\n        closeRequested = false;\n\n        GamePauseUtil.Pause();\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n        if (shopNameText != null) shopNameText.text = shop.shopName;\n\n        Refresh();\n\n        while (!closeRequested)\n        {\n            PollCloseInput();\n            yield return null;\n        }\n\n        ClearSpawned();\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        GamePauseUtil.Resume();\n        currentShop = null;\n    }\n\n    /// <summary>Pede o fecho da loja no fim do frame actual. Pode ser ligado a um botão \"Fechar\".</summary>\n    public void RequestClose() => closeRequested = true;\n\n    private void PollCloseInput()\n    {\n        var keyboard = Keyboard.current;\n        if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame) RequestClose();\n\n        var gamepad = Gamepad.current;\n        if (gamepad != null && (gamepad.buttonEast.wasPressedThisFrame || gamepad.buttonSouth.wasPressedThisFrame))\n        {\n            // Só fecha com \"Sul\"/\"A\" se nenhum elemento estiver focado, para não\n            // entrar em conflito com a confirmação de compra/venda dos botões.\n            bool nothingSelected = EventSystem.current == null || EventSystem.current.currentSelectedGameObject == null;\n            if (gamepad.buttonEast.wasPressedThisFrame || nothingSelected) RequestClose();\n        }\n    }\n\n    // ==================== Refresh ====================\n\n    private void Refresh()\n    {\n        ClearSpawned();\n        RefreshSementes();\n        RefreshBuyList();\n        RefreshSellList();\n\n        if (EventSystem.current != null && spawnedBuy.Count > 0)\n            EventSystem.current.SetSelectedGameObject(spawnedBuy[0]);\n    }\n\n    private void RefreshSementes()\n    {\n        if (sementesText == null) return;\n\n        int sementes = PlayerProgress.Instance != null ? PlayerProgress.Instance.sementes : 0;\n        sementesText.text = string.Format(sementesFormat, sementes);\n    }\n\n    private void RefreshBuyList()\n    {\n        if (currentShop == null || buyContainer == null || buyRowPrefab == null) return;\n\n        var progress = PlayerProgress.Instance;\n\n        // Itens normais primeiro, depois itens de compra única já adquiridos\n        // (aparecem no final, cinza/bloqueados — GDD: \"itens bloqueados ficam\n        // no final da lista para não atrapalhar o foco dos itens importantes\").\n        var normalEntries    = new System.Collections.Generic.List<ShopEntry>();\n        var onceOwnedEntries = new System.Collections.Generic.List<ShopEntry>();\n\n        foreach (var entry in currentShop.entries)\n        {\n            if (entry == null || entry.item == null) continue;\n            if (!entry.IsAvailableNow()) continue;\n\n            bool isOnce    = entry.item.onlyBuyOnce;\n            bool alreadyHad = isOnce && progress != null && progress.HasCollectedSpecialItem(entry.item.itemId);\n\n            if (isOnce && alreadyHad)\n                onceOwnedEntries.Add(entry);\n            else\n                normalEntries.Add(entry);\n        }\n\n        // Exibir itens normais.\n        foreach (var entry in normalEntries)\n        {\n            var row = Instantiate(buyRowPrefab, buyContainer);\n            row.gameObject.SetActive(true);\n            row.Setup(entry, Buy);\n            spawnedBuy.Add(row.gameObject);\n        }\n\n        // Exibir itens de compra única já adquiridos (bloqueados, no final).\n        foreach (var entry in onceOwnedEntries)\n        {\n            var row = Instantiate(buyRowPrefab, buyContainer);\n            row.gameObject.SetActive(true);\n            row.SetupLocked(entry); // visual cinza, sem callback de compra.\n            spawnedBuy.Add(row.gameObject);\n        }\n\n        if (buyEmptyState != null)\n        {\n            bool empty = spawnedBuy.Count == 0;\n            buyEmptyState.SetActive(empty);\n\n            if (empty)\n            {\n                var label = buyEmptyState.GetComponentInChildren<TMP_Text>();\n                if (label != null) label.text = buyEmptyText;\n            }\n        }\n    }\n\n    private void RefreshSellList()\n    {\n        bool canSell = currentShop != null && currentShop.merchantBuysItems;\n        if (sellSectionRoot != null) sellSectionRoot.SetActive(canSell);\n        if (!canSell || sellContainer == null || sellRowPrefab == null) return;\n\n        var progress = PlayerProgress.Instance;\n\n        foreach (var item in allSellableItems)\n        {\n            if (item == null || !item.sellable) continue;\n\n            int quantity = progress != null ? progress.GetItemQuantity(item) : 0;\n            if (quantity <= 0) continue;\n\n            int price = currentShop.GetBuybackPrice(item);\n\n            var row = Instantiate(sellRowPrefab, sellContainer);\n            row.gameObject.SetActive(true);\n            row.Setup(item, quantity, price, Sell);\n            spawnedSell.Add(row.gameObject);\n        }\n\n        if (sellEmptyState != null)\n        {\n            bool empty = spawnedSell.Count == 0;\n            sellEmptyState.SetActive(empty);\n\n            if (empty)\n            {\n                var label = sellEmptyState.GetComponentInChildren<TMP_Text>();\n                if (label != null) label.text = sellEmptyText;\n            }\n        }\n    }\n\n    private void ClearSpawned()\n    {\n        foreach (var go in spawnedBuy)\n            if (go != null) Destroy(go);\n        spawnedBuy.Clear();\n\n        foreach (var go in spawnedSell)\n            if (go != null) Destroy(go);\n        spawnedSell.Clear();\n    }\n\n    // ==================== Transacções ====================\n\n    private void Buy(ShopEntry entry)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || entry == null || entry.item == null) return;\n\n        // Bloqueio de compra única: não permite comprar de novo se já foi adquirido.\n        if (entry.item.onlyBuyOnce && progress.HasCollectedSpecialItem(entry.item.itemId))\n        {\n            PlaySfx(errorSfx);\n            return;\n        }\n\n        int price = entry.GetCurrentPrice();\n        if (!progress.HasSementes(price))\n        {\n            PlaySfx(errorSfx);\n            return;\n        }\n\n        progress.GiveSementes(-price);\n        progress.AddItem(entry.item, 1);\n\n        // Para itens de compra única: marcar como adquirido (usa o mesmo sistema\n        // de collectedSpecialItemIds — requer savedAsCollected = true no ItemData).\n        if (entry.item.onlyBuyOnce)\n            progress.MarkSpecialItemCollected(entry.item.itemId);\n\n        PlaySfx(buySfx);\n\n        // Callback de pós-compra: permite que sistemas externos reajam à compra\n        // de itens especiais (ex: abrir o Jukebox automaticamente na 1ª compra).\n        OnItemPurchased?.Invoke(entry.item);\n\n        Refresh();\n    }\n\n    /// <summary>\n    /// Evento disparado após cada compra bem-sucedida na loja.\n    /// Parâmetro: o <see cref=\"ItemData\"/> comprado.\n    /// Usado por sistemas externos (ex: JukeboxShopHandler) para reagir à\n    /// compra de itens específicos (Jukebox, etc.) sem acoplar diretamente\n    /// à ShopUI.\n    /// </summary>\n    public static event System.Action<ItemData> OnItemPurchased;\n\n    // Task #11: limpa subscribers ao entrar em Play Mode sem Domain Reload\n    // (mesmo padrão de PlayerLocator/GamePauseUtil/WheelTimeScaleUtil).\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]\n    private static void ResetStaticEvents() => OnItemPurchased = null;\n\n    private void Sell(ItemData item)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || currentShop == null || item == null) return;\n        if (!currentShop.merchantBuysItems || !item.sellable) return;\n        if (progress.GetItemQuantity(item) <= 0) return;\n\n        int price = currentShop.GetBuybackPrice(item);\n\n        progress.RemoveItem(item, 1);\n        progress.GiveSementes(price);\n\n        PlaySfx(sellSfx);\n        Refresh();\n    }\n\n    // ==================== Helpers ====================\n\n    private void HandleSeedsChanged(int sementes) => RefreshSementes();\n\n    private void PlaySfx(AudioClip clip)\n    {\n        if (clip == null) return;\n        if (AudioManager.Instance != null) AudioManager.Instance.PlaySE(clip);\n        else AudioSource.PlayClipAtPoint(clip, transform.position);\n    }\n}\n\n/// <summary>\n/// Linha da lista \"Comprar\" da ShopUI: ícone, nome, preço (já com promoções\n/// aplicadas) e indicador de promoção activa.\n/// </summary>\npublic class ShopBuyRowUI : MonoBehaviour\n{\n    [SerializeField] private Image iconImage;\n    [SerializeField] private TMP_Text nameText;\n    [SerializeField] private TMP_Text priceText;\n    [SerializeField] private GameObject promoMarker;\n    [Tooltip(\"Texto exibido no campo de preço quando o item já foi comprado (onlyBuyOnce). Ex: 'Adquirido'.\")]\n    [SerializeField] private string alreadyOwnedLabel = \"Adquirido\";\n\n    private ShopEntry entry;\n    private Action<ShopEntry> onBuy;\n\n    public void Setup(ShopEntry entry, Action<ShopEntry> onBuy)\n    {\n        this.entry = entry;\n        this.onBuy = onBuy;\n\n        var item = entry.item;\n\n        if (nameText != null) nameText.text = item.displayName;\n\n        if (iconImage != null)\n        {\n            iconImage.sprite = item.icon;\n            iconImage.enabled = item.icon != null;\n        }\n\n        if (priceText != null) priceText.text = entry.GetCurrentPrice().ToString();\n        if (promoMarker != null) promoMarker.SetActive(entry.HasActivePromotion());\n\n        var button = GetComponent<Button>();\n        if (button != null)\n        {\n            button.onClick.RemoveAllListeners();\n            button.onClick.AddListener(() => this.onBuy?.Invoke(this.entry));\n            button.interactable = true;\n        }\n    }\n\n    /// <summary>\n    /// Configura a linha como \"bloqueada\" (item de compra única já adquirido):\n    /// visual cinza, preço substituído por \"Adquirido\", botão não-interativo.\n    /// </summary>\n    public void SetupLocked(ShopEntry entry)\n    {\n        this.entry = entry;\n        this.onBuy = null;\n\n        var item = entry.item;\n\n        if (nameText != null) nameText.text = item.displayName;\n\n        if (iconImage != null)\n        {\n            iconImage.sprite = item.icon;\n            iconImage.enabled = item.icon != null;\n            // Tom cinza para indicar item já adquirido.\n            iconImage.color = new Color(0.5f, 0.5f, 0.5f, 1f);\n        }\n\n        if (priceText != null) priceText.text = alreadyOwnedLabel;\n        if (promoMarker != null) promoMarker.SetActive(false);\n\n        var button = GetComponent<Button>();\n        if (button != null)\n        {\n            button.onClick.RemoveAllListeners();\n            button.interactable = false;\n        }\n    }\n}\n\n/// <summary>\n/// Linha da lista \"Vender\" da ShopUI: ícone, nome, quantidade no inventário e\n/// preço de recompra (ShopData.GetBuybackPrice).\n/// </summary>\npublic class ShopSellRowUI : MonoBehaviour\n{\n    [SerializeField] private Image iconImage;\n    [SerializeField] private TMP_Text nameText;\n    [SerializeField] private TMP_Text quantityText;\n    [SerializeField] private TMP_Text priceText;\n\n    private ItemData item;\n    private Action<ItemData> onSell;\n\n    public void Setup(ItemData item, int quantity, int buybackPrice, Action<ItemData> onSell)\n    {\n        this.item = item;\n        this.onSell = onSell;\n\n        if (nameText != null) nameText.text = item.displayName;\n        if (quantityText != null) quantityText.text = quantity.ToString();\n        if (priceText != null) priceText.text = buybackPrice.ToString();\n\n        if (iconImage != null)\n        {\n            iconImage.sprite = item.icon;\n            iconImage.enabled = item.icon != null;\n        }\n\n        var button = GetComponent<Button>();\n        if (button != null)\n        {\n            button.onClick.RemoveAllListeners();\n            button.onClick.AddListener(() => this.onSell?.Invoke(this.item));\n        }\n    }\n}\n",
   "id": "script-ui-shopui-cs",
   "dependencyIds": [
-    "script-npc-actions-shopactions-cs",
     "script-audio-audiomanager-cs",
     "script-npc-pauseutil-cs",
     "script-data-itemdata-cs",
-    "script-ui-jukeboxshophandler-cs",
     "script-data-playerprogress-cs",
+    "script-data-shopdata-cs",
     "script-data-shopdata-cs"
   ],
   "usedByIds": [

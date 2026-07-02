@@ -49,9 +49,7 @@
     "NpcControllerEditor",
     "PolymorphicListDrawer"
   ],
-  "used_by": [
-    "Attack_ClawShort"
-  ],
+  "used_by": [],
   "source": "#if UNITY_EDITOR\nusing UnityEditor;\nusing UnityEngine;\n\n/// <summary>\n/// Editor customizado do EnemyAttackController (Enemy Creator — Etapa 2.1).\n///\n/// Usa PolymorphicListDrawer (mesmo utilitário de EnemyControllerEditor /\n/// NpcControllerEditor) para listar/adicionar subclasses concretas de\n/// EnemyAttack na lista <see cref=\"EnemyAttackController.attacks\"/> — inclui\n/// automaticamente todas as classes \"Attack_*\" definidas em Enemy/Attacks/.\n/// </summary>\n[CustomEditor(typeof(EnemyAttackController))]\npublic class EnemyAttackControllerEditor : Editor\n{\n    private SerializedProperty _attacksProp;\n\n    private void OnEnable()\n    {\n        _attacksProp = serializedObject.FindProperty(\"attacks\");\n    }\n\n    public override void OnInspectorGUI()\n    {\n        serializedObject.Update();\n\n        DrawPropertiesExcluding(serializedObject, \"m_Script\", \"attacks\");\n\n        EditorGUILayout.Space();\n        PolymorphicListDrawer.Draw(serializedObject, _attacksProp, \"Ataques (Etapa 2.1)\", typeof(EnemyAttack), \"Adicionar Ataque\");\n\n        serializedObject.ApplyModifiedProperties();\n    }\n}\n#endif\n",
   "id": "script-enemy-editor-enemyattackcontrollereditor-cs",
   "dependencyIds": [
@@ -61,7 +59,5 @@
     "script-npc-editor-npccontrollereditor-cs",
     "script-npc-editor-polymorphiclistdrawer-cs"
   ],
-  "usedByIds": [
-    "script-enemy-attacks-enemyattacks-melee-cs"
-  ]
+  "usedByIds": []
 }

@@ -84,26 +84,13 @@
     "GameSettings",
     "PlayerFeedback"
   ],
-  "used_by": [
-    "AreaManager",
-    "CameraAreaBounds",
-    "CameraBlocker",
-    "CameraFocusMode",
-    "CameraZone",
-    "PlayerFeedback"
-  ],
+  "used_by": [],
   "source": "using System.Collections;\nusing UnityEngine;\nusing Cinemachine;\n\n/// <summary>\n/// CameraManager — shake de câmara (Tarefa #21): impacto ao levar dano\n/// (<see cref=\"ShakeHit\"/>), e shake genérico parametrizável usado por\n/// PlayerFeedback (morte) e Action_ShakeCamera (Etapa 6).\n/// </summary>\npublic partial class CameraManager\n{\n    [Header(\"Shake on Hit\")]\n    [SerializeField] private float hitShakeAmplitude = 1.2f;\n    [SerializeField] private float hitShakeFrequency = 2.0f;\n    [SerializeField] private float hitShakeDuration = 0.18f;\n\n    private Coroutine shakeRoutine;\n\n    public void ShakeHit()\n    {\n        Shake(hitShakeAmplitude, hitShakeFrequency, hitShakeDuration);\n    }\n\n    /// <summary>\n    /// Aplica um shake de câmara com amplitude/frequência/duração personalizadas\n    /// (ex: Action_ShakeCamera, Etapa 6) — útil para impactos de boss, explosões,\n    /// quedas, etc., além do shake automático de ShakeHit(). Aplica-se à vcam\n    /// realmente activa no momento (incluindo vcamManual, durante uma cutscene).\n    ///\n    /// Respeita <see cref=\"GameSettings.ScreenShakeEnabled\"/> (Tarefa #40):\n    /// se o jogador desligou o screen shake nas Opções, este método não faz nada.\n    /// </summary>\n    public void Shake(float amplitude, float frequency, float duration)\n    {\n        // Tarefa #40 — acessibilidade: não aplicar shake se desligado nas Opções.\n        if (GameSettings.Instance != null && !GameSettings.Instance.ScreenShakeEnabled) return;\n\n        var v = GetActiveVcam() ?? vcamNormal;\n        if (v == null) return;\n\n        if (shakeRoutine != null) StopCoroutine(shakeRoutine);\n        shakeRoutine = StartCoroutine(DoShake(v, amplitude, frequency, duration));\n    }\n\n    private IEnumerator DoShake(CinemachineVirtualCamera vcam, float amp, float freq, float duration)\n    {\n        if (vcam == null) yield break;\n\n        var noise = vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();\n        if (noise == null) yield break;\n\n        float oldAmp = noise.m_AmplitudeGain;\n        float oldFreq = noise.m_FrequencyGain;\n\n        noise.m_AmplitudeGain = amp;\n        noise.m_FrequencyGain = freq;\n\n        yield return new WaitForSeconds(duration);\n\n        noise.m_AmplitudeGain = oldAmp;\n        noise.m_FrequencyGain = oldFreq;\n    }\n}\n",
   "id": "script-camera-cameramanager-shake-cs",
   "dependencyIds": [
+    "script-npc-actions-cameraactions-cs",
     "script-data-gamesettings-cs",
     "script-player-playerfeedback-cs"
   ],
-  "usedByIds": [
-    "script-world-areamanager-cs",
-    "script-camera-cameraareabounds-cs",
-    "script-camera-camerablocker-cs",
-    "script-npc-actions-cameraactions-cs",
-    "script-camera-camerazone-cs",
-    "script-player-playerfeedback-cs"
-  ]
+  "usedByIds": []
 }

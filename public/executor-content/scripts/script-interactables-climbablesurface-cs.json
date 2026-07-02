@@ -57,7 +57,6 @@
     "SwingAbility"
   ],
   "used_by": [
-    "AnimalFormData",
     "ClimbAbility",
     "SwingAbility"
   ],
@@ -69,7 +68,6 @@
     "script-abilities-swingability-cs"
   ],
   "usedByIds": [
-    "script-forms-animalformdata-cs",
     "script-abilities-climbability-cs",
     "script-abilities-swingability-cs"
   ]

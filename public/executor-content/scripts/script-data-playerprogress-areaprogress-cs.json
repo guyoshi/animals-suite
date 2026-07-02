@@ -1,0 +1,612 @@
+{
+  "path": "Data/PlayerProgress.AreaProgress.cs",
+  "filename": "PlayerProgress.AreaProgress.cs",
+  "category": "Data",
+  "primary": "PlayerProgress",
+  "kind": "Componente",
+  "summary": "Define a parte de PlayerProgress responsável pelo progresso persistente por área, incluindo colecionáveis, missões, desafios e restauração segura de dados antigos.",
+  "attach": "Adicionar ao objeto de sistemas persistentes ou ao Player conforme o guia 02/07.",
+  "types": [
+    {
+      "name": "PlayerProgress",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "GetDeaths",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetDeaths."
+    },
+    {
+      "name": "GetDeaths",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetDeaths."
+    },
+    {
+      "name": "RegisterDeath",
+      "ret": "void",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação RegisterDeath."
+    },
+    {
+      "name": "RegisterDeath",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação RegisterDeath."
+    },
+    {
+      "name": "HasVisited",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação HasVisited."
+    },
+    {
+      "name": "HasVisited",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação HasVisited."
+    },
+    {
+      "name": "MarkVisited",
+      "ret": "void",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação MarkVisited."
+    },
+    {
+      "name": "MarkVisited",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação MarkVisited."
+    },
+    {
+      "name": "IsFirstVisit",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsFirstVisit."
+    },
+    {
+      "name": "IsFirstVisit",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsFirstVisit."
+    },
+    {
+      "name": "IsOpened",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsOpened."
+    },
+    {
+      "name": "IsOpened",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsOpened."
+    },
+    {
+      "name": "MarkOpened",
+      "ret": "void",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação MarkOpened."
+    },
+    {
+      "name": "MarkOpened",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação MarkOpened."
+    },
+    {
+      "name": "GetRunasFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetRunasFound."
+    },
+    {
+      "name": "GetRunasFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetRunasFound."
+    },
+    {
+      "name": "AddRunaFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddRunaFound."
+    },
+    {
+      "name": "GetNpcsRescued",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetNpcsRescued."
+    },
+    {
+      "name": "GetNpcsRescued",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetNpcsRescued."
+    },
+    {
+      "name": "IsNpcRescued",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area, string npcId",
+      "description": "Executa a operação IsNpcRescued."
+    },
+    {
+      "name": "AddNpcRescued",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area, string npcId",
+      "description": "Executa a operação AddNpcRescued."
+    },
+    {
+      "name": "SyncVillagePopulationForWorld",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação SyncVillagePopulationForWorld."
+    },
+    {
+      "name": "SyncAllVillagePopulations",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação SyncAllVillagePopulations."
+    },
+    {
+      "name": "GetWhispersFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetWhispersFound."
+    },
+    {
+      "name": "GetWhispersFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetWhispersFound."
+    },
+    {
+      "name": "AddWhisperFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddWhisperFound."
+    },
+    {
+      "name": "GetWhispersDelivered",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetWhispersDelivered."
+    },
+    {
+      "name": "GetWhispersDelivered",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetWhispersDelivered."
+    },
+    {
+      "name": "AddWhisperDelivered",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddWhisperDelivered."
+    },
+    {
+      "name": "GetChestsFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetChestsFound."
+    },
+    {
+      "name": "GetChestsFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetChestsFound."
+    },
+    {
+      "name": "AddChestFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddChestFound."
+    },
+    {
+      "name": "GetFragmentsFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetFragmentsFound."
+    },
+    {
+      "name": "GetFragmentsFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetFragmentsFound."
+    },
+    {
+      "name": "AddFragmentFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddFragmentFound."
+    },
+    {
+      "name": "GetEcosPerdidosFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetEcosPerdidosFound."
+    },
+    {
+      "name": "GetEcosPerdidosFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetEcosPerdidosFound."
+    },
+    {
+      "name": "AddEcoPerdidoFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação AddEcoPerdidoFound."
+    },
+    {
+      "name": "HasCollectedMelody",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string melodyId",
+      "description": "Executa a operação HasCollectedMelody."
+    },
+    {
+      "name": "MarkMelodyCollected",
+      "ret": "void",
+      "mods": "public",
+      "params": "string melodyId, AreaData area",
+      "description": "Executa a operação MarkMelodyCollected."
+    },
+    {
+      "name": "GetMelodiesFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetMelodiesFound."
+    },
+    {
+      "name": "GetMelodiesFound",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetMelodiesFound."
+    },
+    {
+      "name": "IsChallengeDiscovered",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsChallengeDiscovered."
+    },
+    {
+      "name": "IsChallengeDiscovered",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsChallengeDiscovered."
+    },
+    {
+      "name": "MarkChallengeDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação MarkChallengeDiscovered."
+    },
+    {
+      "name": "IsChallengeCompleted",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsChallengeCompleted."
+    },
+    {
+      "name": "IsChallengeCompleted",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsChallengeCompleted."
+    },
+    {
+      "name": "MarkChallengeCompleted",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação MarkChallengeCompleted."
+    },
+    {
+      "name": "GetSussurrosDaTerraOuvidos",
+      "ret": "IReadOnlyList<string>",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação GetSussurrosDaTerraOuvidos."
+    },
+    {
+      "name": "GetSussurrosDaTerraOuvidos",
+      "ret": "IReadOnlyList<string>",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetSussurrosDaTerraOuvidos."
+    },
+    {
+      "name": "AddSussurroDaTerra",
+      "ret": "void",
+      "mods": "public",
+      "params": "AreaData area, string phrase",
+      "description": "Executa a operação AddSussurroDaTerra."
+    },
+    {
+      "name": "GetAreaCompletionPercent",
+      "ret": "int",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação GetAreaCompletionPercent."
+    },
+    {
+      "name": "GetOrCreateAreaProgress",
+      "ret": "AreaProgress",
+      "mods": "private",
+      "params": "string areaId",
+      "description": "Executa a operação GetOrCreateAreaProgress."
+    },
+    {
+      "name": "TryGetAreaProgress",
+      "ret": "AreaProgress",
+      "mods": "private",
+      "params": "string areaId",
+      "description": "Executa a operação TryGetAreaProgress."
+    }
+  ],
+  "dependencies": [
+    "AreaData",
+    "AreaProgress",
+    "EmblemManager",
+    "GameDatabase",
+    "GameVariables",
+    "PickupType",
+    "WorldData",
+    "WorldState"
+  ],
+  "used_by": [
+    "Action_Heal",
+    "Action_RemoveItem",
+    "Action_RescueNpc",
+    "Action_SavePlayerSnapshot",
+    "Action_ShowSementes",
+    "AnimalSpiritRescue",
+    "AnimalsDebugPanel",
+    "ApoloRunaCollectUI",
+    "AreaDiscoveryType",
+    "AreaManager",
+    "AreaSectionUI",
+    "Boss_AMenteQueMata",
+    "BrotoDeVidaPickup",
+    "CameraAreaBounds",
+    "ChallengeDefinition",
+    "ChallengeDefinitionEditor",
+    "ChallengeManager",
+    "ChallengeTrigger",
+    "Checkpoint",
+    "ChestPickup",
+    "Condition_HasItemQuantity",
+    "Condition_TimeOfDay",
+    "DeathScreenUI",
+    "DiarySectionUI",
+    "EcoPerdidoPickup",
+    "EmblemManager",
+    "EmblemsSectionUI",
+    "EnemyAttack",
+    "EnemyData",
+    "EnemyDropTable",
+    "EnemyRespawn",
+    "EnemyRespawnZone",
+    "FailCondition_PlayerDamaged",
+    "FallResetZone",
+    "FormSwitcher",
+    "FormsSectionUI",
+    "FragmentoVitalPickup",
+    "GameSettings",
+    "HUDController",
+    "IAbility",
+    "IPauseMenuSection",
+    "InteractionPromptUI",
+    "ItemWheelNodeUI",
+    "ItemWheelUI",
+    "ItemsInstinctsSectionUI",
+    "JournalManager",
+    "JukeboxSectionUI",
+    "LoadingScreenController",
+    "MainMenuController",
+    "MissionCompleteUI",
+    "MissionData",
+    "MissionManager",
+    "MissionRewardPickup",
+    "NpcConditionUtil",
+    "NpcPlayerConditionUtil",
+    "Objective_DefeatSpecificEnemy",
+    "Objective_ItemCollected",
+    "OxygenSystem",
+    "PauseMenuController",
+    "PickupBase",
+    "PickupMagnet",
+    "PickupPopupUI",
+    "PlayerCombat",
+    "PlayerConsumableEffects",
+    "PlayerDeathHandler",
+    "PlayerFeedback",
+    "PlayerHealthRegen",
+    "PlayerItemUser",
+    "PlayerResourceType",
+    "ProgressSectionUI",
+    "ProjectileData",
+    "ProjectilePool",
+    "RumbleManager",
+    "RumorData",
+    "RunaDeGaiaPickup",
+    "SafeHaven",
+    "SaveData",
+    "SaveManager",
+    "SceneLoader",
+    "SementePickup",
+    "ShopUI",
+    "SussurroDaTerraPickup",
+    "UpgradeData",
+    "UpgradesTabUI",
+    "VfxPoolManager",
+    "VillageEvolutionController",
+    "WaterMotor2D",
+    "WildMelodyPickup",
+    "WorldData",
+    "WorldMapConnection",
+    "WorldMapController",
+    "WorldMapNode",
+    "WorldMapUI",
+    "WorldState"
+  ],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\npublic partial class PlayerProgress : MonoBehaviour\n{\n    // ---------------- Progressão por Área ----------------\n\n    public int GetDeaths(string areaId) => TryGetAreaProgress(areaId)?.deaths ?? 0;\n    public int GetDeaths(AreaData area) => area != null ? GetDeaths(area.areaId) : 0;\n\n    public void RegisterDeath(string areaId) => GetOrCreateAreaProgress(areaId).deaths++;\n    public void RegisterDeath(AreaData area)\n    {\n        if (area != null) RegisterDeath(area.areaId);\n    }\n\n    public bool HasVisited(string areaId) => TryGetAreaProgress(areaId)?.visited ?? false;\n    public bool HasVisited(AreaData area) => area != null && HasVisited(area.areaId);\n\n    public void MarkVisited(string areaId) => GetOrCreateAreaProgress(areaId).visited = true;\n    public void MarkVisited(AreaData area)\n    {\n        if (area != null) MarkVisited(area.areaId);\n    }\n\n    public bool IsFirstVisit(string areaId) => !HasVisited(areaId);\n    public bool IsFirstVisit(AreaData area) => area != null && IsFirstVisit(area.areaId);\n\n    /// <summary>True se a área já foi \"aberta\" (acesso desbloqueado — ex: porta/portão/ponte activados), distinto de \"visitada\" (jogador já lá esteve).</summary>\n    public bool IsOpened(string areaId) => TryGetAreaProgress(areaId)?.opened ?? false;\n    public bool IsOpened(AreaData area) => area != null && IsOpened(area.areaId);\n\n    public void MarkOpened(string areaId) => GetOrCreateAreaProgress(areaId).opened = true;\n    public void MarkOpened(AreaData area)\n    {\n        if (area != null) MarkOpened(area.areaId);\n    }\n\n    // ---------------- Descobertas da Área (Menu de Pausa: Área Atual) ----------------\n\n    public int GetRunasFound(string areaId) => TryGetAreaProgress(areaId)?.runasFound ?? 0;\n    public int GetRunasFound(AreaData area) => area != null ? GetRunasFound(area.areaId) : 0;\n\n    /// <summary>Regista mais uma Runa de Gaia encontrada nesta área (limitado a AreaData.totalRunas, se fornecida).</summary>\n    public void AddRunaFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        ap.runasFound = area.totalRunas > 0 ? Mathf.Min(ap.runasFound + 1, area.totalRunas) : ap.runasFound + 1;\n    }\n\n    public int GetNpcsRescued(string areaId) => TryGetAreaProgress(areaId)?.npcsRescued ?? 0;\n    public int GetNpcsRescued(AreaData area) => area != null ? GetNpcsRescued(area.areaId) : 0;\n\n    /// <summary>True se o NPC com este \"npcId\" já foi resgatado nesta área.</summary>\n    public bool IsNpcRescued(AreaData area, string npcId)\n    {\n        if (area == null || string.IsNullOrEmpty(npcId)) return false;\n        return TryGetAreaProgress(area.areaId)?.rescuedNpcIds.Contains(npcId) ?? false;\n    }\n\n    /// <summary>\n    /// Regista um NPC como resgatado nesta área. Se \"npcId\" for fornecido, a\n    /// operação é idempotente — chamadas repetidas com o mesmo ID não duplicam a\n    /// contagem nem disparam eventos novamente. Se \"npcId\" for vazio/nulo, o\n    /// comportamento antigo é mantido (incrementa sem verificar duplicados).\n    ///\n    /// Quando \"npcId\" é fornecido:\n    ///   • Adiciona o ID a <see cref=\"AreaProgress.rescuedNpcIds\"/>.\n    ///   • Incrementa <see cref=\"AreaProgress.npcsRescued\"/> (limitado ao total da área).\n    ///   • Define automaticamente a variável global \"NpcResgatado_&lt;npcId&gt;\" = true em\n    ///     <see cref=\"GameVariables\"/> — permite usar Condition_BoolVariable para\n    ///     verificar o resgate sem configurar Action_SetBoolVariable manualmente.\n    ///   • Sincroniza a população da vila correspondente em WorldState.\n    /// </summary>\n    public void AddNpcRescued(AreaData area, string npcId)\n    {\n        if (area == null) return;\n\n        // Task #21: npcId é obrigatório para garantir idempotência. Sem ID não há\n        // como saber se este NPC já foi contado, abrindo a porta a duplicação de\n        // população sempre que o evento volta a correr (recarregar cena, etc.).\n        if (string.IsNullOrEmpty(npcId))\n        {\n            Debug.LogError($\"[PlayerProgress] AddNpcRescued chamado sem npcId para a área \\\"{area.areaId}\\\". Preenche o campo npcId em Action_RescueNpc para garantir idempotência.\");\n            return;\n        }\n\n        var ap = GetOrCreateAreaProgress(area.areaId);\n\n        // Idempotência: se o npcId já está na lista, não fazer nada.\n        if (ap.rescuedNpcIds.Contains(npcId))\n            return;\n\n        ap.rescuedNpcIds.Add(npcId);\n\n        // Variável automática: permite Condition_BoolVariable sem configuração extra.\n        GameVariables.Instance?.SetBool($\"NpcResgatado_{npcId}\", true);\n\n        ap.npcsRescued = area.totalNpcsToRescue > 0\n            ? Mathf.Min(ap.npcsRescued + 1, area.totalNpcsToRescue)\n            : ap.npcsRescued + 1;\n\n        // Auto-sync: actualiza WorldState.villagePopulations para que o HUD e\n        // outros sistemas (música, lojas, decoração) reflictam o resgate imediatamente.\n        SyncVillagePopulationForWorld(area.world);\n    }\n\n    /// <summary>\n    /// Re-calcula e sincroniza a população de uma vila específica (world.mainVillageId)\n    /// somando todos os npcsRescued e totalNpcsToRescue das áreas desse mundo.\n    /// Chamado automaticamente por AddNpcRescued e pode ser chamado externamente.\n    /// </summary>\n    public void SyncVillagePopulationForWorld(WorldData world)\n    {\n        if (world == null || string.IsNullOrEmpty(world.mainVillageId)) return;\n        var db = GameDatabase.Instance;\n        var ws = WorldState.Instance;\n        if (db == null || ws == null) return;\n\n        int totalRescued = 0, totalMax = 0;\n        foreach (var a in db.areas)\n        {\n            if (a == null || a.world != world) continue;\n            totalRescued += GetNpcsRescued(a);\n            totalMax += a.totalNpcsToRescue;\n        }\n        ws.SyncRescuedPopulation(world.mainVillageId, totalRescued, totalMax);\n    }\n\n    /// <summary>\n    /// Re-calcula e sincroniza a população de TODAS as vilas a partir dos resgates\n    /// registados. Chamado por WorldState.RestoreFrom após carregar um save, para\n    /// garantir consistência mesmo em saves criados antes desta sincronização ser\n    /// implementada.\n    /// </summary>\n    public void SyncAllVillagePopulations()\n    {\n        var db = GameDatabase.Instance;\n        if (db == null) return;\n\n        // Agrupa áreas por mundo e soma os contadores.\n        var totals = new System.Collections.Generic.Dictionary<string, (int rescued, int max)>();\n        foreach (var area in db.areas)\n        {\n            if (area == null || area.world == null) continue;\n            string vid = area.world.mainVillageId;\n            if (string.IsNullOrEmpty(vid)) continue;\n            if (!totals.ContainsKey(vid)) totals[vid] = (0, 0);\n            var t = totals[vid];\n            totals[vid] = (t.rescued + GetNpcsRescued(area), t.max + area.totalNpcsToRescue);\n        }\n\n        var ws = WorldState.Instance;\n        if (ws == null) return;\n        foreach (var kv in totals)\n            ws.SyncRescuedPopulation(kv.Key, kv.Value.rescued, kv.Value.max);\n    }\n\n    public int GetWhispersFound(string areaId) => TryGetAreaProgress(areaId)?.whispersFound ?? 0;\n    public int GetWhispersFound(AreaData area) => area != null ? GetWhispersFound(area.areaId) : 0;\n\n    /// <summary>Regista mais um Sussurro da Terra encontrado nesta área (limitado a AreaData.totalWhispers, se fornecida) e actualiza o contador global.</summary>\n    public void AddWhisperFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        int before = ap.whispersFound;\n        ap.whispersFound = area.totalWhispers > 0 ? Mathf.Min(ap.whispersFound + 1, area.totalWhispers) : ap.whispersFound + 1;\n        if (ap.whispersFound > before) totalSussurrosCollected++;\n    }\n\n    public int GetWhispersDelivered(string areaId) => TryGetAreaProgress(areaId)?.whispersDelivered ?? 0;\n    public int GetWhispersDelivered(AreaData area) => area != null ? GetWhispersDelivered(area.areaId) : 0;\n\n    /// <summary>Regista a entrega de mais um Sussurro da Terra nesta área (limitado a AreaData.totalWhispers, se fornecida) — distinto de \"encontrado\" (ver AddWhisperFound).</summary>\n    public void AddWhisperDelivered(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        ap.whispersDelivered = area.totalWhispers > 0 ? Mathf.Min(ap.whispersDelivered + 1, area.totalWhispers) : ap.whispersDelivered + 1;\n    }\n\n    public int GetChestsFound(string areaId) => TryGetAreaProgress(areaId)?.chestsFound ?? 0;\n    public int GetChestsFound(AreaData area) => area != null ? GetChestsFound(area.areaId) : 0;\n\n    /// <summary>Regista mais um baú aberto nesta área (limitado a AreaData.totalChests, se fornecida) e actualiza o contador global.</summary>\n    public void AddChestFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        int before = ap.chestsFound;\n        ap.chestsFound = area.totalChests > 0 ? Mathf.Min(ap.chestsFound + 1, area.totalChests) : ap.chestsFound + 1;\n        if (ap.chestsFound > before) totalChestsOpenedGlobal++;\n    }\n\n    public int GetFragmentsFound(string areaId) => TryGetAreaProgress(areaId)?.fragmentsFound ?? 0;\n    public int GetFragmentsFound(AreaData area) => area != null ? GetFragmentsFound(area.areaId) : 0;\n\n    /// <summary>Regista mais um Fragmento Vital encontrado nesta área (limitado a AreaData.totalFragments, se fornecida).</summary>\n    public void AddFragmentFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        ap.fragmentsFound = area.totalFragments > 0 ? Mathf.Min(ap.fragmentsFound + 1, area.totalFragments) : ap.fragmentsFound + 1;\n    }\n\n    // ---------------- Ecos Perdidos (por área) ----------------\n\n    public int GetEcosPerdidosFound(string areaId) => TryGetAreaProgress(areaId)?.ecosPerdidosFound ?? 0;\n    public int GetEcosPerdidosFound(AreaData area) => area != null ? GetEcosPerdidosFound(area.areaId) : 0;\n\n    /// <summary>\n    /// Regista mais um Eco Perdido encontrado nesta área (limitado a\n    /// AreaData.totalEcosPerdidos, se fornecida) e dá +1 ao saldo global de\n    /// Ecos Perdidos do jogador (GiveEcosPerdidos, que actualiza o evento).\n    /// </summary>\n    public void AddEcoPerdidoFound(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        int before = ap.ecosPerdidosFound;\n        ap.ecosPerdidosFound = area.totalEcosPerdidos > 0\n            ? Mathf.Min(ap.ecosPerdidosFound + 1, area.totalEcosPerdidos)\n            : ap.ecosPerdidosFound + 1;\n\n        if (ap.ecosPerdidosFound > before)\n            GiveEcosPerdidos(1);\n    }\n\n    // ---------------- Melodias Selvagens ----------------\n\n    /// <summary>True se a melodia com este \"melodyId\" já foi colectada.</summary>\n    public bool HasCollectedMelody(string melodyId) =>\n        !string.IsNullOrEmpty(melodyId) && _collectedMelodyIds.Contains(melodyId);\n\n    /// <summary>\n    /// Regista a melodia \"melodyId\" como colectada e incrementa o contador da\n    /// área \"area\" (se fornecida). Idempotente — não duplica.\n    /// Dispara <see cref=\"PickupCollected\"/> (PickupType.WildMelody) para que\n    /// sistemas externos (EmblemManager, UI, etc.) possam reagir.\n    /// </summary>\n    public void MarkMelodyCollected(string melodyId, AreaData area)\n    {\n        if (string.IsNullOrEmpty(melodyId)) return;\n        if (_collectedMelodyIds.Contains(melodyId)) return;\n\n        _collectedMelodyIds.Add(melodyId);\n\n        if (area != null)\n        {\n            var ap = GetOrCreateAreaProgress(area.areaId);\n            ap.melodiesFound = area.totalMelodies > 0\n                ? Mathf.Min(ap.melodiesFound + 1, area.totalMelodies)\n                : ap.melodiesFound + 1;\n        }\n\n        // Notifica o EmblemManager e outros sistemas.\n        PickupCollected?.Invoke(PickupType.WildMelody, melodyId);\n\n        // Verifica se o desbloqueio de uma melodia completa o 100% da área\n        // ou do jogo → dispara CheckAll do EmblemManager.\n        EmblemManager.Instance?.CheckAll();\n    }\n\n    /// <summary>Melodias Selvagens encontradas nesta área.</summary>\n    public int GetMelodiesFound(string areaId) => TryGetAreaProgress(areaId)?.melodiesFound ?? 0;\n    public int GetMelodiesFound(AreaData area) => area != null ? GetMelodiesFound(area.areaId) : 0;\n\n    /// <summary>O jogador já encontrou/descobriu o desafio opcional desta área (mostra \"?\" até aqui).</summary>\n    public bool IsChallengeDiscovered(string areaId) => TryGetAreaProgress(areaId)?.challengeDiscovered ?? false;\n    public bool IsChallengeDiscovered(AreaData area) => area != null && IsChallengeDiscovered(area.areaId);\n\n    public void MarkChallengeDiscovered(AreaData area)\n    {\n        if (area != null) GetOrCreateAreaProgress(area.areaId).challengeDiscovered = true;\n    }\n\n    public bool IsChallengeCompleted(string areaId) => TryGetAreaProgress(areaId)?.challengeCompleted ?? false;\n    public bool IsChallengeCompleted(AreaData area) => area != null && IsChallengeCompleted(area.areaId);\n\n    public void MarkChallengeCompleted(AreaData area)\n    {\n        if (area == null) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        ap.challengeCompleted = true;\n        ap.challengeDiscovered = true;\n    }\n\n    /// <summary>Sussurros da Terra (frases exactas ditas por NPCs) já ouvidos sobre esta área — usado em \"SUSSURROS DA TERRA\" no Menu de Pausa.</summary>\n    public IReadOnlyList<string> GetSussurrosDaTerraOuvidos(string areaId) => TryGetAreaProgress(areaId)?.sussurrosDaTerraOuvidos ?? (IReadOnlyList<string>)System.Array.Empty<string>();\n    public IReadOnlyList<string> GetSussurrosDaTerraOuvidos(AreaData area) => area != null ? GetSussurrosDaTerraOuvidos(area.areaId) : null;\n\n    /// <summary>\n    /// Regista um Sussurro da Terra (frase exacta dita por um NPC) sobre esta área, se ainda não\n    /// tiver sido ouvido. É a mesma colecionável da contagem \"Sussurros da Terra\" das Descobertas\n    /// da área — por isso também conta como um Sussurro da Terra encontrado (ver AddWhisperFound).\n    /// </summary>\n    public void AddSussurroDaTerra(AreaData area, string phrase)\n    {\n        if (area == null || string.IsNullOrEmpty(phrase)) return;\n        var ap = GetOrCreateAreaProgress(area.areaId);\n        if (ap.sussurrosDaTerraOuvidos.Contains(phrase)) return;\n\n        ap.sussurrosDaTerraOuvidos.Add(phrase);\n        AddWhisperFound(area);\n    }\n\n    /// <summary>\n    /// Percentagem de conclusão de uma área (0–100), considerando apenas\n    /// conteúdo permanente. Critérios que entram no cálculo:\n    ///   • Runas de Gaia\n    ///   • NPCs resgatados\n    ///   • Sussurros da Terra encontrados (whispersFound — a entrega é contada\n    ///     no total global, não nesta vista por área)\n    ///   • Baús abertos\n    ///   • Fragmentos Vitais recolhidos\n    ///   • Animal libertado (area.freedAnimalForm)\n    ///   • Desafio opcional concluído (area.hasOptionalChallenge)\n    ///   • Melodias Selvagens recolhidas (area.totalMelodies)\n    ///\n    /// Excluídos: Sementes, Ecos Perdidos, inimigos.\n    /// </summary>\n    public int GetAreaCompletionPercent(AreaData area)\n    {\n        if (area == null) return 0;\n\n        var ap = GetOrCreateAreaProgress(area.areaId);\n\n        int total = 0;\n        int found = 0;\n\n        if (area.totalRunas > 0) { total += area.totalRunas; found += Mathf.Min(ap.runasFound, area.totalRunas); }\n        if (area.totalNpcsToRescue > 0) { total += area.totalNpcsToRescue; found += Mathf.Min(ap.npcsRescued, area.totalNpcsToRescue); }\n        if (area.totalWhispers > 0) { total += area.totalWhispers; found += Mathf.Min(ap.whispersFound, area.totalWhispers); }\n        if (area.totalChests > 0) { total += area.totalChests; found += Mathf.Min(ap.chestsFound, area.totalChests); }\n        if (area.totalFragments > 0) { total += area.totalFragments; found += Mathf.Min(ap.fragmentsFound, area.totalFragments); }\n\n        if (area.freedAnimalForm != null)\n        {\n            total += 1;\n            if (_freedAnimalIds.Contains(area.freedAnimalForm.formId)) found += 1;\n        }\n\n        if (area.hasOptionalChallenge)\n        {\n            total += 1;\n            if (ap.challengeCompleted) found += 1;\n        }\n\n        if (area.totalMelodies > 0) { total += area.totalMelodies; found += Mathf.Min(ap.melodiesFound, area.totalMelodies); }\n\n        if (total <= 0) return 0;\n        return Mathf.RoundToInt(100f * found / total);\n    }\n\n    private AreaProgress GetOrCreateAreaProgress(string areaId)\n    {\n        for (int i = 0; i < areaProgress.Count; i++)\n            if (areaProgress[i].areaId == areaId) return areaProgress[i];\n\n        var created = new AreaProgress { areaId = areaId };\n        areaProgress.Add(created);\n        return created;\n    }\n\n    /// <summary>\n    /// Versão read-only: devolve o AreaProgress existente ou null.\n    /// Usar nos getters de leitura para não criar entradas vazias no save\n    /// quando a área ainda não foi visitada (Task #20).\n    /// </summary>\n    private AreaProgress TryGetAreaProgress(string areaId)\n    {\n        for (int i = 0; i < areaProgress.Count; i++)\n            if (areaProgress[i].areaId == areaId) return areaProgress[i];\n        return null;\n    }\n}\n",
+  "id": "script-data-playerprogress-areaprogress-cs",
+  "dependencyIds": [
+    "script-data-areadata-cs",
+    "script-data-playerprogress-cs",
+    "script-data-emblemmanager-cs",
+    "script-data-gamedatabase-cs",
+    "script-data-gamevariables-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-data-worlddata-cs",
+    "script-data-worldstate-cs"
+  ],
+  "usedByIds": [
+    "script-npc-actions-playeractions-cs",
+    "script-npc-actions-missionactions-cs",
+    "script-npc-actions-villageactions-cs",
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-npc-actions-seedsnpcactions-cs",
+    "script-interactables-animalspiritrescue-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-ui-apolorunacollectui-cs",
+    "script-npc-actions-areaactions-cs",
+    "script-world-areamanager-cs",
+    "script-ui-areasectionui-cs",
+    "script-enemy-bosses-boss-amentequemata-cs",
+    "script-collectibles-brotodevidapickup-cs",
+    "script-camera-cameraareabounds-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-editor-challengedefinitioneditor-cs",
+    "script-data-challengemanager-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-interactables-checkpoint-cs",
+    "script-collectibles-chestpickup-cs",
+    "script-npc-conditions-missionconditions-cs",
+    "script-npc-conditions-worldconditions-cs",
+    "script-ui-deathscreenui-cs",
+    "script-ui-diarysectionui-cs",
+    "script-collectibles-ecoperdidopickup-cs",
+    "script-data-emblemmanager-cs",
+    "script-ui-emblemssectionui-cs",
+    "script-enemy-enemyattack-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemydroptable-cs",
+    "script-enemy-enemyrespawn-cs",
+    "script-enemy-enemyrespawnzone-cs",
+    "script-data-objectives-challengefailconditions-player-cs",
+    "script-interactables-fallresetzone-cs",
+    "script-forms-formswitcher-cs",
+    "script-ui-formssectionui-cs",
+    "script-collectibles-fragmentovitalpickup-cs",
+    "script-data-gamesettings-cs",
+    "script-ui-hudcontroller-cs",
+    "script-abilities-iability-cs",
+    "script-ui-ipausemenusection-cs",
+    "script-ui-interactionpromptui-cs",
+    "script-ui-itemwheelnodeui-cs",
+    "script-ui-itemwheelui-cs",
+    "script-ui-itemsinstinctssectionui-cs",
+    "script-data-journalmanager-cs",
+    "script-ui-jukeboxsectionui-cs",
+    "script-ui-loadingscreencontroller-cs",
+    "script-ui-mainmenucontroller-cs",
+    "script-ui-missioncompleteui-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-collectibles-missionrewardpickup-cs",
+    "script-npc-npcconditionutil-cs",
+    "script-npc-conditions-playerconditions-cs",
+    "script-data-objectives-challengeobjectives-enemy-cs",
+    "script-data-objectives-challengeobjectives-player-cs",
+    "script-player-oxygensystem-cs",
+    "script-ui-pausemenucontroller-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-collectibles-pickupmagnet-cs",
+    "script-ui-pickuppopupui-cs",
+    "script-player-playercombat-cs",
+    "script-player-playerconsumableeffects-cs",
+    "script-player-playerdeathhandler-cs",
+    "script-player-playerfeedback-cs",
+    "script-player-playerhealthregen-cs",
+    "script-player-playeritemuser-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-ui-progresssectionui-cs",
+    "script-enemy-projectiledata-cs",
+    "script-enemy-projectilepool-cs",
+    "script-combat-rumblemanager-cs",
+    "script-data-rumordata-cs",
+    "script-collectibles-runadegaiapickup-cs",
+    "script-interactables-safehaven-cs",
+    "script-data-savedata-cs",
+    "script-data-savemanager-cs",
+    "script-world-sceneloader-cs",
+    "script-collectibles-sementepickup-cs",
+    "script-ui-shopui-cs",
+    "script-collectibles-sussurrodaterrapickup-cs",
+    "script-data-upgradedata-cs",
+    "script-ui-upgradestabui-cs",
+    "script-combat-vfxpoolmanager-cs",
+    "script-npc-villageevolutioncontroller-cs",
+    "script-player-watermotor2d-cs",
+    "script-collectibles-wildmelodypickup-cs",
+    "script-data-worlddata-cs",
+    "script-world-worldmapconnection-cs",
+    "script-world-worldmapcontroller-cs",
+    "script-world-worldmapnode-cs",
+    "script-world-worldmapui-cs",
+    "script-data-worldstate-cs"
+  ]
+}

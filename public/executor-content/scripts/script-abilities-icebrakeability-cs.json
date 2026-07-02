@@ -66,16 +66,6 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "CooldownRemaining",
-      "type": "float",
-      "mods": "public",
-      "default": "> Mathf.Max(0f, cooldownTimer)",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "CooldownDuration",
       "type": "float",
       "mods": "public",
@@ -142,7 +132,6 @@
   ],
   "dependencies": [
     "AbilityCancelReason",
-    "AbilityRouter",
     "AnimalFormData",
     "IAbility",
     "IActiveAbility",
@@ -153,15 +142,16 @@
   "used_by": [
     "AbilityRouter"
   ],
-  "source": "using UnityEngine;\n\n/// <summary>\n/// Tarefa #7 — Pinguim: travagem/curva instantânea, exclusiva em cima de\n/// gelo (PlayerMotor2D.IsOnIce). Reduz bruscamente a velocidade horizontal\n/// ao premir o botão de Habilidade, dando controlo de curvas que o\n/// iceSlideFactor normal (atrito reduzido constante) não permite.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class IceBrakeAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private bool enabledForForm;\n    private AnimalFormData form;\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    private float cooldownTimer;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.IceBrake;\n        cooldownTimer = 0f;\n    }\n\n    /// <summary>Chamado pelo AbilityRouter (botão de Habilidade). Só tem efeito em cima de gelo.</summary>\n    public void TryBrake()\n    {\n        if (!enabledForForm || cooldownTimer > 0f) return;\n        if (!motor.IsOnIce || !motor.IsGrounded) return;\n\n        cooldownTimer = 0.15f;\n\n        float strength = form.iceBrakeStrength > 0f ? form.iceBrakeStrength : 6f;\n        float newVx = Mathf.MoveTowards(rb.velocity.x, 0f, strength);\n        rb.velocity = new Vector2(newVx, rb.velocity.y);\n\n        motor.Anim?.SetTrigger(\"IceBrake\");\n    }\n\n    void IAbility.Activate() => TryBrake();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => 0f;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && motor.IsOnIce && motor.IsGrounded;\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Tarefa #7 — Pinguim: travagem/curva instantânea, exclusiva em cima de\n/// gelo (PlayerMotor2D.IsOnIce). Reduz bruscamente a velocidade horizontal\n/// ao premir o botão de Habilidade, dando controlo de curvas que o\n/// iceSlideFactor normal (atrito reduzido constante) não permite.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class IceBrakeAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private bool enabledForForm;\n    private AnimalFormData form;\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    private float cooldownTimer;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.IceBrake;\n        cooldownTimer = 0f;\n    }\n\n    /// <summary>Chamado pelo AbilityRouter (botão de Habilidade). Só tem efeito em cima de gelo.</summary>\n    public void TryBrake()\n    {\n        if (!enabledForForm || cooldownTimer > 0f) return;\n        if (!motor.IsOnIce || !motor.IsGrounded) return;\n\n        cooldownTimer = 0.15f;\n\n        float strength = form.iceBrakeStrength > 0f ? form.iceBrakeStrength : 6f;\n        float newVx = Mathf.MoveTowards(rb.linearVelocity.x, 0f, strength);\n        rb.linearVelocity = new Vector2(newVx, rb.linearVelocity.y);\n\n        motor.Anim?.SetTrigger(\"IceBrake\");\n    }\n\n    void IAbility.Activate() => TryBrake();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => 0f;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && motor.IsOnIce && motor.IsGrounded;\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
   "id": "script-abilities-icebrakeability-cs",
   "dependencyIds": [
-    "script-abilities-abilityrouter-cs",
+    "script-abilities-iability-cs",
     "script-forms-animalformdata-cs",
     "script-abilities-iability-cs",
     "script-abilities-iactiveability-cs",
     "script-abilities-iformability-cs",
-    "script-player-playermotor2d-cs"
+    "script-player-playermotor2d-cs",
+    "script-forms-animalformdata-cs"
   ],
   "usedByIds": [
     "script-abilities-abilityrouter-cs"

@@ -93,17 +93,15 @@
     "PlayerCombat",
     "State"
   ],
-  "used_by": [
-    "PlayerCombat"
-  ],
+  "used_by": [],
   "source": "using UnityEngine;\n\n/// <summary>\n/// Dano por contacto de um inimigo (P3 — consome EnemyData.stats.contactDamage,\n/// que até aqui nunca era lido): tocar no corpo do inimigo fere o player,\n/// mesmo sem ser um ataque.\n///\n/// Funciona com collider sólido (OnCollisionStay2D) ou trigger\n/// (OnTriggerStay2D). Passa por PlayerCombat.TryDamagePlayer (P2): respeita\n/// i-frames, aplica a Defesa da forma e dá knockback. \"tickInterval\" evita\n/// dano contínuo a cada frame (além dos i-frames do próprio player).\n///\n/// Não aplica dano em estados terminais (Morto/Desactivado) nem Atordoado.\n/// </summary>\n[DisallowMultipleComponent]\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyContactDamage : MonoBehaviour\n{\n    [Tooltip(\"Intervalo mínimo (segundos) entre danos de contacto.\")]\n    [Min(0.1f)] public float tickInterval = 0.6f;\n\n    [Tooltip(\"Força de empurrão aplicada ao player no contacto.\")]\n    [Min(0f)] public float contactKnockback = 6f;\n\n    private EnemyController _controller;\n    private float _nextDamageTime;\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n    }\n\n    private void OnCollisionStay2D(Collision2D collision) => TryHit(collision.collider);\n    private void OnTriggerStay2D(Collider2D other) => TryHit(other);\n\n    private void TryHit(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (_controller.IsTerminal || _controller.State == EnemyState.Atordoado) return;\n        if (Time.time < _nextDamageTime) return;\n\n        int damage = _controller.Data != null ? _controller.Data.stats.contactDamage : 0;\n        if (damage <= 0) return;\n\n        if (PlayerCombat.TryDamagePlayer(other.transform, damage, transform.position, contactKnockback))\n            _nextDamageTime = Time.time + tickInterval;\n    }\n}\n",
   "id": "script-enemy-enemycontactdamage-cs",
   "dependencyIds": [
     "script-enemy-enemycontroller-cs",
     "script-enemy-enemydata-cs",
-    "script-player-playercombat-cs"
+    "script-enemy-enemycontroller-cs",
+    "script-player-playercombat-cs",
+    "script-platforms-fallingplatform-cs"
   ],
-  "usedByIds": [
-    "script-player-playercombat-cs"
-  ]
+  "usedByIds": []
 }

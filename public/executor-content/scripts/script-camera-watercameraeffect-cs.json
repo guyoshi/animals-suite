@@ -16,56 +16,6 @@
   ],
   "fields": [
     {
-      "name": "playerWaterDetector",
-      "type": "WaterDetector",
-      "mods": "private",
-      "default": "",
-      "section": "",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "overlayImage",
-      "type": "Image",
-      "mods": "private",
-      "default": "",
-      "section": "",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "surfaceColor",
-      "type": "Color",
-      "mods": "public",
-      "default": "new Color(0.2f, 0.55f, 0.85f, 0.10f)",
-      "section": "Cores",
-      "attrs": "[Header(\"Cores\")] [Tooltip(\"Overlay enquanto à superfície da água (cabeça fora).\")]",
-      "inspector": true,
-      "description": "Overlay enquanto à superfície da água (cabeça fora)."
-    },
-    {
-      "name": "submergedColor",
-      "type": "Color",
-      "mods": "public",
-      "default": "new Color(0.1f, 0.35f, 0.7f, 0.32f)",
-      "section": "Cores",
-      "attrs": "[Tooltip(\"Overlay enquanto submerso (cabeça dentro de água).\")]",
-      "inspector": true,
-      "description": "Overlay enquanto submerso (cabeça dentro de água)."
-    },
-    {
-      "name": "outOfWaterColor",
-      "type": "Color",
-      "mods": "public",
-      "default": "new Color(0f, 0f, 0f, 0f)",
-      "section": "Cores",
-      "attrs": "[Tooltip(\"Overlay fora de água (sem efeito).\")]",
-      "inspector": true,
-      "description": "Overlay fora de água (sem efeito)."
-    },
-    {
       "name": "lerpSpeed",
       "type": "float",
       "mods": "public",
@@ -96,7 +46,7 @@
     "WaterDetector"
   ],
   "used_by": [],
-  "source": "using UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// \"Câmara aquática\" (Tarefa #14): feedback visual de estar dentro/submerso em\n/// água através de um overlay de cor num Canvas (Screen Space - Overlay), sem\n/// depender de post-processing.\n///\n/// Montagem no Editor:\n/// - Criar um Canvas (Screen Space - Overlay) com uma Image full-screen\n///   (esticada aos 4 cantos), cor inicial transparente.\n/// - Colocar este script num GameObject qualquer da cena e ligar\n///   \"overlayImage\" a essa Image e \"playerWaterDetector\" ao WaterDetector do\n///   player (auto-detectado por FindObjectOfType se ficar vazio).\n/// </summary>\npublic class WaterCameraEffect : MonoBehaviour\n{\n    [SerializeField] private WaterDetector playerWaterDetector;\n    [SerializeField] private Image overlayImage;\n\n    [Header(\"Cores\")]\n    [Tooltip(\"Overlay enquanto à superfície da água (cabeça fora).\")]\n    public Color surfaceColor = new Color(0.2f, 0.55f, 0.85f, 0.10f);\n\n    [Tooltip(\"Overlay enquanto submerso (cabeça dentro de água).\")]\n    public Color submergedColor = new Color(0.1f, 0.35f, 0.7f, 0.32f);\n\n    [Tooltip(\"Overlay fora de água (sem efeito).\")]\n    public Color outOfWaterColor = new Color(0f, 0f, 0f, 0f);\n\n    [Tooltip(\"Velocidade de transição entre cores (por segundo).\")]\n    public float lerpSpeed = 4f;\n\n    private void Awake()\n    {\n        if (playerWaterDetector == null)\n            playerWaterDetector = FindObjectOfType<WaterDetector>();\n    }\n\n    private void Update()\n    {\n        if (overlayImage == null || playerWaterDetector == null) return;\n\n        Color target = outOfWaterColor;\n        if (playerWaterDetector.IsSubmerged) target = submergedColor;\n        else if (playerWaterDetector.IsInWater) target = surfaceColor;\n\n        overlayImage.color = Color.Lerp(overlayImage.color, target, lerpSpeed * Time.unscaledDeltaTime);\n    }\n}\n",
+  "source": "using UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// \"Câmara aquática\" (Tarefa #14): feedback visual de estar dentro/submerso em\n/// água através de um overlay de cor num Canvas (Screen Space - Overlay), sem\n/// depender de post-processing.\n///\n/// Montagem no Editor:\n/// - Criar um Canvas (Screen Space - Overlay) com uma Image full-screen\n///   (esticada aos 4 cantos), cor inicial transparente.\n/// - Colocar este script num GameObject qualquer da cena e ligar\n///   \"overlayImage\" a essa Image e \"playerWaterDetector\" ao WaterDetector do\n///   player (auto-detectado por FindFirstObjectByType se ficar vazio).\n/// </summary>\npublic class WaterCameraEffect : MonoBehaviour\n{\n    [SerializeField] private WaterDetector playerWaterDetector;\n    [SerializeField] private Image overlayImage;\n\n    [Header(\"Cores\")]\n    [Tooltip(\"Overlay enquanto à superfície da água (cabeça fora).\")]\n    public Color surfaceColor = new Color(0.2f, 0.55f, 0.85f, 0.10f);\n\n    [Tooltip(\"Overlay enquanto submerso (cabeça dentro de água).\")]\n    public Color submergedColor = new Color(0.1f, 0.35f, 0.7f, 0.32f);\n\n    [Tooltip(\"Overlay fora de água (sem efeito).\")]\n    public Color outOfWaterColor = new Color(0f, 0f, 0f, 0f);\n\n    [Tooltip(\"Velocidade de transição entre cores (por segundo).\")]\n    public float lerpSpeed = 4f;\n\n    private void Awake()\n    {\n        if (playerWaterDetector == null)\n            playerWaterDetector = FindFirstObjectByType<WaterDetector>();\n    }\n\n    private void Update()\n    {\n        if (overlayImage == null || playerWaterDetector == null) return;\n\n        Color target = outOfWaterColor;\n        if (playerWaterDetector.IsSubmerged) target = submergedColor;\n        else if (playerWaterDetector.IsInWater) target = surfaceColor;\n\n        overlayImage.color = Color.Lerp(overlayImage.color, target, lerpSpeed * Time.unscaledDeltaTime);\n    }\n}\n",
   "id": "script-camera-watercameraeffect-cs",
   "dependencyIds": [
     "script-player-waterdetector-cs"

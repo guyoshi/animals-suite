@@ -16,16 +16,6 @@
   ],
   "fields": [
     {
-      "name": "globalVariables",
-      "type": "List<GameVariable>",
-      "mods": "private",
-      "default": "new List<GameVariable>()",
-      "section": "",
-      "attrs": "[Tooltip(\"Variáveis globais, partilhadas por todos os eventos do jogo. Usa \\\"+ Adicionar Variável\\\" — nomes duplicados são assinalados.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Variáveis globais, partilhadas por todos os eventos do jogo. Usa \"+ Adicionar Variável\" — nomes duplicados são assinalados."
-    },
-    {
       "name": "isAutoFallback",
       "type": "bool",
       "mods": "private",
@@ -93,7 +83,7 @@
       "name": "GetString",
       "ret": "string",
       "mods": "public",
-      "params": "string name, string defaultValue = \"\"",
+      "params": "string name, string defaultValue =",
       "description": "Executa a operação GetString."
     },
     {
@@ -142,13 +132,9 @@
   "dependencies": [
     "GameVariable",
     "GameVariableListUtil",
-    "NpcController",
-    "PlayerProgress",
-    "SaveData",
-    "SaveManager"
+    "SaveData"
   ],
   "used_by": [
-    "Action_RescueNpc",
     "AnimalsDebugPanel",
     "ChallengeDefinition",
     "ChallengeManager",
@@ -160,18 +146,15 @@
     "EmblemManager",
     "EmblemsSectionUI",
     "EnemyCondition",
-    "EnemyController",
     "EnemyData",
     "EnemyDropTable",
     "EnemyMultiPartBoss",
     "FailCondition_BoolVariable",
     "GaleriaUI",
-    "GameDataValidatorWindow",
     "GameSettings",
     "GameVariable",
     "GameVariableListDrawer",
     "GameVariablesEditor",
-    "JournalManager",
     "JukeboxSectionUI",
     "Lever",
     "LoadingScreenController",
@@ -194,17 +177,14 @@
     "WorldMapController",
     "WorldMapUI"
   ],
-  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// \"Banco de dados\" de variáveis globais configuráveis no Inspector (Etapa 8):\n/// bools/ints/floats/strings nomeados, criados/editados/removidos no editor de\n/// GameVariables, lidos e escritos por Action_Set*Variable / Condition_*Variable\n/// com \"scope = Global\". Permite montar lógica de eventos \"trigger\" sem código\n/// (ex: ligar \"porta_aberta\" = true num evento, condicionar outro a essa variável\n/// estar true).\n///\n/// Para variáveis próprias de um único NPC, usa \"scope = Local\" — ver\n/// NpcController.localVariables.\n/// </summary>\npublic class GameVariables : MonoBehaviour\n{\n    public static GameVariables Instance { get; private set; }\n\n    [Tooltip(\"Variáveis globais, partilhadas por todos os eventos do jogo. Usa \\\"+ Adicionar Variável\\\" — nomes duplicados são assinalados.\")]\n    [SerializeField] private List<GameVariable> globalVariables = new List<GameVariable>();\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\"). Sem isto, uma\n    /// GameVariables configurada numa cena (com \"globalVariables\" preenchida no\n    /// Inspector) seria destruída ao encontrar a versão vazia auto-criada como\n    /// Instance, perdendo todas as variáveis configuradas.\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        // Tarefa #22 (Menu Inicial — \"Novo Jogo\"): ver PlayerProgress.cs para a\n        // explicação completa do mecanismo de fotografia/restauro.\n        _initialSnapshotJson = JsonUtility.ToJson(this);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(GameVariables) + \" (Fallback)\");\n        var instance = go.AddComponent<GameVariables>();\n        instance.isAutoFallback = true;\n    }\n\n    // ---------------- Novo Jogo (Tarefa #22) ----------------\n\n    private string _initialSnapshotJson;\n\n    /// <summary>Repõe todas as variáveis globais para os valores configurados no Inspector no arranque — ver PlayerProgress.ResetForNewGame.</summary>\n    public void ResetForNewGame()\n    {\n        if (!string.IsNullOrEmpty(_initialSnapshotJson))\n            JsonUtility.FromJsonOverwrite(_initialSnapshotJson, this);\n    }\n\n    public bool GetBool(string name, bool defaultValue = false) => GameVariableListUtil.GetBool(globalVariables, name, defaultValue);\n    public int GetInt(string name, int defaultValue = 0) => GameVariableListUtil.GetInt(globalVariables, name, defaultValue);\n    public float GetFloat(string name, float defaultValue = 0f) => GameVariableListUtil.GetFloat(globalVariables, name, defaultValue);\n    public string GetString(string name, string defaultValue = \"\") => GameVariableListUtil.GetString(globalVariables, name, defaultValue);\n\n    public void SetBool(string name, bool value) => GameVariableListUtil.SetBool(globalVariables, name, value);\n    public void SetInt(string name, int value) => GameVariableListUtil.SetInt(globalVariables, name, value);\n    public void SetFloat(string name, float value) => GameVariableListUtil.SetFloat(globalVariables, name, value);\n    public void SetString(string name, string value) => GameVariableListUtil.SetString(globalVariables, name, value);\n\n    // ---------------- Save / Load ----------------\n\n    /// <summary>Copia todas as variáveis globais para \"data\" (usado por SaveManager ao gravar).</summary>\n    public void CaptureTo(SaveData data)\n    {\n        data.globalVariables = new List<GameVariable>();\n        foreach (var v in globalVariables)\n        {\n            data.globalVariables.Add(new GameVariable\n            {\n                variableName = v.variableName,\n                type = v.type,\n                boolValue = v.boolValue,\n                intValue = v.intValue,\n                floatValue = v.floatValue,\n                stringValue = v.stringValue\n            });\n        }\n    }\n\n    /// <summary>Substitui as variáveis globais pelas guardadas em \"data\" (usado por SaveManager ao carregar).</summary>\n    public void RestoreFrom(SaveData data)\n    {\n        if (data == null) return;\n\n        globalVariables.Clear();\n        if (data.globalVariables == null) return;\n\n        foreach (var v in data.globalVariables)\n        {\n            globalVariables.Add(new GameVariable\n            {\n                variableName = v.variableName,\n                type = v.type,\n                boolValue = v.boolValue,\n                intValue = v.intValue,\n                floatValue = v.floatValue,\n                stringValue = v.stringValue\n            });\n        }\n    }\n}\n",
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// \"Banco de dados\" de variáveis globais configuráveis no Inspector (Etapa 8):\n/// bools/ints/floats/strings nomeados, criados/editados/removidos no editor de\n/// GameVariables, lidos e escritos por Action_Set*Variable / Condition_*Variable\n/// com \"scope = Global\". Permite montar lógica de eventos \"trigger\" sem código\n/// (ex: ligar \"porta_aberta\" = true num evento, condicionar outro a essa variável\n/// estar true).\n///\n/// Para variáveis próprias de um único NPC, usa \"scope = Local\" — ver\n/// NpcController.localVariables.\n/// </summary>\npublic class GameVariables : MonoBehaviour\n{\n    public static GameVariables Instance { get; private set; }\n\n    [Tooltip(\"Variáveis globais, partilhadas por todos os eventos do jogo. Usa \\\"+ Adicionar Variável\\\" — nomes duplicados são assinalados.\")]\n    [SerializeField] private List<GameVariable> globalVariables = new List<GameVariable>();\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\"). Sem isto, uma\n    /// GameVariables configurada numa cena (com \"globalVariables\" preenchida no\n    /// Inspector) seria destruída ao encontrar a versão vazia auto-criada como\n    /// Instance, perdendo todas as variáveis configuradas.\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        // Tarefa #22 (Menu Inicial — \"Novo Jogo\"): ver PlayerProgress.cs para a\n        // explicação completa do mecanismo de fotografia/restauro.\n        _initialSnapshotJson = JsonUtility.ToJson(this);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(GameVariables) + \" (Fallback)\");\n        var instance = go.AddComponent<GameVariables>();\n        instance.isAutoFallback = true;\n    }\n\n    // ---------------- Novo Jogo (Tarefa #22) ----------------\n\n    private string _initialSnapshotJson;\n\n    /// <summary>Repõe todas as variáveis globais para os valores configurados no Inspector no arranque — ver PlayerProgress.ResetForNewGame.</summary>\n    public void ResetForNewGame()\n    {\n        if (!string.IsNullOrEmpty(_initialSnapshotJson))\n            JsonUtility.FromJsonOverwrite(_initialSnapshotJson, this);\n    }\n\n    public bool GetBool(string name, bool defaultValue = false) => GameVariableListUtil.GetBool(globalVariables, name, defaultValue);\n    public int GetInt(string name, int defaultValue = 0) => GameVariableListUtil.GetInt(globalVariables, name, defaultValue);\n    public float GetFloat(string name, float defaultValue = 0f) => GameVariableListUtil.GetFloat(globalVariables, name, defaultValue);\n    public string GetString(string name, string defaultValue = \"\") => GameVariableListUtil.GetString(globalVariables, name, defaultValue);\n\n    /// <summary>\n    /// Disparado sempre que qualquer variável global muda de valor (Task #30).\n    /// O MissionManager subscreve-se para avaliar autoCompleteConditions sem\n    /// precisar de Update() por frame.\n    /// </summary>\n    public event System.Action AnyVariableChanged;\n\n    public void SetBool(string name, bool value)   { GameVariableListUtil.SetBool(globalVariables, name, value);   AnyVariableChanged?.Invoke(); }\n    public void SetInt(string name, int value)     { GameVariableListUtil.SetInt(globalVariables, name, value);    AnyVariableChanged?.Invoke(); }\n    public void SetFloat(string name, float value) { GameVariableListUtil.SetFloat(globalVariables, name, value);  AnyVariableChanged?.Invoke(); }\n    public void SetString(string name, string value){ GameVariableListUtil.SetString(globalVariables, name, value); AnyVariableChanged?.Invoke(); }\n\n    // ---------------- Save / Load ----------------\n\n    /// <summary>Copia todas as variáveis globais para \"data\" (usado por SaveManager ao gravar).</summary>\n    public void CaptureTo(SaveData data)\n    {\n        data.globalVariables = new List<GameVariable>();\n        foreach (var v in globalVariables)\n        {\n            data.globalVariables.Add(new GameVariable\n            {\n                variableName = v.variableName,\n                type = v.type,\n                boolValue = v.boolValue,\n                intValue = v.intValue,\n                floatValue = v.floatValue,\n                stringValue = v.stringValue\n            });\n        }\n    }\n\n    /// <summary>\n    /// Aplica as variáveis guardadas em \"data\" (usado por SaveManager ao\n    /// carregar) por MERGE, não por substituição: variáveis presentes no save\n    /// actualizam as existentes (por nome); variáveis que só existem no save\n    /// (removidas do Inspector entretanto) são adicionadas; variáveis novas do\n    /// Inspector que não existem no save MANTÊM o valor padrão configurado —\n    /// sem isto, criar variáveis novas depois de um save antigo fazia-as\n    /// desaparecer ao carregar esse save (quebrando eventos no-code que\n    /// dependem delas).\n    /// </summary>\n    public void RestoreFrom(SaveData data)\n    {\n        if (data == null || data.globalVariables == null) return;\n\n        foreach (var v in data.globalVariables)\n        {\n            if (v == null || string.IsNullOrEmpty(v.variableName)) continue;\n\n            var existing = globalVariables.Find(g =>\n                g != null && g.variableName == v.variableName);\n\n            if (existing != null)\n            {\n                existing.type = v.type;\n                existing.boolValue = v.boolValue;\n                existing.intValue = v.intValue;\n                existing.floatValue = v.floatValue;\n                existing.stringValue = v.stringValue;\n            }\n            else\n            {\n                globalVariables.Add(new GameVariable\n                {\n                    variableName = v.variableName,\n                    type = v.type,\n                    boolValue = v.boolValue,\n                    intValue = v.intValue,\n                    floatValue = v.floatValue,\n                    stringValue = v.stringValue\n                });\n            }\n        }\n\n        AnyVariableChanged?.Invoke();\n    }\n}\n",
   "id": "script-data-gamevariables-cs",
   "dependencyIds": [
     "script-data-gamevariable-cs",
-    "script-npc-npccontroller-cs",
-    "script-data-playerprogress-cs",
-    "script-data-savedata-cs",
-    "script-data-savemanager-cs"
+    "script-data-gamevariable-cs",
+    "script-data-savedata-cs"
   ],
   "usedByIds": [
-    "script-npc-actions-villageactions-cs",
     "script-test-animalsdebugpanel-cs",
     "script-data-challengedefinition-cs",
     "script-data-challengemanager-cs",
@@ -216,18 +196,15 @@
     "script-data-emblemmanager-cs",
     "script-ui-emblemssectionui-cs",
     "script-enemy-enemycondition-cs",
-    "script-enemy-enemycontroller-cs",
     "script-enemy-enemydata-cs",
     "script-enemy-enemydroptable-cs",
     "script-enemy-enemymultipartboss-cs",
     "script-data-objectives-challengefailconditions-variables-cs",
     "script-ui-galeriaui-cs",
-    "script-data-editor-gamedatavalidatorwindow-cs",
     "script-data-gamesettings-cs",
     "script-data-gamevariable-cs",
     "script-data-editor-gamevariablelistdrawer-cs",
     "script-data-editor-gamevariableseditor-cs",
-    "script-data-journalmanager-cs",
     "script-ui-jukeboxsectionui-cs",
     "script-interactables-lever-cs",
     "script-ui-loadingscreencontroller-cs",

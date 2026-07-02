@@ -33,13 +33,10 @@
     "WeightPlate"
   ],
   "used_by": [
-    "AnimalFormData",
     "Carryable",
     "EggAbility",
-    "EggObject",
     "FloatingPlatform",
     "GameWeightUtil",
-    "GrabThrowAbility",
     "TonguePullAbility",
     "WeightPlate",
     "WindAffectable"
@@ -52,13 +49,10 @@
     "script-interactables-weightplate-cs"
   ],
   "usedByIds": [
-    "script-forms-animalformdata-cs",
     "script-interactables-carryable-cs",
     "script-abilities-eggability-cs",
-    "script-interactables-eggobject-cs",
     "script-platforms-floatingplatform-cs",
     "script-interactables-gameweightutil-cs",
-    "script-abilities-grabthrowability-cs",
     "script-abilities-tonguepullability-cs",
     "script-interactables-weightplate-cs",
     "script-interactables-windaffectable-cs"

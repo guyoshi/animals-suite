@@ -586,7 +586,6 @@
     "WorldMapNode"
   ],
   "used_by": [
-    "PlayerProgress",
     "WorldMapController",
     "WorldMapNode"
   ],
@@ -597,6 +596,7 @@
     "script-audio-audiomanager-cs",
     "script-data-emblemdata-cs",
     "script-data-gamevariables-cs",
+    "script-data-areadata-cs",
     "script-data-playerprogress-cs",
     "script-npc-actions-rewardactions-cs",
     "script-data-worlddata-cs",
@@ -604,7 +604,6 @@
     "script-world-worldmapnode-cs"
   ],
   "usedByIds": [
-    "script-data-playerprogress-cs",
     "script-world-worldmapcontroller-cs",
     "script-world-worldmapnode-cs"
   ]

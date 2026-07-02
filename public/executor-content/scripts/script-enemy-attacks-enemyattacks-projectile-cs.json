@@ -60,6 +60,16 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
+      "name": "projectileData",
+      "type": "ProjectileData",
+      "mods": "public",
+      "default": "",
+      "section": "Projéctil em Arco",
+      "attrs": "[Header(\"Projéctil em Arco\")] [Tooltip(\"Configuração do projéctil (Etapa 2.2). 'gravityScale' deve ser > 0 para descrever o arco.\")]",
+      "inspector": true,
+      "description": "Configuração do projéctil (Etapa 2.2). 'gravityScale' deve ser > 0 para descrever o arco."
+    },
+    {
       "name": "arcHeight",
       "type": "float",
       "mods": "public",
@@ -77,7 +87,37 @@
       "section": "Projéctil em Arco",
       "attrs": "[Tooltip(\"Tempo de voo aproximado até à posição actual do alvo (s).\")]",
       "inspector": true,
-      "description": "Tempo de voo aproximado até à posição atual do alvo (s)."
+      "description": "Tempo de voo aproximado até à posição actual do alvo (s)."
+    },
+    {
+      "name": "spawnOffset",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "Vector2.zero",
+      "section": "Projéctil em Arco",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "projectileData",
+      "type": "ProjectileData",
+      "mods": "public",
+      "default": "",
+      "section": "Projéctil Teleguiado",
+      "attrs": "[Header(\"Projéctil Teleguiado\")] [Tooltip(\"Configuração do projéctil (Etapa 2.2). 'tracksPlayer' deve estar activo, 'trackingIntensity' baixo = curvas 'leves'.\")]",
+      "inspector": true,
+      "description": "Configuração do projéctil (Etapa 2.2). 'tracksPlayer' deve estar activo, 'trackingIntensity' baixo = curvas 'leves'."
+    },
+    {
+      "name": "spawnOffset",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "Vector2.zero",
+      "section": "Projéctil Teleguiado",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
     },
     {
       "name": "explosionRadius",
@@ -107,7 +147,27 @@
       "section": "Opção A — Criar Outro Inimigo",
       "attrs": "[Header(\"Opção A — Criar Outro Inimigo\")] [Tooltip(\"Prefab de outro inimigo (com EnemyController) a instanciar e lançar na direcção do alvo. Tem prioridade sobre 'projectileData'.\")]",
       "inspector": true,
-      "description": "Prefab de outro inimigo (com EnemyController) a instanciar e lançar na direção do alvo. Tem prioridade sobre 'projectileData'."
+      "description": "Prefab de outro inimigo (com EnemyController) a instanciar e lançar na direcção do alvo. Tem prioridade sobre 'projectileData'."
+    },
+    {
+      "name": "projectileData",
+      "type": "ProjectileData",
+      "mods": "public",
+      "default": "",
+      "section": "Opção B — Disparar Projéctil (Etapa 2.2)",
+      "attrs": "[Header(\"Opção B — Disparar Projéctil (Etapa 2.2)\")] [Tooltip(\"Usado se 'enemyPrefab' estiver vazio: configuração do projéctil (ProjectileData) auto-propulsionado na direcção do alvo, à velocidade 'projectileData.speed'.\")]",
+      "inspector": true,
+      "description": "Usado se 'enemyPrefab' estiver vazio: configuração do projéctil (ProjectileData) auto-propulsionado na direcção do alvo, à velocidade 'projectileData.speed'."
+    },
+    {
+      "name": "spawnOffset",
+      "type": "Vector2",
+      "mods": "public",
+      "default": "Vector2.zero",
+      "section": "Opção B — Disparar Projéctil (Etapa 2.2)",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
     },
     {
       "name": "launchSpeed",
@@ -117,42 +177,69 @@
       "section": "Opção B — Disparar Projéctil (Etapa 2.2)",
       "attrs": "[Tooltip(\"Velocidade de lançamento de 'enemyPrefab' na direcção do alvo. Para 'projectileData', usa-se 'projectileData.speed'.\")]",
       "inspector": true,
-      "description": "Velocidade de lançamento de 'enemyPrefab' na direção do alvo. Para 'projectileData', usa-se 'projectileData.speed'."
+      "description": "Velocidade de lançamento de 'enemyPrefab' na direcção do alvo. Para 'projectileData', usa-se 'projectileData.speed'."
     }
   ],
   "methods": [
+    {
+      "name": "Attack_ProjectileStraight",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_ProjectileStraight."
+    },
     {
       "name": "Execute",
       "ret": "IEnumerator",
       "mods": "public override",
       "params": "EnemyAttackController ctx",
       "description": "Executa a operação Execute."
+    },
+    {
+      "name": "Attack_ProjectileArc",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_ProjectileArc."
+    },
+    {
+      "name": "Attack_ProjectileHoming",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_ProjectileHoming."
+    },
+    {
+      "name": "Attack_AreaExplosion",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_AreaExplosion."
+    },
+    {
+      "name": "Attack_SpawnEnemyOrProjectile",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_SpawnEnemyOrProjectile."
     }
   ],
   "dependencies": [
     "EnemyAttack",
     "EnemyAttackController",
-    "EnemyController",
-    "ProjectileController",
     "ProjectileData"
   ],
   "used_by": [
-    "ProjectileController",
-    "ProjectileData",
-    "WaterCurrentMode"
+    "ProjectileData"
   ],
-  "source": "using System.Collections;\nusing UnityEngine;\n\n// Ataques que disparam projécteis ou criam outros objectos (Etapa 2.1).\n// Usam EnemyAttackController.SpawnProjectile + ProjectileData/ProjectileController\n// (Etapa 2.2): cada ataque calcula a velocidade inicial (direcção/arco) e o\n// resto da configuração — velocidade-base, dano, leque, rajada, tracking,\n// explosão, interacções, carregamento e sons — vem do asset ProjectileData.\n\n/// <summary>Projéctil recto: dispara em linha recta na direcção do alvo, à velocidade de \"projectileData\".</summary>\n[System.Serializable]\npublic class Attack_ProjectileStraight : EnemyAttack\n{\n    [Header(\"Projéctil Recto\")]\n    [Tooltip(\"Configuração do projéctil (Etapa 2.2). Velocidade, dano, leque, rajada, sons, etc.\")]\n    public ProjectileData projectileData;\n\n    public Vector2 spawnOffset = Vector2.zero;\n\n    public Attack_ProjectileStraight()\n    {\n        attackName = \"Projéctil Recto\";\n        range = 8f;\n        requiresLineOfSight = true;\n        prepTime = 0.3f;\n        recoveryTime = 0.4f;\n        cooldown = 1.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (projectileData == null) yield break;\n\n        Vector2 velocity = ctx.DirectionToTarget() * projectileData.speed;\n        yield return ctx.SpawnProjectile(projectileData, spawnOffset, velocity);\n    }\n}\n\n/// <summary>Projéctil em arco: lançado com uma trajectória parabólica (gravidade — \"projectileData.gravityScale\" deve ser > 0) que tenta atingir a posição actual do alvo.</summary>\n[System.Serializable]\npublic class Attack_ProjectileArc : EnemyAttack\n{\n    [Header(\"Projéctil em Arco\")]\n    [Tooltip(\"Configuração do projéctil (Etapa 2.2). 'gravityScale' deve ser > 0 para descrever o arco.\")]\n    public ProjectileData projectileData;\n\n    [Tooltip(\"Altura aproximada do arco (m).\")]\n    public float arcHeight = 3f;\n\n    [Tooltip(\"Tempo de voo aproximado até à posição actual do alvo (s).\")]\n    public float flightTime = 0.8f;\n\n    public Vector2 spawnOffset = Vector2.zero;\n\n    public Attack_ProjectileArc()\n    {\n        attackName = \"Projéctil em Arco\";\n        range = 8f;\n        prepTime = 0.4f;\n        recoveryTime = 0.4f;\n        cooldown = 2f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (projectileData == null || ctx.Target == null) yield break;\n\n        Vector2 from = (Vector2)ctx.transform.position + spawnOffset;\n        Vector2 to = ctx.Target.position;\n        Vector2 displacement = to - from;\n\n        float g = Mathf.Abs(Physics2D.gravity.y) * Mathf.Max(0.01f, projectileData.gravityScale);\n        float vy = Mathf.Sqrt(2f * g * Mathf.Max(0.01f, arcHeight));\n        float vx = displacement.x / Mathf.Max(0.01f, flightTime);\n\n        yield return ctx.SpawnProjectile(projectileData, spawnOffset, new Vector2(vx, vy));\n    }\n}\n\n/// <summary>Projéctil teleguiado leve: persegue o alvo com uma curva suave, conforme \"projectileData.tracksPlayer\"/\"trackingIntensity\".</summary>\n[System.Serializable]\npublic class Attack_ProjectileHoming : EnemyAttack\n{\n    [Header(\"Projéctil Teleguiado\")]\n    [Tooltip(\"Configuração do projéctil (Etapa 2.2). 'tracksPlayer' deve estar activo, 'trackingIntensity' baixo = curvas 'leves'.\")]\n    public ProjectileData projectileData;\n\n    public Vector2 spawnOffset = Vector2.zero;\n\n    public Attack_ProjectileHoming()\n    {\n        attackName = \"Projéctil Teleguiado\";\n        range = 8f;\n        requiresLineOfSight = true;\n        prepTime = 0.4f;\n        recoveryTime = 0.5f;\n        cooldown = 2.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (projectileData == null) yield break;\n\n        Vector2 velocity = ctx.DirectionToTarget() * projectileData.speed;\n        yield return ctx.SpawnProjectile(projectileData, spawnOffset, velocity);\n    }\n}\n\n/// <summary>Explosão em área: dano em área centrado no inimigo (ou num deslocamento), após o telegraph (prepTime).</summary>\n[System.Serializable]\npublic class Attack_AreaExplosion : EnemyAttack\n{\n    [Header(\"Explosão\")]\n    public float explosionRadius = 2f;\n    public Vector2 explosionOffset = Vector2.zero;\n\n    public Attack_AreaExplosion()\n    {\n        attackName = \"Explosão\";\n        range = 4f;\n        prepTime = 0.6f;\n        recoveryTime = 0.4f;\n        cooldown = 3f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        Vector2 center = (Vector2)ctx.transform.position + explosionOffset;\n\n        if (ctx.IsTargetWithin(center, explosionRadius))\n        {\n            Vector2 away = ctx.Target != null ? (Vector2)ctx.Target.position - center : Vector2.zero;\n            ctx.DamagePlayer(damage, knockbackForce, away);\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>Cria outro inimigo ou projéctil (ex: \"Bullet Bill\"): instancia \"enemyPrefab\" (outro EnemyController) OU dispara \"projectileData\" via ProjectileController, lançado na direcção do alvo.</summary>\n[System.Serializable]\npublic class Attack_SpawnEnemyOrProjectile : EnemyAttack\n{\n    [Header(\"Opção A — Criar Outro Inimigo\")]\n    [Tooltip(\"Prefab de outro inimigo (com EnemyController) a instanciar e lançar na direcção do alvo. Tem prioridade sobre 'projectileData'.\")]\n    public GameObject enemyPrefab;\n\n    [Header(\"Opção B — Disparar Projéctil (Etapa 2.2)\")]\n    [Tooltip(\"Usado se 'enemyPrefab' estiver vazio: configuração do projéctil (ProjectileData) auto-propulsionado na direcção do alvo, à velocidade 'projectileData.speed'.\")]\n    public ProjectileData projectileData;\n\n    public Vector2 spawnOffset = Vector2.zero;\n\n    [Tooltip(\"Velocidade de lançamento de 'enemyPrefab' na direcção do alvo. Para 'projectileData', usa-se 'projectileData.speed'.\")]\n    public float launchSpeed = 5f;\n\n    public Attack_SpawnEnemyOrProjectile()\n    {\n        attackName = \"Criar Inimigo/Projéctil\";\n        range = 10f;\n        prepTime = 0.4f;\n        recoveryTime = 0.6f;\n        cooldown = 4f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (enemyPrefab != null)\n        {\n            Vector3 pos = ctx.transform.position + (Vector3)spawnOffset;\n            var go = Object.Instantiate(enemyPrefab, pos, Quaternion.identity);\n\n            var rb = go.GetComponent<Rigidbody2D>();\n            if (rb != null) rb.velocity = ctx.DirectionToTarget() * launchSpeed;\n\n            yield break;\n        }\n\n        if (projectileData != null)\n        {\n            Vector2 velocity = ctx.DirectionToTarget() * projectileData.speed;\n            yield return ctx.SpawnProjectile(projectileData, spawnOffset, velocity);\n        }\n    }\n}\n",
+  "source": "using System.Collections;\nusing UnityEngine;\n\n// Ataques que disparam projécteis ou criam outros objectos (Etapa 2.1).\n// Usam EnemyAttackController.SpawnProjectile + ProjectileData/ProjectileController\n// (Etapa 2.2): cada ataque calcula a velocidade inicial (direcção/arco) e o\n// resto da configuração — velocidade-base, dano, leque, rajada, tracking,\n// explosão, interacções, carregamento e sons — vem do asset ProjectileData.\n\n/// <summary>Projéctil recto: dispara em linha recta na direcção do alvo, à velocidade de \"projectileData\".</summary>\n[System.Serializable]\npublic class Attack_ProjectileStraight : EnemyAttack\n{\n    [Header(\"Projéctil Recto\")]\n    [Tooltip(\"Configuração do projéctil (Etapa 2.2). Velocidade, dano, leque, rajada, sons, etc.\")]\n    public ProjectileData projectileData;\n\n    public Vector2 spawnOffset = Vector2.zero;\n\n    public Attack_ProjectileStraight()\n    {\n        attackName = \"Projéctil Recto\";\n        range = 8f;\n        requiresLineOfSight = true;\n        prepTime = 0.3f;\n        recoveryTime = 0.4f;\n        cooldown = 1.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (projectileData == null) yield break;\n\n        Vector2 velocity = ctx.DirectionToTarget() * projectileData.speed;\n        yield return ctx.SpawnProjectile(projectileData, spawnOffset, velocity);\n    }\n}\n\n/// <summary>Projéctil em arco: lançado com uma trajectória parabólica (gravidade — \"projectileData.gravityScale\" deve ser > 0) que tenta atingir a posição actual do alvo.</summary>\n[System.Serializable]\npublic class Attack_ProjectileArc : EnemyAttack\n{\n    [Header(\"Projéctil em Arco\")]\n    [Tooltip(\"Configuração do projéctil (Etapa 2.2). 'gravityScale' deve ser > 0 para descrever o arco.\")]\n    public ProjectileData projectileData;\n\n    [Tooltip(\"Altura aproximada do arco (m).\")]\n    public float arcHeight = 3f;\n\n    [Tooltip(\"Tempo de voo aproximado até à posição actual do alvo (s).\")]\n    public float flightTime = 0.8f;\n\n    public Vector2 spawnOffset = Vector2.zero;\n\n    public Attack_ProjectileArc()\n    {\n        attackName = \"Projéctil em Arco\";\n        range = 8f;\n        prepTime = 0.4f;\n        recoveryTime = 0.4f;\n        cooldown = 2f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (projectileData == null || ctx.Target == null) yield break;\n\n        Vector2 from = (Vector2)ctx.transform.position + spawnOffset;\n        Vector2 to = ctx.Target.position;\n        Vector2 displacement = to - from;\n\n        float g = Mathf.Abs(Physics2D.gravity.y) * Mathf.Max(0.01f, projectileData.gravityScale);\n        float vy = Mathf.Sqrt(2f * g * Mathf.Max(0.01f, arcHeight));\n        float vx = displacement.x / Mathf.Max(0.01f, flightTime);\n\n        yield return ctx.SpawnProjectile(projectileData, spawnOffset, new Vector2(vx, vy));\n    }\n}\n\n/// <summary>Projéctil teleguiado leve: persegue o alvo com uma curva suave, conforme \"projectileData.tracksPlayer\"/\"trackingIntensity\".</summary>\n[System.Serializable]\npublic class Attack_ProjectileHoming : EnemyAttack\n{\n    [Header(\"Projéctil Teleguiado\")]\n    [Tooltip(\"Configuração do projéctil (Etapa 2.2). 'tracksPlayer' deve estar activo, 'trackingIntensity' baixo = curvas 'leves'.\")]\n    public ProjectileData projectileData;\n\n    public Vector2 spawnOffset = Vector2.zero;\n\n    public Attack_ProjectileHoming()\n    {\n        attackName = \"Projéctil Teleguiado\";\n        range = 8f;\n        requiresLineOfSight = true;\n        prepTime = 0.4f;\n        recoveryTime = 0.5f;\n        cooldown = 2.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (projectileData == null) yield break;\n\n        Vector2 velocity = ctx.DirectionToTarget() * projectileData.speed;\n        yield return ctx.SpawnProjectile(projectileData, spawnOffset, velocity);\n    }\n}\n\n/// <summary>Explosão em área: dano em área centrado no inimigo (ou num deslocamento), após o telegraph (prepTime).</summary>\n[System.Serializable]\npublic class Attack_AreaExplosion : EnemyAttack\n{\n    [Header(\"Explosão\")]\n    public float explosionRadius = 2f;\n    public Vector2 explosionOffset = Vector2.zero;\n\n    public Attack_AreaExplosion()\n    {\n        attackName = \"Explosão\";\n        range = 4f;\n        prepTime = 0.6f;\n        recoveryTime = 0.4f;\n        cooldown = 3f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        Vector2 center = (Vector2)ctx.transform.position + explosionOffset;\n\n        if (ctx.IsTargetWithin(center, explosionRadius))\n        {\n            Vector2 away = ctx.Target != null ? (Vector2)ctx.Target.position - center : Vector2.zero;\n            ctx.DamagePlayer(damage, knockbackForce, away);\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>Cria outro inimigo ou projéctil (ex: \"Bullet Bill\"): instancia \"enemyPrefab\" (outro EnemyController) OU dispara \"projectileData\" via ProjectileController, lançado na direcção do alvo.</summary>\n[System.Serializable]\npublic class Attack_SpawnEnemyOrProjectile : EnemyAttack\n{\n    [Header(\"Opção A — Criar Outro Inimigo\")]\n    [Tooltip(\"Prefab de outro inimigo (com EnemyController) a instanciar e lançar na direcção do alvo. Tem prioridade sobre 'projectileData'.\")]\n    public GameObject enemyPrefab;\n\n    [Header(\"Opção B — Disparar Projéctil (Etapa 2.2)\")]\n    [Tooltip(\"Usado se 'enemyPrefab' estiver vazio: configuração do projéctil (ProjectileData) auto-propulsionado na direcção do alvo, à velocidade 'projectileData.speed'.\")]\n    public ProjectileData projectileData;\n\n    public Vector2 spawnOffset = Vector2.zero;\n\n    [Tooltip(\"Velocidade de lançamento de 'enemyPrefab' na direcção do alvo. Para 'projectileData', usa-se 'projectileData.speed'.\")]\n    public float launchSpeed = 5f;\n\n    public Attack_SpawnEnemyOrProjectile()\n    {\n        attackName = \"Criar Inimigo/Projéctil\";\n        range = 10f;\n        prepTime = 0.4f;\n        recoveryTime = 0.6f;\n        cooldown = 4f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (enemyPrefab != null)\n        {\n            Vector3 pos = ctx.transform.position + (Vector3)spawnOffset;\n            var go = Object.Instantiate(enemyPrefab, pos, Quaternion.identity);\n\n            var rb = go.GetComponent<Rigidbody2D>();\n            if (rb != null) rb.linearVelocity = ctx.DirectionToTarget() * launchSpeed;\n\n            yield break;\n        }\n\n        if (projectileData != null)\n        {\n            Vector2 velocity = ctx.DirectionToTarget() * projectileData.speed;\n            yield return ctx.SpawnProjectile(projectileData, spawnOffset, velocity);\n        }\n    }\n}\n",
   "id": "script-enemy-attacks-enemyattacks-projectile-cs",
   "dependencyIds": [
     "script-enemy-enemyattack-cs",
     "script-enemy-enemyattackcontroller-cs",
-    "script-enemy-enemycontroller-cs",
-    "script-enemy-projectilecontroller-cs",
     "script-enemy-projectiledata-cs"
   ],
   "usedByIds": [
-    "script-enemy-projectilecontroller-cs",
-    "script-enemy-projectiledata-cs",
-    "script-enemy-attacks-enemyattacks-water-cs"
+    "script-enemy-projectiledata-cs"
   ]
 }

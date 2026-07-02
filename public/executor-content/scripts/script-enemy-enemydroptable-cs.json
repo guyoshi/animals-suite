@@ -108,12 +108,10 @@
     "PlayerProgress"
   ],
   "used_by": [
-    "EnemyController",
     "EnemyData",
     "EnemyHealth",
     "EnemyPuzzleInteraction",
-    "EnemyRespawn",
-    "ItemData"
+    "EnemyRespawn"
   ],
   "source": "using UnityEngine;\n\n/// <summary>\n/// Entrega os drops de um inimigo (Enemy Creator — Etapa 4.3), conforme\n/// <see cref=\"EnemyData.drops\"/> (EnemyDropConfig).\n///\n/// Escuta EnemyController.OnStateChanged: quando o inimigo passa a Morto (ou\n/// Desactivado, se \"dropOnDeactivated\"), entrega uma única vez:\n///\n/// - Sementes (Random entre seedsMin/seedsMax) via PlayerProgress.GiveSementes.\n/// - Broto de Vida (probabilidade \"lifeSproutChance\") via GiveBrotosDeVida.\n/// - Item especial via PlayerProgress.AddItem (respeita ItemData.maxQuantity e\n///   regista em collectedSpecialItemIds se \"savedAsCollected\"), sujeito a:\n///   - condição de variável global (\"requiredBoolVariable\" — ex: missão activa);\n///   - drop único (\"specialDropOnlyOnce\" ou ItemData.dropsOnlyOnce): se o item\n///     já estiver registado como recolhido, não volta a dropar (persiste mesmo\n///     após reentrar na área — liga à Etapa 7.3).\n///\n/// <see cref=\"ResetDrops\"/> permite ao respawn (Etapa 7.3) rearmar os drops\n/// comuns (o drop único continua bloqueado pelo registo no PlayerProgress).\n/// </summary>\n[DisallowMultipleComponent]\n[RequireComponent(typeof(EnemyController))]\npublic class EnemyDropTable : MonoBehaviour\n{\n    private EnemyController _controller;\n    private bool _dropped;\n\n    /// <summary>Config de drops do EnemyData (null se \"data\" não estiver definido).</summary>\n    public EnemyDropConfig Config => _controller != null && _controller.Data != null ? _controller.Data.drops : null;\n\n    private void Awake()\n    {\n        _controller = GetComponent<EnemyController>();\n    }\n\n    private void OnEnable()\n    {\n        _controller.OnStateChanged += HandleStateChanged;\n    }\n\n    private void OnDisable()\n    {\n        _controller.OnStateChanged -= HandleStateChanged;\n    }\n\n    private void HandleStateChanged(EnemyState oldState, EnemyState newState)\n    {\n        var cfg = Config;\n        if (cfg == null || _dropped) return;\n\n        bool shouldDrop = newState == EnemyState.Morto ||\n                          (newState == EnemyState.Desactivado && cfg.dropOnDeactivated);\n\n        if (!shouldDrop) return;\n\n        _dropped = true;\n        GiveDrops(cfg);\n    }\n\n    private void GiveDrops(EnemyDropConfig cfg)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return;\n\n        // Sementes.\n        int maxSeeds = Mathf.Max(cfg.seedsMin, cfg.seedsMax);\n        if (maxSeeds > 0)\n        {\n            int seeds = Random.Range(cfg.seedsMin, maxSeeds + 1);\n            if (seeds > 0) progress.GiveSementes(seeds);\n        }\n\n        // Broto de Vida — cura instantânea, NÃO vai para o inventário de recursos\n        // (consistente com BrotoDeVidaPickup.GrantReward, que usa Heal() directamente).\n        // Brotos comprados em loja chegam como ItemData e são usados manualmente.\n        if (cfg.lifeSproutChance > 0f && Random.value < cfg.lifeSproutChance)\n            progress.Heal(1);\n\n        // Item especial.\n        GiveSpecialItem(cfg, progress);\n    }\n\n    private void GiveSpecialItem(EnemyDropConfig cfg, PlayerProgress progress)\n    {\n        var item = cfg.specialItem;\n        if (item == null) return;\n\n        // Condição de variável global (ex: missão activa — Etapa 5.1).\n        if (!string.IsNullOrEmpty(cfg.requiredBoolVariable))\n        {\n            var vars = GameVariables.Instance;\n            bool value = vars != null && vars.GetBool(cfg.requiredBoolVariable);\n            if (value != cfg.requiredBoolValue) return;\n        }\n\n        // Drop único: já recolhido = não repete.\n        bool onlyOnce = cfg.specialDropOnlyOnce || item.dropsOnlyOnce;\n        if (onlyOnce && progress.HasCollectedSpecialItem(item)) return;\n\n        progress.AddItem(item, Mathf.Max(1, cfg.specialItemQuantity));\n\n        // Garante o registo persistente do drop único mesmo que o ItemData não\n        // tenha 'savedAsCollected' (AddItem já o faz quando tem).\n        if (onlyOnce) progress.MarkSpecialItemCollected(item.itemId);\n    }\n\n    /// <summary>Rearma os drops (usado pelo respawn — Etapa 7.3). Drops únicos continuam bloqueados pelo registo em PlayerProgress.</summary>\n    public void ResetDrops()\n    {\n        _dropped = false;\n    }\n}\n",
   "id": "script-enemy-enemydroptable-cs",
@@ -121,16 +119,16 @@
     "script-collectibles-brotodevidapickup-cs",
     "script-enemy-enemycontroller-cs",
     "script-enemy-enemydata-cs",
+    "script-enemy-enemydata-cs",
+    "script-enemy-enemycontroller-cs",
     "script-data-gamevariables-cs",
     "script-data-itemdata-cs",
     "script-data-playerprogress-cs"
   ],
   "usedByIds": [
-    "script-enemy-enemycontroller-cs",
     "script-enemy-enemydata-cs",
     "script-enemy-enemyhealth-cs",
     "script-enemy-enemypuzzleinteraction-cs",
-    "script-enemy-enemyrespawn-cs",
-    "script-data-itemdata-cs"
+    "script-enemy-enemyrespawn-cs"
   ]
 }

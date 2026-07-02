@@ -178,6 +178,7 @@
   "id": "script-platforms-invertingspikes-cs",
   "dependencyIds": [
     "script-player-damageinfo-cs",
+    "script-player-damageinfo-cs",
     "script-platforms-movingplatform-cs",
     "script-player-playercombat-cs"
   ],

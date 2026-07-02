@@ -23472,5 +23472,462 @@
         ]
       }
     ]
+  },
+  {
+    "id": "build-mission-097",
+    "legacyId": 97,
+    "number": 97,
+    "stageId": "build-stage-08",
+    "phase": "Fase 8 — Polimento e lançamento",
+    "title": "Migrar e validar o backup técnico 02/07",
+    "summary": "Importar os 282 scripts, validar saves, PlayerLocator, Jukebox, eventos e o bloqueio automático de builds com dados inválidos.",
+    "objective": "Atualizar o projeto Unity para a base técnica 02/07 sem perder referências ou progresso.",
+    "result": "Projeto atualizado, saves compatíveis e validação de build aprovada.",
+    "sourceStatus": "ready",
+    "detailed": true,
+    "roadmap": false,
+    "guide": "atualizacao-02-07",
+    "scripts": [
+      "PlayerLocator",
+      "PlayerProgress",
+      "SaveManager",
+      "GameVariables",
+      "GameDataValidatorBuildPreprocess",
+      "JukeboxSectionUI",
+      "WildMelodyPickup",
+      "AnimalsDebugPanel"
+    ],
+    "warnings": [
+      "Faça cópia completa do projeto e dos saves antes da substituição.",
+      "Não remova ficheiros .meta durante a importação.",
+      "A build deve permanecer bloqueada enquanto houver erro crítico no validador."
+    ],
+    "prerequisites": [
+      "Projeto sem erros de compilação antes da migração."
+    ],
+    "art": "",
+    "preset": "",
+    "tasks": [
+      {
+        "id": "build-mission-097-task-97-1",
+        "index": 0,
+        "code": "97.1",
+        "title": "Preparar uma migração segura",
+        "purpose": "Criar backup e confirmar a base antes da troca",
+        "result": "Criar backup e confirmar a base antes da troca",
+        "guide": "atualizacao-02-07",
+        "scripts": [],
+        "art": "",
+        "preset": "",
+        "steps": [
+          {
+            "id": "build-mission-097-task-97-1-step-001",
+            "index": 0,
+            "title": "Fechar o Unity",
+            "actions": [
+              "Feche o Unity e confirme que não há importação em andamento."
+            ],
+            "expected": "O projeto fica fechado e estável.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-1-step-002",
+            "index": 1,
+            "title": "Duplicar o projeto",
+            "actions": [
+              "Copie a pasta inteira do projeto para uma pasta de segurança datada."
+            ],
+            "expected": "Existe uma cópia restaurável.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-1-step-003",
+            "index": 2,
+            "title": "Registrar a versão atual",
+            "actions": [
+              "Anote a versão do Unity e tire captura da Console sem erros."
+            ],
+            "expected": "A base anterior fica documentada.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-1-step-004",
+            "index": 3,
+            "title": "Separar o backup antigo",
+            "actions": [
+              "Guarde o backup 18/06 sem substituir o ficheiro."
+            ],
+            "expected": "A comparação continua possível.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          }
+        ]
+      },
+      {
+        "id": "build-mission-097-task-97-2",
+        "index": 1,
+        "code": "97.2",
+        "title": "Importar o backup 02/07",
+        "purpose": "Substituir scripts e preservar metadados do Unity",
+        "result": "Substituir scripts e preservar metadados do Unity",
+        "guide": "atualizacao-02-07",
+        "scripts": [],
+        "art": "",
+        "preset": "",
+        "steps": [
+          {
+            "id": "build-mission-097-task-97-2-step-001",
+            "index": 0,
+            "title": "Copiar a pasta Scripts",
+            "actions": [
+              "Copie o conteúdo do backup 02/07 para Assets/Scripts."
+            ],
+            "expected": "Os 282 scripts ficam presentes.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-2-step-002",
+            "index": 1,
+            "title": "Preservar metadados",
+            "actions": [
+              "Confirme a substituição incluindo ficheiros .meta; não gere GUIDs novos sem necessidade."
+            ],
+            "expected": "Referências existentes permanecem.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-2-step-003",
+            "index": 2,
+            "title": "Abrir o Unity",
+            "actions": [
+              "Abra o projeto e aguarde a recompilação completa."
+            ],
+            "expected": "A Console termina sem erros de C#.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-2-step-004",
+            "index": 3,
+            "title": "Reimportar se necessário",
+            "actions": [
+              "Use Reimport apenas nos ficheiros problemáticos; não apague a Library como primeira tentativa."
+            ],
+            "expected": "A importação termina sem perda de referências.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          }
+        ]
+      },
+      {
+        "id": "build-mission-097-task-97-3",
+        "index": 2,
+        "code": "97.3",
+        "title": "Validar PlayerLocator e APIs do Unity 6",
+        "purpose": "Confirmar referências do Player e movimento moderno",
+        "result": "Confirmar referências do Player e movimento moderno",
+        "guide": "atualizacao-02-07",
+        "scripts": [],
+        "art": "",
+        "preset": "",
+        "steps": [
+          {
+            "id": "build-mission-097-task-97-3-step-001",
+            "index": 0,
+            "title": "Localizar PlayerLocator",
+            "actions": [
+              "Confirme que o script está no projeto e que os sistemas encontram o Player ativo."
+            ],
+            "expected": "A referência é resolvida ao iniciar a cena.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-3-step-002",
+            "index": 1,
+            "title": "Trocar de cena",
+            "actions": [
+              "Viaje entre duas áreas e volte."
+            ],
+            "expected": "Os sistemas continuam ligados ao Player.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-3-step-003",
+            "index": 2,
+            "title": "Trocar de forma",
+            "actions": [
+              "Alterne várias formas e use habilidades."
+            ],
+            "expected": "Nenhuma referência aponta para forma destruída.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-3-step-004",
+            "index": 3,
+            "title": "Verificar física",
+            "actions": [
+              "Teste corrida, salto, água, plataformas e knockback."
+            ],
+            "expected": "linearVelocity e linearDamping funcionam sem regressão.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          }
+        ]
+      },
+      {
+        "id": "build-mission-097-task-97-4",
+        "index": 3,
+        "code": "97.4",
+        "title": "Testar save, backup e migração",
+        "purpose": "Garantir compatibilidade com saves novos e antigos",
+        "result": "Garantir compatibilidade com saves novos e antigos",
+        "guide": "atualizacao-02-07",
+        "scripts": [],
+        "art": "",
+        "preset": "",
+        "steps": [
+          {
+            "id": "build-mission-097-task-97-4-step-001",
+            "index": 0,
+            "title": "Criar save novo",
+            "actions": [
+              "Inicie um jogo novo, recolha recursos e salve."
+            ],
+            "expected": "O save principal e o estado esperado são criados.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-4-step-002",
+            "index": 1,
+            "title": "Carregar save antigo",
+            "actions": [
+              "Abra uma cópia de save anterior ao backup 02/07."
+            ],
+            "expected": "Novos valores padrão são adicionados sem apagar progresso.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-4-step-003",
+            "index": 2,
+            "title": "Testar recuperação .bak",
+            "actions": [
+              "Com uma cópia de segurança, invalide o save principal de teste e carregue."
+            ],
+            "expected": "O SaveManager recupera o backup válido.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-4-step-004",
+            "index": 3,
+            "title": "Apagar slot",
+            "actions": [
+              "Exclua o slot de teste."
+            ],
+            "expected": "O save principal e o .bak são removidos.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          }
+        ]
+      },
+      {
+        "id": "build-mission-097-task-97-5",
+        "index": 4,
+        "code": "97.5",
+        "title": "Testar Jukebox, itens, eventos e debug",
+        "purpose": "Validar os sistemas afetados pela atualização",
+        "result": "Validar os sistemas afetados pela atualização",
+        "guide": "atualizacao-02-07",
+        "scripts": [],
+        "art": "",
+        "preset": "",
+        "steps": [
+          {
+            "id": "build-mission-097-task-97-5-step-001",
+            "index": 0,
+            "title": "Recolher Melodia Selvagem",
+            "actions": [
+              "Recolha uma melodia com o Jukebox disponível."
+            ],
+            "expected": "A faixa aparece imediatamente.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-5-step-002",
+            "index": 1,
+            "title": "Usar item",
+            "actions": [
+              "Equipe e use um item pelo fluxo normal e pelo UnityEvent."
+            ],
+            "expected": "Quantidade e efeito são aplicados uma vez.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-5-step-003",
+            "index": 2,
+            "title": "Repetir Play Mode",
+            "actions": [
+              "Entre e saia do Play Mode várias vezes com Domain Reload desativado."
+            ],
+            "expected": "Eventos não duplicam respostas.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-5-step-004",
+            "index": 3,
+            "title": "Abrir AnimalsDebugPanel",
+            "actions": [
+              "Conceda e remova recursos, formas, upgrades e faça uma viagem."
+            ],
+            "expected": "O painel funciona sem alterar listas somente de leitura.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          }
+        ]
+      },
+      {
+        "id": "build-mission-097-task-97-6",
+        "index": 5,
+        "code": "97.6",
+        "title": "Executar validação e regressão final",
+        "purpose": "Aprovar a base antes de continuar a produção",
+        "result": "Aprovar a base antes de continuar a produção",
+        "guide": "atualizacao-02-07",
+        "scripts": [],
+        "art": "",
+        "preset": "",
+        "steps": [
+          {
+            "id": "build-mission-097-task-97-6-step-001",
+            "index": 0,
+            "title": "Abrir GameDataValidator",
+            "actions": [
+              "Execute a validação completa dos assets."
+            ],
+            "expected": "Não restam erros críticos.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-6-step-002",
+            "index": 1,
+            "title": "Testar bloqueio de build",
+            "actions": [
+              "Crie temporariamente um erro crítico controlado e tente uma build de teste."
+            ],
+            "expected": "O preprocessador bloqueia a build.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-6-step-003",
+            "index": 2,
+            "title": "Corrigir e compilar",
+            "actions": [
+              "Desfaça o erro e gere uma build de desenvolvimento."
+            ],
+            "expected": "A build é concluída.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          },
+          {
+            "id": "build-mission-097-task-97-6-step-004",
+            "index": 3,
+            "title": "Registrar resultado",
+            "actions": [
+              "Marque a missão como concluída e anote problemas não críticos."
+            ],
+            "expected": "A migração 02/07 fica documentada e rastreável.",
+            "trouble": "Consulte o guia de atualização 02/07 e restaure a cópia de segurança se ocorrer perda de referência.",
+            "why": "A etapa reduz risco de regressão durante a migração.",
+            "guide": "atualizacao-02-07",
+            "art": "",
+            "preset": ""
+          }
+        ]
+      }
+    ]
   }
 ]

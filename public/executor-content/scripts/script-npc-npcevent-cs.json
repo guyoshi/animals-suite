@@ -29,13 +29,13 @@
       "section": "",
       "attrs": "[Tooltip(\"Identificador único deste evento (usado por outros eventos/escolhas para activar/desactivar este).\")]",
       "inspector": true,
-      "description": "Identificador único deste evento (usado por outros eventos/escolhas para ativar/desativar este)."
+      "description": "Identificador único deste evento (usado por outros eventos/escolhas para activar/desactivar este)."
     },
     {
       "name": "label",
       "type": "string",
       "mods": "public",
-      "default": "\"Novo Evento\"",
+      "default": "",
       "section": "",
       "attrs": "[Tooltip(\"Nome só para organização no Inspector.\")]",
       "inspector": true,
@@ -79,7 +79,7 @@
       "section": "",
       "attrs": "[Tooltip(\"Se este evento começa activo (pode disparar) ao iniciar a cena.\")]",
       "inspector": true,
-      "description": "Se este evento começa ativo (pode disparar) ao iniciar a cena."
+      "description": "Se este evento começa activo (pode disparar) ao iniciar a cena."
     },
     {
       "name": "overrideSprite",
@@ -89,27 +89,7 @@
       "section": "",
       "attrs": "[Tooltip(\"Sprite do NPC enquanto este evento está activo (opcional).\")]",
       "inspector": true,
-      "description": "Sprite do NPC enquanto este evento está ativo (opcional)."
-    },
-    {
-      "name": "conditions",
-      "type": "List<NpcCondition>",
-      "mods": "public",
-      "default": "new List<NpcCondition>()",
-      "section": "",
-      "attrs": "[Tooltip(\"Condições que têm de ser todas verdadeiras para o evento poder disparar (lista vazia = sempre verdadeiro).\")] [SerializeReference]",
-      "inspector": true,
-      "description": "Condições que têm de ser todas verdadeiras para o evento poder disparar (lista vazia = sempre verdadeiro)."
-    },
-    {
-      "name": "actions",
-      "type": "List<NpcAction>",
-      "mods": "public",
-      "default": "new List<NpcAction>()",
-      "section": "",
-      "attrs": "[Tooltip(\"Ações executadas em sequência quando o evento dispara.\")] [SerializeReference]",
-      "inspector": true,
-      "description": "Ações executadas em sequência quando o evento dispara."
+      "description": "Sprite do NPC enquanto este evento está activo (opcional)."
     },
     {
       "name": "deactivateOnComplete",
@@ -122,6 +102,16 @@
       "description": "Desactiva este evento (deixa de poder disparar) depois de correr."
     },
     {
+      "name": "persistDeactivation",
+      "type": "bool",
+      "mods": "public",
+      "default": "false",
+      "section": "",
+      "attrs": "[Tooltip(\"Persiste a desactivação entre cenas/reloads via GameVariables (chave: NpcEventDone_<eventId>). Requer eventId + deactivateOnComplete.\")]",
+      "inspector": true,
+      "description": "Persiste a desactivação entre cenas/reloads via GameVariables (chave: NpcEventDone_<eventId>). Requer eventId + deactivateOnComplete."
+    },
+    {
       "name": "activateEventIdOnComplete",
       "type": "string",
       "mods": "public",
@@ -129,7 +119,7 @@
       "section": "",
       "attrs": "[Tooltip(\"ID de outro evento a activar quando este terminar (vazio = nenhum).\")]",
       "inspector": true,
-      "description": "ID de outro evento a ativar quando este terminar (vazio = nenhum)."
+      "description": "ID de outro evento a activar quando este terminar (vazio = nenhum)."
     },
     {
       "name": "isActive",
@@ -145,28 +135,26 @@
   "methods": [],
   "dependencies": [
     "NpcAction",
-    "NpcCondition",
-    "NpcController"
+    "NpcCondition"
   ],
   "used_by": [
-    "Action_Dialogue",
     "ChallengeDefinition",
     "INpcDialogueDisplay",
     "NpcAction",
-    "NpcController"
+    "NpcController",
+    "NpcControllerEditor"
   ],
-  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>Como este evento é disparado pelo player.</summary>\npublic enum NpcInteractionType\n{\n    /// <summary>Dispara automaticamente quando o player entra no alcance (sem precisar de input).</summary>\n    Auto,\n\n    /// <summary>Dispara quando o player toca no NPC (collider/trigger).</summary>\n    Touch,\n\n    /// <summary>Dispara quando o player está no alcance e prime o botão de interação.</summary>\n    Button\n}\n\n/// <summary>\n/// Um evento configurável de NPC: um conjunto de condições que, quando todas\n/// verdadeiras, permitem disparar uma sequência de ações.\n///\n/// A lista de eventos de um NpcController é avaliada por ordem de \"priority\"\n/// (maior primeiro); o primeiro evento activo, no alcance certo (se aplicável)\n/// e cujas condições sejam todas verdadeiras é o que dispara.\n/// </summary>\n[System.Serializable]\npublic class NpcEvent\n{\n    [Tooltip(\"Identificador único deste evento (usado por outros eventos/escolhas para activar/desactivar este).\")]\n    public string eventId;\n\n    [Tooltip(\"Nome só para organização no Inspector.\")]\n    public string label = \"Novo Evento\";\n\n    [Tooltip(\"Eventos com prioridade mais alta são avaliados primeiro.\")]\n    public int priority = 0;\n\n    [Tooltip(\"Como este evento é disparado pelo player.\")]\n    public NpcInteractionType interactionType = NpcInteractionType.Button;\n\n    [Tooltip(\"Distância máxima do player para Auto/Button. Se <= 0, usa o 'Default Interaction Range' do NpcController.\")]\n    public float interactionRange = 0f;\n\n    [Tooltip(\"Se este evento começa activo (pode disparar) ao iniciar a cena.\")]\n    public bool startActive = true;\n\n    [Tooltip(\"Sprite do NPC enquanto este evento está activo (opcional).\")]\n    public Sprite overrideSprite;\n\n    [Tooltip(\"Condições que têm de ser todas verdadeiras para o evento poder disparar (lista vazia = sempre verdadeiro).\")]\n    [SerializeReference]\n    public List<NpcCondition> conditions = new List<NpcCondition>();\n\n    [Tooltip(\"Ações executadas em sequência quando o evento dispara.\")]\n    [SerializeReference]\n    public List<NpcAction> actions = new List<NpcAction>();\n\n    [Tooltip(\"Desactiva este evento (deixa de poder disparar) depois de correr.\")]\n    public bool deactivateOnComplete = false;\n\n    [Tooltip(\"ID de outro evento a activar quando este terminar (vazio = nenhum).\")]\n    public string activateEventIdOnComplete;\n\n    /// <summary>Estado em runtime: se este evento pode actualmente ser avaliado/disparado.</summary>\n    [HideInInspector]\n    public bool isActive = true;\n}\n",
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>Como este evento é disparado pelo player.</summary>\npublic enum NpcInteractionType\n{\n    /// <summary>Dispara automaticamente quando o player entra no alcance (sem precisar de input).</summary>\n    Auto,\n\n    /// <summary>Dispara quando o player toca no NPC (collider/trigger).</summary>\n    Touch,\n\n    /// <summary>Dispara quando o player está no alcance e prime o botão de interação.</summary>\n    Button\n}\n\n/// <summary>\n/// Um evento configurável de NPC: um conjunto de condições que, quando todas\n/// verdadeiras, permitem disparar uma sequência de ações.\n///\n/// A lista de eventos de um NpcController é avaliada por ordem de \"priority\"\n/// (maior primeiro); o primeiro evento activo, no alcance certo (se aplicável)\n/// e cujas condições sejam todas verdadeiras é o que dispara.\n/// </summary>\n[System.Serializable]\npublic class NpcEvent\n{\n    [Tooltip(\"Identificador único deste evento (usado por outros eventos/escolhas para activar/desactivar este).\")]\n    public string eventId;\n\n    [Tooltip(\"Nome só para organização no Inspector.\")]\n    public string label = \"Novo Evento\";\n\n    [Tooltip(\"Eventos com prioridade mais alta são avaliados primeiro.\")]\n    public int priority = 0;\n\n    [Tooltip(\"Como este evento é disparado pelo player.\")]\n    public NpcInteractionType interactionType = NpcInteractionType.Button;\n\n    [Tooltip(\"Distância máxima do player para Auto/Button. Se <= 0, usa o 'Default Interaction Range' do NpcController.\")]\n    public float interactionRange = 0f;\n\n    [Tooltip(\"Se este evento começa activo (pode disparar) ao iniciar a cena.\")]\n    public bool startActive = true;\n\n    [Tooltip(\"Sprite do NPC enquanto este evento está activo (opcional).\")]\n    public Sprite overrideSprite;\n\n    [Tooltip(\"Condições que têm de ser todas verdadeiras para o evento poder disparar (lista vazia = sempre verdadeiro).\")]\n    [SerializeReference]\n    public List<NpcCondition> conditions = new List<NpcCondition>();\n\n    [Tooltip(\"Ações executadas em sequência quando o evento dispara.\")]\n    [SerializeReference]\n    public List<NpcAction> actions = new List<NpcAction>();\n\n    [Tooltip(\"Desactiva este evento (deixa de poder disparar) depois de correr.\")]\n    public bool deactivateOnComplete = false;\n\n    /// <summary>\n    /// Se activo, persiste a desactivação em GameVariables (chave\n    /// \"NpcEventDone_&lt;eventId&gt;\") para que o evento não volte a correr\n    /// depois de recarregar a cena ou o save (Task #22).\n    /// Requer que 'eventId' esteja preenchido e 'deactivateOnComplete = true'.\n    /// </summary>\n    [Tooltip(\"Persiste a desactivação entre cenas/reloads via GameVariables (chave: NpcEventDone_<eventId>). Requer eventId + deactivateOnComplete.\")]\n    public bool persistDeactivation = false;\n\n    [Tooltip(\"ID de outro evento a activar quando este terminar (vazio = nenhum).\")]\n    public string activateEventIdOnComplete;\n\n    /// <summary>Estado em runtime: se este evento pode actualmente ser avaliado/disparado.</summary>\n    [HideInInspector]\n    public bool isActive = true;\n}\n",
   "id": "script-npc-npcevent-cs",
   "dependencyIds": [
     "script-npc-npcaction-cs",
-    "script-npc-npccondition-cs",
-    "script-npc-npccontroller-cs"
+    "script-npc-npccondition-cs"
   ],
   "usedByIds": [
-    "script-npc-actions-coreactions-cs",
     "script-data-challengedefinition-cs",
     "script-npc-npcinterfaces-cs",
     "script-npc-npcaction-cs",
-    "script-npc-npccontroller-cs"
+    "script-npc-npccontroller-cs",
+    "script-npc-editor-npccontrollereditor-cs"
   ]
 }

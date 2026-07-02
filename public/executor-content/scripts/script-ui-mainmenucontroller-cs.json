@@ -16,206 +16,6 @@
   ],
   "fields": [
     {
-      "name": "continueButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[Header(\"Botões Principais\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "newGameButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "newGamePlusButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[Tooltip(\"Botão New Game+ (Tarefa #33) — mostrado sempre, mas só interactivo quando IsPostGameRewardActive é true.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Botão New Game+ (Tarefa #33) — mostrado sempre, mas só interativo quando IsPostGameRewardActive é true."
-    },
-    {
-      "name": "loadButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "optionsButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "galeriaButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "creditosButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "quitButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "mainButtonsRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "firstSelectable",
-      "type": "Selectable",
-      "mods": "private",
-      "default": "",
-      "section": "Botões Principais",
-      "attrs": "[Tooltip(\"Primeiro botão a seleccionar ao abrir o menu (e ao voltar de um sub-painel).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Primeiro botão a selecionar ao abrir o menu (e ao voltar de um sub-painel)."
-    },
-    {
-      "name": "newGameSceneName",
-      "type": "string",
-      "mods": "private",
-      "default": "",
-      "section": "Novo Jogo",
-      "attrs": "[Header(\"Novo Jogo\")] [Tooltip(\"Nome da cena carregada ao escolher 'Novo Jogo' (primeira área jogável).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Nome da cena carregada ao escolher 'Novo Jogo' (primeira área jogável)."
-    },
-    {
-      "name": "saveMenu",
-      "type": "SaveMenuController",
-      "mods": "private",
-      "default": "",
-      "section": "Sub-Painéis",
-      "attrs": "[Header(\"Sub-Painéis\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "optionsPanel",
-      "type": "MainMenuOptionsUI",
-      "mods": "private",
-      "default": "",
-      "section": "Sub-Painéis",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "galeriaPanel",
-      "type": "GaleriaUI",
-      "mods": "private",
-      "default": "",
-      "section": "Sub-Painéis",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "creditosPanel",
-      "type": "CreditosUI",
-      "mods": "private",
-      "default": "",
-      "section": "Sub-Painéis",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "confirmPanel",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Confirmação",
-      "attrs": "[Header(\"Confirmação\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "confirmText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Confirmação",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "confirmYesButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Confirmação",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "confirmNoButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Confirmação",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "quitConfirmText",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Sair do jogo?\"",
-      "section": "Confirmação",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "_pendingConfirmAction",
       "type": "Action",
       "mods": "private",
@@ -402,10 +202,9 @@
     "WorldState"
   ],
   "used_by": [
-    "MainMenuOptionsUI",
-    "PlayerProgress"
+    "MainMenuOptionsUI"
   ],
-  "source": "using System;\nusing System.Collections;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.SceneManagement;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Menu Principal (Tarefa #22) — primeira tela do jogo, com \"Continuar\",\n/// \"Novo Jogo\", \"New Game+\", \"Carregar\", \"Opções\", \"Galeria\", \"Créditos\" e \"Sair\".\n///\n/// - <b>Continuar</b>: carrega o autoguardar directamente (sem escolher\n///   slot). O botão fica desactivado (não interactivo) se\n///   <see cref=\"SaveManager.HasAutoSave\"/> for false.\n/// - <b>Novo Jogo</b>: repõe <see cref=\"PlayerProgress\"/>,\n///   <see cref=\"WorldState\"/> e <see cref=\"GameVariables\"/> para os valores\n///   configurados no Inspector no arranque (ResetForNewGame — ver\n///   PlayerProgress.cs) e carrega <see cref=\"newGameSceneName\"/>. Se já\n///   existir um autoguardar, pede confirmação antes (o ficheiro de save NÃO é\n///   apagado — apenas o estado em memória é reiniciado).\n/// - <b>New Game+</b> (Tarefa #33): visível apenas quando\n///   <see cref=\"PlayerProgress.IsPostGameRewardActive\"/> é true. Preserva\n///   animais libertados, upgrades e variáveis de emblemas (Gaia/Apolo/Zeus)\n///   e reinicia o resto — ver <see cref=\"PlayerProgress.StartNewGamePlus\"/>.\n/// - <b>Carregar</b>: abre <see cref=\"saveMenu\"/> em modo Carregar (escolher\n///   entre autoguardar e slots manuais — mesmo painel usado no Menu de\n///   Pausa).\n/// - <b>Opções</b>: abre <see cref=\"optionsPanel\"/> (versão simplificada das\n///   Opções, sem Salvar/Carregar/Regressar).\n/// - <b>Galeria</b>: abre <see cref=\"galeriaPanel\"/> — grelha de ilustrações/\n///   artes conceptuais desbloqueadas (Tarefa #39).\n/// - <b>Créditos</b>: abre <see cref=\"creditosPanel\"/> — scroll de créditos\n///   (Tarefa #39).\n/// - <b>Sair</b>: fecha a aplicação, com confirmação.\n///\n/// Montagem no Editor:\n/// - Ligar os 8 botões principais e \"mainButtonsRoot\" (GameObject com os botões,\n///   escondido enquanto qualquer sub-painel está aberto).\n/// - \"newGameButton\": sempre visível. \"newGamePlusButton\": só interactivo pós-game.\n/// - \"newGameSceneName\": nome da cena inicial de uma nova partida.\n/// - \"saveMenu\": SaveMenuController (modo Carregar).\n/// - \"optionsPanel\": MainMenuOptionsUI.\n/// - \"galeriaPanel\": GaleriaUI.\n/// - \"creditosPanel\": CreditosUI.\n/// - \"confirmPanel\"/\"confirmText\"/\"confirmYesButton\"/\"confirmNoButton\":\n///   diálogo de confirmação genérico, reaproveitado para \"Novo Jogo\", \"NG+\" e \"Sair\".\n/// </summary>\npublic class MainMenuController : MonoBehaviour\n{\n    [Header(\"Botões Principais\")]\n    [SerializeField] private Button continueButton;\n    [SerializeField] private Button newGameButton;\n    [Tooltip(\"Botão New Game+ (Tarefa #33) — mostrado sempre, mas só interactivo quando IsPostGameRewardActive é true.\")]\n    [SerializeField] private Button newGamePlusButton;\n    [SerializeField] private Button loadButton;\n    [SerializeField] private Button optionsButton;\n    [SerializeField] private Button galeriaButton;\n    [SerializeField] private Button creditosButton;\n    [SerializeField] private Button quitButton;\n    [SerializeField] private GameObject mainButtonsRoot;\n\n    [Tooltip(\"Primeiro botão a seleccionar ao abrir o menu (e ao voltar de um sub-painel).\")]\n    [SerializeField] private Selectable firstSelectable;\n\n    [Header(\"Novo Jogo\")]\n    [Tooltip(\"Nome da cena carregada ao escolher 'Novo Jogo' (primeira área jogável).\")]\n    [SerializeField] private string newGameSceneName;\n\n    [Header(\"Sub-Painéis\")]\n    [SerializeField] private SaveMenuController saveMenu;\n    [SerializeField] private MainMenuOptionsUI optionsPanel;\n    [SerializeField] private GaleriaUI galeriaPanel;\n    [SerializeField] private CreditosUI creditosPanel;\n\n    [Header(\"Confirmação\")]\n    [SerializeField] private GameObject confirmPanel;\n    [SerializeField] private TMP_Text confirmText;\n    [SerializeField] private Button confirmYesButton;\n    [SerializeField] private Button confirmNoButton;\n    [SerializeField] private string newGameWithSaveConfirmText =\n        \"Começar um Novo Jogo? O teu progresso guardado não será apagado, mas o jogo actual vai recomeçar do início.\";\n    [SerializeField] private string newGamePlusConfirmText =\n        \"Iniciar New Game+? Os teus animais, upgrades e emblemas serão preservados, mas o resto do progresso vai recomeçar.\";\n    [SerializeField] private string quitConfirmText = \"Sair do jogo?\";\n\n    private Action _pendingConfirmAction;\n\n    private void Awake()\n    {\n        if (continueButton != null) continueButton.onClick.AddListener(OnContinue);\n        if (newGameButton != null) newGameButton.onClick.AddListener(OnNewGame);\n        if (newGamePlusButton != null) newGamePlusButton.onClick.AddListener(OnNewGamePlus);\n        if (loadButton != null) loadButton.onClick.AddListener(OnLoad);\n        if (optionsButton != null) optionsButton.onClick.AddListener(OnOptions);\n        if (galeriaButton != null) galeriaButton.onClick.AddListener(OnGaleria);\n        if (creditosButton != null) creditosButton.onClick.AddListener(OnCreditos);\n        if (quitButton != null) quitButton.onClick.AddListener(OnQuit);\n\n        if (confirmYesButton != null) confirmYesButton.onClick.AddListener(OnConfirmYes);\n        if (confirmNoButton != null) confirmNoButton.onClick.AddListener(OnConfirmNo);\n        if (confirmPanel != null) confirmPanel.SetActive(false);\n\n        if (saveMenu != null) saveMenu.Closed += OnSubPanelClosed;\n        if (optionsPanel != null) optionsPanel.Closed += OnSubPanelClosed;\n        if (galeriaPanel != null) galeriaPanel.Closed += OnSubPanelClosed;\n        if (creditosPanel != null) creditosPanel.Closed += OnSubPanelClosed;\n    }\n\n    private void OnEnable()\n    {\n        Refresh();\n    }\n\n    private void Refresh()\n    {\n        bool hasAuto = SaveManager.Instance != null && SaveManager.Instance.HasAutoSave();\n        if (continueButton != null) continueButton.interactable = hasAuto;\n\n        // Tarefa #33: NG+ só interactivo após pós-game.\n        // Bug #4: antes de o save ser carregado, PlayerProgress pode estar no estado\n        // inicial (IsPostGameRewardActive = false), mesmo que o autosave seja pós-game.\n        // Solução: se a instância ainda não tem a recompensa, consultar o autosave.\n        bool isPostGame = PlayerProgress.Instance?.IsPostGameRewardActive ?? false;\n        if (!isPostGame && SaveManager.Instance != null)\n        {\n            var peek = SaveManager.Instance.PeekSlot(-1, true); // lê metadados sem aplicar\n            if (peek?.enabledUpgradeIds != null\n                && peek.enabledUpgradeIds.Contains(PlayerProgress.RecompensaPosJogoUpgradeId))\n                isPostGame = true;\n        }\n        if (newGamePlusButton != null) newGamePlusButton.interactable = isPostGame;\n\n        ShowMainButtons();\n        SelectFirst();\n    }\n\n    // ==================== Continuar ====================\n\n    private void OnContinue()\n    {\n        var manager = SaveManager.Instance;\n        if (manager == null || !manager.HasAutoSave()) return;\n\n        var data = manager.PeekSlot(-1, true);\n        if (data == null) return;\n\n        StartCoroutine(LoadAutosaveRoutine(data));\n    }\n\n    private IEnumerator LoadAutosaveRoutine(SaveData data)\n    {\n        // Tarefa #16 (tela de loading): troca de cena via LoadingScreenController\n        // — o save só é aplicado depois da nova cena activar, com o overlay\n        // ainda visível (mesmo padrão de SaveMenuController.LoadRoutine).\n        if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)\n        {\n            bool done = false;\n            LoadingScreenController.Instance.LoadScene(data.sceneName, () =>\n            {\n                SaveManager.Instance?.LoadAutosave();\n                done = true;\n            });\n\n            while (!done) yield return null;\n        }\n        else\n        {\n            SaveManager.Instance?.LoadAutosave();\n        }\n    }\n\n    // ==================== Novo Jogo ====================\n\n    private void OnNewGame()\n    {\n        bool hasAuto = SaveManager.Instance != null && SaveManager.Instance.HasAutoSave();\n\n        if (hasAuto)\n            RequestConfirm(newGameWithSaveConfirmText, StartNewGame);\n        else\n            StartNewGame();\n    }\n\n    private void StartNewGame()\n    {\n        // Tarefa #22 — repõe os singletons persistentes para os valores de\n        // arranque sem os destruir (ver PlayerProgress.ResetForNewGame).\n        PlayerProgress.Instance?.ResetForNewGame();\n        WorldState.Instance?.ResetForNewGame();\n        GameVariables.Instance?.ResetForNewGame();\n\n        if (string.IsNullOrEmpty(newGameSceneName))\n        {\n            Debug.LogWarning(\"[MainMenuController] 'newGameSceneName' não está configurado — não é possível iniciar um Novo Jogo.\");\n            return;\n        }\n\n        LoadingScreenController.Instance.LoadScene(newGameSceneName);\n    }\n\n    // ==================== New Game+ (Tarefa #33) ====================\n\n    private void OnNewGamePlus()\n    {\n        RequestConfirm(newGamePlusConfirmText, StartNewGamePlus);\n    }\n\n    private void StartNewGamePlus()\n    {\n        // Preserva animais/upgrades/emblemas e repõe o resto (ver PlayerProgress.StartNewGamePlus).\n        PlayerProgress.Instance?.StartNewGamePlus();\n        WorldState.Instance?.ResetForNewGame();\n        // GameVariables já é reposto e restaurado internamente pelo StartNewGamePlus de PlayerProgress.\n\n        if (string.IsNullOrEmpty(newGameSceneName))\n        {\n            Debug.LogWarning(\"[MainMenuController] 'newGameSceneName' não está configurado — não é possível iniciar NG+.\");\n            return;\n        }\n\n        LoadingScreenController.Instance.LoadScene(newGameSceneName);\n    }\n\n    // ==================== Carregar ====================\n\n    private void OnLoad()\n    {\n        if (saveMenu == null) return;\n\n        HideMainButtons();\n        saveMenu.OpenForLoad();\n    }\n\n    // ==================== Opções ====================\n\n    private void OnOptions()\n    {\n        if (optionsPanel == null) return;\n\n        HideMainButtons();\n        optionsPanel.Open();\n    }\n\n    // ==================== Galeria ====================\n\n    private void OnGaleria()\n    {\n        if (galeriaPanel == null) return;\n\n        HideMainButtons();\n        galeriaPanel.Open();\n    }\n\n    // ==================== Créditos ====================\n\n    private void OnCreditos()\n    {\n        if (creditosPanel == null) return;\n\n        HideMainButtons();\n        creditosPanel.Open();\n    }\n\n    // ==================== Sair ====================\n\n    private void OnQuit()\n    {\n        RequestConfirm(quitConfirmText, QuitApplication);\n    }\n\n    private static void QuitApplication()\n    {\n#if UNITY_EDITOR\n        UnityEditor.EditorApplication.isPlaying = false;\n#else\n        Application.Quit();\n#endif\n    }\n\n    // ==================== Sub-Painéis ====================\n\n    private void OnSubPanelClosed()\n    {\n        ShowMainButtons();\n        SelectFirst();\n    }\n\n    private void ShowMainButtons()\n    {\n        if (mainButtonsRoot != null) mainButtonsRoot.SetActive(true);\n    }\n\n    private void HideMainButtons()\n    {\n        if (mainButtonsRoot != null) mainButtonsRoot.SetActive(false);\n    }\n\n    private void SelectFirst()\n    {\n        if (EventSystem.current != null && firstSelectable != null)\n            EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);\n    }\n\n    // ==================== Confirmação ====================\n\n    private void RequestConfirm(string message, Action onYes)\n    {\n        if (confirmPanel == null)\n        {\n            // Sem painel de confirmação configurado: executa directamente.\n            onYes?.Invoke();\n            return;\n        }\n\n        _pendingConfirmAction = onYes;\n        if (confirmText != null) confirmText.text = message;\n        confirmPanel.SetActive(true);\n\n        if (EventSystem.current != null && confirmYesButton != null)\n            EventSystem.current.SetSelectedGameObject(confirmYesButton.gameObject);\n    }\n\n    private void OnConfirmYes()\n    {\n        var action = _pendingConfirmAction;\n        HideConfirm();\n        action?.Invoke();\n    }\n\n    private void OnConfirmNo() => HideConfirm();\n\n    private void HideConfirm()\n    {\n        _pendingConfirmAction = null;\n        if (confirmPanel != null) confirmPanel.SetActive(false);\n        SelectFirst();\n    }\n}\n",
+  "source": "using System;\nusing System.Collections;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.SceneManagement;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Menu Principal (Tarefa #22) — primeira tela do jogo, com \"Continuar\",\n/// \"Novo Jogo\", \"New Game+\", \"Carregar\", \"Opções\", \"Galeria\", \"Créditos\" e \"Sair\".\n///\n/// - <b>Continuar</b>: carrega o autoguardar directamente (sem escolher\n///   slot). O botão fica desactivado (não interactivo) se\n///   <see cref=\"SaveManager.HasAutoSave\"/> for false.\n/// - <b>Novo Jogo</b>: repõe <see cref=\"PlayerProgress\"/>,\n///   <see cref=\"WorldState\"/> e <see cref=\"GameVariables\"/> para os valores\n///   configurados no Inspector no arranque (ResetForNewGame — ver\n///   PlayerProgress.cs) e carrega <see cref=\"newGameSceneName\"/>. Se já\n///   existir um autoguardar, pede confirmação antes (o ficheiro de save NÃO é\n///   apagado — apenas o estado em memória é reiniciado).\n/// - <b>New Game+</b> (Tarefa #33): visível apenas quando\n///   <see cref=\"PlayerProgress.IsPostGameRewardActive\"/> é true. Preserva\n///   animais libertados, upgrades e variáveis de emblemas (Gaia/Apolo/Zeus)\n///   e reinicia o resto — ver <see cref=\"PlayerProgress.StartNewGamePlus\"/>.\n/// - <b>Carregar</b>: abre <see cref=\"saveMenu\"/> em modo Carregar (escolher\n///   entre autoguardar e slots manuais — mesmo painel usado no Menu de\n///   Pausa).\n/// - <b>Opções</b>: abre <see cref=\"optionsPanel\"/> (versão simplificada das\n///   Opções, sem Salvar/Carregar/Regressar).\n/// - <b>Galeria</b>: abre <see cref=\"galeriaPanel\"/> — grelha de ilustrações/\n///   artes conceptuais desbloqueadas (Tarefa #39).\n/// - <b>Créditos</b>: abre <see cref=\"creditosPanel\"/> — scroll de créditos\n///   (Tarefa #39).\n/// - <b>Sair</b>: fecha a aplicação, com confirmação.\n///\n/// Montagem no Editor:\n/// - Ligar os 8 botões principais e \"mainButtonsRoot\" (GameObject com os botões,\n///   escondido enquanto qualquer sub-painel está aberto).\n/// - \"newGameButton\": sempre visível. \"newGamePlusButton\": só interactivo pós-game.\n/// - \"newGameSceneName\": nome da cena inicial de uma nova partida.\n/// - \"saveMenu\": SaveMenuController (modo Carregar).\n/// - \"optionsPanel\": MainMenuOptionsUI.\n/// - \"galeriaPanel\": GaleriaUI.\n/// - \"creditosPanel\": CreditosUI.\n/// - \"confirmPanel\"/\"confirmText\"/\"confirmYesButton\"/\"confirmNoButton\":\n///   diálogo de confirmação genérico, reaproveitado para \"Novo Jogo\", \"NG+\" e \"Sair\".\n/// </summary>\npublic class MainMenuController : MonoBehaviour\n{\n    [Header(\"Botões Principais\")]\n    [SerializeField] private Button continueButton;\n    [SerializeField] private Button newGameButton;\n    [Tooltip(\"Botão New Game+ (Tarefa #33) — mostrado sempre, mas só interactivo quando IsPostGameRewardActive é true.\")]\n    [SerializeField] private Button newGamePlusButton;\n    [SerializeField] private Button loadButton;\n    [SerializeField] private Button optionsButton;\n    [SerializeField] private Button galeriaButton;\n    [SerializeField] private Button creditosButton;\n    [SerializeField] private Button quitButton;\n    [SerializeField] private GameObject mainButtonsRoot;\n\n    [Tooltip(\"Primeiro botão a seleccionar ao abrir o menu (e ao voltar de um sub-painel).\")]\n    [SerializeField] private Selectable firstSelectable;\n\n    [Header(\"Novo Jogo\")]\n    [Tooltip(\"Nome da cena carregada ao escolher 'Novo Jogo' (primeira área jogável).\")]\n    [SerializeField] private string newGameSceneName;\n\n    [Header(\"Sub-Painéis\")]\n    [SerializeField] private SaveMenuController saveMenu;\n    [SerializeField] private MainMenuOptionsUI optionsPanel;\n    [SerializeField] private GaleriaUI galeriaPanel;\n    [SerializeField] private CreditosUI creditosPanel;\n\n    [Header(\"Confirmação\")]\n    [SerializeField] private GameObject confirmPanel;\n    [SerializeField] private TMP_Text confirmText;\n    [SerializeField] private Button confirmYesButton;\n    [SerializeField] private Button confirmNoButton;\n    [SerializeField] private string newGameWithSaveConfirmText =\n        \"Começar um Novo Jogo? O teu progresso guardado não será apagado, mas o jogo actual vai recomeçar do início.\";\n    [SerializeField] private string newGamePlusConfirmText =\n        \"Iniciar New Game+? Os teus animais, upgrades e emblemas serão preservados, mas o resto do progresso vai recomeçar.\";\n    [SerializeField] private string quitConfirmText = \"Sair do jogo?\";\n\n    private Action _pendingConfirmAction;\n\n    private void Awake()\n    {\n        if (continueButton != null) continueButton.onClick.AddListener(OnContinue);\n        if (newGameButton != null) newGameButton.onClick.AddListener(OnNewGame);\n        if (newGamePlusButton != null) newGamePlusButton.onClick.AddListener(OnNewGamePlus);\n        if (loadButton != null) loadButton.onClick.AddListener(OnLoad);\n        if (optionsButton != null) optionsButton.onClick.AddListener(OnOptions);\n        if (galeriaButton != null) galeriaButton.onClick.AddListener(OnGaleria);\n        if (creditosButton != null) creditosButton.onClick.AddListener(OnCreditos);\n        if (quitButton != null) quitButton.onClick.AddListener(OnQuit);\n\n        if (confirmYesButton != null) confirmYesButton.onClick.AddListener(OnConfirmYes);\n        if (confirmNoButton != null) confirmNoButton.onClick.AddListener(OnConfirmNo);\n        if (confirmPanel != null) confirmPanel.SetActive(false);\n\n        if (saveMenu != null) saveMenu.Closed += OnSubPanelClosed;\n        if (optionsPanel != null) optionsPanel.Closed += OnSubPanelClosed;\n        if (galeriaPanel != null) galeriaPanel.Closed += OnSubPanelClosed;\n        if (creditosPanel != null) creditosPanel.Closed += OnSubPanelClosed;\n    }\n\n    private void OnEnable()\n    {\n        Refresh();\n    }\n\n    private void Refresh()\n    {\n        bool hasAuto = SaveManager.Instance != null && SaveManager.Instance.HasAutoSave();\n        if (continueButton != null) continueButton.interactable = hasAuto;\n\n        // Tarefa #33: NG+ só interactivo após pós-game.\n        // Bug #4: antes de o save ser carregado, PlayerProgress pode estar no estado\n        // inicial (IsPostGameRewardActive = false), mesmo que o autosave seja pós-game.\n        // Solução: se a instância ainda não tem a recompensa, consultar o autosave.\n        bool isPostGame = PlayerProgress.Instance?.IsPostGameRewardActive ?? false;\n        if (!isPostGame && SaveManager.Instance != null)\n        {\n            var peek = SaveManager.Instance.PeekSlot(-1, true); // lê metadados sem aplicar\n            if (peek?.enabledUpgradeIds != null\n                && peek.enabledUpgradeIds.Contains(PlayerProgress.RecompensaPosJogoUpgradeId))\n                isPostGame = true;\n        }\n        if (newGamePlusButton != null) newGamePlusButton.interactable = isPostGame;\n\n        ShowMainButtons();\n        SelectFirst();\n    }\n\n    // ==================== Continuar ====================\n\n    private void OnContinue()\n    {\n        var manager = SaveManager.Instance;\n        if (manager == null || !manager.HasAutoSave()) return;\n\n        var data = manager.PeekSlot(-1, true);\n        if (data == null) return;\n\n        StartCoroutine(LoadAutosaveRoutine(data));\n    }\n\n    private IEnumerator LoadAutosaveRoutine(SaveData data)\n    {\n        // Tarefa #16 (tela de loading): troca de cena via LoadingScreenController\n        // — o save só é aplicado depois da nova cena activar, com o overlay\n        // ainda visível (mesmo padrão de SaveMenuController.LoadRoutine).\n        if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)\n        {\n            bool done = false;\n            LoadingScreenController.Instance.LoadScene(data.sceneName, () =>\n            {\n                SaveManager.Instance?.LoadAutosave();\n                done = true;\n            });\n\n            while (!done) yield return null;\n        }\n        else\n        {\n            SaveManager.Instance?.LoadAutosave();\n        }\n    }\n\n    // ==================== Novo Jogo ====================\n\n    private void OnNewGame()\n    {\n        bool hasAuto = SaveManager.Instance != null && SaveManager.Instance.HasAutoSave();\n\n        if (hasAuto)\n            RequestConfirm(newGameWithSaveConfirmText, StartNewGame);\n        else\n            StartNewGame();\n    }\n\n    private void StartNewGame()\n    {\n        // Tarefa #22 — repõe os singletons persistentes para os valores de\n        // arranque sem os destruir (ver PlayerProgress.ResetForNewGame).\n        PlayerProgress.Instance?.ResetForNewGame();\n        WorldState.Instance?.ResetForNewGame();\n        GameVariables.Instance?.ResetForNewGame();\n\n        if (string.IsNullOrEmpty(newGameSceneName))\n        {\n            Debug.LogWarning(\"[MainMenuController] 'newGameSceneName' não está configurado — não é possível iniciar um Novo Jogo.\");\n            return;\n        }\n\n        LoadingScreenController.Instance.LoadScene(newGameSceneName);\n    }\n\n    // ==================== New Game+ (Tarefa #33) ====================\n\n    private void OnNewGamePlus()\n    {\n        RequestConfirm(newGamePlusConfirmText, StartNewGamePlus);\n    }\n\n    private void StartNewGamePlus()\n    {\n        // Task 1.1: ao iniciar pelo menu principal, PlayerProgress está nos valores\n        // iniciais (listas vazias). Usar o autosave como fonte para preservar\n        // animais/upgrades/emblemas correctamente, independentemente do estado em memória.\n        var save = SaveManager.Instance?.PeekSlot(-1, true);\n        if (save != null)\n            PlayerProgress.Instance?.StartNewGamePlusFromSave(save);\n        else\n            PlayerProgress.Instance?.StartNewGamePlus(); // fallback (save não existe)\n\n        WorldState.Instance?.ResetForNewGame();\n        // GameVariables já é reposto e restaurado internamente pelo StartNewGamePlusFromSave.\n\n        if (string.IsNullOrEmpty(newGameSceneName))\n        {\n            Debug.LogWarning(\"[MainMenuController] 'newGameSceneName' não está configurado — não é possível iniciar NG+.\");\n            return;\n        }\n\n        LoadingScreenController.Instance.LoadScene(newGameSceneName);\n    }\n\n    // ==================== Carregar ====================\n\n    private void OnLoad()\n    {\n        if (saveMenu == null) return;\n\n        HideMainButtons();\n        saveMenu.OpenForLoad();\n    }\n\n    // ==================== Opções ====================\n\n    private void OnOptions()\n    {\n        if (optionsPanel == null) return;\n\n        HideMainButtons();\n        optionsPanel.Open();\n    }\n\n    // ==================== Galeria ====================\n\n    private void OnGaleria()\n    {\n        if (galeriaPanel == null) return;\n\n        HideMainButtons();\n        galeriaPanel.Open();\n    }\n\n    // ==================== Créditos ====================\n\n    private void OnCreditos()\n    {\n        if (creditosPanel == null) return;\n\n        HideMainButtons();\n        creditosPanel.Open();\n    }\n\n    // ==================== Sair ====================\n\n    private void OnQuit()\n    {\n        RequestConfirm(quitConfirmText, QuitApplication);\n    }\n\n    private static void QuitApplication()\n    {\n#if UNITY_EDITOR\n        UnityEditor.EditorApplication.isPlaying = false;\n#else\n        Application.Quit();\n#endif\n    }\n\n    // ==================== Sub-Painéis ====================\n\n    private void OnSubPanelClosed()\n    {\n        ShowMainButtons();\n        SelectFirst();\n    }\n\n    private void ShowMainButtons()\n    {\n        if (mainButtonsRoot != null) mainButtonsRoot.SetActive(true);\n    }\n\n    private void HideMainButtons()\n    {\n        if (mainButtonsRoot != null) mainButtonsRoot.SetActive(false);\n    }\n\n    private void SelectFirst()\n    {\n        if (EventSystem.current != null && firstSelectable != null)\n            EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);\n    }\n\n    // ==================== Confirmação ====================\n\n    private void RequestConfirm(string message, Action onYes)\n    {\n        if (confirmPanel == null)\n        {\n            // Sem painel de confirmação configurado: executa directamente.\n            onYes?.Invoke();\n            return;\n        }\n\n        _pendingConfirmAction = onYes;\n        if (confirmText != null) confirmText.text = message;\n        confirmPanel.SetActive(true);\n\n        if (EventSystem.current != null && confirmYesButton != null)\n            EventSystem.current.SetSelectedGameObject(confirmYesButton.gameObject);\n    }\n\n    private void OnConfirmYes()\n    {\n        var action = _pendingConfirmAction;\n        HideConfirm();\n        action?.Invoke();\n    }\n\n    private void OnConfirmNo() => HideConfirm();\n\n    private void HideConfirm()\n    {\n        _pendingConfirmAction = null;\n        if (confirmPanel != null) confirmPanel.SetActive(false);\n        SelectFirst();\n    }\n}\n",
   "id": "script-ui-mainmenucontroller-cs",
   "dependencyIds": [
     "script-ui-creditosui-cs",
@@ -420,7 +219,6 @@
     "script-data-worldstate-cs"
   ],
   "usedByIds": [
-    "script-ui-mainmenuoptionsui-cs",
-    "script-data-playerprogress-cs"
+    "script-ui-mainmenuoptionsui-cs"
   ]
 }

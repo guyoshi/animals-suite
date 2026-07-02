@@ -26,6 +26,18 @@
       "attrs": ""
     },
     {
+      "name": "WeightedDialogueLine",
+      "kind": "class",
+      "bases": "",
+      "attrs": ""
+    },
+    {
+      "name": "Action_RandomDialogue",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
       "name": "Action_ShowChoices",
       "kind": "class",
       "bases": "NpcAction",
@@ -33,16 +45,6 @@
     }
   ],
   "fields": [
-    {
-      "name": "lines",
-      "type": "List<DialogueLine>",
-      "mods": "public",
-      "default": "new List<DialogueLine>()",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
     {
       "name": "charsPerSecond",
       "type": "float",
@@ -101,17 +103,37 @@
       "section": "",
       "attrs": "[Tooltip(\"Se activo, espera o movimento terminar antes de avançar para a próxima ação. Se desactivo, o movimento corre em paralelo com as ações seguintes.\")]",
       "inspector": true,
-      "description": "Se ativo, espera o movimento terminar antes de avançar para a próxima ação. Se desactivo, o movimento corre em paralelo com as ações seguintes."
+      "description": "Se activo, espera o movimento terminar antes de avançar para a próxima ação. Se desactivo, o movimento corre em paralelo com as ações seguintes."
     },
     {
-      "name": "choices",
-      "type": "List<NpcChoice>",
+      "name": "line",
+      "type": "DialogueLine",
       "mods": "public",
-      "default": "new List<NpcChoice>()",
+      "default": "",
       "section": "",
-      "attrs": "",
+      "attrs": "[Tooltip(\"Fala a mostrar se esta entrada for sorteada.\")]",
       "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
+      "description": "Fala a mostrar se esta entrada for sorteada."
+    },
+    {
+      "name": "entries",
+      "type": "WeightedDialogueLine[]",
+      "mods": "public",
+      "default": "new WeightedDialogueLine[0]",
+      "section": "",
+      "attrs": "[Tooltip(\"Lista de falas possíveis (máx. 5 entradas — ver documentação).\")]",
+      "inspector": true,
+      "description": "Lista de falas possíveis (máx. 5 entradas — ver documentação)."
+    },
+    {
+      "name": "charsPerSecond",
+      "type": "float",
+      "mods": "public",
+      "default": "30f",
+      "section": "",
+      "attrs": "[Tooltip(\"Caracteres por segundo do efeito de escrita. 0 = instantâneo.\")]",
+      "inspector": true,
+      "description": "Caracteres por segundo do efeito de escrita. 0 = instantâneo."
     }
   ],
   "methods": [
@@ -125,31 +147,24 @@
   ],
   "dependencies": [
     "DialogueLine",
-    "INpcDialogueDisplay",
     "NpcAction",
     "NpcActionUtil",
     "NpcChoice",
-    "NpcController",
-    "NpcEvent",
-    "NpcMovement"
-  ],
-  "used_by": [
-    "INpcDialogueDisplay",
     "NpcController"
   ],
-  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Mostra uma ou mais linhas de diálogo, cada uma com o seu próprio falante\n/// (Self/Player/Outro NPC, ver DialogueLine), com efeito de escrita se houver\n/// um INpcDialogueDisplay configurado em \"Dialogue Display\" no NpcController.\n/// </summary>\n[System.Serializable]\npublic class Action_Dialogue : NpcAction\n{\n    public List<DialogueLine> lines = new List<DialogueLine>();\n\n    [Tooltip(\"Caracteres por segundo do efeito de escrita. 0 = instantâneo.\")]\n    public float charsPerSecond = 30f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var display = npc.DialogueDisplay;\n\n        foreach (var line in lines)\n        {\n            if (line == null) continue;\n\n            string speakerName = line.ResolveSpeakerName(npc);\n\n            if (display != null)\n            {\n                yield return display.ShowLine(npc, speakerName, line.text, charsPerSecond, line.ResolveSpeakerTransform(npc));\n            }\n            else\n            {\n                Debug.Log(string.IsNullOrEmpty(speakerName) ? line.text : $\"{speakerName}: {line.text}\");\n                yield return null;\n            }\n        }\n\n        display?.Hide(npc);\n    }\n}\n\n/// <summary>Espera um número de segundos antes de continuar para a próxima ação.</summary>\n[System.Serializable]\npublic class Action_Wait : NpcAction\n{\n    public float seconds = 1f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (seconds > 0f) yield return NpcActionUtil.Wait(seconds);\n    }\n}\n\n/// <summary>Move o NPC numa direção fixa, a uma velocidade, durante um tempo (via NpcMovement).</summary>\n[System.Serializable]\npublic class Action_MoveNpc : NpcAction\n{\n    public Vector2 direction = Vector2.right;\n    public float speed = 2f;\n    public float duration = 1f;\n\n    [Tooltip(\"Se activo, espera o movimento terminar antes de avançar para a próxima ação. Se desactivo, o movimento corre em paralelo com as ações seguintes.\")]\n    public bool waitForCompletion = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var movement = npc.Movement;\n        if (movement == null)\n        {\n            Debug.LogWarning($\"[{npc.name}] Action_MoveNpc: NpcMovement não encontrado.\");\n            yield break;\n        }\n\n        if (waitForCompletion)\n        {\n            yield return movement.MoveDirectionForTime(direction, speed, duration);\n        }\n        else\n        {\n            npc.StartCoroutine(movement.MoveDirectionForTime(direction, speed, duration));\n        }\n    }\n}\n\n/// <summary>Mostra um menu de escolhas ao player; a escolha seleccionada pode activar outro NpcEvent.</summary>\n[System.Serializable]\npublic class Action_ShowChoices : NpcAction\n{\n    public List<NpcChoice> choices = new List<NpcChoice>();\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var menu = npc.ChoiceMenu;\n        if (menu == null || choices.Count == 0)\n        {\n            Debug.LogWarning($\"[{npc.name}] Action_ShowChoices: nenhum menu de escolhas atribuído ou lista de escolhas vazia.\");\n            yield break;\n        }\n\n        int selected = -1;\n        yield return menu.Show(npc, choices, result => selected = result);\n\n        if (selected >= 0 && selected < choices.Count)\n        {\n            string targetId = choices[selected].targetEventId;\n            if (!string.IsNullOrEmpty(targetId))\n                npc.ActivateEventById(targetId);\n        }\n    }\n}\n",
+  "used_by": [
+    "INpcDialogueDisplay"
+  ],
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Mostra uma ou mais linhas de diálogo, cada uma com o seu próprio falante\n/// (Self/Player/Outro NPC, ver DialogueLine), com efeito de escrita se houver\n/// um INpcDialogueDisplay configurado em \"Dialogue Display\" no NpcController.\n/// </summary>\n[System.Serializable]\npublic class Action_Dialogue : NpcAction\n{\n    public List<DialogueLine> lines = new List<DialogueLine>();\n\n    [Tooltip(\"Caracteres por segundo do efeito de escrita. 0 = instantâneo.\")]\n    public float charsPerSecond = 30f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var display = npc.DialogueDisplay;\n\n        foreach (var line in lines)\n        {\n            if (line == null) continue;\n\n            string speakerName = line.ResolveSpeakerName(npc);\n\n            if (display != null)\n            {\n                yield return display.ShowLine(npc, speakerName, line.text, charsPerSecond, line.ResolveSpeakerTransform(npc));\n            }\n            else\n            {\n                Debug.Log(string.IsNullOrEmpty(speakerName) ? line.text : $\"{speakerName}: {line.text}\");\n                yield return null;\n            }\n        }\n\n        display?.Hide(npc);\n    }\n}\n\n/// <summary>Espera um número de segundos antes de continuar para a próxima ação.</summary>\n[System.Serializable]\npublic class Action_Wait : NpcAction\n{\n    public float seconds = 1f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (seconds > 0f) yield return NpcActionUtil.Wait(seconds);\n    }\n}\n\n/// <summary>Move o NPC numa direção fixa, a uma velocidade, durante um tempo (via NpcMovement).</summary>\n[System.Serializable]\npublic class Action_MoveNpc : NpcAction\n{\n    public Vector2 direction = Vector2.right;\n    public float speed = 2f;\n    public float duration = 1f;\n\n    [Tooltip(\"Se activo, espera o movimento terminar antes de avançar para a próxima ação. Se desactivo, o movimento corre em paralelo com as ações seguintes.\")]\n    public bool waitForCompletion = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var movement = npc.Movement;\n        if (movement == null)\n        {\n            Debug.LogWarning($\"[{npc.name}] Action_MoveNpc: NpcMovement não encontrado.\");\n            yield break;\n        }\n\n        if (waitForCompletion)\n        {\n            yield return movement.MoveDirectionForTime(direction, speed, duration);\n        }\n        else\n        {\n            npc.StartCoroutine(movement.MoveDirectionForTime(direction, speed, duration));\n        }\n    }\n}\n\n// ─── Task #33 — Diálogo multi com probabilidade ───────────────────────────\n\n/// <summary>\n/// Uma entrada numa lista de falas com peso de probabilidade.\n/// Peso relativo (não precisa de somar 100): 1+1+2 → 25%/25%/50%.\n/// </summary>\n[System.Serializable]\npublic class WeightedDialogueLine\n{\n    [Tooltip(\"Fala a mostrar se esta entrada for sorteada.\")]\n    public DialogueLine line;\n\n    [Tooltip(\"Peso relativo de ser sorteada (ex: 1 = mesma probabilidade de todas as outras com peso 1; 2 = o dobro).\")]\n    [Min(0f)] public float weight = 1f;\n}\n\n/// <summary>\n/// Sorteia aleatoriamente UMA linha de diálogo de até 5 entradas com peso\n/// de probabilidade configurável no Inspector.\n///\n/// Útil para NPCs com falas variadas consoante o encontro — por exemplo,\n/// um guarda que diz coisas diferentes cada vez que o player passa:\n///   • \"Circula.\" (peso 3)\n///   • \"Não fiques aqui.\" (peso 2)\n///   • \"Vai embora.\" (peso 1)\n///\n/// A linha sorteada é mostrada exactamente como em Action_Dialogue (mesmo\n/// balão, mesmo efeito de escrita). Se todos os pesos forem 0 ou a lista\n/// estiver vazia, não faz nada.\n///\n/// Limite de 5 entradas por razões de Inspector — para listas maiores,\n/// considera usar eventos separados com Condition_Chance (ainda não\n/// existe, mas pode ser adicionado).\n/// </summary>\n[System.Serializable]\npublic class Action_RandomDialogue : NpcAction\n{\n    [Tooltip(\"Lista de falas possíveis (máx. 5 entradas — ver documentação).\")]\n    public WeightedDialogueLine[] entries = new WeightedDialogueLine[0];\n\n    [Tooltip(\"Caracteres por segundo do efeito de escrita. 0 = instantâneo.\")]\n    public float charsPerSecond = 30f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (entries == null || entries.Length == 0) yield break;\n\n        // Calcular total de pesos.\n        float totalWeight = 0f;\n        foreach (var e in entries)\n            if (e != null && e.weight > 0f) totalWeight += e.weight;\n\n        if (totalWeight <= 0f) yield break;\n\n        // Sortear.\n        float roll = Random.Range(0f, totalWeight);\n        WeightedDialogueLine chosen = null;\n        float cumulative = 0f;\n        foreach (var e in entries)\n        {\n            if (e == null || e.weight <= 0f) continue;\n            cumulative += e.weight;\n            if (roll <= cumulative) { chosen = e; break; }\n        }\n        if (chosen == null || chosen.line == null) yield break;\n\n        // Mostrar exactamente como Action_Dialogue.\n        var display = npc.DialogueDisplay;\n        string speakerName = chosen.line.ResolveSpeakerName(npc);\n\n        if (display != null)\n            yield return display.ShowLine(npc, speakerName, chosen.line.text, charsPerSecond, chosen.line.ResolveSpeakerTransform(npc));\n        else\n            Debug.Log(string.IsNullOrEmpty(speakerName) ? chosen.line.text : $\"{speakerName}: {chosen.line.text}\");\n\n        display?.Hide(npc);\n    }\n}\n\n/// <summary>Mostra um menu de escolhas ao player; a escolha seleccionada pode activar outro NpcEvent.</summary>\n[System.Serializable]\npublic class Action_ShowChoices : NpcAction\n{\n    public List<NpcChoice> choices = new List<NpcChoice>();\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var menu = npc.ChoiceMenu;\n        if (menu == null || choices.Count == 0)\n        {\n            Debug.LogWarning($\"[{npc.name}] Action_ShowChoices: nenhum menu de escolhas atribuído ou lista de escolhas vazia.\");\n            yield break;\n        }\n\n        int selected = -1;\n        yield return menu.Show(npc, choices, result => selected = result);\n\n        if (selected >= 0 && selected < choices.Count)\n        {\n            string targetId = choices[selected].targetEventId;\n            if (!string.IsNullOrEmpty(targetId))\n                npc.ActivateEventById(targetId);\n        }\n    }\n}\n",
   "id": "script-npc-actions-coreactions-cs",
   "dependencyIds": [
     "script-npc-dialogue-dialogueline-cs",
-    "script-npc-npcinterfaces-cs",
     "script-npc-npcaction-cs",
     "script-npc-actions-npcactionutil-cs",
-    "script-npc-npccontroller-cs",
-    "script-npc-npcevent-cs",
-    "script-npc-npcmovement-cs"
-  ],
-  "usedByIds": [
     "script-npc-npcinterfaces-cs",
     "script-npc-npccontroller-cs"
+  ],
+  "usedByIds": [
+    "script-npc-npcinterfaces-cs"
   ]
 }

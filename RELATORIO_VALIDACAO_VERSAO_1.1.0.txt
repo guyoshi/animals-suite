@@ -1,0 +1,14 @@
+ANIMALS SUITE 1.1.0 — RELATÓRIO DE CONTEÚDO
+Data: 02/07/2026
+Fonte técnica: Scripts backup 02-07.rar
+GDD vigente: Animals GDD.docx — 18/06/2026
+
+Totais esperados:
+- 97 missões
+- 283 tarefas
+- 1123 Steps
+- 27 guias
+- 282 scripts
+- 108 scripts novos ou alterados desde 18/06
+
+A validação automatizada deve ser executada com: npm run validate:final

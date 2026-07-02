@@ -172,7 +172,9 @@
     "script-data-challengemanager-cs",
     "script-data-challengeobjective-cs",
     "script-data-objectives-challengefailconditions-player-cs",
+    "script-data-objectives-challengefailconditions-player-cs",
     "script-data-itemdata-cs",
+    "script-collectibles-pickupbase-cs",
     "script-collectibles-pickupbase-cs",
     "script-data-playerprogress-cs"
   ],

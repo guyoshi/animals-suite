@@ -48,15 +48,11 @@
   "dependencies": [
     "MovingPlatform"
   ],
-  "used_by": [
-    "SpringPlatform"
-  ],
+  "used_by": [],
   "source": "using UnityEngine;\n\n/// <summary>\n/// Faz o GameObject girar continuamente (add-on opcional — ex: plataforma\n/// giratória, hélice, obstáculo rotativo). Combina com MovingPlatform se a\n/// plataforma também se deslocar.\n/// </summary>\n[DisallowMultipleComponent]\npublic class PlatformSpinner : MonoBehaviour\n{\n    [Tooltip(\"Velocidade de rotação em graus/segundo.\")]\n    public float grausPorSegundo = 90f;\n\n    [Tooltip(\"Ligado = sentido horário. Desligado = anti-horário.\")]\n    public bool sentidoHorario = true;\n\n    private void Update()\n    {\n        float sign = sentidoHorario ? -1f : 1f;\n        transform.Rotate(0f, 0f, grausPorSegundo * sign * Time.deltaTime);\n    }\n}\n",
   "id": "script-platforms-platformspinner-cs",
   "dependencyIds": [
     "script-platforms-movingplatform-cs"
   ],
-  "usedByIds": [
-    "script-platforms-springplatform-cs"
-  ]
+  "usedByIds": []
 }

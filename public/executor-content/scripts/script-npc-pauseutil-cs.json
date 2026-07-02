@@ -52,16 +52,6 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "_paused",
-      "type": "List<NpcMovement>",
-      "mods": "private static readonly",
-      "default": "new List<NpcMovement>()",
-      "section": "",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "HasPaused",
       "type": "bool",
       "mods": "public static",
@@ -73,6 +63,13 @@
     }
   ],
   "methods": [
+    {
+      "name": "ResetStatics",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação ResetStatics."
+    },
     {
       "name": "Pause",
       "ret": "void",
@@ -86,6 +83,13 @@
       "mods": "public static",
       "params": "",
       "description": "Executa a operação Resume."
+    },
+    {
+      "name": "UpdateSavedTimeScale",
+      "ret": "void",
+      "mods": "public static",
+      "params": "float scale",
+      "description": "Executa a operação UpdateSavedTimeScale."
     },
     {
       "name": "PauseNearbyNpcs",
@@ -103,10 +107,6 @@
     }
   ],
   "dependencies": [
-    "Action_PauseGame",
-    "Action_ResumeGame",
-    "Action_Wait",
-    "NpcActionUtil",
     "NpcController",
     "NpcMovement",
     "NpcMovementMode"
@@ -120,17 +120,16 @@
     "NpcActionUtil",
     "OptionsSectionUI",
     "PauseMenuController",
-    "PlayerConsumableEffects",
     "SecondaryMenuController",
     "ShopUI",
     "TutorialMessageUI",
     "WheelTimeScaleUtil"
   ],
-  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Helper estático para a \"pausa física\" do jogo (Etapa 8): Time.timeScale = 0\n/// para tudo, à espera de Resume(). Guarda o timeScale anterior para o\n/// restaurar correctamente (ex: se o jogo já estivesse em câmara lenta por\n/// outro motivo). A sequência de ações do próprio evento que pausou continua a\n/// correr em tempo real porque as ações de espera usam\n/// NpcActionUtil.Wait/WaitForSecondsRealtime quando Time.timeScale == 0 — ver\n/// Action_Wait, Action_PauseGame, Action_ResumeGame.\n/// </summary>\npublic static class GamePauseUtil\n{\n    private static float _savedTimeScale = 1f;\n    private static bool _paused;\n\n    public static bool IsPaused => _paused;\n\n    public static void Pause()\n    {\n        if (_paused) return;\n\n        _savedTimeScale = Time.timeScale;\n        Time.timeScale = 0f;\n        _paused = true;\n    }\n\n    public static void Resume()\n    {\n        if (!_paused) return;\n\n        Time.timeScale = _savedTimeScale;\n        _paused = false;\n    }\n}\n\n/// <summary>\n/// Helper estático para \"pausar NPCs em movimento\" (Etapa 8): suspende\n/// temporariamente o NpcMovement de qualquer NPC que esteja actualmente em\n/// FollowPlayer/FleePlayer/Patrol (os \"modos activos\" — tratados aqui como\n/// \"inimigos\"/NPCs em movimento autónomo), opcionalmente só dentro de um raio\n/// a partir do player. Guarda quais foram pausados para Resume() restaurar\n/// exactamente esses, mesmo que outro NPC mude de modo entretanto.\n/// </summary>\npublic static class NpcPauseUtil\n{\n    private static readonly List<NpcMovement> _paused = new List<NpcMovement>();\n\n    /// <summary>true se há NPCs actualmente pausados por esta acção.</summary>\n    public static bool HasPaused => _paused.Count > 0;\n\n    /// <summary>\n    /// Pausa todos os NPCs em FollowPlayer/FleePlayer/Patrol. Se \"radius\" for\n    /// maior que 0 e \"npc\" tiver um Player atribuído, só pausa os que estiverem\n    /// a essa distância (ou menos) do player; \"radius\" <= 0 = sem limite\n    /// (todos os NPCs da cena).\n    /// </summary>\n    public static void PauseNearbyNpcs(NpcController npc, float radius)\n    {\n        Transform player = npc != null ? npc.Player : null;\n\n        var allNpcs = Object.FindObjectsOfType<NpcController>();\n\n        foreach (var other in allNpcs)\n        {\n            var movement = other != null ? other.Movement : null;\n            if (movement == null || movement.IsMovementPaused) continue;\n\n            var mode = movement.DefaultMode;\n            if (mode != NpcMovementMode.FollowPlayer && mode != NpcMovementMode.FleePlayer && mode != NpcMovementMode.Patrol)\n                continue;\n\n            if (radius > 0f && player != null)\n            {\n                float dist = Vector2.Distance(player.position, other.transform.position);\n                if (dist > radius) continue;\n            }\n\n            if (movement.Pause())\n                _paused.Add(movement);\n        }\n    }\n\n    /// <summary>Retoma todos os NPCs pausados por PauseNearbyNpcs e limpa a lista.</summary>\n    public static void ResumePausedNpcs()\n    {\n        foreach (var movement in _paused)\n        {\n            if (movement != null) movement.Resume();\n        }\n\n        _paused.Clear();\n    }\n}\n",
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Helper estático para a \"pausa física\" do jogo (Etapa 8): Time.timeScale = 0\n/// para tudo, à espera de Resume(). Guarda o timeScale anterior para o\n/// restaurar correctamente (ex: se o jogo já estivesse em câmara lenta por\n/// outro motivo). A sequência de ações do próprio evento que pausou continua a\n/// correr em tempo real porque as ações de espera usam\n/// NpcActionUtil.Wait/WaitForSecondsRealtime quando Time.timeScale == 0 — ver\n/// Action_Wait, Action_PauseGame, Action_ResumeGame.\n/// </summary>\npublic static class GamePauseUtil\n{\n    private static float _savedTimeScale = 1f;\n    private static bool _paused;\n\n    public static bool IsPaused => _paused;\n\n    // Task #11: reset estático ao entrar em Play Mode no Editor, mesmo com\n    // \"Enter Play Mode Options > Domain Reload\" desactivado. Garante que\n    // Time.timeScale volta a 1 e _paused volta a false se a sessão anterior\n    // terminou com o jogo pausado (ex: abertura do Menu de Pausa).\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]\n    private static void ResetStatics()\n    {\n        _savedTimeScale = 1f;\n        _paused = false;\n        Time.timeScale = 1f;\n    }\n\n    public static void Pause()\n    {\n        if (_paused) return;\n\n        _savedTimeScale = Time.timeScale;\n        Time.timeScale = 0f;\n        _paused = true;\n    }\n\n    public static void Resume()\n    {\n        if (!_paused) return;\n\n        Time.timeScale = _savedTimeScale;\n        _paused = false;\n    }\n\n    /// <summary>\n    /// Corrige o timeScale que será restaurado quando a pausa terminar.\n    /// Usado pelo WheelTimeScaleUtil quando a roda fecha durante a pausa:\n    /// sem esta correcção, Resume() restauraria 0.2 (escala da roda) em vez de 1.\n    /// </summary>\n    public static void UpdateSavedTimeScale(float scale)\n    {\n        if (_paused) _savedTimeScale = scale;\n    }\n}\n\n/// <summary>\n/// Helper estático para \"pausar NPCs em movimento\" (Etapa 8): suspende\n/// temporariamente o NpcMovement de qualquer NPC que esteja actualmente em\n/// FollowPlayer/FleePlayer/Patrol (os \"modos activos\" — tratados aqui como\n/// \"inimigos\"/NPCs em movimento autónomo), opcionalmente só dentro de um raio\n/// a partir do player. Guarda quais foram pausados para Resume() restaurar\n/// exactamente esses, mesmo que outro NPC mude de modo entretanto.\n/// </summary>\npublic static class NpcPauseUtil\n{\n    private static readonly List<NpcMovement> _paused = new List<NpcMovement>();\n\n    /// <summary>true se há NPCs actualmente pausados por esta acção.</summary>\n    public static bool HasPaused => _paused.Count > 0;\n\n    // Task #11: limpa referências estáticas a NpcMovements da sessão anterior.\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]\n    private static void ResetStatics() => _paused.Clear();\n\n    /// <summary>\n    /// Pausa todos os NPCs em FollowPlayer/FleePlayer/Patrol. Se \"radius\" for\n    /// maior que 0 e \"npc\" tiver um Player atribuído, só pausa os que estiverem\n    /// a essa distância (ou menos) do player; \"radius\" <= 0 = sem limite\n    /// (todos os NPCs da cena).\n    /// </summary>\n    public static void PauseNearbyNpcs(NpcController npc, float radius)\n    {\n        Transform player = npc != null ? npc.Player : null;\n\n        var allNpcs = Object.FindObjectsByType<NpcController>(FindObjectsSortMode.None);\n\n        foreach (var other in allNpcs)\n        {\n            var movement = other != null ? other.Movement : null;\n            if (movement == null || movement.IsMovementPaused) continue;\n\n            var mode = movement.DefaultMode;\n            if (mode != NpcMovementMode.FollowPlayer && mode != NpcMovementMode.FleePlayer && mode != NpcMovementMode.Patrol)\n                continue;\n\n            if (radius > 0f && player != null)\n            {\n                float dist = Vector2.Distance(player.position, other.transform.position);\n                if (dist > radius) continue;\n            }\n\n            if (movement.Pause())\n                _paused.Add(movement);\n        }\n    }\n\n    /// <summary>Retoma todos os NPCs pausados por PauseNearbyNpcs e limpa a lista.</summary>\n    public static void ResumePausedNpcs()\n    {\n        foreach (var movement in _paused)\n        {\n            if (movement != null) movement.Resume();\n        }\n\n        _paused.Clear();\n    }\n}\n",
   "id": "script-npc-pauseutil-cs",
   "dependencyIds": [
-    "script-npc-actions-npcactionutil-cs",
     "script-npc-npccontroller-cs",
+    "script-npc-npcmovement-cs",
     "script-npc-npcmovement-cs"
   ],
   "usedByIds": [
@@ -142,7 +141,6 @@
     "script-npc-actions-npcactionutil-cs",
     "script-ui-optionssectionui-cs",
     "script-ui-pausemenucontroller-cs",
-    "script-player-playerconsumableeffects-cs",
     "script-ui-secondarymenucontroller-cs",
     "script-ui-shopui-cs",
     "script-ui-tutorialmessageui-cs",

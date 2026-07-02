@@ -1,17 +1,17 @@
 {
-  "version": "2026.06.18-stage3",
-  "generatedAt": "2026-06-18T12:00:00.000Z",
-  "sourceVersion": "18-06-att",
+  "version": "2026.07.02-1.1.0",
+  "generatedAt": "2026-07-02T12:00:00.000Z",
+  "sourceVersion": "02-07",
   "desktopOnly": true,
   "counts": {
     "stages": 8,
-    "missions": 96,
-    "detailedMissions": 49,
+    "missions": 97,
+    "detailedMissions": 50,
     "plannedMissions": 47,
-    "tasks": 277,
-    "steps": 1099,
-    "guides": 26,
-    "scripts": 278
+    "tasks": 283,
+    "steps": 1123,
+    "guides": 27,
+    "scripts": 282
   },
   "validation": {
     "missingGuideRefs": [],

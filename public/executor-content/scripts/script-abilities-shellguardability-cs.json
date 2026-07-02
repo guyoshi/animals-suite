@@ -151,12 +151,12 @@
   ],
   "used_by": [
     "AbilityRouter",
-    "PlayerCombat",
-    "WaterMotor2D"
+    "PlayerCombat"
   ],
   "source": "using UnityEngine;\n\n/// <summary>\n/// Postura de escudo (Tartaruga Marinha — P5): enquanto o botão de habilidade\n/// está seguro, o player fica em guarda: dano recebido reduzido (em cima da\n/// Defesa da forma — ver PlayerCombat.TryDamagePlayer) e movimento travado.\n///\n/// Activado via PrimaryAbility.ShellGuard (AbilityRouter: StartGuard ao\n/// pressionar, StopGuard ao soltar).\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D))]\npublic class ShellGuardAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Escudo\")]\n    [Tooltip(\"Dano adicional reduzido enquanto em guarda (depois da Defesa da forma). O dano nunca desce abaixo de 'minDamage'.\")]\n    [Min(0)] public int guardDamageReduction = 1;\n\n    [Tooltip(\"Dano mínimo que ainda passa com a guarda levantada (0 = pode anular por completo).\")]\n    [Min(0)] public int minDamage = 0;\n\n    private PlayerMotor2D motor;\n    private bool enabledForForm;\n\n    /// <summary>true enquanto a guarda está levantada (lido por PlayerCombat.TryDamagePlayer).</summary>\n    public bool IsGuarding { get; private set; }\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.ShellGuard;\n        StopGuard();\n    }\n\n    public void StartGuard()\n    {\n        if (!enabledForForm || IsGuarding) return;\n\n        IsGuarding = true;\n        motor.SetMovementLocked(true, this);\n    }\n\n    public void StopGuard()\n    {\n        if (!IsGuarding) return;\n\n        IsGuarding = false;\n        motor.SetMovementLocked(false, this);\n    }\n\n    /// <summary>Aplica a redução da guarda ao dano (chamado por PlayerCombat.TryDamagePlayer).</summary>\n    public int ApplyGuard(int damage)\n    {\n        if (!IsGuarding || damage <= 0) return damage;\n        return Mathf.Max(minDamage, damage - guardDamageReduction);\n    }\n\n    // ---- IAbility (item 8) ----\n    void IAbility.Activate() => StartGuard();\n    void IAbility.Release() => StopGuard();\n    public void Cancel(AbilityCancelReason reason) => StopGuard();\n    public float CooldownRemaining => 0f;\n    bool IAbility.IsActive => IsGuarding;\n\n    // ---- IActiveAbility (Tarefa #34 — HUD) ----\n    // Sem cooldown: a HUD não mostra indicador para esta habilidade.\n    public float CooldownDuration => 0f;\n    public bool CanActivate => enabledForForm && !IsGuarding;\n\n    /// <summary>AnimalsDebugPanel — sem cooldown próprio (no-op).</summary>\n    public void ResetCooldown() { }\n}\n",
   "id": "script-abilities-shellguardability-cs",
   "dependencyIds": [
+    "script-abilities-iability-cs",
     "script-abilities-abilityrouter-cs",
     "script-forms-animalformdata-cs",
     "script-test-animalsdebugpanel-cs",
@@ -164,11 +164,11 @@
     "script-abilities-iactiveability-cs",
     "script-abilities-iformability-cs",
     "script-player-playercombat-cs",
-    "script-player-playermotor2d-cs"
+    "script-player-playermotor2d-cs",
+    "script-forms-animalformdata-cs"
   ],
   "usedByIds": [
     "script-abilities-abilityrouter-cs",
-    "script-player-playercombat-cs",
-    "script-player-watermotor2d-cs"
+    "script-player-playercombat-cs"
   ]
 }

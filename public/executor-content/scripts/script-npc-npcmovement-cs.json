@@ -28,186 +28,6 @@
   ],
   "fields": [
     {
-      "name": "defaultMode",
-      "type": "NpcMovementMode",
-      "mods": "private",
-      "default": "NpcMovementMode.Idle",
-      "section": "Comportamento Base",
-      "attrs": "[Header(\"Comportamento Base\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "defaultSpeed",
-      "type": "float",
-      "mods": "private",
-      "default": "2f",
-      "section": "Comportamento Base",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "stopDistance",
-      "type": "float",
-      "mods": "private",
-      "default": "0.1f",
-      "section": "Comportamento Base",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "followRange",
-      "type": "float",
-      "mods": "private",
-      "default": "5f",
-      "section": "Comportamento Base",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "fleeRange",
-      "type": "float",
-      "mods": "private",
-      "default": "3f",
-      "section": "Comportamento Base",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "patrolPoints",
-      "type": "List<Vector2>",
-      "mods": "private",
-      "default": "new List<Vector2>()",
-      "section": "Patrulha",
-      "attrs": "[Header(\"Patrulha\")] [Tooltip(\"Pontos de patrulha, como deslocamento (offset) relativo à posição inicial do NPC.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Pontos de patrulha, como deslocamento (offset) relativo à posição inicial do NPC."
-    },
-    {
-      "name": "patrolLoopMode",
-      "type": "PatrolLoopMode",
-      "mods": "private",
-      "default": "PatrolLoopMode.PingPong",
-      "section": "Patrulha",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "patrolWaitTime",
-      "type": "float",
-      "mods": "private",
-      "default": "1f",
-      "section": "Patrulha",
-      "attrs": "[Tooltip(\"Tempo parado em cada ponto antes de seguir para o próximo.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Tempo parado em cada ponto antes de seguir para o próximo."
-    },
-    {
-      "name": "groundMask",
-      "type": "LayerMask",
-      "mods": "private",
-      "default": "",
-      "section": "Detecção de Paredes/Bordas (opcional)",
-      "attrs": "[Header(\"Detecção de Paredes/Bordas (opcional)\")] [Tooltip(\"Camadas consideradas 'chão'/'parede'. Deixa em \\\"Nothing\\\" para desligar a detecção (recomendado: não incluir a layer do próprio NPC).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Camadas consideradas 'chão'/'parede'. Deixa em \"Nothing\" para desligar a detecção (recomendado: não incluir a layer do próprio NPC)."
-    },
-    {
-      "name": "respectLedges",
-      "type": "bool",
-      "mods": "private",
-      "default": "true",
-      "section": "Detecção de Paredes/Bordas (opcional)",
-      "attrs": "[Tooltip(\"Se activo, o NPC não anda para fora de uma plataforma (Follow/Flee/Patrol).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Se ativo, o NPC não anda para fora de uma plataforma (Follow/Flee/Patrol)."
-    },
-    {
-      "name": "wallCheckDistance",
-      "type": "float",
-      "mods": "private",
-      "default": "0.3f",
-      "section": "Detecção de Paredes/Bordas (opcional)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "groundCheckDistance",
-      "type": "float",
-      "mods": "private",
-      "default": "0.6f",
-      "section": "Detecção de Paredes/Bordas (opcional)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "groundCheckOffset",
-      "type": "Vector2",
-      "mods": "private",
-      "default": "new Vector2(0.4f, 0f)",
-      "section": "Detecção de Paredes/Bordas (opcional)",
-      "attrs": "[Tooltip(\"Deslocamento vertical do ponto de onde parte o raio de detecção de chão (o X é espelhado consoante a direção do movimento).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Deslocamento vertical do ponto de onde parte o raio de detecção de chão (o X é espelhado conforme a direção do movimento)."
-    },
-    {
-      "name": "spriteRenderer",
-      "type": "SpriteRenderer",
-      "mods": "private",
-      "default": "",
-      "section": "Visual",
-      "attrs": "[Header(\"Visual\")] [Tooltip(\"Auto-detectado se vazio.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Auto-detectado se vazio."
-    },
-    {
-      "name": "faceMovementDirection",
-      "type": "bool",
-      "mods": "private",
-      "default": "true",
-      "section": "Visual",
-      "attrs": "[Tooltip(\"Se activo, o sprite vira (flipX) consoante a direção do movimento.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Se ativo, o sprite vira (flipX) conforme a direção do movimento."
-    },
-    {
-      "name": "spriteFacesRightByDefault",
-      "type": "bool",
-      "mods": "private",
-      "default": "true",
-      "section": "Visual",
-      "attrs": "[Tooltip(\"Desliga se o sprite, com flipX = false, olha por defeito para a esquerda.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Desliga se o sprite, com flipX = false, olha por defeito para a esquerda."
-    },
-    {
-      "name": "animator",
-      "type": "Animator",
-      "mods": "private",
-      "default": "",
-      "section": "Animação (opcional)",
-      "attrs": "[Header(\"Animação (opcional)\")] [Tooltip(\"Auto-detectado se vazio. Se atribuído, o parâmetro float abaixo recebe a velocidade horizontal (em unidades/seg).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Auto-detectado se vazio. Se atribuído, o parâmetro float abaixo recebe a velocidade horizontal (em unidades/seg)."
-    },
-    {
-      "name": "animSpeedParam",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Speed\"",
-      "section": "Animação (opcional)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "_rb",
       "type": "Rigidbody2D",
       "mods": "private",
@@ -468,30 +288,22 @@
     }
   ],
   "dependencies": [
-    "Action_FleeFromPlayer",
-    "Action_Jump",
-    "Action_MoveNpc",
-    "Action_MoveToTarget",
-    "Action_PauseNearbyNpcs",
-    "NpcController"
+    "NpcController",
+    "PlayerLocator"
   ],
   "used_by": [
-    "Action_Dialogue",
-    "Action_PauseNearbyNpcs",
     "EnemyMovement",
     "GamePauseUtil",
     "NpcController",
     "NpcFaceMode"
   ],
-  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>Comportamento de movimento \"de fundo\" do NPC, fora de ações de cutscene.</summary>\npublic enum NpcMovementMode\n{\n    Idle,\n    FollowPlayer,\n    FleePlayer,\n    Patrol\n}\n\n/// <summary>Como a patrulha se comporta ao chegar a uma das pontas do percurso.</summary>\npublic enum PatrolLoopMode\n{\n    /// <summary>Ao chegar ao último ponto, salta directamente de volta para o primeiro.</summary>\n    Loop,\n\n    /// <summary>Ao chegar a uma ponta, inverte a direção (vai e volta).</summary>\n    PingPong\n}\n\n/// <summary>\n/// Controla o movimento básico do NPC (parado / seguir / fugir / patrulhar),\n/// com detecção opcional de paredes e bordas de plataforma, viragem do sprite\n/// (flipX) consoante a direção, e um parâmetro de Animator opcional para\n/// animações de andar/parado.\n///\n/// Também expõe MoveDirectionForTime (Action_MoveNpc, Etapa 1) e\n/// MoveToPosition (Action_MoveToTarget, Etapa 4) para movimento controlado\n/// por cutscenes.\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D))]\npublic class NpcMovement : MonoBehaviour\n{\n    [Header(\"Comportamento Base\")]\n    [SerializeField] private NpcMovementMode defaultMode = NpcMovementMode.Idle;\n    [SerializeField] private float defaultSpeed = 2f;\n    [SerializeField] private float stopDistance = 0.1f;\n    [SerializeField] private float followRange = 5f;\n    [SerializeField] private float fleeRange = 3f;\n\n    [Header(\"Patrulha\")]\n    [Tooltip(\"Pontos de patrulha, como deslocamento (offset) relativo à posição inicial do NPC.\")]\n    [SerializeField] private List<Vector2> patrolPoints = new List<Vector2>();\n    [SerializeField] private PatrolLoopMode patrolLoopMode = PatrolLoopMode.PingPong;\n    [Tooltip(\"Tempo parado em cada ponto antes de seguir para o próximo.\")]\n    [SerializeField] private float patrolWaitTime = 1f;\n\n    [Header(\"Detecção de Paredes/Bordas (opcional)\")]\n    [Tooltip(\"Camadas consideradas 'chão'/'parede'. Deixa em \\\"Nothing\\\" para desligar a detecção (recomendado: não incluir a layer do próprio NPC).\")]\n    [SerializeField] private LayerMask groundMask;\n    [Tooltip(\"Se activo, o NPC não anda para fora de uma plataforma (Follow/Flee/Patrol).\")]\n    [SerializeField] private bool respectLedges = true;\n    [SerializeField] private float wallCheckDistance = 0.3f;\n    [SerializeField] private float groundCheckDistance = 0.6f;\n    [Tooltip(\"Deslocamento vertical do ponto de onde parte o raio de detecção de chão (o X é espelhado consoante a direção do movimento).\")]\n    [SerializeField] private Vector2 groundCheckOffset = new Vector2(0.4f, 0f);\n\n    [Header(\"Visual\")]\n    [Tooltip(\"Auto-detectado se vazio.\")]\n    [SerializeField] private SpriteRenderer spriteRenderer;\n    [Tooltip(\"Se activo, o sprite vira (flipX) consoante a direção do movimento.\")]\n    [SerializeField] private bool faceMovementDirection = true;\n    [Tooltip(\"Desliga se o sprite, com flipX = false, olha por defeito para a esquerda.\")]\n    [SerializeField] private bool spriteFacesRightByDefault = true;\n\n    [Header(\"Animação (opcional)\")]\n    [Tooltip(\"Auto-detectado se vazio. Se atribuído, o parâmetro float abaixo recebe a velocidade horizontal (em unidades/seg).\")]\n    [SerializeField] private Animator animator;\n    [SerializeField] private string animSpeedParam = \"Speed\";\n\n    private Rigidbody2D _rb;\n    private Transform _player;\n    private int _animSpeedHash = -1;\n\n    private Vector2 _startPosition;\n    private int _patrolIndex;\n    private int _patrolDir = 1;\n    private float _patrolWaitTimer;\n\n    /// <summary>Enquanto true, o comportamento base (idle/follow/flee/patrol) fica suspenso porque uma ação de cutscene está a controlar o movimento.</summary>\n    private bool _actionOverride;\n\n    /// <summary>Enquanto true, o comportamento base está suspenso por Pause() (Etapa 8 — ver Action_PauseNearbyNpcs).</summary>\n    private bool _movementPaused;\n    private NpcMovementMode _modeBeforePause;\n\n    public NpcMovementMode DefaultMode { get => defaultMode; set => defaultMode = value; }\n    public float DefaultSpeed { get => defaultSpeed; set => defaultSpeed = value; }\n    public bool IsMovementPaused => _movementPaused;\n\n    private void Awake()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n\n        if (spriteRenderer == null)\n            spriteRenderer = GetComponent<SpriteRenderer>();\n\n        if (animator == null)\n            animator = GetComponent<Animator>();\n\n        if (animator != null && !string.IsNullOrEmpty(animSpeedParam))\n            _animSpeedHash = Animator.StringToHash(animSpeedParam);\n    }\n\n    private void Start()\n    {\n        _startPosition = transform.position;\n\n        var npc = GetComponent<NpcController>();\n        _player = npc != null ? npc.Player : null;\n\n        if (_player == null)\n        {\n            var playerGo = GameObject.FindGameObjectWithTag(\"Player\");\n            if (playerGo != null) _player = playerGo.transform;\n        }\n    }\n\n    private void FixedUpdate()\n    {\n        if (!_actionOverride)\n        {\n            switch (defaultMode)\n            {\n                case NpcMovementMode.Idle:\n                    break;\n\n                case NpcMovementMode.FollowPlayer:\n                    ApplyFollow();\n                    break;\n\n                case NpcMovementMode.FleePlayer:\n                    ApplyFlee();\n                    break;\n\n                case NpcMovementMode.Patrol:\n                    ApplyPatrol();\n                    break;\n            }\n        }\n\n        UpdateAnimator();\n    }\n\n    private void ApplyFollow()\n    {\n        if (_player == null) return;\n\n        float dist = Vector2.Distance(_player.position, transform.position);\n        if (dist <= stopDistance || dist > followRange)\n        {\n            _rb.velocity = new Vector2(0f, _rb.velocity.y);\n            return;\n        }\n\n        float dir = Mathf.Sign(_player.position.x - transform.position.x);\n\n        if (!CanMove(dir))\n        {\n            _rb.velocity = new Vector2(0f, _rb.velocity.y);\n            return;\n        }\n\n        _rb.velocity = new Vector2(dir * defaultSpeed, _rb.velocity.y);\n        FaceDirection(dir);\n    }\n\n    private void ApplyFlee()\n    {\n        if (_player == null) return;\n\n        float dist = Vector2.Distance(_player.position, transform.position);\n        if (dist > fleeRange)\n        {\n            _rb.velocity = new Vector2(0f, _rb.velocity.y);\n            return;\n        }\n\n        float dir = Mathf.Sign(transform.position.x - _player.position.x);\n\n        if (!CanMove(dir))\n        {\n            _rb.velocity = new Vector2(0f, _rb.velocity.y);\n            return;\n        }\n\n        _rb.velocity = new Vector2(dir * defaultSpeed, _rb.velocity.y);\n        FaceDirection(dir);\n    }\n\n    private void ApplyPatrol()\n    {\n        if (patrolPoints == null || patrolPoints.Count == 0) return;\n\n        if (_patrolWaitTimer > 0f)\n        {\n            _patrolWaitTimer -= Time.fixedDeltaTime;\n            _rb.velocity = new Vector2(0f, _rb.velocity.y);\n            return;\n        }\n\n        Vector2 target = _startPosition + patrolPoints[_patrolIndex];\n        float dx = target.x - transform.position.x;\n\n        if (Mathf.Abs(dx) <= stopDistance)\n        {\n            _patrolWaitTimer = patrolWaitTime;\n            AdvancePatrolIndex();\n            _rb.velocity = new Vector2(0f, _rb.velocity.y);\n            return;\n        }\n\n        float dir = Mathf.Sign(dx);\n\n        if (!CanMove(dir))\n        {\n            // Obstáculo ou borda à frente: espera e avança o índice (tenta o próximo ponto).\n            _patrolWaitTimer = patrolWaitTime;\n            AdvancePatrolIndex();\n            _rb.velocity = new Vector2(0f, _rb.velocity.y);\n            return;\n        }\n\n        _rb.velocity = new Vector2(dir * defaultSpeed, _rb.velocity.y);\n        FaceDirection(dir);\n    }\n\n    private void AdvancePatrolIndex()\n    {\n        if (patrolPoints.Count <= 1) return;\n\n        if (patrolLoopMode == PatrolLoopMode.Loop)\n        {\n            _patrolIndex = (_patrolIndex + 1) % patrolPoints.Count;\n            return;\n        }\n\n        // PingPong\n        if (_patrolIndex + _patrolDir < 0 || _patrolIndex + _patrolDir >= patrolPoints.Count)\n            _patrolDir = -_patrolDir;\n\n        _patrolIndex += _patrolDir;\n    }\n\n    /// <summary>Verifica se o NPC pode avançar na direção \"dir\" (±1) sem bater numa parede ou cair de uma borda.</summary>\n    private bool CanMove(float dir)\n    {\n        if (groundMask.value == 0) return true;\n\n        if (wallCheckDistance > 0f)\n        {\n            var wallHit = Physics2D.Raycast(transform.position, new Vector2(dir, 0f), wallCheckDistance, groundMask);\n            if (wallHit.collider != null) return false;\n        }\n\n        if (respectLedges && groundCheckDistance > 0f)\n        {\n            Vector2 origin = (Vector2)transform.position + new Vector2(groundCheckOffset.x * Mathf.Sign(dir), groundCheckOffset.y);\n            var groundHit = Physics2D.Raycast(origin, Vector2.down, groundCheckDistance, groundMask);\n            if (groundHit.collider == null) return false;\n        }\n\n        return true;\n    }\n\n    /// <summary>Vira o sprite (flipX) para olhar na direção \"dirX\" (positivo = direita, negativo = esquerda). Não faz nada se dirX for ~0.</summary>\n    public void FaceDirection(float dirX)\n    {\n        if (!faceMovementDirection || spriteRenderer == null || Mathf.Approximately(dirX, 0f)) return;\n\n        bool facingRight = dirX > 0f;\n        spriteRenderer.flipX = spriteFacesRightByDefault ? !facingRight : facingRight;\n    }\n\n    /// <summary>Vira o sprite para olhar para uma posição do mundo (ex: o player), com base na diferença no eixo X.</summary>\n    public void FaceTowards(Vector2 worldPosition)\n    {\n        FaceDirection(worldPosition.x - transform.position.x);\n    }\n\n    private void UpdateAnimator()\n    {\n        if (animator == null || _animSpeedHash == -1) return;\n        animator.SetFloat(_animSpeedHash, Mathf.Abs(_rb.velocity.x));\n    }\n\n    /// <summary>\n    /// Move o NPC numa direção fixa, a uma velocidade, durante \"duration\" segundos.\n    /// Usado por Action_MoveNpc. Suspende o comportamento base (idle/follow/flee/patrol)\n    /// enquanto corre e restaura-o no fim.\n    /// </summary>\n    public IEnumerator MoveDirectionForTime(Vector2 direction, float speed, float duration)\n    {\n        _actionOverride = true;\n\n        direction = direction.normalized;\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            float vy = direction.y == 0f ? _rb.velocity.y : direction.y * speed;\n            _rb.velocity = new Vector2(direction.x * speed, vy);\n            FaceDirection(direction.x);\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        _rb.velocity = new Vector2(0f, _rb.velocity.y);\n        _actionOverride = false;\n    }\n\n    /// <summary>\n    /// Move o NPC horizontalmente até ficar a \"arriveDistance\" de \"target\" (eixo X).\n    /// Usado por Action_MoveToTarget. Suspende o comportamento base enquanto corre.\n    /// \"timeout\" em segundos evita ficar preso para sempre se o alvo for\n    /// inalcançável (0 = sem limite).\n    /// </summary>\n    public IEnumerator MoveToPosition(Transform target, float speed, float arriveDistance, float timeout)\n    {\n        _actionOverride = true;\n        float elapsed = 0f;\n\n        while (target != null)\n        {\n            float dx = target.position.x - transform.position.x;\n            if (Mathf.Abs(dx) <= arriveDistance) break;\n\n            float dir = Mathf.Sign(dx);\n            _rb.velocity = new Vector2(dir * speed, _rb.velocity.y);\n            FaceDirection(dir);\n\n            elapsed += Time.fixedDeltaTime;\n            if (timeout > 0f && elapsed >= timeout) break;\n\n            yield return new WaitForFixedUpdate();\n        }\n\n        _rb.velocity = new Vector2(0f, _rb.velocity.y);\n        _actionOverride = false;\n    }\n\n    /// <summary>Liberta um override de movimento (segurança, caso uma ação seja interrompida a meio).</summary>\n    public void ReleaseOverride()\n    {\n        _actionOverride = false;\n    }\n\n    /// <summary>\n    /// Suspende o comportamento base (Follow/Flee/Patrol), guardando o\n    /// \"DefaultMode\" actual para Resume() restaurar, e pára o movimento\n    /// horizontal. Não faz nada se já estiver pausado. Usado por\n    /// Action_PauseNearbyNpcs (Etapa 8). Devolve true se este NPC passou a\n    /// estar pausado agora (false se já estava).\n    /// </summary>\n    public bool Pause()\n    {\n        if (_movementPaused) return false;\n\n        _movementPaused = true;\n        _modeBeforePause = defaultMode;\n        defaultMode = NpcMovementMode.Idle;\n\n        if (_rb != null) _rb.velocity = new Vector2(0f, _rb.velocity.y);\n\n        return true;\n    }\n\n    /// <summary>Restaura o \"DefaultMode\" guardado por Pause(). Não faz nada se não estiver pausado.</summary>\n    public void Resume()\n    {\n        if (!_movementPaused) return;\n\n        _movementPaused = false;\n        defaultMode = _modeBeforePause;\n    }\n\n    /// <summary>\n    /// Foge horizontalmente de \"from\" (ex: o player) durante \"duration\" segundos,\n    /// recalculando a direção a cada passo de física — funciona mesmo que \"from\"\n    /// se mova durante a fuga. Usado por Action_FleeFromPlayer. Suspende o\n    /// comportamento base enquanto corre.\n    /// </summary>\n    public IEnumerator FleeFromTransform(Transform from, float speed, float duration)\n    {\n        if (from == null) yield break;\n\n        _actionOverride = true;\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            float dir = Mathf.Sign(transform.position.x - from.position.x);\n            if (dir == 0f) dir = 1f;\n\n            if (CanMove(dir))\n            {\n                _rb.velocity = new Vector2(dir * speed, _rb.velocity.y);\n                FaceDirection(dir);\n            }\n            else\n            {\n                _rb.velocity = new Vector2(0f, _rb.velocity.y);\n            }\n\n            elapsed += Time.fixedDeltaTime;\n            yield return new WaitForFixedUpdate();\n        }\n\n        _rb.velocity = new Vector2(0f, _rb.velocity.y);\n        _actionOverride = false;\n    }\n\n    /// <summary>\n    /// Aplica um impulso vertical (salto). Se \"groundMask\" estiver configurado e\n    /// o NPC não estiver no chão, não faz nada e devolve false. Usado por Action_Jump.\n    /// </summary>\n    public bool Jump(float force)\n    {\n        if (!IsGrounded()) return false;\n\n        _rb.velocity = new Vector2(_rb.velocity.x, force);\n        return true;\n    }\n\n    /// <summary>Verifica se o NPC está actualmente apoiado em \"groundMask\" (true sempre que \"groundMask\" não estiver configurado).</summary>\n    private bool IsGrounded()\n    {\n        if (groundMask.value == 0) return true;\n\n        var hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundMask);\n        return hit.collider != null;\n    }\n\n    /// <summary>\n    /// Espera até o NPC voltar a tocar em \"groundMask\" (ex: depois de Jump),\n    /// até \"timeout\" segundos (0 = sem limite). Usado por Action_Jump.\n    /// </summary>\n    public IEnumerator WaitUntilGrounded(float timeout)\n    {\n        float elapsed = 0f;\n\n        // Espera primeiro deixar o chão, para não detectar \"aterrou\" no mesmo frame do salto.\n        yield return new WaitForFixedUpdate();\n\n        while (!IsGrounded())\n        {\n            elapsed += Time.fixedDeltaTime;\n            if (timeout > 0f && elapsed >= timeout) yield break;\n            yield return new WaitForFixedUpdate();\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        if (patrolPoints == null || patrolPoints.Count == 0) return;\n\n        Vector2 basePos = Application.isPlaying ? _startPosition : (Vector2)transform.position;\n\n        Gizmos.color = Color.yellow;\n        Vector2 prev = basePos;\n\n        foreach (var offset in patrolPoints)\n        {\n            Vector2 point = basePos + offset;\n            Gizmos.DrawWireSphere(point, 0.15f);\n            Gizmos.DrawLine(prev, point);\n            prev = point;\n        }\n\n        if (patrolLoopMode == PatrolLoopMode.Loop && patrolPoints.Count > 1)\n            Gizmos.DrawLine(prev, basePos + patrolPoints[0]);\n    }\n}\n",
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>Comportamento de movimento \"de fundo\" do NPC, fora de ações de cutscene.</summary>\npublic enum NpcMovementMode\n{\n    Idle,\n    FollowPlayer,\n    FleePlayer,\n    Patrol\n}\n\n/// <summary>Como a patrulha se comporta ao chegar a uma das pontas do percurso.</summary>\npublic enum PatrolLoopMode\n{\n    /// <summary>Ao chegar ao último ponto, salta directamente de volta para o primeiro.</summary>\n    Loop,\n\n    /// <summary>Ao chegar a uma ponta, inverte a direção (vai e volta).</summary>\n    PingPong\n}\n\n/// <summary>\n/// Controla o movimento básico do NPC (parado / seguir / fugir / patrulhar),\n/// com detecção opcional de paredes e bordas de plataforma, viragem do sprite\n/// (flipX) consoante a direção, e um parâmetro de Animator opcional para\n/// animações de andar/parado.\n///\n/// Também expõe MoveDirectionForTime (Action_MoveNpc, Etapa 1) e\n/// MoveToPosition (Action_MoveToTarget, Etapa 4) para movimento controlado\n/// por cutscenes.\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D))]\npublic class NpcMovement : MonoBehaviour\n{\n    [Header(\"Comportamento Base\")]\n    [SerializeField] private NpcMovementMode defaultMode = NpcMovementMode.Idle;\n    [SerializeField] private float defaultSpeed = 2f;\n    [SerializeField] private float stopDistance = 0.1f;\n    [SerializeField] private float followRange = 5f;\n    [SerializeField] private float fleeRange = 3f;\n\n    [Header(\"Patrulha\")]\n    [Tooltip(\"Pontos de patrulha, como deslocamento (offset) relativo à posição inicial do NPC.\")]\n    [SerializeField] private List<Vector2> patrolPoints = new List<Vector2>();\n    [SerializeField] private PatrolLoopMode patrolLoopMode = PatrolLoopMode.PingPong;\n    [Tooltip(\"Tempo parado em cada ponto antes de seguir para o próximo.\")]\n    [SerializeField] private float patrolWaitTime = 1f;\n\n    [Header(\"Detecção de Paredes/Bordas (opcional)\")]\n    [Tooltip(\"Camadas consideradas 'chão'/'parede'. Deixa em \\\"Nothing\\\" para desligar a detecção (recomendado: não incluir a layer do próprio NPC).\")]\n    [SerializeField] private LayerMask groundMask;\n    [Tooltip(\"Se activo, o NPC não anda para fora de uma plataforma (Follow/Flee/Patrol).\")]\n    [SerializeField] private bool respectLedges = true;\n    [SerializeField] private float wallCheckDistance = 0.3f;\n    [SerializeField] private float groundCheckDistance = 0.6f;\n    [Tooltip(\"Deslocamento vertical do ponto de onde parte o raio de detecção de chão (o X é espelhado consoante a direção do movimento).\")]\n    [SerializeField] private Vector2 groundCheckOffset = new Vector2(0.4f, 0f);\n\n    [Header(\"Visual\")]\n    [Tooltip(\"Auto-detectado se vazio.\")]\n    [SerializeField] private SpriteRenderer spriteRenderer;\n    [Tooltip(\"Se activo, o sprite vira (flipX) consoante a direção do movimento.\")]\n    [SerializeField] private bool faceMovementDirection = true;\n    [Tooltip(\"Desliga se o sprite, com flipX = false, olha por defeito para a esquerda.\")]\n    [SerializeField] private bool spriteFacesRightByDefault = true;\n\n    [Header(\"Animação (opcional)\")]\n    [Tooltip(\"Auto-detectado se vazio. Se atribuído, o parâmetro float abaixo recebe a velocidade horizontal (em unidades/seg).\")]\n    [SerializeField] private Animator animator;\n    [SerializeField] private string animSpeedParam = \"Speed\";\n\n    private Rigidbody2D _rb;\n    private Transform _player;\n    private int _animSpeedHash = -1;\n\n    private Vector2 _startPosition;\n    private int _patrolIndex;\n    private int _patrolDir = 1;\n    private float _patrolWaitTimer;\n\n    /// <summary>Enquanto true, o comportamento base (idle/follow/flee/patrol) fica suspenso porque uma ação de cutscene está a controlar o movimento.</summary>\n    private bool _actionOverride;\n\n    /// <summary>Enquanto true, o comportamento base está suspenso por Pause() (Etapa 8 — ver Action_PauseNearbyNpcs).</summary>\n    private bool _movementPaused;\n    private NpcMovementMode _modeBeforePause;\n\n    public NpcMovementMode DefaultMode { get => defaultMode; set => defaultMode = value; }\n    public float DefaultSpeed { get => defaultSpeed; set => defaultSpeed = value; }\n    public bool IsMovementPaused => _movementPaused;\n\n    private void Awake()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n\n        if (spriteRenderer == null)\n            spriteRenderer = GetComponent<SpriteRenderer>();\n\n        if (animator == null)\n            animator = GetComponent<Animator>();\n\n        if (animator != null && !string.IsNullOrEmpty(animSpeedParam))\n            _animSpeedHash = Animator.StringToHash(animSpeedParam);\n    }\n\n    private void Start()\n    {\n        _startPosition = transform.position;\n\n        var npc = GetComponent<NpcController>();\n        _player = npc != null ? npc.Player : null;\n\n        if (_player == null)\n            _player = PlayerLocator.Find();\n    }\n\n    private void FixedUpdate()\n    {\n        if (!_actionOverride)\n        {\n            switch (defaultMode)\n            {\n                case NpcMovementMode.Idle:\n                    break;\n\n                case NpcMovementMode.FollowPlayer:\n                    ApplyFollow();\n                    break;\n\n                case NpcMovementMode.FleePlayer:\n                    ApplyFlee();\n                    break;\n\n                case NpcMovementMode.Patrol:\n                    ApplyPatrol();\n                    break;\n            }\n        }\n\n        UpdateAnimator();\n    }\n\n    private void ApplyFollow()\n    {\n        if (_player == null) return;\n\n        float dist = Vector2.Distance(_player.position, transform.position);\n        if (dist <= stopDistance || dist > followRange)\n        {\n            _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n            return;\n        }\n\n        float dir = Mathf.Sign(_player.position.x - transform.position.x);\n\n        if (!CanMove(dir))\n        {\n            _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n            return;\n        }\n\n        _rb.linearVelocity = new Vector2(dir * defaultSpeed, _rb.linearVelocity.y);\n        FaceDirection(dir);\n    }\n\n    private void ApplyFlee()\n    {\n        if (_player == null) return;\n\n        float dist = Vector2.Distance(_player.position, transform.position);\n        if (dist > fleeRange)\n        {\n            _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n            return;\n        }\n\n        float dir = Mathf.Sign(transform.position.x - _player.position.x);\n\n        if (!CanMove(dir))\n        {\n            _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n            return;\n        }\n\n        _rb.linearVelocity = new Vector2(dir * defaultSpeed, _rb.linearVelocity.y);\n        FaceDirection(dir);\n    }\n\n    private void ApplyPatrol()\n    {\n        if (patrolPoints == null || patrolPoints.Count == 0) return;\n\n        if (_patrolWaitTimer > 0f)\n        {\n            _patrolWaitTimer -= Time.fixedDeltaTime;\n            _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n            return;\n        }\n\n        Vector2 target = _startPosition + patrolPoints[_patrolIndex];\n        float dx = target.x - transform.position.x;\n\n        if (Mathf.Abs(dx) <= stopDistance)\n        {\n            _patrolWaitTimer = patrolWaitTime;\n            AdvancePatrolIndex();\n            _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n            return;\n        }\n\n        float dir = Mathf.Sign(dx);\n\n        if (!CanMove(dir))\n        {\n            // Obstáculo ou borda à frente: espera e avança o índice (tenta o próximo ponto).\n            _patrolWaitTimer = patrolWaitTime;\n            AdvancePatrolIndex();\n            _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n            return;\n        }\n\n        _rb.linearVelocity = new Vector2(dir * defaultSpeed, _rb.linearVelocity.y);\n        FaceDirection(dir);\n    }\n\n    private void AdvancePatrolIndex()\n    {\n        if (patrolPoints.Count <= 1) return;\n\n        if (patrolLoopMode == PatrolLoopMode.Loop)\n        {\n            _patrolIndex = (_patrolIndex + 1) % patrolPoints.Count;\n            return;\n        }\n\n        // PingPong\n        if (_patrolIndex + _patrolDir < 0 || _patrolIndex + _patrolDir >= patrolPoints.Count)\n            _patrolDir = -_patrolDir;\n\n        _patrolIndex += _patrolDir;\n    }\n\n    /// <summary>Verifica se o NPC pode avançar na direção \"dir\" (±1) sem bater numa parede ou cair de uma borda.</summary>\n    private bool CanMove(float dir)\n    {\n        if (groundMask.value == 0) return true;\n\n        if (wallCheckDistance > 0f)\n        {\n            var wallHit = Physics2D.Raycast(transform.position, new Vector2(dir, 0f), wallCheckDistance, groundMask);\n            if (wallHit.collider != null) return false;\n        }\n\n        if (respectLedges && groundCheckDistance > 0f)\n        {\n            Vector2 origin = (Vector2)transform.position + new Vector2(groundCheckOffset.x * Mathf.Sign(dir), groundCheckOffset.y);\n            var groundHit = Physics2D.Raycast(origin, Vector2.down, groundCheckDistance, groundMask);\n            if (groundHit.collider == null) return false;\n        }\n\n        return true;\n    }\n\n    /// <summary>Vira o sprite (flipX) para olhar na direção \"dirX\" (positivo = direita, negativo = esquerda). Não faz nada se dirX for ~0.</summary>\n    public void FaceDirection(float dirX)\n    {\n        if (!faceMovementDirection || spriteRenderer == null || Mathf.Approximately(dirX, 0f)) return;\n\n        bool facingRight = dirX > 0f;\n        spriteRenderer.flipX = spriteFacesRightByDefault ? !facingRight : facingRight;\n    }\n\n    /// <summary>Vira o sprite para olhar para uma posição do mundo (ex: o player), com base na diferença no eixo X.</summary>\n    public void FaceTowards(Vector2 worldPosition)\n    {\n        FaceDirection(worldPosition.x - transform.position.x);\n    }\n\n    private void UpdateAnimator()\n    {\n        if (animator == null || _animSpeedHash == -1) return;\n        animator.SetFloat(_animSpeedHash, Mathf.Abs(_rb.linearVelocity.x));\n    }\n\n    /// <summary>\n    /// Move o NPC numa direção fixa, a uma velocidade, durante \"duration\" segundos.\n    /// Usado por Action_MoveNpc. Suspende o comportamento base (idle/follow/flee/patrol)\n    /// enquanto corre e restaura-o no fim.\n    /// </summary>\n    public IEnumerator MoveDirectionForTime(Vector2 direction, float speed, float duration)\n    {\n        _actionOverride = true;\n\n        direction = direction.normalized;\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            float vy = direction.y == 0f ? _rb.linearVelocity.y : direction.y * speed;\n            _rb.linearVelocity = new Vector2(direction.x * speed, vy);\n            FaceDirection(direction.x);\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n        _actionOverride = false;\n    }\n\n    /// <summary>\n    /// Move o NPC horizontalmente até ficar a \"arriveDistance\" de \"target\" (eixo X).\n    /// Usado por Action_MoveToTarget. Suspende o comportamento base enquanto corre.\n    /// \"timeout\" em segundos evita ficar preso para sempre se o alvo for\n    /// inalcançável (0 = sem limite).\n    /// </summary>\n    public IEnumerator MoveToPosition(Transform target, float speed, float arriveDistance, float timeout)\n    {\n        _actionOverride = true;\n        float elapsed = 0f;\n\n        while (target != null)\n        {\n            float dx = target.position.x - transform.position.x;\n            if (Mathf.Abs(dx) <= arriveDistance) break;\n\n            float dir = Mathf.Sign(dx);\n            _rb.linearVelocity = new Vector2(dir * speed, _rb.linearVelocity.y);\n            FaceDirection(dir);\n\n            elapsed += Time.fixedDeltaTime;\n            if (timeout > 0f && elapsed >= timeout) break;\n\n            yield return new WaitForFixedUpdate();\n        }\n\n        _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n        _actionOverride = false;\n    }\n\n    /// <summary>Liberta um override de movimento (segurança, caso uma ação seja interrompida a meio).</summary>\n    public void ReleaseOverride()\n    {\n        _actionOverride = false;\n    }\n\n    /// <summary>\n    /// Suspende o comportamento base (Follow/Flee/Patrol), guardando o\n    /// \"DefaultMode\" actual para Resume() restaurar, e pára o movimento\n    /// horizontal. Não faz nada se já estiver pausado. Usado por\n    /// Action_PauseNearbyNpcs (Etapa 8). Devolve true se este NPC passou a\n    /// estar pausado agora (false se já estava).\n    /// </summary>\n    public bool Pause()\n    {\n        if (_movementPaused) return false;\n\n        _movementPaused = true;\n        _modeBeforePause = defaultMode;\n        defaultMode = NpcMovementMode.Idle;\n\n        if (_rb != null) _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n\n        return true;\n    }\n\n    /// <summary>Restaura o \"DefaultMode\" guardado por Pause(). Não faz nada se não estiver pausado.</summary>\n    public void Resume()\n    {\n        if (!_movementPaused) return;\n\n        _movementPaused = false;\n        defaultMode = _modeBeforePause;\n    }\n\n    /// <summary>\n    /// Foge horizontalmente de \"from\" (ex: o player) durante \"duration\" segundos,\n    /// recalculando a direção a cada passo de física — funciona mesmo que \"from\"\n    /// se mova durante a fuga. Usado por Action_FleeFromPlayer. Suspende o\n    /// comportamento base enquanto corre.\n    /// </summary>\n    public IEnumerator FleeFromTransform(Transform from, float speed, float duration)\n    {\n        if (from == null) yield break;\n\n        _actionOverride = true;\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            float dir = Mathf.Sign(transform.position.x - from.position.x);\n            if (dir == 0f) dir = 1f;\n\n            if (CanMove(dir))\n            {\n                _rb.linearVelocity = new Vector2(dir * speed, _rb.linearVelocity.y);\n                FaceDirection(dir);\n            }\n            else\n            {\n                _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n            }\n\n            elapsed += Time.fixedDeltaTime;\n            yield return new WaitForFixedUpdate();\n        }\n\n        _rb.linearVelocity = new Vector2(0f, _rb.linearVelocity.y);\n        _actionOverride = false;\n    }\n\n    /// <summary>\n    /// Aplica um impulso vertical (salto). Se \"groundMask\" estiver configurado e\n    /// o NPC não estiver no chão, não faz nada e devolve false. Usado por Action_Jump.\n    /// </summary>\n    public bool Jump(float force)\n    {\n        if (!IsGrounded()) return false;\n\n        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, force);\n        return true;\n    }\n\n    /// <summary>Verifica se o NPC está actualmente apoiado em \"groundMask\" (true sempre que \"groundMask\" não estiver configurado).</summary>\n    private bool IsGrounded()\n    {\n        if (groundMask.value == 0) return true;\n\n        var hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundMask);\n        return hit.collider != null;\n    }\n\n    /// <summary>\n    /// Espera até o NPC voltar a tocar em \"groundMask\" (ex: depois de Jump),\n    /// até \"timeout\" segundos (0 = sem limite). Usado por Action_Jump.\n    /// </summary>\n    public IEnumerator WaitUntilGrounded(float timeout)\n    {\n        float elapsed = 0f;\n\n        // Espera primeiro deixar o chão, para não detectar \"aterrou\" no mesmo frame do salto.\n        yield return new WaitForFixedUpdate();\n\n        while (!IsGrounded())\n        {\n            elapsed += Time.fixedDeltaTime;\n            if (timeout > 0f && elapsed >= timeout) yield break;\n            yield return new WaitForFixedUpdate();\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        if (patrolPoints == null || patrolPoints.Count == 0) return;\n\n        Vector2 basePos = Application.isPlaying ? _startPosition : (Vector2)transform.position;\n\n        Gizmos.color = Color.yellow;\n        Vector2 prev = basePos;\n\n        foreach (var offset in patrolPoints)\n        {\n            Vector2 point = basePos + offset;\n            Gizmos.DrawWireSphere(point, 0.15f);\n            Gizmos.DrawLine(prev, point);\n            prev = point;\n        }\n\n        if (patrolLoopMode == PatrolLoopMode.Loop && patrolPoints.Count > 1)\n            Gizmos.DrawLine(prev, basePos + patrolPoints[0]);\n    }\n}\n",
   "id": "script-npc-npcmovement-cs",
   "dependencyIds": [
-    "script-npc-actions-pauseactions-cs",
-    "script-npc-npccontroller-cs"
+    "script-npc-npccontroller-cs",
+    "script-player-playerlocator-cs"
   ],
   "usedByIds": [
-    "script-npc-actions-coreactions-cs",
-    "script-npc-actions-pauseactions-cs",
     "script-enemy-enemymovement-cs",
     "script-npc-pauseutil-cs",
     "script-npc-npccontroller-cs",

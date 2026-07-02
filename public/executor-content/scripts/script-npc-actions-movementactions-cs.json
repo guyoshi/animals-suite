@@ -195,6 +195,7 @@
     "script-npc-npcaction-cs",
     "script-npc-npccontroller-cs",
     "script-npc-npcmovement-cs",
+    "script-npc-npcmovement-cs",
     "script-npc-npcrefutil-cs"
   ],
   "usedByIds": []

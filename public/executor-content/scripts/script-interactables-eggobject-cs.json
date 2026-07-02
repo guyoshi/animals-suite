@@ -46,16 +46,6 @@
       "description": "Knockback aplicado ao inimigo atingido."
     },
     {
-      "name": "strongImpactsToBreak",
-      "type": "int",
-      "mods": "public",
-      "default": "0",
-      "section": "Quebra",
-      "attrs": "[Header(\"Quebra\")] [Tooltip(\"O ovo parte-se após este número de impactos FORTES (0 = nunca parte).\")] [Min(0)]",
-      "inspector": true,
-      "description": "O ovo parte-se após este número de impactos FORTES (0 = nunca parte)."
-    },
-    {
       "name": "breakVfxPrefab",
       "type": "GameObject",
       "mods": "public",
@@ -113,31 +103,19 @@
     }
   ],
   "dependencies": [
-    "Carryable",
-    "EggAbility",
-    "EnemyHealth",
-    "GrabThrowAbility",
-    "ObjectWeight"
+    "AudioManager",
+    "EnemyHealth"
   ],
   "used_by": [
-    "AnimalFormData",
-    "Carryable",
-    "EggAbility",
-    "GrabThrowAbility"
+    "EggAbility"
   ],
-  "source": "using UnityEngine;\n\n/// <summary>\n/// Ovo da galinha (P5/P6 — EggAbility): objecto PESADO que cai. Causa dano a\n/// INIMIGOS quando os atinge com velocidade (cair em cima, ou atirado por uma\n/// forma com canGrab/canThrow — ver Carryable/GrabThrowAbility). Pressiona\n/// placas de peso (pôr ObjectWeight pesado no prefab).\n///\n/// Prefab recomendado: SpriteRenderer + Rigidbody2D + Collider2D + EggObject +\n/// ObjectWeight (peso alto) + Carryable.\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]\npublic class EggObject : MonoBehaviour\n{\n    [Header(\"Dano por Impacto\")]\n    [Tooltip(\"Dano causado a um inimigo atingido com velocidade suficiente.\")]\n    public int impactDamage = 2;\n\n    [Tooltip(\"Velocidade relativa mínima do impacto para causar dano.\")]\n    public float minImpactSpeed = 5f;\n\n    [Tooltip(\"Knockback aplicado ao inimigo atingido.\")]\n    public float impactKnockback = 6f;\n\n    [Header(\"Quebra\")]\n    [Tooltip(\"O ovo parte-se após este número de impactos FORTES (0 = nunca parte).\")]\n    [Min(0)] public int strongImpactsToBreak = 0;\n\n    public GameObject breakVfxPrefab;\n    public AudioClip impactSound;\n\n    private Rigidbody2D _rb;\n    private int _strongImpacts;\n\n    private void Awake()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void OnCollisionEnter2D(Collision2D collision)\n    {\n        float impactSpeed = collision.relativeVelocity.magnitude;\n        if (impactSpeed < minImpactSpeed) return;\n\n        if (impactSound != null)\n            AudioSource.PlayClipAtPoint(impactSound, transform.position);\n\n        // Dano a inimigos (sem categoria — o ovo não é uma \"forma\").\n        var enemyHealth = collision.collider.GetComponent<EnemyHealth>();\n        if (enemyHealth != null)\n            enemyHealth.TakeDamage(impactDamage, transform.position, impactKnockback);\n\n        // Quebra após N impactos fortes (opcional).\n        if (strongImpactsToBreak > 0)\n        {\n            _strongImpacts++;\n            if (_strongImpacts >= strongImpactsToBreak)\n            {\n                if (breakVfxPrefab != null)\n                    Instantiate(breakVfxPrefab, transform.position, Quaternion.identity);\n\n                Destroy(gameObject);\n            }\n        }\n    }\n}\n",
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Ovo da galinha (P5/P6 — EggAbility): objecto PESADO que cai. Causa dano a\n/// INIMIGOS quando os atinge com velocidade (cair em cima, ou atirado por uma\n/// forma com canGrab/canThrow — ver Carryable/GrabThrowAbility). Pressiona\n/// placas de peso (pôr ObjectWeight pesado no prefab).\n///\n/// Prefab recomendado: SpriteRenderer + Rigidbody2D + Collider2D + EggObject +\n/// ObjectWeight (peso alto) + Carryable.\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]\npublic class EggObject : MonoBehaviour\n{\n    [Header(\"Dano por Impacto\")]\n    [Tooltip(\"Dano causado a um inimigo atingido com velocidade suficiente.\")]\n    public int impactDamage = 2;\n\n    [Tooltip(\"Velocidade relativa mínima do impacto para causar dano.\")]\n    public float minImpactSpeed = 5f;\n\n    [Tooltip(\"Knockback aplicado ao inimigo atingido.\")]\n    public float impactKnockback = 6f;\n\n    [Header(\"Quebra\")]\n    [Tooltip(\"O ovo parte-se após este número de impactos FORTES (0 = nunca parte).\")]\n    [Min(0)] public int strongImpactsToBreak = 0;\n\n    public GameObject breakVfxPrefab;\n    public AudioClip impactSound;\n\n    private Rigidbody2D _rb;\n    private int _strongImpacts;\n\n    private void Awake()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void OnCollisionEnter2D(Collision2D collision)\n    {\n        float impactSpeed = collision.relativeVelocity.magnitude;\n        if (impactSpeed < minImpactSpeed) return;\n\n        if (impactSound != null)\n            AudioManager.Instance?.PlaySEAtPoint(impactSound, transform.position);\n\n        // Dano a inimigos (sem categoria — o ovo não é uma \"forma\").\n        var enemyHealth = collision.collider.GetComponent<EnemyHealth>();\n        if (enemyHealth != null)\n            enemyHealth.TakeDamage(impactDamage, transform.position, impactKnockback);\n\n        // Quebra após N impactos fortes (opcional).\n        if (strongImpactsToBreak > 0)\n        {\n            _strongImpacts++;\n            if (_strongImpacts >= strongImpactsToBreak)\n            {\n                if (breakVfxPrefab != null)\n                    Instantiate(breakVfxPrefab, transform.position, Quaternion.identity);\n\n                Destroy(gameObject);\n            }\n        }\n    }\n}\n",
   "id": "script-interactables-eggobject-cs",
   "dependencyIds": [
-    "script-interactables-carryable-cs",
-    "script-abilities-eggability-cs",
-    "script-enemy-enemyhealth-cs",
-    "script-abilities-grabthrowability-cs",
-    "script-interactables-objectweight-cs"
+    "script-audio-audiomanager-cs",
+    "script-enemy-enemyhealth-cs"
   ],
   "usedByIds": [
-    "script-forms-animalformdata-cs",
-    "script-interactables-carryable-cs",
-    "script-abilities-eggability-cs",
-    "script-abilities-grabthrowability-cs"
+    "script-abilities-eggability-cs"
   ]
 }

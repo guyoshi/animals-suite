@@ -21,9 +21,9 @@
       "mods": "public",
       "default": "",
       "section": "",
-      "attrs": "[Tooltip(\"Layers consideradas �gua\")]",
+      "attrs": "[Tooltip(\"Layers consideradas água\")]",
       "inspector": true,
-      "description": "Layers consideradas �gua"
+      "description": "Layers consideradas água"
     },
     {
       "name": "headCheck",
@@ -31,19 +31,9 @@
       "mods": "public",
       "default": "",
       "section": "Checks",
-      "attrs": "[Header(\"Checks\")] [Tooltip(\"Ponto que representa a cabe�a (se estiver dentro da �gua, est� submerso).\")]",
+      "attrs": "[Header(\"Checks\")] [Tooltip(\"Ponto que representa a cabeça (se estiver dentro da água, está submerso).\")]",
       "inspector": true,
-      "description": "Ponto que representa a cabe�a (se estiver dentro da �gua, est� submerso)."
-    },
-    {
-      "name": "autoHeadOffset",
-      "type": "Vector2",
-      "mods": "public",
-      "default": "new Vector2(0f, 0.6f)",
-      "section": "Checks",
-      "attrs": "[Tooltip(\"Offset autom�tico da cabe�a se headCheck n�o for definido.\")]",
-      "inspector": true,
-      "description": "Offset autom�tico da cabe�a se headCheck n�o for definido."
+      "description": "Ponto que representa a cabeça (se estiver dentro da água, está submerso)."
     },
     {
       "name": "IsAtSurface",
@@ -138,10 +128,9 @@
     "PullAbility",
     "PushableBlock",
     "WaterCameraEffect",
-    "WaterCurrentMode",
     "WaterMotor2D"
   ],
-  "source": "using UnityEngine;\n\n[RequireComponent(typeof(Collider2D))]\npublic class WaterDetector : MonoBehaviour\n{\n    [Tooltip(\"Layers consideradas �gua\")]\n    public LayerMask waterLayer;\n\n    [Header(\"Checks\")]\n    [Tooltip(\"Ponto que representa a cabe�a (se estiver dentro da �gua, est� submerso).\")]\n    public Transform headCheck;\n\n    [Tooltip(\"Offset autom�tico da cabe�a se headCheck n�o for definido.\")]\n    public Vector2 autoHeadOffset = new Vector2(0f, 0.6f);\n\n    public bool IsInWater { get; private set; }\n    public bool IsSubmerged { get; private set; }\n    public bool IsAtSurface => IsInWater && !IsSubmerged;\n\n    /// <summary>Disparado quando o player passa de \"não-submerso\" para \"submerso\" (cabeça debaixo de água).</summary>\n    public event System.Action EnteredSubmerged;\n\n    /// <summary>Disparado quando o player passa de \"submerso\" para \"não-submerso\" (saiu de baixo de água ou saiu da água).</summary>\n    public event System.Action ExitedSubmerged;\n\n    /// <summary>Disparado quando o player entra em contacto com a água (IsInWater passa de false a true).</summary>\n    public event System.Action EnteredWater;\n\n    /// <summary>Disparado quando o player sai completamente da água (IsInWater passa de true a false).</summary>\n    public event System.Action ExitedWater;\n\n    private int waterContacts = 0;\n    private Animator anim;\n\n    private void Awake()\n    {\n        anim = GetComponent<Animator>();\n\n        if (headCheck == null)\n        {\n            var hc = new GameObject(\"HeadCheck\");\n            hc.transform.SetParent(transform);\n            hc.transform.localPosition = autoHeadOffset;\n            headCheck = hc.transform;\n        }\n    }\n\n    private void Update()\n    {\n        // S� faz sentido calcular submerso se estiver em �gua\n        if (!IsInWater)\n        {\n            SetSubmerged(false);\n            return;\n        }\n\n        // Se a cabe�a est� dentro do water layer -> submerso\n        bool submergedNow = Physics2D.OverlapPoint(headCheck.position, waterLayer) != null;\n        SetSubmerged(submergedNow);\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!IsWater(other)) return;\n\n        waterContacts++;\n        if (!IsInWater)\n        {\n            IsInWater = true;\n            if (anim) anim.SetBool(\"IsInWater\", true);\n            EnteredWater?.Invoke();\n        }\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!IsWater(other)) return;\n\n        waterContacts = Mathf.Max(0, waterContacts - 1);\n        bool wasInWater = IsInWater;\n        IsInWater = waterContacts > 0;\n\n        if (anim) anim.SetBool(\"IsInWater\", IsInWater);\n\n        if (!IsInWater)\n        {\n            SetSubmerged(false);\n            if (wasInWater) ExitedWater?.Invoke();\n        }\n    }\n\n    private void SetSubmerged(bool value)\n    {\n        if (IsSubmerged == value) return;\n        IsSubmerged = value;\n\n        if (anim) anim.SetBool(\"IsSubmerged\", IsSubmerged);\n        if (anim) anim.SetBool(\"IsAtSurface\", IsAtSurface);\n\n        if (IsSubmerged) EnteredSubmerged?.Invoke();\n        else             ExitedSubmerged?.Invoke();\n    }\n\n    private bool IsWater(Collider2D other)\n    {\n        int mask = 1 << other.gameObject.layer;\n        return (waterLayer.value & mask) != 0;\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        if (headCheck == null) return;\n        Gizmos.color = Color.cyan;\n        Gizmos.DrawWireSphere(headCheck.position, 0.05f);\n    }\n}\n",
+  "source": "using UnityEngine;\n\n[RequireComponent(typeof(Collider2D))]\npublic class WaterDetector : MonoBehaviour\n{\n    [Tooltip(\"Layers consideradas água\")]\n    public LayerMask waterLayer;\n\n    [Header(\"Checks\")]\n    [Tooltip(\"Ponto que representa a cabeça (se estiver dentro da água, está submerso).\")]\n    public Transform headCheck;\n\n    [Tooltip(\"Offset autom'tico da cabeça se headCheck não for definido.\")]\n    public Vector2 autoHeadOffset = new Vector2(0f, 0.6f);\n\n    public bool IsInWater { get; private set; }\n    public bool IsSubmerged { get; private set; }\n    public bool IsAtSurface => IsInWater && !IsSubmerged;\n\n    /// <summary>Disparado quando o player passa de \"não-submerso\" para \"submerso\" (cabeça debaixo de água).</summary>\n    public event System.Action EnteredSubmerged;\n\n    /// <summary>Disparado quando o player passa de \"submerso\" para \"não-submerso\" (saiu de baixo de água ou saiu da água).</summary>\n    public event System.Action ExitedSubmerged;\n\n    /// <summary>Disparado quando o player entra em contacto com a água (IsInWater passa de false a true).</summary>\n    public event System.Action EnteredWater;\n\n    /// <summary>Disparado quando o player sai completamente da água (IsInWater passa de true a false).</summary>\n    public event System.Action ExitedWater;\n\n    private int waterContacts = 0;\n    private Animator anim;\n\n    private void Awake()\n    {\n        anim = GetComponent<Animator>();\n\n        if (headCheck == null)\n        {\n            var hc = new GameObject(\"HeadCheck\");\n            hc.transform.SetParent(transform);\n            hc.transform.localPosition = autoHeadOffset;\n            headCheck = hc.transform;\n        }\n    }\n\n    private void Update()\n    {\n        // S' faz sentido calcular submerso se estiver em água\n        if (!IsInWater)\n        {\n            SetSubmerged(false);\n            return;\n        }\n\n        // Se a cabeça está dentro do water layer -> submerso\n        bool submergedNow = Physics2D.OverlapPoint(headCheck.position, waterLayer) != null;\n        SetSubmerged(submergedNow);\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!IsWater(other)) return;\n\n        waterContacts++;\n        if (!IsInWater)\n        {\n            IsInWater = true;\n            if (anim) anim.SetBool(\"IsInWater\", true);\n            EnteredWater?.Invoke();\n        }\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!IsWater(other)) return;\n\n        waterContacts = Mathf.Max(0, waterContacts - 1);\n        bool wasInWater = IsInWater;\n        IsInWater = waterContacts > 0;\n\n        if (anim) anim.SetBool(\"IsInWater\", IsInWater);\n\n        if (!IsInWater)\n        {\n            SetSubmerged(false);\n            if (wasInWater) ExitedWater?.Invoke();\n        }\n    }\n\n    private void SetSubmerged(bool value)\n    {\n        if (IsSubmerged == value) return;\n        IsSubmerged = value;\n\n        if (anim) anim.SetBool(\"IsSubmerged\", IsSubmerged);\n        if (anim) anim.SetBool(\"IsAtSurface\", IsAtSurface);\n\n        if (IsSubmerged) EnteredSubmerged?.Invoke();\n        else             ExitedSubmerged?.Invoke();\n    }\n\n    private bool IsWater(Collider2D other)\n    {\n        int mask = 1 << other.gameObject.layer;\n        return (waterLayer.value & mask) != 0;\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        if (headCheck == null) return;\n        Gizmos.color = Color.cyan;\n        Gizmos.DrawWireSphere(headCheck.position, 0.05f);\n    }\n}\n",
   "id": "script-player-waterdetector-cs",
   "dependencyIds": [],
   "usedByIds": [
@@ -154,7 +143,6 @@
     "script-abilities-pullability-cs",
     "script-interactables-pushableblock-cs",
     "script-camera-watercameraeffect-cs",
-    "script-enemy-attacks-enemyattacks-water-cs",
     "script-player-watermotor2d-cs"
   ]
 }

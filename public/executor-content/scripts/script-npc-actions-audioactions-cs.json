@@ -32,6 +32,12 @@
       "attrs": ""
     },
     {
+      "name": "Action_PlayME",
+      "kind": "class",
+      "bases": "NpcAction",
+      "attrs": ""
+    },
+    {
       "name": "Action_StopBGS",
       "kind": "class",
       "bases": "NpcAction",
@@ -70,6 +76,16 @@
       "description": "1 = altura normal. Valores diferentes mudam o tom do som."
     },
     {
+      "name": "clip",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
       "name": "fadeTime",
       "type": "float",
       "mods": "public",
@@ -97,7 +113,137 @@
       "section": "",
       "attrs": "[Tooltip(\"Se activo, espera a transição terminar antes de avançar para a próxima ação.\")]",
       "inspector": true,
-      "description": "Se ativo, espera a transição terminar antes de avançar para a próxima ação."
+      "description": "Se activo, espera a transição terminar antes de avançar para a próxima ação."
+    },
+    {
+      "name": "clip",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "fadeTime",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "",
+      "attrs": "[Tooltip(\"Duração da transição (em segundos).\")]",
+      "inspector": true,
+      "description": "Duração da transição (em segundos)."
+    },
+    {
+      "name": "loop",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "waitForFade",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, espera a transição terminar antes de avançar para a próxima ação.\")]",
+      "inspector": true,
+      "description": "Se activo, espera a transição terminar antes de avançar para a próxima ação."
+    },
+    {
+      "name": "fadeTime",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "",
+      "attrs": "[Tooltip(\"Duração do fade-out (em segundos).\")]",
+      "inspector": true,
+      "description": "Duração do fade-out (em segundos)."
+    },
+    {
+      "name": "waitForFade",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, espera o fade-out terminar antes de avançar para a próxima ação.\")]",
+      "inspector": true,
+      "description": "Se activo, espera o fade-out terminar antes de avançar para a próxima ação."
+    },
+    {
+      "name": "clip",
+      "type": "AudioClip",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Clip do Musical Effect (não repetitivo).\")]",
+      "inspector": true,
+      "description": "Clip do Musical Effect (não repetitivo)."
+    },
+    {
+      "name": "stopBgmFadeTime",
+      "type": "float",
+      "mods": "public",
+      "default": "0.3f",
+      "section": "",
+      "attrs": "[Tooltip(\"Fade-out aplicado à BGM antes de iniciar o ME.\")]",
+      "inspector": true,
+      "description": "Fade-out aplicado à BGM antes de iniciar o ME."
+    },
+    {
+      "name": "waitForMe",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, aguarda que o ME termine (baseado em clip.length) antes de avançar para a próxima ação. Recomendado para jingles curtos.\")]",
+      "inspector": true,
+      "description": "Se activo, aguarda que o ME termine (baseado em clip.length) antes de avançar para a próxima ação. Recomendado para jingles curtos."
+    },
+    {
+      "name": "restoreFadeTime",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "",
+      "attrs": "[Tooltip(\"Tempo de fade-in ao restaurar a BGM original após o ME. 0 = instantâneo.\")]",
+      "inspector": true,
+      "description": "Tempo de fade-in ao restaurar a BGM original após o ME. 0 = instantâneo."
+    },
+    {
+      "name": "restoreBgmAfter",
+      "type": "bool",
+      "mods": "public",
+      "default": "true",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, restaura automaticamente a BGM original após o ME terminar. Desactivar se a BGM seguinte for controlada por outro sistema (ex: MusicZone).\")]",
+      "inspector": true,
+      "description": "Se activo, restaura automaticamente a BGM original após o ME terminar. Desactivar se a BGM seguinte for controlada por outro sistema (ex: MusicZone)."
+    },
+    {
+      "name": "fadeTime",
+      "type": "float",
+      "mods": "public",
+      "default": "1.5f",
+      "section": "",
+      "attrs": "[Tooltip(\"Duração do fade-out (em segundos).\")]",
+      "inspector": true,
+      "description": "Duração do fade-out (em segundos)."
+    },
+    {
+      "name": "waitForFade",
+      "type": "bool",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "[Tooltip(\"Se activo, espera o fade-out terminar antes de avançar para a próxima ação.\")]",
+      "inspector": true,
+      "description": "Se activo, espera o fade-out terminar antes de avançar para a próxima ação."
     }
   ],
   "methods": [
@@ -115,8 +261,10 @@
     "NpcActionUtil",
     "NpcController"
   ],
-  "used_by": [],
-  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>Toca um efeito sonoro (SE) uma vez, através de AudioManager.</summary>\n[System.Serializable]\npublic class Action_PlaySE : NpcAction\n{\n    public AudioClip clip;\n\n    [Range(0f, 1f)]\n    [Tooltip(\"Volume relativo deste som (multiplicado pelo volume de SE nas opções).\")]\n    public float volume = 1f;\n\n    [Tooltip(\"1 = altura normal. Valores diferentes mudam o tom do som.\")]\n    public float pitch = 1f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (clip != null) AudioManager.Instance?.PlaySE(clip, volume, pitch);\n        yield break;\n    }\n}\n\n/// <summary>Muda a música de fundo (BGM), com transição suave (crossfade). Clip vazio = parar (ver Action_StopBGM).</summary>\n[System.Serializable]\npublic class Action_PlayBGM : NpcAction\n{\n    public AudioClip clip;\n\n    [Tooltip(\"Duração da transição (em segundos).\")]\n    public float fadeTime = 1.5f;\n\n    public bool loop = true;\n\n    [Tooltip(\"Se activo, espera a transição terminar antes de avançar para a próxima ação.\")]\n    public bool waitForFade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        AudioManager.Instance?.PlayBGM(clip, fadeTime, loop);\n        if (waitForFade && fadeTime > 0f) yield return NpcActionUtil.Wait(fadeTime);\n    }\n}\n\n/// <summary>Muda o som ambiente (BGS), com transição suave (crossfade). Clip vazio = parar (ver Action_StopBGS).</summary>\n[System.Serializable]\npublic class Action_PlayBGS : NpcAction\n{\n    public AudioClip clip;\n\n    [Tooltip(\"Duração da transição (em segundos).\")]\n    public float fadeTime = 1.5f;\n\n    public bool loop = true;\n\n    [Tooltip(\"Se activo, espera a transição terminar antes de avançar para a próxima ação.\")]\n    public bool waitForFade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        AudioManager.Instance?.PlayBGS(clip, fadeTime, loop);\n        if (waitForFade && fadeTime > 0f) yield return NpcActionUtil.Wait(fadeTime);\n    }\n}\n\n/// <summary>Pára a música de fundo (BGM) actual com fade-out.</summary>\n[System.Serializable]\npublic class Action_StopBGM : NpcAction\n{\n    [Tooltip(\"Duração do fade-out (em segundos).\")]\n    public float fadeTime = 1.5f;\n\n    [Tooltip(\"Se activo, espera o fade-out terminar antes de avançar para a próxima ação.\")]\n    public bool waitForFade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        AudioManager.Instance?.StopBGM(fadeTime);\n        if (waitForFade && fadeTime > 0f) yield return NpcActionUtil.Wait(fadeTime);\n    }\n}\n\n/// <summary>Pára o som ambiente (BGS) actual com fade-out.</summary>\n[System.Serializable]\npublic class Action_StopBGS : NpcAction\n{\n    [Tooltip(\"Duração do fade-out (em segundos).\")]\n    public float fadeTime = 1.5f;\n\n    [Tooltip(\"Se activo, espera o fade-out terminar antes de avançar para a próxima ação.\")]\n    public bool waitForFade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        AudioManager.Instance?.StopBGS(fadeTime);\n        if (waitForFade && fadeTime > 0f) yield return NpcActionUtil.Wait(fadeTime);\n    }\n}\n",
+  "used_by": [
+    "BossController"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>Toca um efeito sonoro (SE) uma vez, através de AudioManager.</summary>\n[System.Serializable]\npublic class Action_PlaySE : NpcAction\n{\n    public AudioClip clip;\n\n    [Range(0f, 1f)]\n    [Tooltip(\"Volume relativo deste som (multiplicado pelo volume de SE nas opções).\")]\n    public float volume = 1f;\n\n    [Tooltip(\"1 = altura normal. Valores diferentes mudam o tom do som.\")]\n    public float pitch = 1f;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (clip != null) AudioManager.Instance?.PlaySE(clip, volume, pitch);\n        yield break;\n    }\n}\n\n/// <summary>Muda a música de fundo (BGM), com transição suave (crossfade). Clip vazio = parar (ver Action_StopBGM).</summary>\n[System.Serializable]\npublic class Action_PlayBGM : NpcAction\n{\n    public AudioClip clip;\n\n    [Tooltip(\"Duração da transição (em segundos).\")]\n    public float fadeTime = 1.5f;\n\n    public bool loop = true;\n\n    [Tooltip(\"Se activo, espera a transição terminar antes de avançar para a próxima ação.\")]\n    public bool waitForFade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        AudioManager.Instance?.PlayBGM(clip, fadeTime, loop);\n        if (waitForFade && fadeTime > 0f) yield return NpcActionUtil.Wait(fadeTime);\n    }\n}\n\n/// <summary>Muda o som ambiente (BGS), com transição suave (crossfade). Clip vazio = parar (ver Action_StopBGS).</summary>\n[System.Serializable]\npublic class Action_PlayBGS : NpcAction\n{\n    public AudioClip clip;\n\n    [Tooltip(\"Duração da transição (em segundos).\")]\n    public float fadeTime = 1.5f;\n\n    public bool loop = true;\n\n    [Tooltip(\"Se activo, espera a transição terminar antes de avançar para a próxima ação.\")]\n    public bool waitForFade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        AudioManager.Instance?.PlayBGS(clip, fadeTime, loop);\n        if (waitForFade && fadeTime > 0f) yield return NpcActionUtil.Wait(fadeTime);\n    }\n}\n\n/// <summary>Pára a música de fundo (BGM) actual com fade-out.</summary>\n[System.Serializable]\npublic class Action_StopBGM : NpcAction\n{\n    [Tooltip(\"Duração do fade-out (em segundos).\")]\n    public float fadeTime = 1.5f;\n\n    [Tooltip(\"Se activo, espera o fade-out terminar antes de avançar para a próxima ação.\")]\n    public bool waitForFade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        AudioManager.Instance?.StopBGM(fadeTime);\n        if (waitForFade && fadeTime > 0f) yield return NpcActionUtil.Wait(fadeTime);\n    }\n}\n\n// ─── Task #34 — ME (Musical Effect) ──────────────────────────────────────\n\n/// <summary>\n/// Efeito Musical (ME): interrompe a BGM actual, toca um clip não-repetitivo\n/// (ex: fanfarra de vitória, jingle de missão) e restaura automaticamente a\n/// BGM original quando o clip termina ou quando o NPC é desactivado.\n///\n/// Diferente de Action_PlayBGM:\n///   • Guarda a BGM actual antes de substituir.\n///   • Restaura-a quando o ME termina (com restoreFadeTime).\n///   • Suporta \"waitForMe = true\" para bloquear as ações seguintes até o ME acabar.\n///   • Se o jogo mudar de cena durante o ME, a restauração não é necessária\n///     (a nova cena inicia a sua própria BGM).\n///\n/// Fluxo típico num evento:\n///   1. Action_PlayME (waitForMe = true) → toca o jingle e espera\n///   2. Action_Dialogue \"Obtiveste a runa!\"\n///   3. ... próximas ações\n/// </summary>\n[System.Serializable]\npublic class Action_PlayME : NpcAction\n{\n    [Tooltip(\"Clip do Musical Effect (não repetitivo).\")]\n    public AudioClip clip;\n\n    [Tooltip(\"Fade-out aplicado à BGM antes de iniciar o ME.\")]\n    public float stopBgmFadeTime = 0.3f;\n\n    [Tooltip(\"Se activo, aguarda que o ME termine (baseado em clip.length) antes de avançar para a próxima ação. Recomendado para jingles curtos.\")]\n    public bool waitForMe = true;\n\n    [Tooltip(\"Tempo de fade-in ao restaurar a BGM original após o ME. 0 = instantâneo.\")]\n    public float restoreFadeTime = 1f;\n\n    [Tooltip(\"Se activo, restaura automaticamente a BGM original após o ME terminar. Desactivar se a BGM seguinte for controlada por outro sistema (ex: MusicZone).\")]\n    public bool restoreBgmAfter = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (clip == null) yield break;\n\n        var am = AudioManager.Instance;\n        if (am == null) yield break;\n\n        // Guardar BGM antes de a interromper.\n        AudioClip savedBgm = am.CurrentBgmClip;\n\n        // Parar BGM e tocar o ME (como SE não-repetitivo, sem loop).\n        am.StopBGM(stopBgmFadeTime);\n        if (stopBgmFadeTime > 0f)\n            yield return NpcActionUtil.Wait(stopBgmFadeTime);\n\n        am.PlayBGM(clip, 0f, false);\n\n        if (waitForMe)\n            yield return NpcActionUtil.Wait(clip.length);\n\n        if (restoreBgmAfter)\n            am.PlayBGM(savedBgm, restoreFadeTime);\n    }\n}\n\n/// <summary>Pára o som ambiente (BGS) actual com fade-out.</summary>\n[System.Serializable]\npublic class Action_StopBGS : NpcAction\n{\n    [Tooltip(\"Duração do fade-out (em segundos).\")]\n    public float fadeTime = 1.5f;\n\n    [Tooltip(\"Se activo, espera o fade-out terminar antes de avançar para a próxima ação.\")]\n    public bool waitForFade;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        AudioManager.Instance?.StopBGS(fadeTime);\n        if (waitForFade && fadeTime > 0f) yield return NpcActionUtil.Wait(fadeTime);\n    }\n}\n",
   "id": "script-npc-actions-audioactions-cs",
   "dependencyIds": [
     "script-audio-audiomanager-cs",
@@ -124,5 +272,7 @@
     "script-npc-actions-npcactionutil-cs",
     "script-npc-npccontroller-cs"
   ],
-  "usedByIds": []
+  "usedByIds": [
+    "script-enemy-bosses-bosscontroller-cs"
+  ]
 }

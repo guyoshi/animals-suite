@@ -16,96 +16,6 @@
   ],
   "fields": [
     {
-      "name": "panelRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Painel",
-      "attrs": "[Header(\"Painel\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "canvasGroup",
-      "type": "CanvasGroup",
-      "mods": "private",
-      "default": "",
-      "section": "Painel",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "artworkImage",
-      "type": "Image",
-      "mods": "private",
-      "default": "",
-      "section": "Painel",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "titleText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Painel",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "nameText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Painel",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "defaultTitle",
-      "type": "string",
-      "mods": "private",
-      "default": "\"NOVO ANIMAL DESBLOQUEADO!\"",
-      "section": "Texto Padrão",
-      "attrs": "[Header(\"Texto Padrão\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "defaultFanfare",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Áudio",
-      "attrs": "[Header(\"Áudio\")] [Tooltip(\"Som tocado quando a forma desbloqueada não tem 'unlockFanfare' própria (opcional). Tocado via AudioManager.PlaySE — não substitui o BGM da área.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Som tocado quando a forma desbloqueada não tem 'unlockFanfare' própria (opcional). Tocado via AudioManager.PlaySE — não substitui o BGM da área."
-    },
-    {
-      "name": "fadeDuration",
-      "type": "float",
-      "mods": "private",
-      "default": "0.3f",
-      "section": "Transição",
-      "attrs": "[Header(\"Transição\")] [Tooltip(\"Duração do fade in/out, em segundos.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Duração do fade in/out, em segundos."
-    },
-    {
-      "name": "holdDuration",
-      "type": "float",
-      "mods": "private",
-      "default": "3f",
-      "section": "Transição",
-      "attrs": "[Tooltip(\"Tempo (s) com o banner totalmente visível, sem contar o fade.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Tempo (s) com o banner totalmente visível, sem contar o fade."
-    },
-    {
       "name": "isAutoFallback",
       "type": "bool",
       "mods": "private",
@@ -120,16 +30,6 @@
       "type": "bool",
       "mods": "private",
       "default": "",
-      "section": "Transição",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_queue",
-      "type": "Queue<AnimalFormData>",
-      "mods": "private readonly",
-      "default": "new Queue<AnimalFormData>()",
       "section": "Transição",
       "attrs": "",
       "inspector": false,
@@ -190,27 +90,19 @@
   "dependencies": [
     "AnimalFormData",
     "AudioManager",
-    "MissionCompleteUI",
-    "PickupPopupUI",
-    "PlayerProgress"
+    "PlayerLocator"
   ],
   "used_by": [
-    "AnimalFormData",
-    "AnimalSpiritRescue",
     "FormSwitcher"
   ],
-  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Tarefa #8 — Sequência \"Novo Animal Desbloqueado\": overlay (CanvasGroup,\n/// Screen Space - Overlay) mostrado quando <see cref=\"PlayerProgress.AnimalUnlocked\"/>\n/// dispara pela primeira vez para uma forma (FreeAnimal — resgate de animais).\n///\n/// - UI: banner central com ilustração (AnimalFormData.unlockArtwork, ou\n///   'icon' se vazio), nome da forma (displayName) e o texto fixo\n///   \"NOVO ANIMAL DESBLOQUEADO!\".\n/// - Música: toca AnimalFormData.unlockFanfare (ou \"defaultFanfare\" se vazio)\n///   via AudioManager.PlaySE, sem substituir o BGM da área (mesmo padrão de\n///   MissionCompleteUI — sting curto \"no meio do jogo normal\").\n/// - Animação: se AnimalFormData.unlockCelebrationTrigger não estiver vazio,\n///   dispara esse trigger no Animator do player (GameObject com tag\n///   \"Player\") — animação de celebração curta.\n///\n/// Mensagens recebidas enquanto outra está visível são colocadas numa fila e\n/// mostradas em sequência (mesmo padrão de PickupPopupUI/MissionCompleteUI).\n///\n/// Singleton com auto-fallback (funciona mesmo sem UI montada, apenas sem\n/// mostrar nada — música e animação continuam a funcionar).\n///\n/// Montagem no Editor:\n/// - Canvas (Screen Space - Overlay) com um \"panelRoot\" (painel central) +\n///   \"canvasGroup\" no mesmo GameObject.\n/// - \"artworkImage\" (Image, opcional): ilustração/ícone da forma.\n/// - \"titleText\" (TMP_Text, opcional): \"NOVO ANIMAL DESBLOQUEADO!\"/defaultTitle.\n/// - \"nameText\" (TMP_Text): AnimalFormData.displayName.\n/// </summary>\npublic class NewAnimalUnlockedUI : MonoBehaviour\n{\n    public static NewAnimalUnlockedUI Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private Image artworkImage;\n    [SerializeField] private TMP_Text titleText;\n    [SerializeField] private TMP_Text nameText;\n\n    [Header(\"Texto Padrão\")]\n    [SerializeField] private string defaultTitle = \"NOVO ANIMAL DESBLOQUEADO!\";\n\n    [Header(\"Áudio\")]\n    [Tooltip(\"Som tocado quando a forma desbloqueada não tem 'unlockFanfare' própria (opcional). Tocado via AudioManager.PlaySE — não substitui o BGM da área.\")]\n    [SerializeField] private AudioClip defaultFanfare;\n\n    [Header(\"Transição\")]\n    [Tooltip(\"Duração do fade in/out, em segundos.\")]\n    [SerializeField] private float fadeDuration = 0.3f;\n\n    [Tooltip(\"Tempo (s) com o banner totalmente visível, sem contar o fade.\")]\n    [SerializeField] private float holdDuration = 3f;\n\n    private bool isAutoFallback;\n    private bool isShowing;\n    private readonly Queue<AnimalFormData> _queue = new Queue<AnimalFormData>();\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (canvasGroup != null) canvasGroup.alpha = 0f;\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(NewAnimalUnlockedUI) + \" (Fallback)\");\n        var instance = go.AddComponent<NewAnimalUnlockedUI>();\n        instance.isAutoFallback = true;\n    }\n\n    /// <summary>\n    /// Mostra a sequência \"Novo Animal Desbloqueado\" para \"form\": banner +\n    /// fanfarra + animação de celebração do player. Se já houver um banner\n    /// visível, esta forma é colocada na fila e mostrada a seguir. Chamado\n    /// automaticamente por <see cref=\"PlayerProgress.AnimalUnlocked\"/>, mas\n    /// pode também ser chamado directamente se necessário.\n    /// </summary>\n    public void Show(AnimalFormData form)\n    {\n        if (form == null) return;\n\n        _queue.Enqueue(form);\n        if (!isShowing) StartCoroutine(ShowQueueRoutine());\n    }\n\n    private IEnumerator ShowQueueRoutine()\n    {\n        isShowing = true;\n\n        while (_queue.Count > 0)\n        {\n            var form = _queue.Dequeue();\n\n            PlayCelebration(form);\n\n            if (titleText != null) titleText.text = defaultTitle;\n            if (nameText != null) nameText.text = form.displayName;\n\n            if (artworkImage != null)\n            {\n                var sprite = form.unlockArtwork != null ? form.unlockArtwork : form.icon;\n                artworkImage.sprite = sprite;\n                artworkImage.gameObject.SetActive(sprite != null);\n            }\n\n            // Sem UI montada (instância \"Fallback\" auto-criada sem montagem no\n            // Editor) — apenas espera (mantém o espaçamento entre mensagens),\n            // sem overlay. Áudio/animação acima já foram disparados.\n            if (canvasGroup == null)\n            {\n                yield return WaitUnscaled(holdDuration);\n                continue;\n            }\n\n            if (panelRoot != null) panelRoot.SetActive(true);\n\n            yield return FadeRoutine(0f, 1f);\n            yield return WaitUnscaled(holdDuration);\n            yield return FadeRoutine(1f, 0f);\n\n            if (panelRoot != null) panelRoot.SetActive(false);\n        }\n\n        isShowing = false;\n    }\n\n    /// <summary>Toca a fanfarra (PlaySE) e dispara a animação de celebração no Animator do player.</summary>\n    private void PlayCelebration(AnimalFormData form)\n    {\n        if (AudioManager.Instance != null)\n        {\n            if (form.unlockFanfare != null) AudioManager.Instance.PlaySE(form.unlockFanfare);\n            else if (defaultFanfare != null) AudioManager.Instance.PlaySE(defaultFanfare);\n        }\n\n        if (!string.IsNullOrEmpty(form.unlockCelebrationTrigger))\n        {\n            var playerGo = GameObject.FindGameObjectWithTag(\"Player\");\n            var anim = playerGo != null ? playerGo.GetComponent<Animator>() : null;\n            anim?.SetTrigger(form.unlockCelebrationTrigger);\n        }\n    }\n\n    private IEnumerator WaitUnscaled(float duration)\n    {\n        float t = 0f;\n        while (t < duration)\n        {\n            t += Time.unscaledDeltaTime;\n            yield return null;\n        }\n    }\n\n    private IEnumerator FadeRoutine(float from, float to)\n    {\n        if (canvasGroup == null) yield break;\n\n        canvasGroup.alpha = from;\n\n        if (fadeDuration <= 0f)\n        {\n            canvasGroup.alpha = to;\n            yield break;\n        }\n\n        float t = 0f;\n        while (t < fadeDuration)\n        {\n            t += Time.unscaledDeltaTime;\n            canvasGroup.alpha = Mathf.Lerp(from, to, t / fadeDuration);\n            yield return null;\n        }\n        canvasGroup.alpha = to;\n    }\n}\n",
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Tarefa #8 — Sequência \"Novo Animal Desbloqueado\": overlay (CanvasGroup,\n/// Screen Space - Overlay) mostrado quando <see cref=\"PlayerProgress.AnimalUnlocked\"/>\n/// dispara pela primeira vez para uma forma (FreeAnimal — resgate de animais).\n///\n/// - UI: banner central com ilustração (AnimalFormData.unlockArtwork, ou\n///   'icon' se vazio), nome da forma (displayName) e o texto fixo\n///   \"NOVO ANIMAL DESBLOQUEADO!\".\n/// - Música: toca AnimalFormData.unlockFanfare (ou \"defaultFanfare\" se vazio)\n///   via AudioManager.PlaySE, sem substituir o BGM da área (mesmo padrão de\n///   MissionCompleteUI — sting curto \"no meio do jogo normal\").\n/// - Animação: se AnimalFormData.unlockCelebrationTrigger não estiver vazio,\n///   dispara esse trigger no Animator do player (GameObject com tag\n///   \"Player\") — animação de celebração curta.\n///\n/// Mensagens recebidas enquanto outra está visível são colocadas numa fila e\n/// mostradas em sequência (mesmo padrão de PickupPopupUI/MissionCompleteUI).\n///\n/// Singleton com auto-fallback (funciona mesmo sem UI montada, apenas sem\n/// mostrar nada — música e animação continuam a funcionar).\n///\n/// Montagem no Editor:\n/// - Canvas (Screen Space - Overlay) com um \"panelRoot\" (painel central) +\n///   \"canvasGroup\" no mesmo GameObject.\n/// - \"artworkImage\" (Image, opcional): ilustração/ícone da forma.\n/// - \"titleText\" (TMP_Text, opcional): \"NOVO ANIMAL DESBLOQUEADO!\"/defaultTitle.\n/// - \"nameText\" (TMP_Text): AnimalFormData.displayName.\n/// </summary>\npublic class NewAnimalUnlockedUI : MonoBehaviour\n{\n    public static NewAnimalUnlockedUI Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private Image artworkImage;\n    [SerializeField] private TMP_Text titleText;\n    [SerializeField] private TMP_Text nameText;\n\n    [Header(\"Texto Padrão\")]\n    [SerializeField] private string defaultTitle = \"NOVO ANIMAL DESBLOQUEADO!\";\n\n    [Header(\"Áudio\")]\n    [Tooltip(\"Som tocado quando a forma desbloqueada não tem 'unlockFanfare' própria (opcional). Tocado via AudioManager.PlaySE — não substitui o BGM da área.\")]\n    [SerializeField] private AudioClip defaultFanfare;\n\n    [Header(\"Transição\")]\n    [Tooltip(\"Duração do fade in/out, em segundos.\")]\n    [SerializeField] private float fadeDuration = 0.3f;\n\n    [Tooltip(\"Tempo (s) com o banner totalmente visível, sem contar o fade.\")]\n    [SerializeField] private float holdDuration = 3f;\n\n    private bool isAutoFallback;\n    private bool isShowing;\n    private readonly Queue<AnimalFormData> _queue = new Queue<AnimalFormData>();\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (canvasGroup != null) canvasGroup.alpha = 0f;\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(NewAnimalUnlockedUI) + \" (Fallback)\");\n        var instance = go.AddComponent<NewAnimalUnlockedUI>();\n        instance.isAutoFallback = true;\n    }\n\n    /// <summary>\n    /// Mostra a sequência \"Novo Animal Desbloqueado\" para \"form\": banner +\n    /// fanfarra + animação de celebração do player. Se já houver um banner\n    /// visível, esta forma é colocada na fila e mostrada a seguir. Chamado\n    /// automaticamente por <see cref=\"PlayerProgress.AnimalUnlocked\"/>, mas\n    /// pode também ser chamado directamente se necessário.\n    /// </summary>\n    public void Show(AnimalFormData form)\n    {\n        if (form == null) return;\n\n        _queue.Enqueue(form);\n        if (!isShowing) StartCoroutine(ShowQueueRoutine());\n    }\n\n    private IEnumerator ShowQueueRoutine()\n    {\n        isShowing = true;\n\n        while (_queue.Count > 0)\n        {\n            var form = _queue.Dequeue();\n\n            PlayCelebration(form);\n\n            if (titleText != null) titleText.text = defaultTitle;\n            if (nameText != null) nameText.text = form.displayName;\n\n            if (artworkImage != null)\n            {\n                var sprite = form.unlockArtwork != null ? form.unlockArtwork : form.icon;\n                artworkImage.sprite = sprite;\n                artworkImage.gameObject.SetActive(sprite != null);\n            }\n\n            // Sem UI montada (instância \"Fallback\" auto-criada sem montagem no\n            // Editor) — apenas espera (mantém o espaçamento entre mensagens),\n            // sem overlay. Áudio/animação acima já foram disparados.\n            if (canvasGroup == null)\n            {\n                yield return WaitUnscaled(holdDuration);\n                continue;\n            }\n\n            if (panelRoot != null) panelRoot.SetActive(true);\n\n            yield return FadeRoutine(0f, 1f);\n            yield return WaitUnscaled(holdDuration);\n            yield return FadeRoutine(1f, 0f);\n\n            if (panelRoot != null) panelRoot.SetActive(false);\n        }\n\n        isShowing = false;\n    }\n\n    /// <summary>Toca a fanfarra (PlaySE) e dispara a animação de celebração no Animator do player.</summary>\n    private void PlayCelebration(AnimalFormData form)\n    {\n        if (AudioManager.Instance != null)\n        {\n            if (form.unlockFanfare != null) AudioManager.Instance.PlaySE(form.unlockFanfare);\n            else if (defaultFanfare != null) AudioManager.Instance.PlaySE(defaultFanfare);\n        }\n\n        if (!string.IsNullOrEmpty(form.unlockCelebrationTrigger))\n        {\n            var playerT = PlayerLocator.Find();\n            var anim = playerT != null ? playerT.GetComponent<Animator>() : null;\n            anim?.SetTrigger(form.unlockCelebrationTrigger);\n        }\n    }\n\n    private IEnumerator WaitUnscaled(float duration)\n    {\n        float t = 0f;\n        while (t < duration)\n        {\n            t += Time.unscaledDeltaTime;\n            yield return null;\n        }\n    }\n\n    private IEnumerator FadeRoutine(float from, float to)\n    {\n        if (canvasGroup == null) yield break;\n\n        canvasGroup.alpha = from;\n\n        if (fadeDuration <= 0f)\n        {\n            canvasGroup.alpha = to;\n            yield break;\n        }\n\n        float t = 0f;\n        while (t < fadeDuration)\n        {\n            t += Time.unscaledDeltaTime;\n            canvasGroup.alpha = Mathf.Lerp(from, to, t / fadeDuration);\n            yield return null;\n        }\n        canvasGroup.alpha = to;\n    }\n}\n",
   "id": "script-ui-newanimalunlockedui-cs",
   "dependencyIds": [
     "script-forms-animalformdata-cs",
     "script-audio-audiomanager-cs",
-    "script-ui-missioncompleteui-cs",
-    "script-ui-pickuppopupui-cs",
-    "script-data-playerprogress-cs"
+    "script-player-playerlocator-cs"
   ],
   "usedByIds": [
-    "script-forms-animalformdata-cs",
-    "script-interactables-animalspiritrescue-cs",
     "script-forms-formswitcher-cs"
   ]
 }

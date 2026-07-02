@@ -167,18 +167,34 @@
     "NpcController",
     "PlayerProgress"
   ],
-  "used_by": [],
+  "used_by": [
+    "Condition_HasClue",
+    "Condition_HasItemQuantity",
+    "MissionData",
+    "MissionDataEditor",
+    "NpcConditionUtil",
+    "RumorData"
+  ],
   "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n// Novas ações de diálogo (Etapa 5.3) — itens com quantidade, missões e branch\n// condicional. Aparecem automaticamente no \"+ Adicionar Ação\".\n\n/// <summary>Remove uma quantidade de um item do inventário do player (Etapa 4.2 — ex: entregar item de missão a um NPC).</summary>\n[System.Serializable]\npublic class Action_RemoveItem : NpcAction\n{\n    public ItemData item;\n\n    [Min(1)] public int amount = 1;\n\n    [Tooltip(\"Se o item removido for o item equipado e a quantidade chegar a 0, também o desequipa.\")]\n    public bool unequipIfDepleted = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || item == null) yield break;\n\n        progress.RemoveItem(item, amount);\n\n        if (unequipIfDepleted && progress.GetItemQuantity(item) <= 0 && progress.HasItemEquipped(item))\n            progress.EquipItem(null);\n    }\n}\n\n/// <summary>Inicia uma missão (Etapa 5.1 — escreve a variável global de activação via MissionManager).</summary>\n[System.Serializable]\npublic class Action_StartMission : NpcAction\n{\n    public MissionData mission;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        MissionManager.Instance?.StartMission(mission);\n        yield break;\n    }\n}\n\n/// <summary>Conclui uma missão (Etapa 5.1 — escreve a variável global de conclusão via MissionManager).</summary>\n[System.Serializable]\npublic class Action_CompleteMission : NpcAction\n{\n    public MissionData mission;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        MissionManager.Instance?.CompleteMission(mission);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Marca uma tarefa de uma missão como concluída (Sistema de Missões — Missão >\n/// Tarefa; tarefas não-lineares — ver MissionTask.dependsOnTaskIds). Usa-se em\n/// qualquer evento de NPC (diálogo) ou de objecto (ex: ao recolher um item, num\n/// evento \"OnPickup\"/\"OnInteract\") para marcar que essa tarefa específica foi\n/// feita. Não precisa de ser \"a próxima\" tarefa de uma sequência: pode ser\n/// qualquer tarefa da missão (ex: \"interagir com X\" e \"interagir com Y\", em\n/// qualquer ordem, ambas necessárias para desbloquear uma terceira tarefa).\n/// Quando TODAS as tarefas da missão ficarem concluídas, a missão é concluída\n/// automaticamente (banner/música \"MISSÃO CONCLUÍDA\").\n/// </summary>\n[System.Serializable]\npublic class Action_CompleteMissionTask : NpcAction\n{\n    public MissionData mission;\n\n    [Tooltip(\"\\\"Task Id\\\" da tarefa a marcar como concluída (ver MissionTask.taskId — se vazio nessa tarefa, o id efectivo é \\\"tarefa_<índice>\\\", 0 = primeira).\")]\n    public string taskId;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        MissionManager.Instance?.CompleteTask(mission, taskId);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Define directamente o estado \"concluída\" (verdadeiro/falso) de uma tarefa\n/// pelo seu \"Task Id\" — útil para ramos de diálogo que \"saltam\" tarefas (ex: o\n/// jogador já tinha feito algo antes de a missão começar) ou que precisam de\n/// \"desfazer\" o progresso de uma tarefa. Marcar como concluída pode concluir a\n/// missão automaticamente, se essa for a última tarefa em falta.\n/// </summary>\n[System.Serializable]\npublic class Action_SetMissionTaskState : NpcAction\n{\n    public MissionData mission;\n\n    [Tooltip(\"\\\"Task Id\\\" da tarefa a alterar (ver MissionTask.taskId — se vazio nessa tarefa, o id efectivo é \\\"tarefa_<índice>\\\", 0 = primeira).\")]\n    public string taskId;\n\n    [Tooltip(\"Novo estado \\\"concluída\\\" desta tarefa.\")]\n    public bool completed = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        MissionManager.Instance?.SetTaskCompleted(mission, taskId, completed);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Branch condicional (Etapa 5.3): avalia uma lista de NpcCondition e activa\n/// \"eventIdIfTrue\" se for verdadeira (ou \"eventIdIfFalse\" caso contrário), via\n/// ActivateEventById — cobre \"executar evento X se condição verdadeira /\n/// evento Y se falsa\". O evento activado dispara naturalmente no próximo\n/// Update/Touch/Button (sem reentrância).\n/// </summary>\n[System.Serializable]\npublic class Action_ConditionalBranch : NpcAction\n{\n    [Tooltip(\"Condições a avaliar (lista vazia = verdadeiro).\")]\n    [SerializeReference] public List<NpcCondition> conditions = new List<NpcCondition>();\n\n    [Tooltip(\"Se activo, TODAS as condições têm de se cumprir; senão, basta UMA.\")]\n    public bool requireAll = true;\n\n    [Tooltip(\"EventId a activar se a avaliação for verdadeira (vazio = nada).\")]\n    public string eventIdIfTrue = \"\";\n\n    [Tooltip(\"EventId a activar se a avaliação for falsa (vazio = nada).\")]\n    public string eventIdIfFalse = \"\";\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        bool result = NpcConditionUtil.EvaluateConditions(conditions, requireAll, npc);\n\n        string eventId = result ? eventIdIfTrue : eventIdIfFalse;\n        if (!string.IsNullOrEmpty(eventId))\n            npc.ActivateEventById(eventId);\n\n        yield break;\n    }\n}\n",
   "id": "script-npc-actions-missionactions-cs",
   "dependencyIds": [
+    "script-ui-formssectionui-cs",
     "script-data-itemdata-cs",
     "script-data-missiondata-cs",
     "script-data-missionmanager-cs",
+    "script-data-missiondata-cs",
     "script-npc-npcaction-cs",
     "script-npc-npccondition-cs",
     "script-npc-npcconditionutil-cs",
     "script-npc-npccontroller-cs",
     "script-data-playerprogress-cs"
   ],
-  "usedByIds": []
+  "usedByIds": [
+    "script-npc-conditions-journalconditions-cs",
+    "script-npc-conditions-missionconditions-cs",
+    "script-data-missiondata-cs",
+    "script-data-editor-missiondataeditor-cs",
+    "script-npc-npcconditionutil-cs",
+    "script-data-rumordata-cs"
+  ]
 }

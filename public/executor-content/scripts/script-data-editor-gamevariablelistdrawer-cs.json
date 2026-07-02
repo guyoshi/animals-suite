@@ -50,7 +50,8 @@
     "script-data-gamevariables-cs",
     "script-data-editor-gamevariableseditor-cs",
     "script-npc-npccontroller-cs",
-    "script-npc-editor-npccontrollereditor-cs"
+    "script-npc-editor-npccontrollereditor-cs",
+    "script-data-gamevariable-cs"
   ],
   "usedByIds": [
     "script-data-editor-gamevariableseditor-cs",

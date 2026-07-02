@@ -117,9 +117,7 @@
     "EnemyRespawn",
     "PlayerProgress"
   ],
-  "used_by": [
-    "EnemyController"
-  ],
+  "used_by": [],
   "source": "using UnityEngine;\n\n/// <summary>\n/// Objectivo cumprido quando o inimigo com \"Enemy Instance Id\" =\n/// <see cref=\"enemyInstanceId\"/> entra num estado terminal (Morto/Desactivado —\n/// EnemyController.OnAnyEnemyDefeated, Tarefa #22). Pensado para \"derrota o\n/// guardião X antes de avançar\" — reaproveita o mesmo \"Enemy Instance Id\" já\n/// usado por EnemyCondition/puzzles (ver EnemyController).\n///\n/// Se o inimigo já estiver num estado terminal (ex: já derrotado numa sessão\n/// anterior — EnemyRespawn/PlayerProgress, Tarefa 7.3) ao iniciar o desafio, o\n/// objectivo já começa cumprido.\n///\n/// Objectivo binário (sem contador) — <see cref=\"TargetProgress\"/> devolve -1.\n/// </summary>\n[System.Serializable]\npublic class Objective_DefeatSpecificEnemy : ChallengeObjective\n{\n    [Tooltip(\"\\\"Enemy Instance Id\\\" (campo no EnemyController do inimigo) a derrotar.\")]\n    public string enemyInstanceId;\n\n    [System.NonSerialized] private bool defeated;\n\n    public override void ResetState()\n    {\n        EnemyController.OnAnyEnemyDefeated -= HandleEnemyDefeated;\n        EnemyController.OnAnyEnemyDefeated += HandleEnemyDefeated;\n\n        var existing = EnemyController.FindById(enemyInstanceId);\n        defeated = existing != null && existing.IsTerminal;\n    }\n\n    private void HandleEnemyDefeated(EnemyController enemy)\n    {\n        if (enemy.EnemyInstanceId == enemyInstanceId)\n            defeated = true;\n    }\n\n    public override bool IsComplete() => defeated;\n}\n\n/// <summary>\n/// Objectivo cumprido ao derrotar pelo menos <see cref=\"amount\"/> inimigos\n/// DURANTE o desafio (EnemyController.OnAnyEnemyDefeated, Tarefa #22).\n/// Contador global — não precisa de listar inimigos no Inspector, conta\n/// qualquer inimigo que entre num estado terminal (Morto/Desactivado) enquanto\n/// o desafio estiver activo, incluindo inimigos criados/spawnados depois do\n/// início.\n///\n/// Mostra \"derrotados/amount\" no HUD (Tarefa #12).\n/// </summary>\n[System.Serializable]\npublic class Objective_DefeatEnemyCount : ChallengeObjective\n{\n    [Tooltip(\"Se definido, só conta derrotas de inimigos com este EnemyData. Se vazio, conta qualquer inimigo.\")]\n    public EnemyData enemyFilter;\n\n    [Tooltip(\"Número de inimigos a derrotar durante o desafio.\")]\n    [Min(1)] public int amount = 1;\n\n    [System.NonSerialized] private int count;\n\n    public override void ResetState()\n    {\n        EnemyController.OnAnyEnemyDefeated -= HandleEnemyDefeated;\n        EnemyController.OnAnyEnemyDefeated += HandleEnemyDefeated;\n        count = 0;\n    }\n\n    private void HandleEnemyDefeated(EnemyController enemy)\n    {\n        if (enemyFilter != null && enemy.Data != enemyFilter) return;\n        count++;\n    }\n\n    public override bool IsComplete() => count >= amount;\n\n    public override int CurrentProgress() => Mathf.Min(count, amount);\n\n    public override int TargetProgress() => amount;\n}\n",
   "id": "script-data-objectives-challengeobjectives-enemy-cs",
   "dependencyIds": [
@@ -130,7 +128,5 @@
     "script-enemy-enemyrespawn-cs",
     "script-data-playerprogress-cs"
   ],
-  "usedByIds": [
-    "script-enemy-enemycontroller-cs"
-  ]
+  "usedByIds": []
 }

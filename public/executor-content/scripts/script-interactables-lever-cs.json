@@ -177,7 +177,6 @@
     "NpcAction"
   ],
   "used_by": [
-    "MovingPlatform",
     "Switch",
     "TonguePullAbility"
   ],
@@ -185,11 +184,11 @@
   "id": "script-interactables-lever-cs",
   "dependencyIds": [
     "script-enemy-enemyconditions-variables-cs",
+    "script-enemy-enemyconditions-variables-cs",
     "script-data-gamevariables-cs",
     "script-npc-npcaction-cs"
   ],
   "usedByIds": [
-    "script-platforms-movingplatform-cs",
     "script-interactables-switch-cs",
     "script-abilities-tonguepullability-cs"
   ]

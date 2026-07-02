@@ -36,6 +36,8 @@
   "id": "script-collectibles-ecoperdidopickup-cs",
   "dependencyIds": [
     "script-data-areadata-cs",
+    "script-data-playerprogress-cs",
+    "script-collectibles-pickupbase-cs",
     "script-collectibles-pickupbase-cs",
     "script-data-playerprogress-cs"
   ],

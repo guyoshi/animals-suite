@@ -16,76 +16,6 @@
   ],
   "fields": [
     {
-      "name": "invulnTime",
-      "type": "float",
-      "mods": "private",
-      "default": "0.8f",
-      "section": "Damage / Invuln",
-      "attrs": "[Header(\"Damage / Invuln\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "knockbackX",
-      "type": "float",
-      "mods": "private",
-      "default": "9f",
-      "section": "Damage / Invuln",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "knockbackY",
-      "type": "float",
-      "mods": "private",
-      "default": "8f",
-      "section": "Damage / Invuln",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "wallBumpMinSpeed",
-      "type": "float",
-      "mods": "private",
-      "default": "10.5f",
-      "section": "Wall Bump",
-      "attrs": "[Header(\"Wall Bump\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "wallBumpRecoil",
-      "type": "float",
-      "mods": "private",
-      "default": "6.0f",
-      "section": "Wall Bump",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "wallBumpStun",
-      "type": "float",
-      "mods": "private",
-      "default": "0.08f",
-      "section": "Wall Bump",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "minKnockbackMultiplier",
-      "type": "float",
-      "mods": "private",
-      "default": "0.15f",
-      "section": "Resistência a Knockback (Tarefa #28)",
-      "attrs": "[Header(\"Resistência a Knockback (Tarefa #28)\")] [Tooltip(\"Limite mínimo do multiplicador de knockback (evita knockback totalmente nulo por acumulação de resistências — forma Resistente + Raiz de Aderência, etc.). Ignorado quando um IKnockbackResistanceProvider concede imunidade total (KnockbackMultiplier == 0).\")] [Range(0f, 1f)] [SerializeField]",
-      "inspector": true,
-      "description": "Limite mínimo do multiplicador de knockback (evita knockback totalmente nulo por acumulação de resistências — forma Resistente + Raiz de Aderência, etc.). Ignorado quando um IKnockbackResistanceProvider concede imunidade total (KnockbackMultiplier == 0)."
-    },
-    {
       "name": "rb",
       "type": "Rigidbody2D",
       "mods": "private",
@@ -146,6 +76,16 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
+      "name": "_stunLockHeld",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Resistência a Knockback (Tarefa #28)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
       "name": "_tempKnockbackMultiplier",
       "type": "float",
       "mods": "private",
@@ -170,16 +110,6 @@
       "type": "float",
       "mods": "private",
       "default": "",
-      "section": "Resistência a Knockback (Tarefa #28)",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_immunityKeysCache",
-      "type": "List<DamageType>",
-      "mods": "private readonly",
-      "default": "new List<DamageType>()",
       "section": "Resistência a Knockback (Tarefa #28)",
       "attrs": "",
       "inspector": false,
@@ -290,31 +220,44 @@
       "mods": "private",
       "params": "float duration",
       "description": "Executa a operação BeginStun."
+    },
+    {
+      "name": "ReleaseStunLock",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ReleaseStunLock."
+    },
+    {
+      "name": "ForceEndStun",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação ForceEndStun."
+    },
+    {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
     }
   ],
   "dependencies": [
-    "AnimalFormData",
     "CamoAbility",
     "ClimbAbility",
     "DamageInfo",
     "DamageType",
-    "DashAbility",
-    "EnemyAttackController",
-    "EnemyContactDamage",
     "FormSwitcher",
     "IKnockbackResistanceProvider",
     "PlayerConsumableEffects",
-    "PlayerDeathHandler",
-    "PlayerItemUser",
     "PlayerMotor2D",
     "PlayerProgress",
-    "ProjectileController",
     "RollAbility",
     "ShellGuardAbility"
   ],
   "used_by": [
     "AnimalsDebugPanel",
-    "ClimbAbility",
     "DamageInfo",
     "EnemyAttackController",
     "EnemyContactDamage",
@@ -322,44 +265,33 @@
     "FallingSpike",
     "IKnockbackResistanceProvider",
     "InvertingSpikes",
-    "ItemData",
     "NpcPlayerConditionUtil",
-    "PlayerConsumableEffects",
-    "PlayerDeathHandler",
     "PlayerFeedback",
     "PlayerHealthRegen",
     "PlayerItemUser",
     "PlayerMotor2D",
-    "PlayerProgress",
     "PlayerResourceType",
     "ProjectileController",
-    "RollAbility",
+    "SaveManager",
     "ShellGuardAbility"
   ],
-  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Reacções físicas do player a impactos: invencibilidade temporária + knockback\n/// ao ser atingido (\"TakeHit\") e recuo ao bater contra paredes a alta velocidade\n/// (\"wall bump\").\n///\n/// Extraído de PlayerController_Horse (HorseController2D) ao reorganizar\n/// Scripts/ — era a única lógica desse script sem equivalente no sistema novo\n/// (PlayerMotor2D / DashAbility / AnimalFormData / PlayerProgress).\n///\n/// P2: <see cref=\"TryDamagePlayer\"/> é agora o ponto de entrada ÚNICO de dano\n/// ao player (usado por EnemyAttackController, ProjectileController e\n/// EnemyContactDamage): respeita IsInvulnerable (i-frames), aplica a Defesa\n/// da forma actual (AnimalFormData.ApplyDefense — tabela por patamares) e\n/// chama TakeHit (invencibilidade + knockback).\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D), typeof(PlayerMotor2D))]\npublic class PlayerCombat : MonoBehaviour\n{\n    [Header(\"Damage / Invuln\")]\n    [SerializeField] private float invulnTime = 0.8f;\n    [SerializeField] private float knockbackX = 9f;\n    [SerializeField] private float knockbackY = 8f;\n\n    [Header(\"Wall Bump\")]\n    [SerializeField] private float wallBumpMinSpeed = 10.5f;\n    [SerializeField] private float wallBumpRecoil = 6.0f;\n    [SerializeField] private float wallBumpStun = 0.08f;\n\n    [Header(\"Resistência a Knockback (Tarefa #28)\")]\n    [Tooltip(\"Limite mínimo do multiplicador de knockback (evita knockback totalmente nulo por acumulação de resistências — forma Resistente + Raiz de Aderência, etc.). Ignorado quando um IKnockbackResistanceProvider concede imunidade total (KnockbackMultiplier == 0).\")]\n    [Range(0f, 1f)] [SerializeField] private float minKnockbackMultiplier = 0.15f;\n\n    private Rigidbody2D rb;\n    private PlayerMotor2D motor;\n    private FormSwitcher formSwitcher;\n    private IKnockbackResistanceProvider[] knockbackProviders;\n\n    private float invulnTimer;\n    private float stunTimer;\n\n    // Tarefa #28 — buff temporário de \"Raiz de Aderência\" (reduz knockback + derrapagem).\n    private float _tempKnockbackMultiplier = 1f;\n    private float _tempSkidGripMultiplier = 1f;\n    private float _tempGripTimer;\n\n    // Tarefa #28 — imunidade temporária a tipos de dano específicos (ex: Hazard após queda).\n    private readonly Dictionary<DamageType, float> _typeImmunityTimers = new Dictionary<DamageType, float>();\n    // Cache reutilizável para iterar _typeImmunityTimers em Update sem alocar por frame.\n    private readonly List<DamageType> _immunityKeysCache = new List<DamageType>();\n\n    public bool IsInvulnerable => invulnTimer > 0f;\n\n    /// <summary>\n    /// Multiplicador aplicado à derrapagem (PlayerMotor2D.skidBrake) enquanto o\n    /// buff de \"Raiz de Aderência\" estiver activo (&gt;= 1 = trava mais rápido\n    /// = menos derrapagem); 1 = sem efeito.\n    /// </summary>\n    public float SkidGripMultiplier => _tempGripTimer > 0f ? _tempSkidGripMultiplier : 1f;\n\n    /// <summary>\n    /// Disparado por TryDamagePlayer sempre que o player recebe dano que passa\n    /// pelos i-frames (já com Defesa/Escudo aplicados). \"info\" é a informação\n    /// original do golpe, \"finalAmount\" é o valor de corações realmente\n    /// subtraído. UI/VFX/SFX (flash do sprite, som, vibração, screen shake)\n    /// devem ligar-se aqui em vez de duplicar lógica de dano — ver auditoria\n    /// item 10 (\"falta evento de dano\").\n    /// </summary>\n    public event System.Action<DamageInfo, int> OnPlayerDamaged;\n\n    private void Awake()\n    {\n        rb = GetComponent<Rigidbody2D>();\n        motor = GetComponent<PlayerMotor2D>();\n        formSwitcher = GetComponent<FormSwitcher>();\n        knockbackProviders = GetComponents<IKnockbackResistanceProvider>();\n    }\n\n    private void Update()\n    {\n        if (invulnTimer > 0f)\n            invulnTimer -= Time.deltaTime;\n\n        if (stunTimer > 0f)\n        {\n            stunTimer -= Time.deltaTime;\n            if (stunTimer <= 0f) motor.SetMovementLocked(false, this);\n        }\n\n        if (_tempGripTimer > 0f)\n        {\n            _tempGripTimer -= Time.deltaTime;\n            if (_tempGripTimer <= 0f)\n            {\n                _tempGripTimer = 0f;\n                _tempKnockbackMultiplier = 1f;\n            }\n        }\n\n        if (_typeImmunityTimers.Count > 0)\n        {\n            _immunityKeysCache.Clear();\n            foreach (var key in _typeImmunityTimers.Keys) _immunityKeysCache.Add(key);\n            foreach (var type in _immunityKeysCache)\n            {\n                float remaining = _typeImmunityTimers[type] - Time.deltaTime;\n                if (remaining <= 0f) _typeImmunityTimers.Remove(type);\n                else _typeImmunityTimers[type] = remaining;\n            }\n        }\n    }\n\n    /// <summary>Chama isto quando o player levar dano: aplica invencibilidade + knockback. \"knockbackForce\" &gt; 0 substitui a força horizontal por defeito (knockbackX).</summary>\n    public void TakeHit(Vector2 hitFrom, float knockbackForce = -1f)\n    {\n        if (invulnTimer > 0f) return;\n\n        invulnTimer = invulnTime;\n\n        float multiplier = ComputeKnockbackMultiplier();\n\n        float dir = (transform.position.x - hitFrom.x) >= 0 ? 1f : -1f;\n        float forceX = (knockbackForce > 0f ? knockbackForce : knockbackX) * multiplier;\n        float forceY = knockbackY * multiplier;\n        rb.velocity = new Vector2(dir * forceX, forceY);\n\n        BeginStun(0.06f);\n    }\n\n    /// <summary>\n    /// Tarefa #28 — calcula o multiplicador de knockback aplicado a este\n    /// player: resistência da forma actual (<see cref=\"AnimalFormData.knockbackResistance\"/>)\n    /// × buff temporário de \"Raiz de Aderência\" × resistências de habilidades\n    /// (<see cref=\"IKnockbackResistanceProvider\"/>). Se qualquer provider\n    /// devolver exactamente 0, concede imunidade total (ignora\n    /// <see cref=\"minKnockbackMultiplier\"/>); caso contrário o resultado é\n    /// limitado por baixo a <see cref=\"minKnockbackMultiplier\"/> para evitar\n    /// knockback completamente nulo só por acumulação de resistências.\n    /// </summary>\n    public float ComputeKnockbackMultiplier()\n    {\n        float multiplier = 1f;\n\n        if (formSwitcher != null && formSwitcher.CurrentForm != null)\n            multiplier *= Mathf.Clamp01(formSwitcher.CurrentForm.knockbackResistance);\n\n        multiplier *= Mathf.Max(0f, _tempKnockbackMultiplier);\n\n        bool fullImmunity = false;\n        if (knockbackProviders != null)\n        {\n            foreach (var provider in knockbackProviders)\n            {\n                float m = provider.KnockbackMultiplier;\n                if (m <= 0f) fullImmunity = true;\n                multiplier *= Mathf.Max(0f, m);\n            }\n        }\n\n        if (fullImmunity) return 0f;\n\n        return Mathf.Max(minKnockbackMultiplier, multiplier);\n    }\n\n    /// <summary>\n    /// Tarefa #28 — aplica o buff temporário do item \"Raiz de Aderência\":\n    /// reduz knockback recebido (knockbackMultiplier, 0-1) e derrapagem\n    /// (skidGripMultiplier, &gt;= 1) durante \"duration\" segundos. Chamado por\n    /// <see cref=\"PlayerItemUser\"/> ao usar o item.\n    /// </summary>\n    public void ApplyTemporaryGripBuff(float knockbackMultiplier, float skidGripMultiplier, float duration)\n    {\n        _tempKnockbackMultiplier = Mathf.Clamp01(knockbackMultiplier);\n        _tempSkidGripMultiplier = Mathf.Max(1f, skidGripMultiplier);\n        _tempGripTimer = Mathf.Max(0f, duration);\n    }\n\n    /// <summary>\n    /// Tarefa #28 — concede imunidade temporária a um tipo de dano específico\n    /// (ex: Hazard, por X segundos depois de uma queda). \"duration\" &lt;= 0\n    /// remove a imunidade imediatamente.\n    /// </summary>\n    public void GrantTemporaryImmunity(DamageType type, float duration)\n    {\n        if (duration <= 0f) { _typeImmunityTimers.Remove(type); return; }\n        _typeImmunityTimers[type] = duration;\n    }\n\n    /// <summary>True se o player estiver temporariamente imune a este tipo de dano (ver <see cref=\"GrantTemporaryImmunity\"/>).</summary>\n    public bool IsImmuneTo(DamageType type) => _typeImmunityTimers.TryGetValue(type, out var remaining) && remaining > 0f;\n\n    /// <summary>\n    /// Ponto de entrada ÚNICO de dano ao player (P2). Respeita i-frames\n    /// (IsInvulnerable), aplica a Defesa da forma actual\n    /// (AnimalFormData.ApplyDefense) e dispara TakeHit (invuln + knockback).\n    /// Devolve false se o dano foi ignorado (invulnerável). Funciona mesmo sem\n    /// PlayerCombat/FormSwitcher no player (fallback: dano directo + empurrão).\n    ///\n    /// Dispara <see cref=\"OnPlayerDamaged\"/> (auditoria item 10) com a info\n    /// original + valor final aplicado; a morte continua sinalizada por\n    /// PlayerProgress.OnHeartsDepleted (PlayerDeathHandler já está ligado lá).\n    /// </summary>\n    public static bool TryDamagePlayer(Transform player, DamageInfo info)\n    {\n        if (player == null)\n        {\n            if (info.Amount > 0) PlayerProgress.Instance?.Damage(info.Amount);\n            return true;\n        }\n\n        // Usar GetComponentInParent para suportar hitboxes em GameObjects filho com tag \"Player\".\n        var combat = player.GetComponentInParent<PlayerCombat>();\n        if (combat != null && (combat.IsInvulnerable || combat.IsImmuneTo(info.Type))) return false;\n\n        int finalAmount = info.Amount;\n\n        if (!info.IgnoreDefense)\n        {\n            // Defesa da forma actual (fichas GDD 1-10, por patamares).\n            var switcher = player.GetComponentInParent<FormSwitcher>();\n            if (switcher != null && switcher.CurrentForm != null)\n                finalAmount = switcher.CurrentForm.ApplyDefense(finalAmount);\n\n            // Postura de escudo (ShellGuardAbility — Tartaruga): redução extra.\n            var guard = player.GetComponentInParent<ShellGuardAbility>();\n            if (guard != null && guard.IsGuarding)\n                finalAmount = guard.ApplyGuard(finalAmount);\n\n            // Rolamento (RollAbility — Pangolim): bónus de defesa enquanto a rolar.\n            var roll = player.GetComponentInParent<RollAbility>();\n            if (roll != null && roll.IsRolling)\n                finalAmount = roll.ApplyRollDefense(finalAmount);\n\n            // Coala (Tarefa #7): bónus de defesa enquanto agarrado/a escalar.\n            var climb = player.GetComponentInParent<ClimbAbility>();\n            if (climb != null && climb.IsClimbing)\n                finalAmount = climb.ApplyClimbDefense(finalAmount);\n\n            // Tarefa #28 — Pele Serena (×0.5) e Juramento Difícil/Modo Difícil (×2),\n            // por esta ordem, com arredondamento para cima e mínimo de 1 de dano.\n            finalAmount = ApplyHealthModifiers(finalAmount);\n        }\n\n        // Escudo da Casca Serenna (Tarefa \"Itens Consumíveis\"): consome o\n        // escudo e bloqueia TANTO o dano quanto o knockback deste golpe, se\n        // ainda houver dano a aplicar depois de Defesa/ShellGuard. Mortes\n        // especiais (info.IgnoreDefense) ignoram o escudo quando o item\n        // concedido tiver \"shieldIgnoresSpecialDeaths\" activo.\n        if (finalAmount > 0)\n        {\n            var consumable = player.GetComponentInParent<PlayerConsumableEffects>();\n            if (consumable != null && consumable.TryConsumeShield(info.IgnoreDefense))\n                return true;\n        }\n\n        // Tomar dano quebra a camuflagem (CamoAbility — P5).\n        var camo = player.GetComponentInParent<CamoAbility>();\n        if (camo != null && camo.IsCamoActive)\n            camo.BreakCamo();\n\n        if (finalAmount > 0)\n            PlayerProgress.Instance?.Damage(finalAmount);\n\n        if (combat != null)\n        {\n            combat.TakeHit(info.SourcePosition, info.Knockback);\n            combat.OnPlayerDamaged?.Invoke(info, finalAmount);\n        }\n        else if (info.Knockback > 0f)\n        {\n            // Fallback antigo: empurrão directo no Rigidbody2D.\n            var rb = player.GetComponent<Rigidbody2D>();\n            if (rb != null)\n            {\n                Vector2 dir = info.KnockbackDir ?? ((Vector2)player.position - info.SourcePosition);\n                rb.velocity = (dir.sqrMagnitude > 0.0001f ? dir.normalized : Vector2.right) * info.Knockback;\n            }\n        }\n\n        return true;\n    }\n\n    /// <summary>\n    /// Tarefa #28 — aplica Pele Serena (×0.5, se activa) e Juramento Difícil/\n    /// Modo Difícil (×2, se activo), por esta ordem, depois da Defesa/Escudo já\n    /// aplicados. Arredonda sempre para cima e garante o mínimo de 1 ponto de\n    /// vida em qualquer ataque que já causasse dano (&gt; 0). Quando ambos\n    /// estão activos, os multiplicadores ×0.5 e ×2 anulam-se matematicamente.\n    /// </summary>\n    private static int ApplyHealthModifiers(int amount)\n    {\n        if (amount <= 0) return amount;\n\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return amount;\n\n        float result = amount;\n\n        if (progress.IsPeleSerenaActive) result *= 0.5f;\n        if (progress.IsHardModeActive) result *= 2f;\n\n        return Mathf.Max(1, Mathf.CeilToInt(result));\n    }\n\n    /// <summary>\n    /// Overload legado, mantido para não obrigar a alterar todas as chamadas\n    /// existentes de uma vez: assume DamageType.Enemy e respeita Defesa/Escudo\n    /// normalmente. Novo código (e chamadores que já sabem a origem do dano)\n    /// devem preferir <see cref=\"TryDamagePlayer(Transform, DamageInfo)\"/>.\n    /// </summary>\n    public static bool TryDamagePlayer(Transform player, int amount, Vector2 hitFrom, float knockbackForce = 0f, Vector2? knockbackDir = null)\n    {\n        return TryDamagePlayer(player, new DamageInfo(amount, DamageType.Enemy, hitFrom, knockbackForce, knockbackDir));\n    }\n\n    private void OnCollisionEnter2D(Collision2D col)\n    {\n        if (motor.IsDashing) return;\n        if (col.contactCount == 0) return;\n\n        foreach (var c in col.contacts)\n        {\n            if (Mathf.Abs(c.normal.x) > 0.7f)\n            {\n                float speed = Mathf.Abs(rb.velocity.x);\n                if (speed >= wallBumpMinSpeed)\n                {\n                    float recoilDir = Mathf.Sign(c.normal.x);\n                    rb.velocity = new Vector2(recoilDir * wallBumpRecoil, rb.velocity.y);\n                    BeginStun(wallBumpStun);\n                }\n                break;\n            }\n        }\n    }\n\n    private void BeginStun(float duration)\n    {\n        if (duration <= 0f) return;\n        stunTimer = Mathf.Max(stunTimer, duration);\n        motor.SetMovementLocked(true, this);\n    }\n}\n",
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\n/// <summary>\n/// Reacções físicas do player a impactos: invencibilidade temporária + knockback\n/// ao ser atingido (\"TakeHit\") e recuo ao bater contra paredes a alta velocidade\n/// (\"wall bump\").\n///\n/// Extraído de PlayerController_Horse (HorseController2D) ao reorganizar\n/// Scripts/ — era a única lógica desse script sem equivalente no sistema novo\n/// (PlayerMotor2D / DashAbility / AnimalFormData / PlayerProgress).\n///\n/// P2: <see cref=\"TryDamagePlayer\"/> é agora o ponto de entrada ÚNICO de dano\n/// ao player (usado por EnemyAttackController, ProjectileController e\n/// EnemyContactDamage): respeita IsInvulnerable (i-frames), aplica a Defesa\n/// da forma actual (AnimalFormData.ApplyDefense — tabela por patamares) e\n/// chama TakeHit (invencibilidade + knockback).\n/// </summary>\n[RequireComponent(typeof(Rigidbody2D), typeof(PlayerMotor2D))]\npublic class PlayerCombat : MonoBehaviour\n{\n    [Header(\"Damage / Invuln\")]\n    [SerializeField] private float invulnTime = 0.8f;\n    [SerializeField] private float knockbackX = 9f;\n    [SerializeField] private float knockbackY = 8f;\n\n    [Header(\"Wall Bump\")]\n    [SerializeField] private float wallBumpMinSpeed = 10.5f;\n    [SerializeField] private float wallBumpRecoil = 6.0f;\n    [SerializeField] private float wallBumpStun = 0.08f;\n\n    [Header(\"Resistência a Knockback (Tarefa #28)\")]\n    [Tooltip(\"Limite mínimo do multiplicador de knockback (evita knockback totalmente nulo por acumulação de resistências — forma Resistente + Raiz de Aderência, etc.). Ignorado quando um IKnockbackResistanceProvider concede imunidade total (KnockbackMultiplier == 0).\")]\n    [Range(0f, 1f)] [SerializeField] private float minKnockbackMultiplier = 0.15f;\n\n    private Rigidbody2D rb;\n    private PlayerMotor2D motor;\n    private FormSwitcher formSwitcher;\n    private IKnockbackResistanceProvider[] knockbackProviders;\n\n    private float invulnTimer;\n    private float stunTimer;\n    // Task 1.4: booleano para evitar múltiplos locks de stun.\n    // SetMovementLocked(true) é adquirido apenas no primeiro stun;\n    // stuns seguintes apenas prolongam o timer; libertado uma única vez.\n    private bool _stunLockHeld;\n\n    // Tarefa #28 — buff temporário de \"Raiz de Aderência\" (reduz knockback + derrapagem).\n    private float _tempKnockbackMultiplier = 1f;\n    private float _tempSkidGripMultiplier = 1f;\n    private float _tempGripTimer;\n\n    // Tarefa #28 — imunidade temporária a tipos de dano específicos (ex: Hazard após queda).\n    private readonly Dictionary<DamageType, float> _typeImmunityTimers = new Dictionary<DamageType, float>();\n    // Cache reutilizável para iterar _typeImmunityTimers em Update sem alocar por frame.\n    private readonly List<DamageType> _immunityKeysCache = new List<DamageType>();\n\n    public bool IsInvulnerable => invulnTimer > 0f;\n\n    /// <summary>\n    /// Multiplicador aplicado à derrapagem (PlayerMotor2D.skidBrake) enquanto o\n    /// buff de \"Raiz de Aderência\" estiver activo (&gt;= 1 = trava mais rápido\n    /// = menos derrapagem); 1 = sem efeito.\n    /// </summary>\n    public float SkidGripMultiplier => _tempGripTimer > 0f ? _tempSkidGripMultiplier : 1f;\n\n    /// <summary>\n    /// Disparado por TryDamagePlayer sempre que o player recebe dano que passa\n    /// pelos i-frames (já com Defesa/Escudo aplicados). \"info\" é a informação\n    /// original do golpe, \"finalAmount\" é o valor de corações realmente\n    /// subtraído. UI/VFX/SFX (flash do sprite, som, vibração, screen shake)\n    /// devem ligar-se aqui em vez de duplicar lógica de dano — ver auditoria\n    /// item 10 (\"falta evento de dano\").\n    /// </summary>\n    public event System.Action<DamageInfo, int> OnPlayerDamaged;\n\n    private void Awake()\n    {\n        rb = GetComponent<Rigidbody2D>();\n        motor = GetComponent<PlayerMotor2D>();\n        formSwitcher = GetComponent<FormSwitcher>();\n        knockbackProviders = GetComponents<IKnockbackResistanceProvider>();\n    }\n\n    private void Update()\n    {\n        if (invulnTimer > 0f)\n            invulnTimer -= Time.deltaTime;\n\n        if (stunTimer > 0f)\n        {\n            stunTimer -= Time.deltaTime;\n            if (stunTimer <= 0f) ReleaseStunLock();\n        }\n\n        if (_tempGripTimer > 0f)\n        {\n            _tempGripTimer -= Time.deltaTime;\n            if (_tempGripTimer <= 0f)\n            {\n                _tempGripTimer = 0f;\n                _tempKnockbackMultiplier = 1f;\n            }\n        }\n\n        if (_typeImmunityTimers.Count > 0)\n        {\n            _immunityKeysCache.Clear();\n            foreach (var key in _typeImmunityTimers.Keys) _immunityKeysCache.Add(key);\n            foreach (var type in _immunityKeysCache)\n            {\n                float remaining = _typeImmunityTimers[type] - Time.deltaTime;\n                if (remaining <= 0f) _typeImmunityTimers.Remove(type);\n                else _typeImmunityTimers[type] = remaining;\n            }\n        }\n    }\n\n    /// <summary>Chama isto quando o player levar dano: aplica invencibilidade + knockback. \"knockbackForce\" &gt; 0 substitui a força horizontal por defeito (knockbackX).</summary>\n    public void TakeHit(Vector2 hitFrom, float knockbackForce = -1f)\n    {\n        if (invulnTimer > 0f) return;\n\n        invulnTimer = invulnTime;\n\n        float multiplier = ComputeKnockbackMultiplier();\n\n        float dir = (transform.position.x - hitFrom.x) >= 0 ? 1f : -1f;\n        float forceX = (knockbackForce > 0f ? knockbackForce : knockbackX) * multiplier;\n        float forceY = knockbackY * multiplier;\n        rb.linearVelocity = new Vector2(dir * forceX, forceY);\n\n        BeginStun(0.06f);\n    }\n\n    /// <summary>\n    /// Tarefa #28 — calcula o multiplicador de knockback aplicado a este\n    /// player: resistência da forma actual (<see cref=\"AnimalFormData.knockbackResistance\"/>)\n    /// × buff temporário de \"Raiz de Aderência\" × resistências de habilidades\n    /// (<see cref=\"IKnockbackResistanceProvider\"/>). Se qualquer provider\n    /// devolver exactamente 0, concede imunidade total (ignora\n    /// <see cref=\"minKnockbackMultiplier\"/>); caso contrário o resultado é\n    /// limitado por baixo a <see cref=\"minKnockbackMultiplier\"/> para evitar\n    /// knockback completamente nulo só por acumulação de resistências.\n    /// </summary>\n    public float ComputeKnockbackMultiplier()\n    {\n        float multiplier = 1f;\n\n        if (formSwitcher != null && formSwitcher.CurrentForm != null)\n            multiplier *= Mathf.Clamp01(formSwitcher.CurrentForm.knockbackResistance);\n\n        multiplier *= Mathf.Max(0f, _tempKnockbackMultiplier);\n\n        bool fullImmunity = false;\n        if (knockbackProviders != null)\n        {\n            foreach (var provider in knockbackProviders)\n            {\n                float m = provider.KnockbackMultiplier;\n                if (m <= 0f) fullImmunity = true;\n                multiplier *= Mathf.Max(0f, m);\n            }\n        }\n\n        if (fullImmunity) return 0f;\n\n        return Mathf.Max(minKnockbackMultiplier, multiplier);\n    }\n\n    /// <summary>\n    /// Tarefa #28 — aplica o buff temporário do item \"Raiz de Aderência\":\n    /// reduz knockback recebido (knockbackMultiplier, 0-1) e derrapagem\n    /// (skidGripMultiplier, &gt;= 1) durante \"duration\" segundos. Chamado por\n    /// <see cref=\"PlayerItemUser\"/> ao usar o item.\n    /// </summary>\n    public void ApplyTemporaryGripBuff(float knockbackMultiplier, float skidGripMultiplier, float duration)\n    {\n        _tempKnockbackMultiplier = Mathf.Clamp01(knockbackMultiplier);\n        _tempSkidGripMultiplier = Mathf.Max(1f, skidGripMultiplier);\n        _tempGripTimer = Mathf.Max(0f, duration);\n    }\n\n    /// <summary>\n    /// Tarefa #28 — concede imunidade temporária a um tipo de dano específico\n    /// (ex: Hazard, por X segundos depois de uma queda). \"duration\" &lt;= 0\n    /// remove a imunidade imediatamente.\n    /// </summary>\n    public void GrantTemporaryImmunity(DamageType type, float duration)\n    {\n        if (duration <= 0f) { _typeImmunityTimers.Remove(type); return; }\n        _typeImmunityTimers[type] = duration;\n    }\n\n    /// <summary>True se o player estiver temporariamente imune a este tipo de dano (ver <see cref=\"GrantTemporaryImmunity\"/>).</summary>\n    public bool IsImmuneTo(DamageType type) => _typeImmunityTimers.TryGetValue(type, out var remaining) && remaining > 0f;\n\n    /// <summary>\n    /// Ponto de entrada ÚNICO de dano ao player (P2). Respeita i-frames\n    /// (IsInvulnerable), aplica a Defesa da forma actual\n    /// (AnimalFormData.ApplyDefense) e dispara TakeHit (invuln + knockback).\n    /// Devolve false se o dano foi ignorado (invulnerável). Funciona mesmo sem\n    /// PlayerCombat/FormSwitcher no player (fallback: dano directo + empurrão).\n    ///\n    /// Dispara <see cref=\"OnPlayerDamaged\"/> (auditoria item 10) com a info\n    /// original + valor final aplicado; a morte continua sinalizada por\n    /// PlayerProgress.OnHeartsDepleted (PlayerDeathHandler já está ligado lá).\n    /// </summary>\n    public static bool TryDamagePlayer(Transform player, DamageInfo info)\n    {\n        if (player == null)\n        {\n            if (info.Amount > 0) PlayerProgress.Instance?.Damage(info.Amount);\n            return true;\n        }\n\n        // Usar GetComponentInParent para suportar hitboxes em GameObjects filho com tag \"Player\".\n        var combat = player.GetComponentInParent<PlayerCombat>();\n        if (combat != null && (combat.IsInvulnerable || combat.IsImmuneTo(info.Type))) return false;\n\n        int finalAmount = info.Amount;\n\n        if (!info.IgnoreDefense)\n        {\n            // Defesa da forma actual (fichas GDD 1-10, por patamares).\n            var switcher = player.GetComponentInParent<FormSwitcher>();\n            if (switcher != null && switcher.CurrentForm != null)\n                finalAmount = switcher.CurrentForm.ApplyDefense(finalAmount);\n\n            // Postura de escudo (ShellGuardAbility — Tartaruga): redução extra.\n            var guard = player.GetComponentInParent<ShellGuardAbility>();\n            if (guard != null && guard.IsGuarding)\n                finalAmount = guard.ApplyGuard(finalAmount);\n\n            // Rolamento (RollAbility — Pangolim): bónus de defesa enquanto a rolar.\n            var roll = player.GetComponentInParent<RollAbility>();\n            if (roll != null && roll.IsRolling)\n                finalAmount = roll.ApplyRollDefense(finalAmount);\n\n            // Coala (Tarefa #7): bónus de defesa enquanto agarrado/a escalar.\n            var climb = player.GetComponentInParent<ClimbAbility>();\n            if (climb != null && climb.IsClimbing)\n                finalAmount = climb.ApplyClimbDefense(finalAmount);\n\n            // Tarefa #28 — Pele Serena (×0.5) e Juramento Difícil/Modo Difícil (×2),\n            // por esta ordem, com arredondamento para cima e mínimo de 1 de dano.\n            finalAmount = ApplyHealthModifiers(finalAmount);\n        }\n\n        // Escudo da Casca Serenna (Tarefa \"Itens Consumíveis\"): consome o\n        // escudo e bloqueia TANTO o dano quanto o knockback deste golpe, se\n        // ainda houver dano a aplicar depois de Defesa/ShellGuard. Mortes\n        // especiais (info.IgnoreDefense) ignoram o escudo quando o item\n        // concedido tiver \"shieldIgnoresSpecialDeaths\" activo.\n        if (finalAmount > 0)\n        {\n            var consumable = player.GetComponentInParent<PlayerConsumableEffects>();\n            if (consumable != null && consumable.TryConsumeShield(info.IgnoreDefense))\n                return true;\n        }\n\n        // Tomar dano quebra a camuflagem (CamoAbility — P5).\n        var camo = player.GetComponentInParent<CamoAbility>();\n        if (camo != null && camo.IsCamoActive)\n            camo.BreakCamo();\n\n        if (finalAmount > 0)\n            PlayerProgress.Instance?.Damage(finalAmount);\n\n        if (combat != null)\n        {\n            combat.TakeHit(info.SourcePosition, info.Knockback);\n            combat.OnPlayerDamaged?.Invoke(info, finalAmount);\n        }\n        else if (info.Knockback > 0f)\n        {\n            // Fallback antigo: empurrão directo no Rigidbody2D.\n            var rb = player.GetComponent<Rigidbody2D>();\n            if (rb != null)\n            {\n                Vector2 dir = info.KnockbackDir ?? ((Vector2)player.position - info.SourcePosition);\n                rb.linearVelocity = (dir.sqrMagnitude > 0.0001f ? dir.normalized : Vector2.right) * info.Knockback;\n            }\n        }\n\n        return true;\n    }\n\n    /// <summary>\n    /// Tarefa #28 — aplica Pele Serena (×0.5, se activa) e Juramento Difícil/\n    /// Modo Difícil (×2, se activo), por esta ordem, depois da Defesa/Escudo já\n    /// aplicados. Arredonda sempre para cima e garante o mínimo de 1 ponto de\n    /// vida em qualquer ataque que já causasse dano (&gt; 0). Quando ambos\n    /// estão activos, os multiplicadores ×0.5 e ×2 anulam-se matematicamente.\n    /// </summary>\n    private static int ApplyHealthModifiers(int amount)\n    {\n        if (amount <= 0) return amount;\n\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return amount;\n\n        float result = amount;\n\n        if (progress.IsPeleSerenaActive) result *= 0.5f;\n        if (progress.IsHardModeActive) result *= 2f;\n\n        return Mathf.Max(1, Mathf.CeilToInt(result));\n    }\n\n    /// <summary>\n    /// Overload legado, mantido para não obrigar a alterar todas as chamadas\n    /// existentes de uma vez: assume DamageType.Enemy e respeita Defesa/Escudo\n    /// normalmente. Novo código (e chamadores que já sabem a origem do dano)\n    /// devem preferir <see cref=\"TryDamagePlayer(Transform, DamageInfo)\"/>.\n    /// </summary>\n    public static bool TryDamagePlayer(Transform player, int amount, Vector2 hitFrom, float knockbackForce = 0f, Vector2? knockbackDir = null)\n    {\n        return TryDamagePlayer(player, new DamageInfo(amount, DamageType.Enemy, hitFrom, knockbackForce, knockbackDir));\n    }\n\n    private void OnCollisionEnter2D(Collision2D col)\n    {\n        if (motor.IsDashing) return;\n        if (col.contactCount == 0) return;\n\n        foreach (var c in col.contacts)\n        {\n            if (Mathf.Abs(c.normal.x) > 0.7f)\n            {\n                float speed = Mathf.Abs(rb.linearVelocity.x);\n                if (speed >= wallBumpMinSpeed)\n                {\n                    float recoilDir = Mathf.Sign(c.normal.x);\n                    rb.linearVelocity = new Vector2(recoilDir * wallBumpRecoil, rb.linearVelocity.y);\n                    BeginStun(wallBumpStun);\n                }\n                break;\n            }\n        }\n    }\n\n    private void BeginStun(float duration)\n    {\n        if (duration <= 0f) return;\n        // Prolonga o timer (nunca trunca um stun em curso).\n        stunTimer = Mathf.Max(stunTimer, duration);\n        // Adquire o lock apenas uma vez: stuns repetidos prolongam o timer\n        // mas não acumulam locks — ForceEndStun liberta sempre exactamente um.\n        if (!_stunLockHeld)\n        {\n            _stunLockHeld = true;\n            motor.SetMovementLocked(true, this);\n        }\n    }\n\n    private void ReleaseStunLock()\n    {\n        if (!_stunLockHeld) return;\n        _stunLockHeld = false;\n        stunTimer = 0f;\n        motor.SetMovementLocked(false, this);\n    }\n\n    /// <summary>\n    /// Termina o stun imediatamente — usado ao carregar, morrer ou trocar de cena\n    /// para garantir que o lock nunca fica preso.\n    /// </summary>\n    public void ForceEndStun()\n    {\n        stunTimer = 0f;\n        ReleaseStunLock();\n    }\n\n    private void OnDisable() => ForceEndStun();\n}\n",
   "id": "script-player-playercombat-cs",
   "dependencyIds": [
-    "script-forms-animalformdata-cs",
     "script-abilities-camoability-cs",
     "script-abilities-climbability-cs",
     "script-player-damageinfo-cs",
-    "script-abilities-dashability-cs",
-    "script-enemy-enemyattackcontroller-cs",
-    "script-enemy-enemycontactdamage-cs",
+    "script-player-damageinfo-cs",
     "script-forms-formswitcher-cs",
     "script-player-iknockbackresistanceprovider-cs",
     "script-player-playerconsumableeffects-cs",
-    "script-player-playerdeathhandler-cs",
-    "script-player-playeritemuser-cs",
     "script-player-playermotor2d-cs",
     "script-data-playerprogress-cs",
-    "script-enemy-projectilecontroller-cs",
     "script-abilities-rollability-cs",
     "script-abilities-shellguardability-cs"
   ],
   "usedByIds": [
     "script-test-animalsdebugpanel-cs",
-    "script-abilities-climbability-cs",
     "script-player-damageinfo-cs",
     "script-enemy-enemyattackcontroller-cs",
     "script-enemy-enemycontactdamage-cs",
@@ -367,18 +299,14 @@
     "script-platforms-fallingspike-cs",
     "script-player-iknockbackresistanceprovider-cs",
     "script-platforms-invertingspikes-cs",
-    "script-data-itemdata-cs",
     "script-npc-conditions-playerconditions-cs",
-    "script-player-playerconsumableeffects-cs",
-    "script-player-playerdeathhandler-cs",
     "script-player-playerfeedback-cs",
     "script-player-playerhealthregen-cs",
     "script-player-playeritemuser-cs",
     "script-player-playermotor2d-cs",
-    "script-data-playerprogress-cs",
     "script-npc-actions-rewardactions-cs",
     "script-enemy-projectilecontroller-cs",
-    "script-abilities-rollability-cs",
+    "script-data-savemanager-cs",
     "script-abilities-shellguardability-cs"
   ]
 }

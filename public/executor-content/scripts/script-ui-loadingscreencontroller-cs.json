@@ -165,7 +165,6 @@
   ],
   "used_by": [
     "AnimalsDebugPanel",
-    "AreaManager",
     "MainMenuController",
     "OptionsSectionUI",
     "SaveMenuController",
@@ -182,7 +181,6 @@
   ],
   "usedByIds": [
     "script-test-animalsdebugpanel-cs",
-    "script-world-areamanager-cs",
     "script-ui-mainmenucontroller-cs",
     "script-ui-optionssectionui-cs",
     "script-ui-savemenucontroller-cs",

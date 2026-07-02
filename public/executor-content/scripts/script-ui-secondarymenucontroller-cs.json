@@ -22,146 +22,6 @@
   ],
   "fields": [
     {
-      "name": "panelRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Painel",
-      "attrs": "[Header(\"Painel\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "canvasGroup",
-      "type": "CanvasGroup",
-      "mods": "private",
-      "default": "",
-      "section": "Painel",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "animatedRoot",
-      "type": "RectTransform",
-      "mods": "private",
-      "default": "",
-      "section": "Painel",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "animDuration",
-      "type": "float",
-      "mods": "private",
-      "default": "0.3f",
-      "section": "Animação de Abertura/Fecho",
-      "attrs": "[Header(\"Animação de Abertura/Fecho\")] [Tooltip(\"Duração da animação de abrir/fechar (GDD: 0.25 a 0.35s).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Duração da animação de abrir/fechar (GDD: 0.25 a 0.35s)."
-    },
-    {
-      "name": "closedScale",
-      "type": "float",
-      "mods": "private",
-      "default": "0.85f",
-      "section": "Animação de Abertura/Fecho",
-      "attrs": "[Tooltip(\"Escala inicial (ao abrir) / final (ao fechar).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Escala inicial (ao abrir) / final (ao fechar)."
-    },
-    {
-      "name": "tabLabels",
-      "type": "List<TMP_Text>",
-      "mods": "private",
-      "default": "new List<TMP_Text>()",
-      "section": "Navegação de Abas",
-      "attrs": "[Header(\"Navegação de Abas\")] [Tooltip(\"Um TMP_Text por aba (mesma ordem que 'tabBehaviours'), para realçar a aba actual.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Um TMP_Text por aba (mesma ordem que 'tabBehaviours'), para realçar a aba atual."
-    },
-    {
-      "name": "tabInactiveColor",
-      "type": "Color",
-      "mods": "private",
-      "default": "new Color(1f, 1f, 1f, 0.5f)",
-      "section": "Navegação de Abas",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "tabActiveColor",
-      "type": "Color",
-      "mods": "private",
-      "default": "Color.white",
-      "section": "Navegação de Abas",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "tabBehaviours",
-      "type": "List<MonoBehaviour>",
-      "mods": "private",
-      "default": "new List<MonoBehaviour>()",
-      "section": "Abas (ordem: Upgrades, ...)",
-      "attrs": "[Header(\"Abas (ordem: Upgrades, ...)\")] [Tooltip(\"Cada elemento deve implementar ISecondaryMenuTab.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Cada elemento deve implementar ISecondaryMenuTab."
-    },
-    {
-      "name": "openSfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Som",
-      "attrs": "[Header(\"Som\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "closeSfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Som",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "tabChangeSfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Som",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "input",
-      "type": "PlayerInputRouter",
-      "mods": "private",
-      "default": "",
-      "section": "Referências",
-      "attrs": "[Header(\"Referências\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "tabs",
-      "type": "List<ISecondaryMenuTab>",
-      "mods": "private readonly",
-      "default": "new List<ISecondaryMenuTab>()",
-      "section": "Referências",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "currentTabIndex",
       "type": "int",
       "mods": "private",
@@ -339,6 +199,13 @@
       "description": "Executa a operação AnimateRoutine."
     },
     {
+      "name": "PauseSectionAdapter",
+      "ret": "",
+      "mods": "public",
+      "params": "IPauseMenuSection section",
+      "description": "Executa a operação PauseSectionAdapter."
+    },
+    {
       "name": "Refresh",
       "ret": "void",
       "mods": "public",
@@ -354,20 +221,12 @@
     }
   ],
   "dependencies": [
-    "AreaSectionUI",
     "AudioManager",
-    "DiarySectionUI",
-    "EmblemsSectionUI",
-    "FormsSectionUI",
     "GamePauseUtil",
     "IPauseMenuSection",
     "ISecondaryMenuTab",
-    "ItemsInstinctsSectionUI",
-    "OptionsSectionUI",
     "PauseMenuController",
-    "PlayerInputRouter",
-    "ProgressSectionUI",
-    "UpgradesTabUI"
+    "PlayerInputRouter"
   ],
   "used_by": [
     "EmblemsSectionUI",
@@ -375,23 +234,15 @@
     "PauseMenuController",
     "UpgradesTabUI"
   ],
-  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\n\n/// <summary>\n/// Menu Secundário (\"-\", Tarefa #35): abre com o botão \"-\"\n/// (<see cref=\"PlayerInputRouter.SecondaryMenuPressed\"/>) e contém as secções\n/// principais do jogo — Área Atual, Diário, Formas, Itens &amp; Instintos,\n/// Progresso, Upgrades, Emblemas.\n///\n/// O Menu de Pausa (\"+\" — <see cref=\"PauseMenuController\"/>) fica apenas com\n/// <see cref=\"OptionsSectionUI\"/>, tornando-se um atalho directo para Opções.\n///\n/// Aceita tanto <see cref=\"ISecondaryMenuTab\"/> como <see cref=\"IPauseMenuSection\"/>\n/// em \"tabBehaviours\" — as secções existentes (<c>AreaSectionUI</c>,\n/// <c>DiarySectionUI</c>, etc.) implementam <c>IPauseMenuSection</c> e são\n/// adaptadas internamente sem precisar de ser alteradas.\n///\n/// - Abre/fecha com \"-\". Se o Menu de Pausa estiver aberto, não abre.\n/// - Navega com L/R (PrevFormTapped/NextFormTapped).\n/// - \"B\"/Escape fecha.\n/// - Animação idêntica ao Menu de Pausa (escala+fade, ~0.25-0.35s).\n///\n/// Montagem no Editor:\n/// - \"panelRoot\"/\"canvasGroup\"/\"animatedRoot\": painel e animação.\n/// - \"tabLabels\": um TMP_Text por aba, na MESMA ordem que \"tabBehaviours\".\n/// - \"tabBehaviours\": MonoBehaviours que implementam ISecondaryMenuTab OU\n///   IPauseMenuSection (ex: AreaSectionUI, DiarySectionUI, FormsSectionUI,\n///   ItemsInstinctsSectionUI, ProgressSectionUI, UpgradesTabUI, EmblemsSectionUI).\n/// </summary>\npublic class SecondaryMenuController : MonoBehaviour\n{\n    public static SecondaryMenuController Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private RectTransform animatedRoot;\n\n    [Header(\"Animação de Abertura/Fecho\")]\n    [Tooltip(\"Duração da animação de abrir/fechar (GDD: 0.25 a 0.35s).\")]\n    [SerializeField] private float animDuration = 0.3f;\n\n    [Tooltip(\"Escala inicial (ao abrir) / final (ao fechar).\")]\n    [SerializeField] private float closedScale = 0.85f;\n\n    [Header(\"Navegação de Abas\")]\n    [Tooltip(\"Um TMP_Text por aba (mesma ordem que 'tabBehaviours'), para realçar a aba actual.\")]\n    [SerializeField] private List<TMP_Text> tabLabels = new List<TMP_Text>();\n    [SerializeField] private Color tabInactiveColor = new Color(1f, 1f, 1f, 0.5f);\n    [SerializeField] private Color tabActiveColor = Color.white;\n\n    [Header(\"Abas (ordem: Upgrades, ...)\")]\n    [Tooltip(\"Cada elemento deve implementar ISecondaryMenuTab.\")]\n    [SerializeField] private List<MonoBehaviour> tabBehaviours = new List<MonoBehaviour>();\n\n    [Header(\"Som\")]\n    [SerializeField] private AudioClip openSfx;\n    [SerializeField] private AudioClip closeSfx;\n    [SerializeField] private AudioClip tabChangeSfx;\n\n    [Header(\"Referências\")]\n    [SerializeField] private PlayerInputRouter input;\n\n    private readonly List<ISecondaryMenuTab> tabs = new List<ISecondaryMenuTab>();\n    private int currentTabIndex;\n    private bool isOpen;\n    private Coroutine animRoutine;\n\n    public bool IsOpen => isOpen;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            Destroy(gameObject);\n            return;\n        }\n\n        Instance = this;\n\n        tabs.Clear();\n        foreach (var mb in tabBehaviours)\n        {\n            ISecondaryMenuTab tab = null;\n\n            if (mb is ISecondaryMenuTab directTab)\n                tab = directTab;\n            else if (mb is IPauseMenuSection section)\n                tab = new PauseSectionAdapter(section);\n\n            if (tab != null)\n            {\n                tabs.Add(tab);\n                if (tab.Root != null) tab.Root.SetActive(false);\n            }\n            else\n            {\n                Debug.LogError($\"[SecondaryMenuController] '{(mb != null ? mb.name : \"null\")}' não implementa ISecondaryMenuTab nem IPauseMenuSection — ignorado.\");\n            }\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n        if (canvasGroup != null) canvasGroup.alpha = 0f;\n    }\n\n    private void Start()\n    {\n        if (input == null) input = FindObjectOfType<PlayerInputRouter>();\n    }\n\n    private void OnEnable()\n    {\n        if (input == null) input = FindObjectOfType<PlayerInputRouter>();\n        if (input == null) return;\n\n        input.SecondaryMenuPressed += OnSecondaryMenuPressed;\n        input.PrevFormTapped += OnPrevTab;\n        input.NextFormTapped += OnNextTab;\n    }\n\n    private void OnDisable()\n    {\n        if (input == null) return;\n\n        input.SecondaryMenuPressed -= OnSecondaryMenuPressed;\n        input.PrevFormTapped -= OnPrevTab;\n        input.NextFormTapped -= OnNextTab;\n    }\n\n    // ---------------- Abrir / Fechar ----------------\n\n    private void OnSecondaryMenuPressed()\n    {\n        // Não abre se o Menu de Pausa estiver aberto (e fecha se já estiver aberto).\n        if (PauseMenuController.Instance != null && PauseMenuController.Instance.IsOpen) return;\n\n        if (isOpen) Close();\n        else Open();\n    }\n\n    public void Open()\n    {\n        if (isOpen) return;\n        if (tabs.Count == 0)\n        {\n            Debug.LogWarning(\"[SecondaryMenuController] Nenhuma aba configurada — menu não abre.\");\n            return;\n        }\n\n        isOpen = true;\n\n        GamePauseUtil.Pause();\n        AudioManager.Instance?.SetBgmMuffled(true);\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        ShowTab(currentTabIndex, refresh: true);\n\n        PlayAnimation(opening: true);\n        AudioManager.Instance?.PlaySE(openSfx);\n    }\n\n    public void Close()\n    {\n        if (!isOpen) return;\n\n        isOpen = false;\n\n        if (currentTabIndex < tabs.Count)\n            tabs[currentTabIndex].OnHide();\n\n        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);\n\n        PlayAnimation(opening: false);\n        AudioManager.Instance?.PlaySE(closeSfx);\n    }\n\n    // ---------------- Navegação de Abas ----------------\n\n    private void OnPrevTab()\n    {\n        if (!isOpen) return;\n        ChangeTab(-1);\n    }\n\n    private void OnNextTab()\n    {\n        if (!isOpen) return;\n        ChangeTab(1);\n    }\n\n    private void ChangeTab(int delta)\n    {\n        if (tabs.Count <= 1) return;\n\n        int next = (currentTabIndex + delta + tabs.Count) % tabs.Count;\n        if (next == currentTabIndex) return;\n\n        tabs[currentTabIndex].OnHide();\n        ShowTab(next, refresh: true);\n\n        AudioManager.Instance?.PlaySE(tabChangeSfx);\n    }\n\n    private void ShowTab(int index, bool refresh)\n    {\n        currentTabIndex = index;\n\n        for (int i = 0; i < tabs.Count; i++)\n        {\n            bool active = i == index;\n\n            if (tabs[i].Root != null) tabs[i].Root.SetActive(active);\n\n            if (i < tabLabels.Count && tabLabels[i] != null)\n                tabLabels[i].color = active ? tabActiveColor : tabInactiveColor;\n        }\n\n        if (refresh) tabs[index].Refresh();\n    }\n\n    // ---------------- Utilitário ----------------\n\n    /// <summary>\n    /// Abre o menu directamente numa aba específica — ex: chamado por um\n    /// sistema externo para revelar um upgrade recém-desbloqueado.\n    /// </summary>\n    public void OpenToTab(MonoBehaviour tabBehaviour)\n    {\n        int index = tabBehaviours.IndexOf(tabBehaviour);\n        if (index < 0)\n        {\n            Open();\n            return;\n        }\n\n        bool wasOpen = isOpen;\n        if (!wasOpen) Open();\n\n        if (index != currentTabIndex)\n        {\n            tabs[currentTabIndex].OnHide();\n            ShowTab(index, refresh: true);\n            if (wasOpen) AudioManager.Instance?.PlaySE(tabChangeSfx);\n        }\n    }\n\n    /// <summary>Toca um som orgânico através do AudioManager — usado pelas abas.</summary>\n    public void PlaySfx(AudioClip clip) => AudioManager.Instance?.PlaySE(clip);\n\n    // ---------------- Animação ----------------\n\n    private void PlayAnimation(bool opening)\n    {\n        if (animRoutine != null) StopCoroutine(animRoutine);\n        animRoutine = StartCoroutine(AnimateRoutine(opening));\n    }\n\n    private IEnumerator AnimateRoutine(bool opening)\n    {\n        float from = opening ? closedScale : 1f;\n        float to = opening ? 1f : closedScale;\n        float fromAlpha = opening ? 0f : 1f;\n        float toAlpha = opening ? 1f : 0f;\n\n        float t = 0f;\n        float duration = Mathf.Max(0.01f, animDuration);\n\n        while (t < duration)\n        {\n            t += Time.unscaledDeltaTime;\n            float p = Mathf.Clamp01(t / duration);\n            float eased = 1f - Mathf.Pow(1f - p, 3f);\n\n            if (animatedRoot != null) animatedRoot.localScale = Vector3.one * Mathf.Lerp(from, to, eased);\n            if (canvasGroup != null) canvasGroup.alpha = Mathf.Lerp(fromAlpha, toAlpha, eased);\n\n            yield return null;\n        }\n\n        if (animatedRoot != null) animatedRoot.localScale = Vector3.one * to;\n        if (canvasGroup != null) canvasGroup.alpha = toAlpha;\n\n        if (!opening)\n        {\n            if (panelRoot != null) panelRoot.SetActive(false);\n\n            GamePauseUtil.Resume();\n            AudioManager.Instance?.SetBgmMuffled(false);\n        }\n    }\n}\n\n/// <summary>\n/// Adapta um <see cref=\"IPauseMenuSection\"/> para <see cref=\"ISecondaryMenuTab\"/>,\n/// permitindo que secções existentes do Menu de Pausa (AreaSectionUI,\n/// DiarySectionUI, etc.) sejam usadas directamente no SecondaryMenuController\n/// sem precisar de alterar os seus scripts.\n/// </summary>\ninternal sealed class PauseSectionAdapter : ISecondaryMenuTab\n{\n    private readonly IPauseMenuSection _section;\n\n    public PauseSectionAdapter(IPauseMenuSection section) => _section = section;\n\n    public string TabName => _section.SectionName;\n    public UnityEngine.GameObject Root => _section.Root;\n    public void Refresh() => _section.Refresh();\n    public void OnHide() => _section.OnHide();\n}\n",
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\n\n/// <summary>\n/// Menu Secundário (\"-\", Tarefa #35): abre com o botão \"-\"\n/// (<see cref=\"PlayerInputRouter.SecondaryMenuPressed\"/>) e contém as secções\n/// principais do jogo — Área Atual, Diário, Formas, Itens &amp; Instintos,\n/// Progresso, Upgrades, Emblemas.\n///\n/// O Menu de Pausa (\"+\" — <see cref=\"PauseMenuController\"/>) fica apenas com\n/// <see cref=\"OptionsSectionUI\"/>, tornando-se um atalho directo para Opções.\n///\n/// Aceita tanto <see cref=\"ISecondaryMenuTab\"/> como <see cref=\"IPauseMenuSection\"/>\n/// em \"tabBehaviours\" — as secções existentes (<c>AreaSectionUI</c>,\n/// <c>DiarySectionUI</c>, etc.) implementam <c>IPauseMenuSection</c> e são\n/// adaptadas internamente sem precisar de ser alteradas.\n///\n/// - Abre/fecha com \"-\". Se o Menu de Pausa estiver aberto, não abre.\n/// - Navega com L/R (PrevFormTapped/NextFormTapped).\n/// - \"B\"/Escape fecha.\n/// - Animação idêntica ao Menu de Pausa (escala+fade, ~0.25-0.35s).\n///\n/// Montagem no Editor:\n/// - \"panelRoot\"/\"canvasGroup\"/\"animatedRoot\": painel e animação.\n/// - \"tabLabels\": um TMP_Text por aba, na MESMA ordem que \"tabBehaviours\".\n/// - \"tabBehaviours\": MonoBehaviours que implementam ISecondaryMenuTab OU\n///   IPauseMenuSection (ex: AreaSectionUI, DiarySectionUI, FormsSectionUI,\n///   ItemsInstinctsSectionUI, ProgressSectionUI, UpgradesTabUI, EmblemsSectionUI).\n/// </summary>\npublic class SecondaryMenuController : MonoBehaviour\n{\n    public static SecondaryMenuController Instance { get; private set; }\n\n    [Header(\"Painel\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private CanvasGroup canvasGroup;\n    [SerializeField] private RectTransform animatedRoot;\n\n    [Header(\"Animação de Abertura/Fecho\")]\n    [Tooltip(\"Duração da animação de abrir/fechar (GDD: 0.25 a 0.35s).\")]\n    [SerializeField] private float animDuration = 0.3f;\n\n    [Tooltip(\"Escala inicial (ao abrir) / final (ao fechar).\")]\n    [SerializeField] private float closedScale = 0.85f;\n\n    [Header(\"Navegação de Abas\")]\n    [Tooltip(\"Um TMP_Text por aba (mesma ordem que 'tabBehaviours'), para realçar a aba actual.\")]\n    [SerializeField] private List<TMP_Text> tabLabels = new List<TMP_Text>();\n    [SerializeField] private Color tabInactiveColor = new Color(1f, 1f, 1f, 0.5f);\n    [SerializeField] private Color tabActiveColor = Color.white;\n\n    [Header(\"Abas (ordem: Upgrades, ...)\")]\n    [Tooltip(\"Cada elemento deve implementar ISecondaryMenuTab.\")]\n    [SerializeField] private List<MonoBehaviour> tabBehaviours = new List<MonoBehaviour>();\n\n    [Header(\"Som\")]\n    [SerializeField] private AudioClip openSfx;\n    [SerializeField] private AudioClip closeSfx;\n    [SerializeField] private AudioClip tabChangeSfx;\n\n    [Header(\"Referências\")]\n    [SerializeField] private PlayerInputRouter input;\n\n    private readonly List<ISecondaryMenuTab> tabs = new List<ISecondaryMenuTab>();\n    private int currentTabIndex;\n    private bool isOpen;\n    private Coroutine animRoutine;\n\n    public bool IsOpen => isOpen;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            Destroy(gameObject);\n            return;\n        }\n\n        Instance = this;\n\n        tabs.Clear();\n        foreach (var mb in tabBehaviours)\n        {\n            ISecondaryMenuTab tab = null;\n\n            if (mb is ISecondaryMenuTab directTab)\n                tab = directTab;\n            else if (mb is IPauseMenuSection section)\n                tab = new PauseSectionAdapter(section);\n\n            if (tab != null)\n            {\n                tabs.Add(tab);\n                if (tab.Root != null) tab.Root.SetActive(false);\n            }\n            else\n            {\n                Debug.LogError($\"[SecondaryMenuController] '{(mb != null ? mb.name : \"null\")}' não implementa ISecondaryMenuTab nem IPauseMenuSection — ignorado.\");\n            }\n        }\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n        if (canvasGroup != null) canvasGroup.alpha = 0f;\n    }\n\n    private void Start()\n    {\n        if (input == null) input = FindFirstObjectByType<PlayerInputRouter>();\n    }\n\n    private void OnEnable()\n    {\n        if (input == null) input = FindFirstObjectByType<PlayerInputRouter>();\n        if (input == null) return;\n\n        input.SecondaryMenuPressed += OnSecondaryMenuPressed;\n        input.PrevFormTapped += OnPrevTab;\n        input.NextFormTapped += OnNextTab;\n    }\n\n    private void OnDisable()\n    {\n        if (input == null) return;\n\n        input.SecondaryMenuPressed -= OnSecondaryMenuPressed;\n        input.PrevFormTapped -= OnPrevTab;\n        input.NextFormTapped -= OnNextTab;\n    }\n\n    // ---------------- Abrir / Fechar ----------------\n\n    private void OnSecondaryMenuPressed()\n    {\n        // Não abre se o Menu de Pausa estiver aberto (e fecha se já estiver aberto).\n        if (PauseMenuController.Instance != null && PauseMenuController.Instance.IsOpen) return;\n\n        if (isOpen) Close();\n        else Open();\n    }\n\n    public void Open()\n    {\n        if (isOpen) return;\n        if (tabs.Count == 0)\n        {\n            Debug.LogWarning(\"[SecondaryMenuController] Nenhuma aba configurada — menu não abre.\");\n            return;\n        }\n\n        isOpen = true;\n\n        GamePauseUtil.Pause();\n        AudioManager.Instance?.SetBgmMuffled(true);\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        ShowTab(currentTabIndex, refresh: true);\n\n        PlayAnimation(opening: true);\n        AudioManager.Instance?.PlaySE(openSfx);\n    }\n\n    public void Close()\n    {\n        if (!isOpen) return;\n\n        isOpen = false;\n\n        if (currentTabIndex < tabs.Count)\n            tabs[currentTabIndex].OnHide();\n\n        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);\n\n        PlayAnimation(opening: false);\n        AudioManager.Instance?.PlaySE(closeSfx);\n    }\n\n    // ---------------- Navegação de Abas ----------------\n\n    private void OnPrevTab()\n    {\n        if (!isOpen) return;\n        ChangeTab(-1);\n    }\n\n    private void OnNextTab()\n    {\n        if (!isOpen) return;\n        ChangeTab(1);\n    }\n\n    private void ChangeTab(int delta)\n    {\n        if (tabs.Count <= 1) return;\n\n        int next = (currentTabIndex + delta + tabs.Count) % tabs.Count;\n        if (next == currentTabIndex) return;\n\n        tabs[currentTabIndex].OnHide();\n        ShowTab(next, refresh: true);\n\n        AudioManager.Instance?.PlaySE(tabChangeSfx);\n    }\n\n    private void ShowTab(int index, bool refresh)\n    {\n        currentTabIndex = index;\n\n        for (int i = 0; i < tabs.Count; i++)\n        {\n            bool active = i == index;\n\n            if (tabs[i].Root != null) tabs[i].Root.SetActive(active);\n\n            if (i < tabLabels.Count && tabLabels[i] != null)\n                tabLabels[i].color = active ? tabActiveColor : tabInactiveColor;\n        }\n\n        if (refresh) tabs[index].Refresh();\n    }\n\n    // ---------------- Utilitário ----------------\n\n    /// <summary>\n    /// Abre o menu directamente numa aba específica — ex: chamado por um\n    /// sistema externo para revelar um upgrade recém-desbloqueado.\n    /// </summary>\n    public void OpenToTab(MonoBehaviour tabBehaviour)\n    {\n        int index = tabBehaviours.IndexOf(tabBehaviour);\n        if (index < 0)\n        {\n            Open();\n            return;\n        }\n\n        bool wasOpen = isOpen;\n        if (!wasOpen) Open();\n\n        if (index != currentTabIndex)\n        {\n            tabs[currentTabIndex].OnHide();\n            ShowTab(index, refresh: true);\n            if (wasOpen) AudioManager.Instance?.PlaySE(tabChangeSfx);\n        }\n    }\n\n    /// <summary>Toca um som orgânico através do AudioManager — usado pelas abas.</summary>\n    public void PlaySfx(AudioClip clip) => AudioManager.Instance?.PlaySE(clip);\n\n    // ---------------- Animação ----------------\n\n    private void PlayAnimation(bool opening)\n    {\n        if (animRoutine != null) StopCoroutine(animRoutine);\n        animRoutine = StartCoroutine(AnimateRoutine(opening));\n    }\n\n    private IEnumerator AnimateRoutine(bool opening)\n    {\n        float from = opening ? closedScale : 1f;\n        float to = opening ? 1f : closedScale;\n        float fromAlpha = opening ? 0f : 1f;\n        float toAlpha = opening ? 1f : 0f;\n\n        float t = 0f;\n        float duration = Mathf.Max(0.01f, animDuration);\n\n        while (t < duration)\n        {\n            t += Time.unscaledDeltaTime;\n            float p = Mathf.Clamp01(t / duration);\n            float eased = 1f - Mathf.Pow(1f - p, 3f);\n\n            if (animatedRoot != null) animatedRoot.localScale = Vector3.one * Mathf.Lerp(from, to, eased);\n            if (canvasGroup != null) canvasGroup.alpha = Mathf.Lerp(fromAlpha, toAlpha, eased);\n\n            yield return null;\n        }\n\n        if (animatedRoot != null) animatedRoot.localScale = Vector3.one * to;\n        if (canvasGroup != null) canvasGroup.alpha = toAlpha;\n\n        if (!opening)\n        {\n            if (panelRoot != null) panelRoot.SetActive(false);\n\n            GamePauseUtil.Resume();\n            AudioManager.Instance?.SetBgmMuffled(false);\n        }\n    }\n}\n\n/// <summary>\n/// Adapta um <see cref=\"IPauseMenuSection\"/> para <see cref=\"ISecondaryMenuTab\"/>,\n/// permitindo que secções existentes do Menu de Pausa (AreaSectionUI,\n/// DiarySectionUI, etc.) sejam usadas directamente no SecondaryMenuController\n/// sem precisar de alterar os seus scripts.\n/// </summary>\ninternal sealed class PauseSectionAdapter : ISecondaryMenuTab\n{\n    private readonly IPauseMenuSection _section;\n\n    public PauseSectionAdapter(IPauseMenuSection section) => _section = section;\n\n    public string TabName => _section.SectionName;\n    public UnityEngine.GameObject Root => _section.Root;\n    public void Refresh() => _section.Refresh();\n    public void OnHide() => _section.OnHide();\n}\n",
   "id": "script-ui-secondarymenucontroller-cs",
   "dependencyIds": [
-    "script-ui-areasectionui-cs",
     "script-audio-audiomanager-cs",
-    "script-ui-diarysectionui-cs",
-    "script-ui-emblemssectionui-cs",
-    "script-ui-formssectionui-cs",
     "script-npc-pauseutil-cs",
     "script-ui-ipausemenusection-cs",
     "script-ui-isecondarymenutab-cs",
-    "script-ui-itemsinstinctssectionui-cs",
-    "script-ui-optionssectionui-cs",
     "script-ui-pausemenucontroller-cs",
-    "script-input-playerinputrouter-cs",
-    "script-ui-progresssectionui-cs",
-    "script-ui-upgradestabui-cs"
+    "script-input-playerinputrouter-cs"
   ],
   "usedByIds": [
     "script-ui-emblemssectionui-cs",

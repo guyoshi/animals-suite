@@ -1,0 +1,99 @@
+{
+  "path": "Player/PlayerLocator.cs",
+  "filename": "PlayerLocator.cs",
+  "category": "Player",
+  "primary": "PlayerLocator",
+  "kind": "Componente",
+  "summary": "Mantém uma referência central e segura ao Player ativo, evitando pesquisas repetidas e referências quebradas quando cenas ou formas mudam.",
+  "attach": "Adicionar ao objeto de sistemas persistentes ou ao Player conforme o guia 02/07.",
+  "types": [
+    {
+      "name": "PlayerLocator",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "GameObject",
+      "type": "GameObject",
+      "mods": "public static",
+      "default": "> Instance != null ? Instance.gameObject : null",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "ResetStatics",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação ResetStatics."
+    },
+    {
+      "name": "Awake",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação Awake."
+    },
+    {
+      "name": "OnDestroy",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDestroy."
+    },
+    {
+      "name": "Find",
+      "ret": "Transform",
+      "mods": "public static",
+      "params": "",
+      "description": "Executa a operação Find."
+    }
+  ],
+  "dependencies": [],
+  "used_by": [
+    "Action_LockForms",
+    "Action_SavePlayerSnapshot",
+    "Action_StartChallenge",
+    "AnimalsDebugPanel",
+    "AreaManager",
+    "ChallengeManager",
+    "ChallengeTrigger",
+    "EnemyController",
+    "FallingPlatform",
+    "FullscreenImageUI",
+    "HUDController",
+    "NewAnimalUnlockedUI",
+    "NightVisionRevealable",
+    "NpcController",
+    "NpcMovement",
+    "SaveManager"
+  ],
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Ponto único de referência ao Transform do player em runtime (Task #19 —\n/// \"Identificação do Player inconsistente entre scripts\").\n///\n/// Attach este componente no GameObject do player (junto com PlayerInputRouter,\n/// PlayerMotor2D, etc.). Ao fazer Awake, regista-se em <see cref=\"Instance\"/>;\n/// ao ser destruído (ex: recarregar cena), limpa o registo.\n///\n/// Todos os scripts que precisem de localizar o player devem usar:\n///   <code>PlayerLocator.Find()</code>   — Transform (com fallback a FindGameObjectWithTag)\n///   <code>PlayerLocator.Instance</code>  — Transform directo (null se não registado)\n///   <code>PlayerLocator.GameObject</code>— GameObject directo (null se não registado)\n///\n/// Substitui as chamadas dispersas a\n/// <c>GameObject.FindGameObjectWithTag(\"Player\")</c> /\n/// <c>GameObject.FindWithTag(\"Player\")</c> que apareciam em\n/// NpcController, NpcMovement, EnemyController, ChallengeManager,\n/// SaveManager, ChallengeTrigger, ChallengeActions, FormLockActions,\n/// NightVisionRevealable, FallingPlatform, etc.\n///\n/// Não usa DontDestroyOnLoad — segue o ciclo de vida normal da cena.\n/// </summary>\n[DefaultExecutionOrder(-100)]   // regista antes de scripts que o consultam em Awake\npublic class PlayerLocator : MonoBehaviour\n{\n    /// <summary>Transform do player registado, ou null se nenhum player estiver activo.</summary>\n    public static Transform Instance { get; private set; }\n\n    /// <summary>GameObject do player registado, ou null se nenhum player estiver activo.</summary>\n    public static GameObject GameObject => Instance != null ? Instance.gameObject : null;\n\n    // Task #11: limpa a referência estática ao entrar em Play Mode, mesmo com\n    // \"Enter Play Mode Options > Domain Reload\" desactivado. Sem isto,\n    // Instance poderia apontar para um Transform destruído da sessão anterior\n    // (Unity anula a referência ao destruir, mas é mais explícito resetar aqui).\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]\n    private static void ResetStatics() => Instance = null;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != transform)\n            Debug.LogWarning($\"[PlayerLocator] Dois players detectados: '{Instance.name}' e '{name}'. A substituir pelo novo.\", this);\n\n        Instance = transform;\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == transform)\n            Instance = null;\n    }\n\n    /// <summary>\n    /// Devolve o Transform do player.\n    /// Se <see cref=\"Instance\"/> não estiver registado (ex: script chamado antes\n    /// do Awake do player, ou PlayerLocator não está no prefab), faz fallback a\n    /// <c>GameObject.FindGameObjectWithTag(\"Player\")</c> e avisa no Console —\n    /// idealmente o fallback nunca deve ocorrer em produção.\n    /// </summary>\n    public static Transform Find()\n    {\n        if (Instance != null) return Instance;\n\n        var go = UnityEngine.GameObject.FindGameObjectWithTag(\"Player\");\n        if (go != null)\n        {\n            Debug.LogWarning(\"[PlayerLocator] Instance não registado — fallback a FindGameObjectWithTag. \" +\n                             \"Adiciona PlayerLocator ao prefab do player.\", go);\n            return go.transform;\n        }\n\n        return null;\n    }\n}\n",
+  "id": "script-player-playerlocator-cs",
+  "dependencyIds": [],
+  "usedByIds": [
+    "script-npc-actions-formlockactions-cs",
+    "script-npc-actions-statussnapshotactions-cs",
+    "script-npc-actions-challengeactions-cs",
+    "script-test-animalsdebugpanel-cs",
+    "script-world-areamanager-cs",
+    "script-data-challengemanager-cs",
+    "script-interactables-challengetrigger-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-platforms-fallingplatform-cs",
+    "script-ui-fullscreenimageui-cs",
+    "script-ui-hudcontroller-cs",
+    "script-ui-newanimalunlockedui-cs",
+    "script-interactables-nightvisionrevealable-cs",
+    "script-npc-npccontroller-cs",
+    "script-npc-npcmovement-cs",
+    "script-data-savemanager-cs"
+  ]
+}

@@ -36,16 +36,6 @@
       "description": "Duração do atordoamento aplicado."
     },
     {
-      "name": "maxEnemyWeight",
-      "type": "float",
-      "mods": "public",
-      "default": "3f",
-      "section": "Rugido",
-      "attrs": "[Tooltip(\"Peso máximo (EnemyData.stats.weight) dos inimigos afectados — 'atordoa inimigos pequenos'. 0 = afecta todos.\")] [Min(0f)]",
-      "inspector": true,
-      "description": "Peso máximo (EnemyData.stats.weight) dos inimigos afectados — 'atordoa inimigos pequenos'. 0 = afecta todos."
-    },
-    {
       "name": "cooldown",
       "type": "float",
       "mods": "public",
@@ -93,16 +83,6 @@
       "section": "Feedback (opcional)",
       "attrs": "",
       "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "CooldownRemaining",
-      "type": "float",
-      "mods": "public",
-      "default": "> Mathf.Max(0f, cooldownTimer)",
-      "section": "Feedback (opcional)",
-      "attrs": "",
-      "inspector": true,
       "description": "Referência/configuração usada por este comportamento."
     },
     {
@@ -172,11 +152,9 @@
   ],
   "dependencies": [
     "AbilityCancelReason",
-    "AbilityRouter",
     "AnimalFormData",
-    "AnimalsDebugPanel",
+    "AudioManager",
     "EnemyController",
-    "EnemyData",
     "EnemyStatusEffect",
     "EnemyStatusEffectReceiver",
     "IAbility",
@@ -185,24 +163,23 @@
     "PrimaryAbility"
   ],
   "used_by": [
-    "AbilityRouter",
-    "EnemyStatusEffectReceiver"
+    "AbilityRouter"
   ],
-  "source": "using UnityEngine;\n\n/// <summary>\n/// Rugido (Leão \"rugido que atordoa inimigos pequenos\", Tigre \"rugido de\n/// pressão\" — P5): atordoa inimigos num raio à volta do player, via\n/// EnemyStatusEffectReceiver (P7 — respeita canBeStunned e imunidades).\n///\n/// \"maxEnemyWeight\" limita o efeito a inimigos pequenos/leves (ficha do Leão).\n/// Activado via PrimaryAbility.Roar (AbilityRouter → TryRoar).\n/// </summary>\npublic class RoarAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Rugido\")]\n    public float radius = 4f;\n\n    [Tooltip(\"Duração do atordoamento aplicado.\")]\n    public float stunDuration = 2f;\n\n    [Tooltip(\"Peso máximo (EnemyData.stats.weight) dos inimigos afectados — 'atordoa inimigos pequenos'. 0 = afecta todos.\")]\n    [Min(0f)] public float maxEnemyWeight = 3f;\n\n    public float cooldown = 4f;\n\n    [Header(\"Feedback (opcional)\")]\n    public GameObject roarVfxPrefab;\n    public AudioClip roarSound;\n\n    private bool enabledForForm;\n    private float cooldownTimer;\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.Roar;\n        cooldownTimer = 0f;\n    }\n\n    /// <summary>Ruge (AbilityRouter — PrimaryAbility.Roar).</summary>\n    public void TryRoar()\n    {\n        if (!enabledForForm || cooldownTimer > 0f) return;\n\n        cooldownTimer = cooldown;\n\n        if (roarVfxPrefab != null)\n            Instantiate(roarVfxPrefab, transform.position, Quaternion.identity);\n\n        if (roarSound != null)\n            AudioSource.PlayClipAtPoint(roarSound, transform.position);\n\n        var hits = Physics2D.OverlapCircleAll(transform.position, radius);\n\n        foreach (var hit in hits)\n        {\n            var receiver = hit.GetComponent<EnemyStatusEffectReceiver>();\n            if (receiver == null) continue;\n\n            // Só inimigos pequenos/leves (ficha do Leão).\n            if (maxEnemyWeight > 0f)\n            {\n                var ctrl = hit.GetComponent<EnemyController>();\n                if (ctrl != null && ctrl.Data != null && ctrl.Data.stats.weight > maxEnemyWeight) continue;\n            }\n\n            receiver.ApplyEffect(EnemyStatusEffect.Stun, stunDuration);\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(1f, 0.8f, 0.2f, 0.5f);\n        Gizmos.DrawWireSphere(transform.position, radius);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Instantânea, sem estado persistente — só o cooldown importa para a HUD.\n    void IAbility.Activate() => TryRoar();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => cooldown;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do rugido.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Rugido (Leão \"rugido que atordoa inimigos pequenos\", Tigre \"rugido de\n/// pressão\" — P5): atordoa inimigos num raio à volta do player, via\n/// EnemyStatusEffectReceiver (P7 — respeita canBeStunned e imunidades).\n///\n/// \"maxEnemyWeight\" limita o efeito a inimigos pequenos/leves (ficha do Leão).\n/// Activado via PrimaryAbility.Roar (AbilityRouter → TryRoar).\n/// </summary>\npublic class RoarAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Rugido\")]\n    public float radius = 4f;\n\n    [Tooltip(\"Duração do atordoamento aplicado.\")]\n    public float stunDuration = 2f;\n\n    [Tooltip(\"Peso máximo (EnemyData.stats.weight) dos inimigos afectados — 'atordoa inimigos pequenos'. 0 = afecta todos.\")]\n    [Min(0f)] public float maxEnemyWeight = 3f;\n\n    public float cooldown = 4f;\n\n    [Header(\"Feedback (opcional)\")]\n    public GameObject roarVfxPrefab;\n    public AudioClip roarSound;\n\n    private bool enabledForForm;\n    private float cooldownTimer;\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.Roar;\n        cooldownTimer = 0f;\n    }\n\n    /// <summary>Ruge (AbilityRouter — PrimaryAbility.Roar).</summary>\n    public void TryRoar()\n    {\n        if (!enabledForForm || cooldownTimer > 0f) return;\n\n        cooldownTimer = cooldown;\n\n        if (roarVfxPrefab != null)\n            Instantiate(roarVfxPrefab, transform.position, Quaternion.identity);\n\n        if (roarSound != null)\n            AudioManager.Instance?.PlaySEAtPoint(roarSound, transform.position);\n\n        var hits = Physics2D.OverlapCircleAll(transform.position, radius);\n\n        foreach (var hit in hits)\n        {\n            var receiver = hit.GetComponent<EnemyStatusEffectReceiver>();\n            if (receiver == null) continue;\n\n            // Só inimigos pequenos/leves (ficha do Leão).\n            if (maxEnemyWeight > 0f)\n            {\n                var ctrl = hit.GetComponent<EnemyController>();\n                if (ctrl != null && ctrl.Data != null && ctrl.Data.stats.weight > maxEnemyWeight) continue;\n            }\n\n            receiver.ApplyEffect(EnemyStatusEffect.Stun, stunDuration);\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(1f, 0.8f, 0.2f, 0.5f);\n        Gizmos.DrawWireSphere(transform.position, radius);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Instantânea, sem estado persistente — só o cooldown importa para a HUD.\n    void IAbility.Activate() => TryRoar();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => cooldown;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do rugido.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
   "id": "script-abilities-roarability-cs",
   "dependencyIds": [
-    "script-abilities-abilityrouter-cs",
+    "script-abilities-iability-cs",
     "script-forms-animalformdata-cs",
-    "script-test-animalsdebugpanel-cs",
+    "script-audio-audiomanager-cs",
     "script-enemy-enemycontroller-cs",
     "script-enemy-enemydata-cs",
     "script-enemy-enemystatuseffectreceiver-cs",
     "script-abilities-iability-cs",
     "script-abilities-iactiveability-cs",
-    "script-abilities-iformability-cs"
+    "script-abilities-iformability-cs",
+    "script-forms-animalformdata-cs"
   ],
   "usedByIds": [
-    "script-abilities-abilityrouter-cs",
-    "script-enemy-enemystatuseffectreceiver-cs"
+    "script-abilities-abilityrouter-cs"
   ]
 }

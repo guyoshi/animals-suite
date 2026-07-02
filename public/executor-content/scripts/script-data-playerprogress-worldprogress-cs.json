@@ -1,0 +1,316 @@
+{
+  "path": "Data/PlayerProgress.WorldProgress.cs",
+  "filename": "PlayerProgress.WorldProgress.cs",
+  "category": "Data",
+  "primary": "PlayerProgress",
+  "kind": "Componente",
+  "summary": "Define a parte de PlayerProgress responsável pelo progresso persistente por mundo, bosses, emblemas e compatibilidade de saves.",
+  "attach": "Adicionar ao objeto de sistemas persistentes ou ao Player conforme o guia 02/07.",
+  "types": [
+    {
+      "name": "PlayerProgress",
+      "kind": "class",
+      "bases": "MonoBehaviour",
+      "attrs": ""
+    }
+  ],
+  "fields": [],
+  "methods": [
+    {
+      "name": "AreWorldTotalsDiscovered",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação AreWorldTotalsDiscovered."
+    },
+    {
+      "name": "AreWorldTotalsDiscovered",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação AreWorldTotalsDiscovered."
+    },
+    {
+      "name": "MarkWorldTotalsDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação MarkWorldTotalsDiscovered."
+    },
+    {
+      "name": "MarkWorldTotalsDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação MarkWorldTotalsDiscovered."
+    },
+    {
+      "name": "GetOrCreateWorldProgress",
+      "ret": "WorldProgress",
+      "mods": "private",
+      "params": "string worldId",
+      "description": "Executa a operação GetOrCreateWorldProgress."
+    },
+    {
+      "name": "CombineClueId",
+      "ret": "string",
+      "mods": "private static",
+      "params": "string missionId, string clueId",
+      "description": "Executa a operação CombineClueId."
+    },
+    {
+      "name": "HasClue",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string missionId, string clueId",
+      "description": "Executa a operação HasClue."
+    },
+    {
+      "name": "HasClue",
+      "ret": "bool",
+      "mods": "public",
+      "params": "MissionData mission, string clueId",
+      "description": "Executa a operação HasClue."
+    },
+    {
+      "name": "MarkClueObtained",
+      "ret": "void",
+      "mods": "public",
+      "params": "string missionId, string clueId",
+      "description": "Executa a operação MarkClueObtained."
+    },
+    {
+      "name": "MarkClueObtained",
+      "ret": "void",
+      "mods": "public",
+      "params": "MissionData mission, string clueId",
+      "description": "Executa a operação MarkClueObtained."
+    },
+    {
+      "name": "HasHeardRumor",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string rumorId",
+      "description": "Executa a operação HasHeardRumor."
+    },
+    {
+      "name": "MarkRumorHeard",
+      "ret": "void",
+      "mods": "public",
+      "params": "string rumorId",
+      "description": "Executa a operação MarkRumorHeard."
+    },
+    {
+      "name": "IsRumorFound",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string rumorId",
+      "description": "Executa a operação IsRumorFound."
+    },
+    {
+      "name": "MarkRumorFound",
+      "ret": "void",
+      "mods": "public",
+      "params": "string rumorId",
+      "description": "Executa a operação MarkRumorFound."
+    },
+    {
+      "name": "GetTotalCompletionPercent",
+      "ret": "int",
+      "mods": "public",
+      "params": "List<AreaData> allAreas, List<AnimalFormData> allForms, List<MissionData> allMissions, List<EmblemData> allEmblems",
+      "description": "Executa a operação GetTotalCompletionPercent."
+    },
+    {
+      "name": "HasDefeatedBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação HasDefeatedBoss."
+    },
+    {
+      "name": "HasDefeatedBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação HasDefeatedBoss."
+    },
+    {
+      "name": "SetBossDefeated",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação SetBossDefeated."
+    },
+    {
+      "name": "SetBossDefeated",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação SetBossDefeated."
+    },
+    {
+      "name": "IsReturningAfterBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação IsReturningAfterBoss."
+    },
+    {
+      "name": "IsReturningAfterBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação IsReturningAfterBoss."
+    },
+    {
+      "name": "ClearReturningAfterBoss",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação ClearReturningAfterBoss."
+    },
+    {
+      "name": "ClearReturningAfterBoss",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação ClearReturningAfterBoss."
+    },
+    {
+      "name": "IsAreaUnlocked",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação IsAreaUnlocked."
+    },
+    {
+      "name": "IsAreaUnlocked",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação IsAreaUnlocked."
+    },
+    {
+      "name": "UnlockArea",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string areaId",
+      "description": "Executa a operação UnlockArea."
+    },
+    {
+      "name": "UnlockArea",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação UnlockArea."
+    },
+    {
+      "name": "TryUnlockArea",
+      "ret": "bool",
+      "mods": "public",
+      "params": "AreaData area",
+      "description": "Executa a operação TryUnlockArea."
+    },
+    {
+      "name": "HasDiscoveredBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação HasDiscoveredBoss."
+    },
+    {
+      "name": "HasDiscoveredBoss",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação HasDiscoveredBoss."
+    },
+    {
+      "name": "MarkBossDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação MarkBossDiscovered."
+    },
+    {
+      "name": "MarkBossDiscovered",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação MarkBossDiscovered."
+    },
+    {
+      "name": "HasPlayedBossUnlockAnimation",
+      "ret": "bool",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação HasPlayedBossUnlockAnimation."
+    },
+    {
+      "name": "HasPlayedBossUnlockAnimation",
+      "ret": "bool",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação HasPlayedBossUnlockAnimation."
+    },
+    {
+      "name": "MarkBossUnlockAnimationPlayed",
+      "ret": "void",
+      "mods": "public",
+      "params": "string worldId",
+      "description": "Executa a operação MarkBossUnlockAnimationPlayed."
+    },
+    {
+      "name": "MarkBossUnlockAnimationPlayed",
+      "ret": "void",
+      "mods": "public",
+      "params": "WorldData world",
+      "description": "Executa a operação MarkBossUnlockAnimationPlayed."
+    },
+    {
+      "name": "HasPlayedApoloAreaUnlockAnimation",
+      "ret": "bool",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação HasPlayedApoloAreaUnlockAnimation."
+    },
+    {
+      "name": "MarkApoloAreaUnlockAnimationPlayed",
+      "ret": "void",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação MarkApoloAreaUnlockAnimationPlayed."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "AreaData",
+    "EmblemData",
+    "EmblemManager",
+    "GameVariables",
+    "MapNodeType",
+    "MissionData",
+    "MissionManager",
+    "PlayerResourceType",
+    "WorldData",
+    "WorldProgress"
+  ],
+  "used_by": [],
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\n\npublic partial class PlayerProgress : MonoBehaviour\n{\n    // ---------------- Progressão por Mundo (Menu de Pausa: Progresso — Tarefa #11) ----------------\n\n    /// <summary>O jogador já descobriu quantos Runas/Animais/NPCs/Sussurros/Missões existem neste mundo (ver WorldProgress.totalsDiscovered).</summary>\n    public bool AreWorldTotalsDiscovered(string worldId) => GetOrCreateWorldProgress(worldId).totalsDiscovered;\n    public bool AreWorldTotalsDiscovered(WorldData world) => world != null && AreWorldTotalsDiscovered(world.worldId);\n\n    /// <summary>Marca que o jogador já descobriu os totais deste mundo — a secção Progresso passa a mostrar \"X/TOTAL\" em vez de \"X/?\".</summary>\n    public void MarkWorldTotalsDiscovered(string worldId)\n    {\n        if (string.IsNullOrEmpty(worldId)) return;\n        GetOrCreateWorldProgress(worldId).totalsDiscovered = true;\n    }\n\n    public void MarkWorldTotalsDiscovered(WorldData world)\n    {\n        if (world != null) MarkWorldTotalsDiscovered(world.worldId);\n    }\n\n    private WorldProgress GetOrCreateWorldProgress(string worldId)\n    {\n        for (int i = 0; i < worldProgress.Count; i++)\n            if (worldProgress[i].worldId == worldId) return worldProgress[i];\n\n        var created = new WorldProgress { worldId = worldId };\n        worldProgress.Add(created);\n        return created;\n    }\n\n    // ---------------- Diário — Pistas de Missão e Rumores (Sistema de Pistas/Rumores) ----------------\n\n    /// <summary>Combina \"missionId\" e \"clueId\" no formato usado por \"_obtainedClueIds\".</summary>\n    private static string CombineClueId(string missionId, string clueId) => $\"{missionId}/{clueId}\";\n\n    /// <summary>True se a pista \"clueId\" da missão \"missionId\" já foi obtida.</summary>\n    public bool HasClue(string missionId, string clueId)\n    {\n        if (string.IsNullOrEmpty(missionId) || string.IsNullOrEmpty(clueId)) return false;\n        return _obtainedClueIds.Contains(CombineClueId(missionId, clueId));\n    }\n\n    public bool HasClue(MissionData mission, string clueId) => mission != null && HasClue(mission.missionId, clueId);\n\n    /// <summary>Regista a pista \"clueId\" da missão \"missionId\" como obtida (idempotente).</summary>\n    public void MarkClueObtained(string missionId, string clueId)\n    {\n        if (string.IsNullOrEmpty(missionId) || string.IsNullOrEmpty(clueId)) return;\n\n        string combined = CombineClueId(missionId, clueId);\n        if (!_obtainedClueIds.Contains(combined)) _obtainedClueIds.Add(combined);\n    }\n\n    public void MarkClueObtained(MissionData mission, string clueId)\n    {\n        if (mission != null) MarkClueObtained(mission.missionId, clueId);\n    }\n\n    /// <summary>True se o rumor \"rumorId\" já foi ouvido (Action_AddRumor) — aparece na secção \"Rumores\" do Diário.</summary>\n    public bool HasHeardRumor(string rumorId) => !string.IsNullOrEmpty(rumorId) && _heardRumorIds.Contains(rumorId);\n\n    public void MarkRumorHeard(string rumorId)\n    {\n        if (!string.IsNullOrEmpty(rumorId) && !_heardRumorIds.Contains(rumorId))\n            _heardRumorIds.Add(rumorId);\n    }\n\n    /// <summary>True se o rumor \"rumorId\" já foi marcado como \"encontrado\" (Action_MarkRumorFound) — mostra o ícone de \"Check\".</summary>\n    public bool IsRumorFound(string rumorId) => !string.IsNullOrEmpty(rumorId) && _foundRumorIds.Contains(rumorId);\n\n    public void MarkRumorFound(string rumorId)\n    {\n        if (!string.IsNullOrEmpty(rumorId) && !_foundRumorIds.Contains(rumorId))\n            _foundRumorIds.Add(rumorId);\n    }\n\n    // ---------------- Percentagem Total do Save (Menu de Pausa: Progresso — Tarefa #11) ----------------\n\n    /// <summary>\n    /// Percentagem total de conclusão do save (0–100, ou exactamente 101 —\n    /// GDD: \"100% = Emblema de Gaia; Provação = Emblema de Apolo;\n    /// Gaia + Apolo = 101% e Emblema de Zeus\").\n    ///\n    /// <b>Critérios por área (allAreas):</b>\n    ///   • Runas de Gaia (totalRunas)\n    ///   • NPCs resgatados (totalNpcsToRescue)\n    ///   • Sussurros da Terra adquiridos (whispersFound): comprados no Contador\n    ///     de Histórias com Ecos Perdidos — GDD: \"Os Sussurros não ficam\n    ///     espalhados como pickups.\" Não há fase de \"entrega\" no GDD;\n    ///     whispersDelivered NÃO entra neste cálculo (Task #5).\n    ///   • Baús (totalChests)\n    ///   • Fragmentos Vitais (totalFragments)\n    ///   • Desafio opcional concluído (hasOptionalChallenge)\n    ///   • Melodias Selvagens recolhidas (totalMelodies)\n    ///\n    /// <b>Critérios globais:</b>\n    ///   • Formas de animais NÃO-secretas libertadas (allForms, isSecretForm=false)\n    ///   • Missões concluídas (allMissions)\n    ///   • Emblemas de mundo (allEmblems onde !isBonus &amp;&amp; !isGaiaEmblem\n    ///     &amp;&amp; !isApoloEmblem — normalmente os 6 emblemas de mundo)\n    ///\n    /// <b>Excluídos do cálculo:</b>\n    ///   • Formas secretas (isSecretForm = true)\n    ///   • Emblema de Gaia, Emblema de Apolo, Emblema de Zeus (isGaiaEmblem /\n    ///     isApoloEmblem / isBonus) — contam apenas para a regra dos 101%\n    ///   • Sementes, Ecos Perdidos, inimigos\n    ///\n    /// <b>Regra especial de 101%:</b>\n    ///   Devolve exactamente 101 se e só se Emblema de Gaia E Emblema de Apolo\n    ///   estiverem ambos obtidos. Em todos os outros casos: clamp(0, 100).\n    /// </summary>\n    public int GetTotalCompletionPercent(List<AreaData> allAreas, List<AnimalFormData> allForms, List<MissionData> allMissions, List<EmblemData> allEmblems)\n    {\n        int total = 0;\n        int found = 0;\n\n        if (allAreas != null)\n        {\n            foreach (var area in allAreas)\n            {\n                if (area == null) continue;\n                var ap = GetOrCreateAreaProgress(area.areaId);\n\n                if (area.totalRunas > 0) { total += area.totalRunas; found += Mathf.Min(ap.runasFound, area.totalRunas); }\n                if (area.totalNpcsToRescue > 0) { total += area.totalNpcsToRescue; found += Mathf.Min(ap.npcsRescued, area.totalNpcsToRescue); }\n\n                // Task #5 / GDD: Sussurros são adquiridos (comprados no Contador de Histórias)\n                // — não existem como pickups físicos nem têm fase de \"entrega\". Só\n                // whispersFound conta; whispersDelivered foi removido do cálculo.\n                if (area.totalWhispers > 0) { total += area.totalWhispers; found += Mathf.Min(ap.whispersFound, area.totalWhispers); }\n\n                if (area.totalChests > 0) { total += area.totalChests; found += Mathf.Min(ap.chestsFound, area.totalChests); }\n                if (area.totalFragments > 0) { total += area.totalFragments; found += Mathf.Min(ap.fragmentsFound, area.totalFragments); }\n\n                if (area.hasOptionalChallenge)\n                {\n                    total += 1;\n                    if (ap.challengeCompleted) found += 1;\n                }\n\n                if (area.totalMelodies > 0) { total += area.totalMelodies; found += Mathf.Min(ap.melodiesFound, area.totalMelodies); }\n            }\n        }\n\n        if (allForms != null)\n        {\n            foreach (var form in allForms)\n            {\n                if (form == null) continue;\n                if (form.isSecretForm) continue; // formas secretas excluídas do cálculo.\n\n                total += 1;\n                if (HasFreedAnimal(form.formId)) found += 1;\n            }\n        }\n\n        if (allMissions != null)\n        {\n            var missionManager = MissionManager.Instance;\n            foreach (var mission in allMissions)\n            {\n                if (mission == null) continue;\n                total += 1;\n                if (missionManager != null && missionManager.IsMissionCompleted(mission)) found += 1;\n            }\n        }\n\n        // Emblemas: só os 6 de mundo (não-bónus, não-Gaia, não-Apolo) contam.\n        // Emblemas de Gaia e Apolo são rastreados separadamente para a regra dos 101%.\n        bool gaiaObtained = false;\n        bool apoloObtained = false;\n\n        if (allEmblems != null)\n        {\n            var vars = GameVariables.Instance;\n            foreach (var emblem in allEmblems)\n            {\n                if (emblem == null) continue;\n                bool obtained = vars != null && !string.IsNullOrEmpty(emblem.obtainedVariable) && vars.GetBool(emblem.obtainedVariable);\n\n                if (emblem.isGaiaEmblem)  { if (obtained) gaiaObtained  = true; continue; }\n                if (emblem.isApoloEmblem) { if (obtained) apoloObtained = true; continue; }\n                if (emblem.isBonus) continue; // outros bónus (ex: Emblema de Zeus) — excluídos.\n\n                total += 1;\n                if (obtained) found += 1;\n            }\n        }\n\n        if (total <= 0) return 0;\n\n        // GDD: 101% é exclusivo de Gaia + Apolo — nunca mais do que isso,\n        // e só quando basePercent já atingiu 100 (Task #27: evitar 101% antes do 100%).\n        int basePercent = Mathf.Clamp(Mathf.RoundToInt(100f * found / total), 0, 100);\n        return (gaiaObtained && apoloObtained && basePercent == 100) ? 101 : basePercent;\n    }\n\n    // ---------------- Bosses / Mundo ----------------\n\n    public bool HasDefeatedBoss(string worldId) => !string.IsNullOrEmpty(worldId) && defeatedBossWorldIds.Contains(worldId);\n    public bool HasDefeatedBoss(WorldData world) => world != null && HasDefeatedBoss(world.worldId);\n\n    public void SetBossDefeated(string worldId)\n    {\n        if (string.IsNullOrEmpty(worldId)) return;\n        if (!defeatedBossWorldIds.Contains(worldId)) defeatedBossWorldIds.Add(worldId);\n        if (!pendingPostBossReturnWorldIds.Contains(worldId)) pendingPostBossReturnWorldIds.Add(worldId);\n\n        // Verifica emblemas após boss derrotado — pode desbloquear emblema de mundo\n        // e, por sua vez, o boss alternativo (Tarefa #32).\n        EmblemManager.Instance?.CheckAll();\n    }\n\n    public void SetBossDefeated(WorldData world)\n    {\n        if (world != null) SetBossDefeated(world.worldId);\n    }\n\n    /// <summary>O jogador venceu o boss deste mundo e ainda não passou pelo evento de \"regresso\".</summary>\n    public bool IsReturningAfterBoss(string worldId) => pendingPostBossReturnWorldIds.Contains(worldId);\n    public bool IsReturningAfterBoss(WorldData world) => world != null && IsReturningAfterBoss(world.worldId);\n\n    /// <summary>Chamar quando o evento de \"regresso pós-boss\" terminar, para não disparar de novo.</summary>\n    public void ClearReturningAfterBoss(string worldId) => pendingPostBossReturnWorldIds.Remove(worldId);\n    public void ClearReturningAfterBoss(WorldData world)\n    {\n        if (world != null) ClearReturningAfterBoss(world.worldId);\n    }\n\n    // ---------------- Mapa-Múndi — Áreas Desbloqueadas ----------------\n\n    public bool IsAreaUnlocked(string areaId) => !string.IsNullOrEmpty(areaId) && unlockedAreaIds.Contains(areaId);\n    public bool IsAreaUnlocked(AreaData area) => area != null && IsAreaUnlocked(area.areaId);\n\n    /// <summary>\n    /// Desbloqueia \"areaId\" sem cobrar Runas (uso interno — vilas auto-desbloqueadas,\n    /// área de boss libertada pela missão principal, ou desbloqueios via debug/editor).\n    /// Para o fluxo normal \"botão Desbloquear\" usar <see cref=\"TryUnlockArea(AreaData)\"/>.\n    /// Devolve true se a área passou de bloqueada para desbloqueada agora.\n    /// </summary>\n    public bool UnlockArea(string areaId)\n    {\n        if (string.IsNullOrEmpty(areaId) || unlockedAreaIds.Contains(areaId)) return false;\n\n        unlockedAreaIds.Add(areaId);\n        AreaUnlockedOnMap?.Invoke(areaId);\n        return true;\n    }\n\n    public bool UnlockArea(AreaData area) => area != null && UnlockArea(area.areaId);\n\n    /// <summary>\n    /// Tenta desbloquear \"area\" no Mapa-Múndi pelo fluxo normal (botão \"Desbloquear\"\n    /// do painel). Áreas <see cref=\"AreaData.MapNodeType.Vila\"/> e\n    /// <see cref=\"AreaData.MapNodeType.Boss\"/> têm custo 0 (vilas são auto-desbloqueadas\n    /// pelo WorldMapController; bosses são libertados por missão — nenhum dos dois\n    /// deve, normalmente, passar pelo botão \"Desbloquear\", mas o método continua\n    /// seguro/gratuito para esses casos). Para áreas Normal, cobra\n    /// <see cref=\"AreaData.unlockCost\"/> em Runas de Gaia via\n    /// <see cref=\"TrySpendResource(PlayerResourceType, int)\"/> — só desbloqueia se\n    /// houver saldo suficiente. Devolve true se a área ficou desbloqueada\n    /// (já estava desbloqueada também conta como sucesso, sem cobrar de novo).\n    /// </summary>\n    public bool TryUnlockArea(AreaData area)\n    {\n        if (area == null) return false;\n        if (IsAreaUnlocked(area)) return true;\n\n        int cost = area.mapNodeType == AreaData.MapNodeType.Normal ? Mathf.Max(0, area.unlockCost) : 0;\n\n        if (cost > 0 && !TrySpendResource(PlayerResourceType.RunasDeGaia, cost))\n            return false;\n\n        return UnlockArea(area.areaId);\n    }\n\n    // ---------------- Mapa-Múndi — Boss ----------------\n\n    /// <summary>O jogador já encontrou o boss deste mundo pelo menos uma vez (vitória OU derrota) — painel mostra AreaData.bossDisplayName em vez de \"????????\".</summary>\n    public bool HasDiscoveredBoss(string worldId) => !string.IsNullOrEmpty(worldId) && discoveredBossWorldIds.Contains(worldId);\n    public bool HasDiscoveredBoss(WorldData world) => world != null && HasDiscoveredBoss(world.worldId);\n\n    public void MarkBossDiscovered(string worldId)\n    {\n        if (!string.IsNullOrEmpty(worldId) && !discoveredBossWorldIds.Contains(worldId))\n            discoveredBossWorldIds.Add(worldId);\n    }\n\n    public void MarkBossDiscovered(WorldData world)\n    {\n        if (world != null) MarkBossDiscovered(world.worldId);\n    }\n\n    /// <summary>A animação de desbloqueio da área do boss (câmara viaja até à Coroa, novo ramo ilumina-se) já foi reproduzida para este mundo — não repetir.</summary>\n    public bool HasPlayedBossUnlockAnimation(string worldId) => !string.IsNullOrEmpty(worldId) && bossUnlockAnimationPlayedWorldIds.Contains(worldId);\n    public bool HasPlayedBossUnlockAnimation(WorldData world) => world != null && HasPlayedBossUnlockAnimation(world.worldId);\n\n    public void MarkBossUnlockAnimationPlayed(string worldId)\n    {\n        if (!string.IsNullOrEmpty(worldId) && !bossUnlockAnimationPlayedWorldIds.Contains(worldId))\n            bossUnlockAnimationPlayedWorldIds.Add(worldId);\n    }\n\n    public void MarkBossUnlockAnimationPlayed(WorldData world)\n    {\n        if (world != null) MarkBossUnlockAnimationPlayed(world.worldId);\n    }\n\n    // ---- Área Secreta de Apolo ----\n\n    [Header(\"Mapa-Múndi — Área Secreta de Apolo\")]\n    [Tooltip(\"True quando a animação de desbloqueio da área secreta de Apolo (câmara viaja até à nova área) já foi reproduzida. Garante que a sequência só acontece uma vez.\")]\n    [SerializeField] private bool apoloAreaUnlockAnimationPlayed;\n\n    /// <summary>A animação de desbloqueio da área secreta de Apolo já foi reproduzida — não repetir.</summary>\n    public bool HasPlayedApoloAreaUnlockAnimation() => apoloAreaUnlockAnimationPlayed;\n\n    /// <summary>Marca que a animação de desbloqueio da área secreta de Apolo já foi reproduzida.</summary>\n    public void MarkApoloAreaUnlockAnimationPlayed() => apoloAreaUnlockAnimationPlayed = true;\n}\n",
+  "id": "script-data-playerprogress-worldprogress-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-data-emblemdata-cs",
+    "script-data-emblemmanager-cs",
+    "script-data-gamevariables-cs",
+    "script-data-areadata-cs",
+    "script-data-missiondata-cs",
+    "script-data-missionmanager-cs",
+    "script-npc-actions-rewardactions-cs",
+    "script-data-worlddata-cs",
+    "script-data-playerprogress-cs"
+  ],
+  "usedByIds": []
+}

@@ -14,18 +14,7 @@
       "attrs": ""
     }
   ],
-  "fields": [
-    {
-      "name": "melody",
-      "type": "WildMelodyData",
-      "mods": "private",
-      "default": "",
-      "section": "Melodia",
-      "attrs": "[Header(\"Melodia\")] [Tooltip(\"WildMelodyData desta melodia selvagem.\")] [SerializeField]",
-      "inspector": true,
-      "description": "WildMelodyData desta melodia selvagem."
-    }
-  ],
+  "fields": [],
   "methods": [
     {
       "name": "GrantReward",
@@ -36,7 +25,6 @@
     }
   ],
   "dependencies": [
-    "AreaData",
     "JukeboxSectionUI",
     "PickupBase",
     "PickupType",
@@ -44,20 +32,18 @@
     "WildMelodyData"
   ],
   "used_by": [
-    "JukeboxSectionUI",
     "WildMelodyData"
   ],
-  "source": "using UnityEngine;\n\n/// <summary>\n/// Pickup de Melodia Selvagem — ao ser recolhido, desbloqueia a melodia\n/// correspondente no Jukebox e registra o progresso na área.\n///\n/// Herda de <see cref=\"PickupBase\"/> (persistência / anti-duplicação via\n/// pickupId) e usa o sistema de eventos de <see cref=\"PlayerProgress\"/> para\n/// notificar o resto do jogo.\n///\n/// Montagem no Editor:\n/// - Adicionar à cena como prefab de collectible.\n/// - \"melody\": WildMelodyData desta melodia.\n/// - \"pickupId\" (herdado): ID único do pickup (ex: \"melodia_floresta_01\").\n/// - \"area\" (herdado): AreaData da área.\n/// - \"popupText\" (herdado): ex: \"Melodia Selvagem: Canto Noturno\".\n/// - \"autosaveOnCollect\" (herdado): recomendado true (melodia é coleccionável único).\n/// </summary>\npublic class WildMelodyPickup : PickupBase\n{\n    [Header(\"Melodia\")]\n    [Tooltip(\"WildMelodyData desta melodia selvagem.\")]\n    [SerializeField] private WildMelodyData melody;\n\n    public override PickupType Type => PickupType.WildMelody;\n\n    protected override void GrantReward()\n    {\n        if (melody == null) return;\n\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return;\n\n        // Registar a melodia como colectada em PlayerProgress.\n        progress.MarkMelodyCollected(melody.melodyId, area ?? melody.area);\n\n        // Notificar o Jukebox de que uma nova melodia está disponível.\n        JukeboxSectionUI.OnWildMelodyCollected?.Invoke(melody);\n    }\n}\n",
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Pickup de Melodia Selvagem — ao ser recolhido, desbloqueia a melodia\n/// correspondente no Jukebox e registra o progresso na área.\n///\n/// Herda de <see cref=\"PickupBase\"/> (persistência / anti-duplicação via\n/// pickupId) e usa o sistema de eventos de <see cref=\"PlayerProgress\"/> para\n/// notificar o resto do jogo.\n///\n/// Montagem no Editor:\n/// - Adicionar à cena como prefab de collectible.\n/// - \"melody\": WildMelodyData desta melodia.\n/// - \"pickupId\" (herdado): ID único do pickup (ex: \"melodia_floresta_01\").\n/// - \"area\" (herdado): AreaData da área.\n/// - \"popupText\" (herdado): ex: \"Melodia Selvagem: Canto Noturno\".\n/// - \"autosaveOnCollect\" (herdado): recomendado true (melodia é coleccionável único).\n/// </summary>\npublic class WildMelodyPickup : PickupBase\n{\n    [Header(\"Melodia\")]\n    [Tooltip(\"WildMelodyData desta melodia selvagem.\")]\n    [SerializeField] private WildMelodyData melody;\n\n    public override PickupType Type => PickupType.WildMelody;\n\n    protected override void GrantReward()\n    {\n        if (melody == null) return;\n\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return;\n\n        // Registar a melodia como colectada em PlayerProgress.\n        progress.MarkMelodyCollected(melody.melodyId, area ?? melody.area);\n\n        // Notificar o Jukebox de que uma nova melodia está disponível.\n        JukeboxSectionUI.NotifyMelodyCollected(melody);\n    }\n}\n",
   "id": "script-collectibles-wildmelodypickup-cs",
   "dependencyIds": [
-    "script-data-areadata-cs",
     "script-ui-jukeboxsectionui-cs",
+    "script-collectibles-pickupbase-cs",
     "script-collectibles-pickupbase-cs",
     "script-data-playerprogress-cs",
     "script-data-wildmelodydata-cs"
   ],
   "usedByIds": [
-    "script-ui-jukeboxsectionui-cs",
     "script-data-wildmelodydata-cs"
   ]
 }

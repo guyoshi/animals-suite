@@ -41,7 +41,7 @@
       "section": "",
       "attrs": "[Tooltip(\"Identificador único deste NPC (ex: \\\"aldeao_maia\\\"). Quando preenchido, a operação é idempotente e a variável global NpcResgatado_<npcId> é criada automaticamente. Deixar vazio apenas se não houver ID configurado (comportamento antigo sem idempotência).\")]",
       "inspector": true,
-      "description": "Identificador único deste NPC (ex: \"aldeao_maia\\"
+      "description": "Identificador único deste NPC (ex: \"aldeao_maia\"). Quando preenchido, a operação é idempotente e a variável global NpcResgatado_<npcId> é criada automaticamente. Deixar vazio apenas se não houver ID configurado (comportamento antigo sem idempotência)."
     },
     {
       "name": "area",
@@ -61,7 +61,7 @@
       "section": "",
       "attrs": "[Tooltip(\"Este resgate conta para a população/restauração da vila? Desactivar para NPCs de evento ou viajantes que não devem contar para os 100% da vila.\")]",
       "inspector": true,
-      "description": "Este resgate conta para a população/restauração da vila? Desativar para NPCs de evento ou viajantes que não devem contar para os 100% da vila."
+      "description": "Este resgate conta para a população/restauração da vila? Desactivar para NPCs de evento ou viajantes que não devem contar para os 100% da vila."
     },
     {
       "name": "villageId",
@@ -71,27 +71,17 @@
       "section": "",
       "attrs": "[Tooltip(\"ID da vila a actualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo actual (WorldState.CurrentWorld.mainVillageId).\")]",
       "inspector": true,
-      "description": "ID da vila a atualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo atual (WorldState.CurrentWorld.mainVillageId)."
+      "description": "ID da vila a actualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo actual (WorldState.CurrentWorld.mainVillageId)."
     },
     {
-      "name": "current",
-      "type": "int",
+      "name": "villageId",
+      "type": "string",
       "mods": "public",
       "default": "",
       "section": "",
-      "attrs": "[Tooltip(\"Número actual de habitantes.\")] [UnityEngine.Min(0)]",
+      "attrs": "[Tooltip(\"ID da vila a actualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo actual.\")]",
       "inspector": true,
-      "description": "Número atual de habitantes."
-    },
-    {
-      "name": "max",
-      "type": "int",
-      "mods": "public",
-      "default": "",
-      "section": "",
-      "attrs": "[Tooltip(\"Capacidade máxima da vila. 0 = sem limite.\")] [UnityEngine.Min(0)]",
-      "inspector": true,
-      "description": "Capacidade máxima da vila. 0 = sem limite."
+      "description": "ID da vila a actualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo actual."
     },
     {
       "name": "world",
@@ -101,7 +91,7 @@
       "section": "",
       "attrs": "[Tooltip(\"Mundo cujos resgates de NPC são somados e aplicados à sua vila principal. Se vazio, usa o mundo actual.\")]",
       "inspector": true,
-      "description": "Mundo cujos resgates de NPC são somados e aplicados à sua vila principal. Se vazio, usa o mundo atual."
+      "description": "Mundo cujos resgates de NPC são somados e aplicados à sua vila principal. Se vazio, usa o mundo actual."
     }
   ],
   "methods": [
@@ -114,11 +104,7 @@
     }
   ],
   "dependencies": [
-    "Action_Autosave",
-    "Action_SetBoolVariable",
     "AreaData",
-    "Condition_BoolVariable",
-    "GameVariables",
     "NpcAction",
     "NpcController",
     "PlayerProgress",
@@ -128,12 +114,10 @@
   "used_by": [
     "NpcControllerEditor"
   ],
-  "source": "using System.Collections;\n\n/// <summary>\n/// Regista um NPC como resgatado nesta área (PlayerProgress.AddNpcRescued) e\n/// actualiza automaticamente a população da vila do mundo correspondente em\n/// WorldState (dispara WorldState.VillagePopulationChanged — HUD, música,\n/// lojas e decoração reagem automaticamente se estiverem subscritos).\n///\n/// A operação é idempotente quando \"npcId\" está preenchido: chamar o evento\n/// duas vezes (por erro, repetição de diálogo ou duplicação de configuração)\n/// não incrementa a contagem nem dispara eventos novamente.\n///\n/// A variável global \"NpcResgatado_&lt;npcId&gt;\" é criada automaticamente em\n/// GameVariables — permite usar Condition_BoolVariable para verificar o\n/// resgate sem configurar Action_SetBoolVariable manualmente.\n///\n/// Usar nos eventos de NPC de \"resgate concluído\", antes de Action_Autosave.\n/// O validador do Editor avisa se Action_Autosave estiver em falta.\n/// </summary>\n[System.Serializable]\npublic class Action_RescueNpc : NpcAction\n{\n    [Tooltip(\"Identificador único deste NPC (ex: \\\"aldeao_maia\\\"). Quando preenchido, a operação é idempotente e a variável global NpcResgatado_<npcId> é criada automaticamente. Deixar vazio apenas se não houver ID configurado (comportamento antigo sem idempotência).\")]\n    public string npcId;\n\n    [Tooltip(\"Área onde este NPC foi resgatado (AreaData). Necessário para contabilizar o resgate e calcular a população da vila do mundo desta área.\")]\n    public AreaData area;\n\n    [Tooltip(\"Este resgate conta para a população/restauração da vila? Desactivar para NPCs de evento ou viajantes que não devem contar para os 100% da vila.\")]\n    public bool countsForVillageRestoration = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (area == null || !countsForVillageRestoration) yield break;\n\n        PlayerProgress.Instance?.AddNpcRescued(area, npcId);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Soma 1 ao \"current\" da população de uma vila directamente em WorldState,\n/// SEM passar por PlayerProgress.AddNpcRescued. Útil para NPCs que aparecem\n/// na vila sem serem \"resgatados\" oficialmente (ex: lojistas que chegam por\n/// missão, visitantes temporários, NPCs de evento).\n///\n/// Respeita o limite \"max\": se current já for igual a max (e max > 0), não\n/// soma. O max deve ter sido definido previamente via Action_SetVillagePopulation\n/// ou pelo sistema de sincronização automática (SyncAllVillagePopulations).\n///\n/// Dispara WorldState.VillagePopulationChanged — reage automaticamente em\n/// HUD, BGM da vila, lojas e decoração.\n/// </summary>\n[System.Serializable]\npublic class Action_AddVillagePopulation : NpcAction\n{\n    [Tooltip(\"ID da vila a actualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo actual (WorldState.CurrentWorld.mainVillageId).\")]\n    public string villageId;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        string vid = string.IsNullOrEmpty(villageId)\n            ? WorldState.Instance?.CurrentWorld?.mainVillageId\n            : villageId;\n\n        if (!string.IsNullOrEmpty(vid))\n            WorldState.Instance?.AddVillagePopulation(vid);\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Define directamente o \"current\" e o \"max\" da população de uma vila em\n/// WorldState. Útil para:\n///   • Inicializar o max no arranque da cena da vila.\n///   • Forçar um valor específico (ex: cinematica que move vários NPCs de uma vez).\n///   • Reduzir a população (ex: NPC que abandona a vila).\n///\n/// Dispara WorldState.VillagePopulationChanged.\n/// </summary>\n[System.Serializable]\npublic class Action_SetVillagePopulation : NpcAction\n{\n    [Tooltip(\"ID da vila a actualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo actual.\")]\n    public string villageId;\n\n    [Tooltip(\"Número actual de habitantes.\")]\n    [UnityEngine.Min(0)] public int current;\n\n    [Tooltip(\"Capacidade máxima da vila. 0 = sem limite.\")]\n    [UnityEngine.Min(0)] public int max;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        string vid = string.IsNullOrEmpty(villageId)\n            ? WorldState.Instance?.CurrentWorld?.mainVillageId\n            : villageId;\n\n        if (!string.IsNullOrEmpty(vid))\n            WorldState.Instance?.SetVillagePopulation(vid, current, max);\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Força a re-sincronização da população de um mundo a partir dos resgates\n/// registados em PlayerProgress. Equivalente a chamar\n/// PlayerProgress.SyncVillagePopulationForWorld(world) — útil depois de\n/// carregar um save antigo ou depois de operações em lote que alteraram\n/// vários contadores de NPCs sem disparar AddNpcRescued.\n/// </summary>\n[System.Serializable]\npublic class Action_SyncVillagePopulation : NpcAction\n{\n    [Tooltip(\"Mundo cujos resgates de NPC são somados e aplicados à sua vila principal. Se vazio, usa o mundo actual.\")]\n    public WorldData world;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        WorldData w = world != null ? world : WorldState.Instance?.CurrentWorld;\n        PlayerProgress.Instance?.SyncVillagePopulationForWorld(w);\n        yield break;\n    }\n}\n",
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Regista um NPC como resgatado nesta área (PlayerProgress.AddNpcRescued) e\n/// actualiza automaticamente a população da vila do mundo correspondente em\n/// WorldState (dispara WorldState.VillagePopulationChanged — HUD, música,\n/// lojas e decoração reagem automaticamente se estiverem subscritos).\n///\n/// A operação é idempotente quando \"npcId\" está preenchido: chamar o evento\n/// duas vezes (por erro, repetição de diálogo ou duplicação de configuração)\n/// não incrementa a contagem nem dispara eventos novamente.\n///\n/// A variável global \"NpcResgatado_&lt;npcId&gt;\" é criada automaticamente em\n/// GameVariables — permite usar Condition_BoolVariable para verificar o\n/// resgate sem configurar Action_SetBoolVariable manualmente.\n///\n/// Usar nos eventos de NPC de \"resgate concluído\", antes de Action_Autosave.\n/// O validador do Editor avisa se Action_Autosave estiver em falta.\n/// </summary>\n[System.Serializable]\npublic class Action_RescueNpc : NpcAction\n{\n    [Tooltip(\"Identificador único deste NPC (ex: \\\"aldeao_maia\\\"). Quando preenchido, a operação é idempotente e a variável global NpcResgatado_<npcId> é criada automaticamente. Deixar vazio apenas se não houver ID configurado (comportamento antigo sem idempotência).\")]\n    public string npcId;\n\n    [Tooltip(\"Área onde este NPC foi resgatado (AreaData). Necessário para contabilizar o resgate e calcular a população da vila do mundo desta área.\")]\n    public AreaData area;\n\n    [Tooltip(\"Este resgate conta para a população/restauração da vila? Desactivar para NPCs de evento ou viajantes que não devem contar para os 100% da vila.\")]\n    public bool countsForVillageRestoration = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (area == null || !countsForVillageRestoration) yield break;\n\n        // Task #21: npcId é obrigatório para idempotência. Avisar o designer aqui\n        // (o AddNpcRescued já bloqueia, mas o aviso próximo do Action é mais útil).\n        if (string.IsNullOrEmpty(npcId))\n        {\n            Debug.LogError($\"[Action_RescueNpc] npcId está vazio no NPC \\\"{(npc != null ? npc.name : \"?\")}\\\" (área \\\"{area.areaId}\\\"). Preenche o campo npcId para garantir idempotência e evitar duplicação de população.\");\n            yield break;\n        }\n\n        PlayerProgress.Instance?.AddNpcRescued(area, npcId);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Soma 1 ao \"current\" da população de uma vila directamente em WorldState,\n/// SEM passar por PlayerProgress.AddNpcRescued. Útil para NPCs que aparecem\n/// na vila sem serem \"resgatados\" oficialmente (ex: lojistas que chegam por\n/// missão, visitantes temporários, NPCs de evento).\n///\n/// Respeita o limite \"max\": se current já for igual a max (e max > 0), não\n/// soma. O max deve ter sido definido previamente via Action_SetVillagePopulation\n/// ou pelo sistema de sincronização automática (SyncAllVillagePopulations).\n///\n/// Dispara WorldState.VillagePopulationChanged — reage automaticamente em\n/// HUD, BGM da vila, lojas e decoração.\n/// </summary>\n[System.Serializable]\npublic class Action_AddVillagePopulation : NpcAction\n{\n    [Tooltip(\"ID da vila a actualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo actual (WorldState.CurrentWorld.mainVillageId).\")]\n    public string villageId;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        string vid = string.IsNullOrEmpty(villageId)\n            ? WorldState.Instance?.CurrentWorld?.mainVillageId\n            : villageId;\n\n        if (!string.IsNullOrEmpty(vid))\n            WorldState.Instance?.AddVillagePopulation(vid);\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Define directamente o \"current\" e o \"max\" da população de uma vila em\n/// WorldState. Útil para:\n///   • Inicializar o max no arranque da cena da vila.\n///   • Forçar um valor específico (ex: cinematica que move vários NPCs de uma vez).\n///   • Reduzir a população (ex: NPC que abandona a vila).\n///\n/// Dispara WorldState.VillagePopulationChanged.\n/// </summary>\n[System.Serializable]\npublic class Action_SetVillagePopulation : NpcAction\n{\n    [Tooltip(\"ID da vila a actualizar (WorldData.mainVillageId). Se vazio, usa a vila do mundo actual.\")]\n    public string villageId;\n\n    [Tooltip(\"Número actual de habitantes.\")]\n    [UnityEngine.Min(0)] public int current;\n\n    [Tooltip(\"Capacidade máxima da vila. 0 = sem limite.\")]\n    [UnityEngine.Min(0)] public int max;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        string vid = string.IsNullOrEmpty(villageId)\n            ? WorldState.Instance?.CurrentWorld?.mainVillageId\n            : villageId;\n\n        if (!string.IsNullOrEmpty(vid))\n            WorldState.Instance?.SetVillagePopulation(vid, current, max);\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Força a re-sincronização da população de um mundo a partir dos resgates\n/// registados em PlayerProgress. Equivalente a chamar\n/// PlayerProgress.SyncVillagePopulationForWorld(world) — útil depois de\n/// carregar um save antigo ou depois de operações em lote que alteraram\n/// vários contadores de NPCs sem disparar AddNpcRescued.\n/// </summary>\n[System.Serializable]\npublic class Action_SyncVillagePopulation : NpcAction\n{\n    [Tooltip(\"Mundo cujos resgates de NPC são somados e aplicados à sua vila principal. Se vazio, usa o mundo actual.\")]\n    public WorldData world;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        WorldData w = world != null ? world : WorldState.Instance?.CurrentWorld;\n        PlayerProgress.Instance?.SyncVillagePopulationForWorld(w);\n        yield break;\n    }\n}\n",
   "id": "script-npc-actions-villageactions-cs",
   "dependencyIds": [
     "script-data-areadata-cs",
-    "script-npc-conditions-variableconditions-cs",
-    "script-data-gamevariables-cs",
     "script-npc-npcaction-cs",
     "script-npc-npccontroller-cs",
     "script-data-playerprogress-cs",

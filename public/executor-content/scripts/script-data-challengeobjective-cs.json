@@ -69,7 +69,6 @@
     "ChallengeDefinition",
     "ChallengeDefinitionEditor",
     "ChallengeHudUI",
-    "ChallengeManager",
     "Objective_BoolVariable",
     "Objective_DefeatSpecificEnemy",
     "Objective_ItemCollected"
@@ -86,7 +85,6 @@
     "script-data-challengedefinition-cs",
     "script-data-editor-challengedefinitioneditor-cs",
     "script-ui-challengehudui-cs",
-    "script-data-challengemanager-cs",
     "script-data-objectives-challengeobjectives-variables-cs",
     "script-data-objectives-challengeobjectives-enemy-cs",
     "script-data-objectives-challengeobjectives-player-cs"

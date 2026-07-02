@@ -85,7 +85,6 @@
   ],
   "used_by": [
     "JukeboxSectionUI",
-    "PlayerProgress",
     "SaveData",
     "WildMelodyPickup"
   ],
@@ -93,11 +92,12 @@
   "id": "script-data-wildmelodydata-cs",
   "dependencyIds": [
     "script-data-areadata-cs",
+    "script-data-challengedefinition-cs",
+    "script-ui-jukeboxsectionui-cs",
     "script-collectibles-wildmelodypickup-cs"
   ],
   "usedByIds": [
     "script-ui-jukeboxsectionui-cs",
-    "script-data-playerprogress-cs",
     "script-data-savedata-cs",
     "script-collectibles-wildmelodypickup-cs"
   ]

@@ -17,8 +17,7 @@
   "fields": [],
   "methods": [],
   "dependencies": [
-    "AnimalFormData",
-    "FormSwitcher"
+    "AnimalFormData"
   ],
   "used_by": [
     "CamoAbility",
@@ -46,11 +45,10 @@
     "TonguePullAbility",
     "WaterMotor2D"
   ],
-  "source": "/// <summary>\n/// Implementado por qualquer m�dulo de habilidade (Dash, Charge, Roll, Glide, etc.).\n/// O FormSwitcher chama ConfigureFromForm em todos os IFormAbility do Player\n/// sempre que a forma actual muda, para que cada m�dulo se active/desactive\n/// e actualize os seus par�metros de acordo com a nova AnimalFormData.\n/// </summary>\npublic interface IFormAbility\n{\n    void ConfigureFromForm(AnimalFormData form);\n}\n",
+  "source": "/// <summary>\n/// Implementado por qualquer módulo de habilidade (Dash, Charge, Roll, Glide, etc.).\n/// O FormSwitcher chama ConfigureFromForm em todos os IFormAbility do Player\n/// sempre que a forma actual muda, para que cada módulo se active/desactive\n/// e actualize os seus par'metros de acordo com a nova AnimalFormData.\n/// </summary>\npublic interface IFormAbility\n{\n    void ConfigureFromForm(AnimalFormData form);\n}\n",
   "id": "script-abilities-iformability-cs",
   "dependencyIds": [
-    "script-forms-animalformdata-cs",
-    "script-forms-formswitcher-cs"
+    "script-forms-animalformdata-cs"
   ],
   "usedByIds": [
     "script-abilities-camoability-cs",

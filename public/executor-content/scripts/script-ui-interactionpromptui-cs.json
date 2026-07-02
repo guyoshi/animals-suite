@@ -73,8 +73,7 @@
   ],
   "used_by": [
     "BossHealthBarUI",
-    "ChallengeTrigger",
-    "HUDController"
+    "ChallengeTrigger"
   ],
   "source": "using TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Prompt genérico de interacção do HUD (Tarefa #32) — ex: \"Aperta [E] para\n/// falar\", \"Aperta [E] para abrir\", \"Aperta [E] para apanhar\". Qualquer\n/// sistema (NpcController, alavancas, baús, objectos agarráveis, etc.) chama\n/// <see cref=\"Show(string)\"/> quando o player entra no alcance e\n/// <see cref=\"Hide\"/> quando sai (ou a interacção deixa de ser possível).\n///\n/// Singleton simples (Instance) — diferente do padrão\n/// EnsureExists/DontDestroyOnLoad dos outros singletons (PlayerProgress,\n/// WorldState, ...) porque este componente faz parte do Canvas do HUD de cada\n/// cena, não precisa de persistir entre cenas.\n/// </summary>\npublic class InteractionPromptUI : MonoBehaviour\n{\n    public static InteractionPromptUI Instance { get; private set; }\n\n    [SerializeField] private GameObject root;\n    [SerializeField] private TMP_Text promptText;\n\n    private void Awake()\n    {\n        Instance = this;\n        if (root != null) root.SetActive(false);\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    /// <summary>Mostra o prompt com o texto dado (ex: \"Aperta [E] para falar\").</summary>\n    public void Show(string text)\n    {\n        if (promptText != null) promptText.text = text;\n        if (root != null) root.SetActive(true);\n    }\n\n    public void Hide()\n    {\n        if (root != null) root.SetActive(false);\n    }\n}\n",
   "id": "script-ui-interactionpromptui-cs",
@@ -85,7 +84,6 @@
   ],
   "usedByIds": [
     "script-ui-bosshealthbarui-cs",
-    "script-interactables-challengetrigger-cs",
-    "script-ui-hudcontroller-cs"
+    "script-interactables-challengetrigger-cs"
   ]
 }

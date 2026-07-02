@@ -22,200 +22,10 @@
   ],
   "fields": [
     {
-      "name": "masterVolume",
-      "type": "float",
-      "mods": "private",
-      "default": "1f",
-      "section": "Volumes (0-1)",
-      "attrs": "[Header(\"Volumes (0-1)\")] [Range(0f, 1f)] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "bgmVolume",
-      "type": "float",
-      "mods": "private",
-      "default": "1f",
-      "section": "Volumes (0-1)",
-      "attrs": "[Range(0f, 1f)] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "bgsVolume",
-      "type": "float",
-      "mods": "private",
-      "default": "1f",
-      "section": "Volumes (0-1)",
-      "attrs": "[Range(0f, 1f)] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "seVolume",
-      "type": "float",
-      "mods": "private",
-      "default": "1f",
-      "section": "Volumes (0-1)",
-      "attrs": "[Range(0f, 1f)] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sePoolSize",
-      "type": "int",
-      "mods": "private",
-      "default": "8",
-      "section": "Sound Effects",
-      "attrs": "[Header(\"Sound Effects\")] [Tooltip(\"Número de AudioSources usados para tocar SE em simultâneo.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Número de AudioSources usados para tocar SE em simultâneo."
-    },
-    {
-      "name": "noZoneFadeTime",
-      "type": "float",
-      "mods": "private",
-      "default": "1.5f",
-      "section": "Music Zones",
-      "attrs": "[Header(\"Music Zones\")] [Tooltip(\"Tempo de fade quando nenhuma zona activa define um clip para o canal (BGM ou BGS).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Tempo de fade quando nenhuma zona ativa define um clip para o canal (BGM ou BGS)."
-    },
-    {
-      "name": "persistVolumes",
-      "type": "bool",
-      "mods": "private",
-      "default": "true",
-      "section": "Persistência",
-      "attrs": "[Header(\"Persistência\")] [Tooltip(\"Se activo, os volumes são lidos/guardados em PlayerPrefs.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Se ativo, os volumes são lidos/guardados em PlayerPrefs."
-    },
-    {
-      "name": "pausedBgmCutoff",
-      "type": "float",
-      "mods": "private",
-      "default": "700f",
-      "section": "Menu de Pausa — Filtro \\\"Memória\\\"",
-      "attrs": "[Header(\"Menu de Pausa — Filtro \\\"Memória\\\"\")] [Tooltip(\"Frequência de corte (Hz) do filtro low-pass aplicado ao BGM enquanto o Menu de Pausa está aberto — \\\"como se o jogador estivesse a ouvir o mundo através de uma memória\\\". Usado apenas se 'normalSnapshot'/'pausedSnapshot' não estiverem definidos (fallback sem mixer). Não pára a música, só a abafa.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Frequência de corte (Hz) do filtro low-pass aplicado ao BGM enquanto o Menu de Pausa está aberto — \"como se o jogador estivesse a ouvir o mundo através de uma memória\". Usado apenas se 'normalSnapshot'/'pausedSnapshot' não estiverem definidos (fallback sem mixer). Não pára a música, só a abafa."
-    },
-    {
-      "name": "mixer",
-      "type": "AudioMixer",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Header(\"Audio Mixer (opcional, Tarefa #19)\")] [Tooltip(\"AudioMixer com grupos Master > BGM/BGS/SE e parâmetros expostos para os volumes. Se vazio, o AudioManager funciona sem mixer (como antes desta tarefa) — ver resumo na documentação da classe.\")] [SerializeField]",
-      "inspector": true,
-      "description": "AudioMixer com grupos Master > BGM/BGS/SE e parâmetros expostos para os volumes. Se vazio, o AudioManager funciona sem mixer (como antes desta tarefa) — ver resumo na documentação da classe."
-    },
-    {
-      "name": "masterVolumeParam",
-      "type": "string",
-      "mods": "private",
-      "default": "\"MasterVolume\"",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Nome do parâmetro exposto (Expose Parameter) para o volume geral, em dB.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Nome do parâmetro exposto (Expose Parameter) para o volume geral, em dB."
-    },
-    {
-      "name": "bgmVolumeParam",
-      "type": "string",
-      "mods": "private",
-      "default": "\"BGMVolume\"",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Nome do parâmetro exposto para o volume da BGM, em dB.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Nome do parâmetro exposto para o volume da BGM, em dB."
-    },
-    {
-      "name": "bgsVolumeParam",
-      "type": "string",
-      "mods": "private",
-      "default": "\"BGSVolume\"",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Nome do parâmetro exposto para o volume do BGS, em dB.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Nome do parâmetro exposto para o volume do BGS, em dB."
-    },
-    {
-      "name": "seVolumeParam",
-      "type": "string",
-      "mods": "private",
-      "default": "\"SEVolume\"",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Nome do parâmetro exposto para o volume dos SE, em dB.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Nome do parâmetro exposto para o volume dos SE, em dB."
-    },
-    {
-      "name": "bgmGroup",
-      "type": "AudioMixerGroup",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Grupo do Mixer para as fontes de BGM (crossfade). Requer 'mixer'.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Grupo do Mixer para as fontes de BGM (crossfade). Requer 'mixer'."
-    },
-    {
-      "name": "bgsGroup",
-      "type": "AudioMixerGroup",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Grupo do Mixer para as fontes de BGS (crossfade). Requer 'mixer'.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Grupo do Mixer para as fontes de BGS (crossfade). Requer 'mixer'."
-    },
-    {
-      "name": "seGroup",
-      "type": "AudioMixerGroup",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Grupo do Mixer para a pool de SE. Requer 'mixer'.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Grupo do Mixer para a pool de SE. Requer 'mixer'."
-    },
-    {
-      "name": "normalSnapshot",
-      "type": "AudioMixerSnapshot",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Snapshot \\\"normal\\\" do Mixer (sem efeitos do Menu de Pausa). Requer 'mixer'.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Snapshot \"normal\" do Mixer (sem efeitos do Menu de Pausa). Requer 'mixer'."
-    },
-    {
-      "name": "pausedSnapshot",
-      "type": "AudioMixerSnapshot",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Snapshot do Menu de Pausa — efeito \\\"memória\\\" (ex: low-pass/volume reduzido no grupo BGM), configurado na janela Audio Mixer do Unity. Requer 'mixer'.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Snapshot do Menu de Pausa — efeito \"memória\" (ex: low-pass/volume reduzido no grupo BGM), configurado na janela Audio Mixer do Unity. Requer 'mixer'."
-    },
-    {
-      "name": "snapshotTransitionTime",
-      "type": "float",
-      "mods": "private",
-      "default": "0.3f",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "[Tooltip(\"Duração da transição entre snapshots ao abrir/fechar o Menu de Pausa.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Duração da transição entre snapshots ao abrir/fechar o Menu de Pausa."
-    },
-    {
       "name": "PrefMaster",
       "type": "string",
       "mods": "private const",
-      "default": "\"audio_master_volume\"",
+      "default": "",
       "section": "Audio Mixer (opcional, Tarefa #19)",
       "attrs": "",
       "inspector": false,
@@ -225,7 +35,7 @@
       "name": "PrefBgm",
       "type": "string",
       "mods": "private const",
-      "default": "\"audio_bgm_volume\"",
+      "default": "",
       "section": "Audio Mixer (opcional, Tarefa #19)",
       "attrs": "",
       "inspector": false,
@@ -235,7 +45,7 @@
       "name": "PrefBgs",
       "type": "string",
       "mods": "private const",
-      "default": "\"audio_bgs_volume\"",
+      "default": "",
       "section": "Audio Mixer (opcional, Tarefa #19)",
       "attrs": "",
       "inspector": false,
@@ -245,7 +55,7 @@
       "name": "PrefSe",
       "type": "string",
       "mods": "private const",
-      "default": "\"audio_se_volume\"",
+      "default": "",
       "section": "Audio Mixer (opcional, Tarefa #19)",
       "attrs": "",
       "inspector": false,
@@ -322,10 +132,20 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "_activeZones",
-      "type": "List<MusicZone>",
-      "mods": "private readonly",
-      "default": "new List<MusicZone>()",
+      "name": "_sePositionalPool",
+      "type": "AudioSource[]",
+      "mods": "private",
+      "default": "",
+      "section": "Audio Mixer (opcional, Tarefa #19)",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_sePositionalNextIndex",
+      "type": "int",
+      "mods": "private",
+      "default": "",
       "section": "Audio Mixer (opcional, Tarefa #19)",
       "attrs": "",
       "inspector": false,
@@ -450,46 +270,6 @@
       "attrs": "",
       "inspector": false,
       "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_runner",
-      "type": "MonoBehaviour",
-      "mods": "private readonly",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_active",
-      "type": "AudioSource",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_standby",
-      "type": "AudioSource",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_fadeRoutine",
-      "type": "Coroutine",
-      "mods": "private",
-      "default": "",
-      "section": "Audio Mixer (opcional, Tarefa #19)",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
     }
   ],
   "methods": [
@@ -513,6 +293,13 @@
       "mods": "private",
       "params": "",
       "description": "Executa a operação SetupSources."
+    },
+    {
+      "name": "CreatePositionalSource",
+      "ret": "AudioSource",
+      "mods": "private",
+      "params": "string sourceName, AudioMixerGroup group = null",
+      "description": "Executa a operação CreatePositionalSource."
     },
     {
       "name": "CreateSource",
@@ -660,61 +447,27 @@
       "mods": "private",
       "params": "",
       "description": "Executa a operação ApplyActiveZones."
-    },
-    {
-      "name": "Play",
-      "ret": "void",
-      "mods": "public",
-      "params": "AudioClip clip, float fadeTime, bool loop, float targetVolume",
-      "description": "Executa a operação Play."
-    },
-    {
-      "name": "Stop",
-      "ret": "void",
-      "mods": "public",
-      "params": "float fadeTime",
-      "description": "Executa a operação Stop."
-    },
-    {
-      "name": "SetActiveVolume",
-      "ret": "void",
-      "mods": "public",
-      "params": "float volume",
-      "description": "Executa a operação SetActiveVolume."
-    },
-    {
-      "name": "Crossfade",
-      "ret": "IEnumerator",
-      "mods": "private",
-      "params": "AudioSource from, AudioSource to, float fadeTime, float targetVolume",
-      "description": "Executa a operação Crossfade."
-    },
-    {
-      "name": "FadeOut",
-      "ret": "IEnumerator",
-      "mods": "private",
-      "params": "AudioSource source, float fadeTime",
-      "description": "Executa a operação FadeOut."
     }
   ],
   "dependencies": [
-    "MusicZone",
-    "PlayerProgress",
-    "WorldState"
+    "MusicZone"
   ],
   "used_by": [
     "Action_PlaySE",
     "Action_SetReactionState",
-    "AnimalFormData",
     "AnimalSpiritRescue",
     "ApoloRunaCollectUI",
     "BossController",
+    "BreakableObject",
     "ChallengeManager",
     "ChallengeResultUI",
     "ChallengeTrigger",
     "Checkpoint",
     "CoralBubble",
     "DeathScreenUI",
+    "EggObject",
+    "EnemyAttackController",
+    "EnemyFeedback",
     "FallResetZone",
     "FallingPlatform",
     "FallingSpike",
@@ -731,36 +484,39 @@
     "PlayerConsumableEffects",
     "PlayerDeathHandler",
     "PlayerFeedback",
-    "PlayerProgress",
+    "ProjectileController",
+    "RoarAbility",
     "RumbleManager",
     "SafeHaven",
     "SecondaryMenuController",
     "ShopUI",
+    "SonarAbility",
     "TutorialMessageManager",
     "VfxPoolManager",
     "WaterMotor2D",
     "WorldMapUI"
   ],
-  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\nusing UnityEngine.Audio;\n\n/// <summary>\n/// Singleton central de áudio: música de fundo (BGM), som ambiente (BGS) e\n/// efeitos sonoros (SE). Segue o mesmo padrão de WorldState/PlayerProgress\n/// (Instance, DontDestroyOnLoad, criado automaticamente se não existir na cena).\n///\n/// - BGM e BGS têm cada um dois AudioSources internos para permitir crossfade\n///   (transição suave entre uma música/ambiente e outro).\n/// - SE usa uma pequena pool de AudioSources para tocar vários sons em\n///   simultâneo sem cortar uns aos outros.\n/// - Volumes (master/bgm/bgs/se, 0-1) são opcionalmente persistidos em\n///   PlayerPrefs, prontos a ligar a um menu de opções.\n/// - MusicZone (Etapa 3) regista-se aqui para mudar o BGM/BGS automaticamente\n///   conforme a área onde o player está.\n///\n/// <para><b>Audio Mixer (Tarefa #19, opcional):</b> se <see cref=\"mixer\"/>\n/// estiver definido, os volumes master/bgm/bgs/se deixam de escalar\n/// directamente \"AudioSource.volume\" e passam a controlar os parâmetros\n/// expostos do Mixer (<see cref=\"masterVolumeParam\"/>/<see cref=\"bgmVolumeParam\"/>/\n/// <see cref=\"bgsVolumeParam\"/>/<see cref=\"seVolumeParam\"/>, em dB — conversão\n/// logarítmica a partir do valor 0-1), e as fontes de BGM/BGS/SE são roteadas\n/// para <see cref=\"bgmGroup\"/>/<see cref=\"bgsGroup\"/>/<see cref=\"seGroup\"/>.\n/// Isto permite desenhar ducking, efeitos e snapshots na janela \"Audio Mixer\"\n/// do Unity, sem código adicional. O filtro \"memória\" do Menu de Pausa\n/// (<see cref=\"SetBgmMuffled\"/>) passa a usar\n/// <see cref=\"normalSnapshot\"/>/<see cref=\"pausedSnapshot\"/>\n/// (AudioMixerSnapshot.TransitionTo) em vez do AudioLowPassFilter por código.</para>\n///\n/// <para>Sem \"mixer\" definido (campo vazio, predefinição): funciona\n/// exactamente como antes — os volumes escalam \"AudioSource.volume\"\n/// directamente, e a \"memória\" usa AudioLowPassFilter. Totalmente opcional e\n/// compatível com cenas sem mixer configurado.</para>\n///\n/// <para><b>Configuração do AudioMixer no Unity (uma vez):</b></para>\n/// <para>1. \"Assets &gt; Create &gt; Audio Mixer\" — criar o asset (ex: \"MainMixer\").</para>\n/// <para>2. Na janela \"Audio Mixer\", criar 3 grupos dentro de \"Master\": \"BGM\", \"BGS\", \"SE\".</para>\n/// <para>3. Em cada grupo (\"Master\", \"BGM\", \"BGS\", \"SE\"), botão direito no\n/// slider \"Volume\" → \"Expose ... to script\", depois na aba \"Exposed\n/// Parameters\" (canto superior direito) renomear cada parâmetro exposto para\n/// \"MasterVolume\", \"BGMVolume\", \"BGSVolume\", \"SEVolume\" respectivamente — os\n/// mesmos nomes (por defeito) de <see cref=\"masterVolumeParam\"/> etc.</para>\n/// <para>4. Criar duas Snapshots (painel \"Snapshots\"): \"Normal\" e \"Pausado\".\n/// Seleccionar \"Pausado\" e, no grupo \"BGM\", reduzir o volume e/ou adicionar um\n/// efeito \"Lowpass\" — este é o efeito \"memória\" do Menu de Pausa.</para>\n/// <para>5. No Inspector do AudioManager: arrastar o asset para <see cref=\"mixer\"/>,\n/// os 3 grupos para <see cref=\"bgmGroup\"/>/<see cref=\"bgsGroup\"/>/<see cref=\"seGroup\"/>,\n/// e as 2 snapshots para <see cref=\"normalSnapshot\"/>/<see cref=\"pausedSnapshot\"/>.</para>\n/// </summary>\npublic class AudioManager : MonoBehaviour\n{\n    public static AudioManager Instance { get; private set; }\n\n    [Header(\"Volumes (0-1)\")]\n    [Range(0f, 1f)] [SerializeField] private float masterVolume = 1f;\n    [Range(0f, 1f)] [SerializeField] private float bgmVolume = 1f;\n    [Range(0f, 1f)] [SerializeField] private float bgsVolume = 1f;\n    [Range(0f, 1f)] [SerializeField] private float seVolume = 1f;\n\n    [Header(\"Sound Effects\")]\n    [Tooltip(\"Número de AudioSources usados para tocar SE em simultâneo.\")]\n    [SerializeField] private int sePoolSize = 8;\n\n    [Header(\"Music Zones\")]\n    [Tooltip(\"Tempo de fade quando nenhuma zona activa define um clip para o canal (BGM ou BGS).\")]\n    [SerializeField] private float noZoneFadeTime = 1.5f;\n\n    [Header(\"Persistência\")]\n    [Tooltip(\"Se activo, os volumes são lidos/guardados em PlayerPrefs.\")]\n    [SerializeField] private bool persistVolumes = true;\n\n    [Header(\"Menu de Pausa — Filtro \\\"Memória\\\"\")]\n    [Tooltip(\"Frequência de corte (Hz) do filtro low-pass aplicado ao BGM enquanto o Menu de Pausa está aberto — \\\"como se o jogador estivesse a ouvir o mundo através de uma memória\\\". Usado apenas se 'normalSnapshot'/'pausedSnapshot' não estiverem definidos (fallback sem mixer). Não pára a música, só a abafa.\")]\n    [SerializeField] private float pausedBgmCutoff = 700f;\n\n    [Header(\"Audio Mixer (opcional, Tarefa #19)\")]\n    [Tooltip(\"AudioMixer com grupos Master > BGM/BGS/SE e parâmetros expostos para os volumes. Se vazio, o AudioManager funciona sem mixer (como antes desta tarefa) — ver resumo na documentação da classe.\")]\n    [SerializeField] private AudioMixer mixer;\n\n    [Tooltip(\"Nome do parâmetro exposto (Expose Parameter) para o volume geral, em dB.\")]\n    [SerializeField] private string masterVolumeParam = \"MasterVolume\";\n    [Tooltip(\"Nome do parâmetro exposto para o volume da BGM, em dB.\")]\n    [SerializeField] private string bgmVolumeParam = \"BGMVolume\";\n    [Tooltip(\"Nome do parâmetro exposto para o volume do BGS, em dB.\")]\n    [SerializeField] private string bgsVolumeParam = \"BGSVolume\";\n    [Tooltip(\"Nome do parâmetro exposto para o volume dos SE, em dB.\")]\n    [SerializeField] private string seVolumeParam = \"SEVolume\";\n\n    [Tooltip(\"Grupo do Mixer para as fontes de BGM (crossfade). Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerGroup bgmGroup;\n    [Tooltip(\"Grupo do Mixer para as fontes de BGS (crossfade). Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerGroup bgsGroup;\n    [Tooltip(\"Grupo do Mixer para a pool de SE. Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerGroup seGroup;\n\n    [Tooltip(\"Snapshot \\\"normal\\\" do Mixer (sem efeitos do Menu de Pausa). Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerSnapshot normalSnapshot;\n    [Tooltip(\"Snapshot do Menu de Pausa — efeito \\\"memória\\\" (ex: low-pass/volume reduzido no grupo BGM), configurado na janela Audio Mixer do Unity. Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerSnapshot pausedSnapshot;\n    [Tooltip(\"Duração da transição entre snapshots ao abrir/fechar o Menu de Pausa.\")]\n    [SerializeField] private float snapshotTransitionTime = 0.3f;\n\n    private const string PrefMaster = \"audio_master_volume\";\n    private const string PrefBgm = \"audio_bgm_volume\";\n    private const string PrefBgs = \"audio_bgs_volume\";\n    private const string PrefSe = \"audio_se_volume\";\n\n    private AudioChannel _bgmChannel;\n    private AudioChannel _bgsChannel;\n\n    private AudioSource _bgmSourceA;\n    private AudioSource _bgmSourceB;\n    private bool _bgmMuffled;\n\n    private AudioSource[] _sePool;\n    private int _seNextIndex;\n\n    private readonly List<MusicZone> _activeZones = new List<MusicZone>();\n\n    public float MasterVolume => masterVolume;\n    public float BgmVolume => bgmVolume;\n    public float BgsVolume => bgsVolume;\n    public float SeVolume => seVolume;\n\n    public AudioClip CurrentBgmClip => _bgmChannel?.CurrentClip;\n    public AudioClip CurrentBgsClip => _bgsChannel?.CurrentClip;\n\n    private float EffectiveBgmVolume => bgmVolume * masterVolume;\n    private float EffectiveBgsVolume => bgsVolume * masterVolume;\n    private float EffectiveSeVolume => seVolume * masterVolume;\n\n    /// <summary>\n    /// Volume-alvo do AudioSource activo de BGM durante o crossfade. Com\n    /// mixer configurado, o grupo \"BGM\" já aplica master/bgm em dB, pelo que\n    /// a fonte toca a 1 (cheio); sem mixer, a fonte aplica directamente\n    /// <see cref=\"EffectiveBgmVolume\"/> (comportamento anterior).\n    /// </summary>\n    private float BgmCrossfadeTarget => mixer != null ? 1f : EffectiveBgmVolume;\n\n    /// <summary>Equivalente a <see cref=\"BgmCrossfadeTarget\"/> para o canal de BGS.</summary>\n    private float BgsCrossfadeTarget => mixer != null ? 1f : EffectiveBgsVolume;\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\"). Sem isto, um\n    /// AudioManager configurado numa cena (volumes/sePoolSize/etc. no\n    /// Inspector) seria destruído ao encontrar a versão vazia auto-criada como\n    /// Instance.\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (persistVolumes) LoadVolumes();\n\n        SetupSources();\n        ApplyAllVolumesToMixer();\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(AudioManager) + \" (Fallback)\");\n        var instance = go.AddComponent<AudioManager>();\n        instance.isAutoFallback = true;\n    }\n\n    private void SetupSources()\n    {\n        _bgmSourceA = CreateSource(\"BGM A\", bgmGroup, true);\n        _bgmSourceB = CreateSource(\"BGM B\", bgmGroup, true);\n        _bgmChannel = new AudioChannel(this, _bgmSourceA, _bgmSourceB);\n\n        _bgsChannel = new AudioChannel(this, CreateSource(\"BGS A\", bgsGroup), CreateSource(\"BGS B\", bgsGroup));\n\n        _sePool = new AudioSource[Mathf.Max(1, sePoolSize)];\n        for (int i = 0; i < _sePool.Length; i++)\n            _sePool[i] = CreateSource($\"SE {i}\", seGroup);\n    }\n\n    private AudioSource CreateSource(string sourceName, AudioMixerGroup group = null, bool addLowPassFilter = false)\n    {\n        var go = new GameObject(sourceName);\n        go.transform.SetParent(transform);\n\n        var source = go.AddComponent<AudioSource>();\n        source.loop = true;\n        source.playOnAwake = false;\n        source.volume = 0f;\n\n        if (group != null) source.outputAudioMixerGroup = group;\n\n        if (addLowPassFilter)\n        {\n            var lowPass = go.AddComponent<AudioLowPassFilter>();\n            lowPass.cutoffFrequency = 22000f;\n            lowPass.enabled = false;\n        }\n\n        return source;\n    }\n\n    // ---------------- BGM ----------------\n\n    /// <summary>Toca uma música de fundo, com crossfade. clip == null equivale a StopBGM.</summary>\n    public void PlayBGM(AudioClip clip, float fadeTime = 1f, bool loop = true)\n    {\n        _bgmChannel.Play(clip, fadeTime, loop, BgmCrossfadeTarget);\n    }\n\n    /// <summary>Pára a música de fundo actual com fade-out.</summary>\n    public void StopBGM(float fadeTime = 1f)\n    {\n        _bgmChannel.Stop(fadeTime);\n    }\n\n    /// <summary>\n    /// Activa/desactiva o efeito \"memória\" no BGM (Menu de Pausa — Tarefa #6):\n    /// abafa a música da área sem a parar, \"como se o jogador estivesse a\n    /// ouvir o mundo através de uma memória\". Não afecta BGS nem SE.\n    ///\n    /// Com mixer e <see cref=\"normalSnapshot\"/>/<see cref=\"pausedSnapshot\"/>\n    /// configurados (Tarefa #19), faz a transição entre snapshots do Mixer;\n    /// caso contrário usa o filtro low-pass por código (comportamento anterior).\n    /// </summary>\n    public void SetBgmMuffled(bool muffled)\n    {\n        if (_bgmMuffled == muffled) return;\n        _bgmMuffled = muffled;\n\n        if (mixer != null && normalSnapshot != null && pausedSnapshot != null)\n        {\n            (muffled ? pausedSnapshot : normalSnapshot).TransitionTo(snapshotTransitionTime);\n            return;\n        }\n\n        ApplyLowPass(_bgmSourceA, muffled);\n        ApplyLowPass(_bgmSourceB, muffled);\n    }\n\n    private void ApplyLowPass(AudioSource source, bool enabled)\n    {\n        if (source == null) return;\n\n        var lowPass = source.GetComponent<AudioLowPassFilter>();\n        if (lowPass == null) return;\n\n        lowPass.cutoffFrequency = pausedBgmCutoff;\n        lowPass.enabled = enabled;\n    }\n\n    // ---------------- BGS ----------------\n\n    /// <summary>Toca um som ambiente, com crossfade. clip == null equivale a StopBGS.</summary>\n    public void PlayBGS(AudioClip clip, float fadeTime = 1f, bool loop = true)\n    {\n        _bgsChannel.Play(clip, fadeTime, loop, BgsCrossfadeTarget);\n    }\n\n    /// <summary>Pára o som ambiente actual com fade-out.</summary>\n    public void StopBGS(float fadeTime = 1f)\n    {\n        _bgsChannel.Stop(fadeTime);\n    }\n\n    // ---------------- SE ----------------\n\n    /// <summary>Toca um efeito sonoro uma vez (não-posicional), usando a pool de SE.</summary>\n    /// <param name=\"volumeScale\">Volume relativo deste som (0-1), multiplicado pelo volume de SE.</param>\n    public void PlaySE(AudioClip clip, float volumeScale = 1f, float pitch = 1f)\n    {\n        if (clip == null || _sePool == null || _sePool.Length == 0) return;\n\n        var source = _sePool[_seNextIndex];\n        _seNextIndex = (_seNextIndex + 1) % _sePool.Length;\n\n        source.pitch = pitch;\n        source.volume = mixer != null ? 1f : EffectiveSeVolume;\n        source.PlayOneShot(clip, Mathf.Clamp01(volumeScale));\n    }\n\n    /// <summary>\n    /// Toca um efeito sonoro numa posição do mundo (útil para sons\n    /// 3D/posicionais). Usa <see cref=\"AudioSource.PlayClipAtPoint\"/>, que cria\n    /// uma fonte temporária fora do Mixer — por isso aplica sempre\n    /// <see cref=\"EffectiveSeVolume\"/> directamente, mesmo com mixer configurado.\n    /// </summary>\n    public void PlaySEAtPoint(AudioClip clip, Vector3 position, float volumeScale = 1f)\n    {\n        if (clip == null) return;\n        AudioSource.PlayClipAtPoint(clip, position, EffectiveSeVolume * Mathf.Clamp01(volumeScale));\n    }\n\n    // ---------------- Volumes ----------------\n\n    public void SetMasterVolume(float value)\n    {\n        masterVolume = Mathf.Clamp01(value);\n        ApplyMixerParam(masterVolumeParam, masterVolume);\n        if (mixer == null)\n        {\n            _bgmChannel.SetActiveVolume(EffectiveBgmVolume);\n            _bgsChannel.SetActiveVolume(EffectiveBgsVolume);\n        }\n        if (persistVolumes) PlayerPrefs.SetFloat(PrefMaster, masterVolume);\n    }\n\n    public void SetBgmVolume(float value)\n    {\n        bgmVolume = Mathf.Clamp01(value);\n        ApplyMixerParam(bgmVolumeParam, bgmVolume);\n        if (mixer == null) _bgmChannel.SetActiveVolume(EffectiveBgmVolume);\n        if (persistVolumes) PlayerPrefs.SetFloat(PrefBgm, bgmVolume);\n    }\n\n    public void SetBgsVolume(float value)\n    {\n        bgsVolume = Mathf.Clamp01(value);\n        ApplyMixerParam(bgsVolumeParam, bgsVolume);\n        if (mixer == null) _bgsChannel.SetActiveVolume(EffectiveBgsVolume);\n        if (persistVolumes) PlayerPrefs.SetFloat(PrefBgs, bgsVolume);\n    }\n\n    public void SetSeVolume(float value)\n    {\n        seVolume = Mathf.Clamp01(value);\n        ApplyMixerParam(seVolumeParam, seVolume);\n        if (persistVolumes) PlayerPrefs.SetFloat(PrefSe, seVolume);\n    }\n\n    private void LoadVolumes()\n    {\n        masterVolume = PlayerPrefs.GetFloat(PrefMaster, masterVolume);\n        bgmVolume = PlayerPrefs.GetFloat(PrefBgm, bgmVolume);\n        bgsVolume = PlayerPrefs.GetFloat(PrefBgs, bgsVolume);\n        seVolume = PlayerPrefs.GetFloat(PrefSe, seVolume);\n    }\n\n    /// <summary>\n    /// Envia os 4 volumes actuais (0-1) para os parâmetros expostos do Mixer,\n    /// em dB. Chamado uma vez em <see cref=\"Awake\"/> (depois de\n    /// <see cref=\"LoadVolumes\"/>) para sincronizar o Mixer com os valores\n    /// persistidos/configurados. Sem efeito se <see cref=\"mixer\"/> for nulo.\n    /// </summary>\n    private void ApplyAllVolumesToMixer()\n    {\n        ApplyMixerParam(masterVolumeParam, masterVolume);\n        ApplyMixerParam(bgmVolumeParam, bgmVolume);\n        ApplyMixerParam(bgsVolumeParam, bgsVolume);\n        ApplyMixerParam(seVolumeParam, seVolume);\n    }\n\n    /// <summary>Converte um volume linear (0-1) para dB e aplica-o a um parâmetro exposto do Mixer. Sem efeito se <see cref=\"mixer\"/> ou o nome do parâmetro estiverem vazios.</summary>\n    private void ApplyMixerParam(string paramName, float linearValue)\n    {\n        if (mixer == null || string.IsNullOrEmpty(paramName)) return;\n        mixer.SetFloat(paramName, LinearToDecibel(linearValue));\n    }\n\n    /// <summary>Conversão padrão linear→dB usada para volumes de AudioMixer (0 → -80dB \"silêncio\", 1 → 0dB).</summary>\n    private static float LinearToDecibel(float value)\n    {\n        return value > 0.0001f ? Mathf.Log10(value) * 20f : -80f;\n    }\n\n    // ---------------- Music Zones ----------------\n\n    /// <summary>Chamado por MusicZone quando o player entra na zona.</summary>\n    public void RegisterZone(MusicZone zone)\n    {\n        if (zone == null || _activeZones.Contains(zone)) return;\n\n        _activeZones.Add(zone);\n        ApplyActiveZones();\n    }\n\n    /// <summary>Chamado por MusicZone quando o player sai da zona.</summary>\n    public void UnregisterZone(MusicZone zone)\n    {\n        if (zone == null) return;\n        if (!_activeZones.Remove(zone)) return;\n\n        ApplyActiveZones();\n    }\n\n    /// <summary>\n    /// Reavalia as zonas activas (BGM/BGS). Chamado por uma MusicZone quando\n    /// uma das suas \"conditions\" (Etapa 8) muda de resultado enquanto o player\n    /// continua dentro dela — sem isto, a zona só seria reavaliada ao entrar/\n    /// sair (OnTriggerEnter2D/OnTriggerExit2D).\n    /// </summary>\n    public void RefreshActiveZones()\n    {\n        ApplyActiveZones();\n    }\n\n    /// <summary>\n    /// Para BGM e BGS, escolhe — entre as zonas activas (com \"conditions\"\n    /// cumpridas) que definem esse clip — a de maior prioridade, e toca-a. Se\n    /// nenhuma zona activa definir esse clip, o canal é silenciado\n    /// (StopBGM/StopBGS). Isto permite zonas \"filhas\" (ex: uma sala) só\n    /// substituírem o BGS sem cortar a música da zona \"mãe\" (ex: a área\n    /// inteira), bastando deixar bgmClip vazio na zona filha.\n    /// </summary>\n    private void ApplyActiveZones()\n    {\n        MusicZone bgmZone = null;\n        MusicZone bgsZone = null;\n\n        foreach (var zone in _activeZones)\n        {\n            if (zone == null || !zone.ConditionsMet()) continue;\n\n            if (zone.bgmClip != null && (bgmZone == null || zone.priority > bgmZone.priority))\n                bgmZone = zone;\n\n            if (zone.bgsClip != null && (bgsZone == null || zone.priority > bgsZone.priority))\n                bgsZone = zone;\n        }\n\n        if (bgmZone != null) PlayBGM(bgmZone.bgmClip, bgmZone.fadeTime, bgmZone.loop);\n        else StopBGM(noZoneFadeTime);\n\n        if (bgsZone != null) PlayBGS(bgsZone.bgsClip, bgsZone.fadeTime, bgsZone.loop);\n        else StopBGS(noZoneFadeTime);\n    }\n\n    /// <summary>\n    /// Canal de áudio com crossfade entre dois AudioSources. Usado internamente\n    /// para BGM e BGS — o código é idêntico para os dois, só muda o volume-alvo.\n    /// </summary>\n    private class AudioChannel\n    {\n        private readonly MonoBehaviour _runner;\n        private AudioSource _active;\n        private AudioSource _standby;\n        private Coroutine _fadeRoutine;\n\n        public AudioClip CurrentClip { get; private set; }\n\n        public AudioChannel(MonoBehaviour runner, AudioSource a, AudioSource b)\n        {\n            _runner = runner;\n            _active = a;\n            _standby = b;\n        }\n\n        /// <summary>Toca \"clip\" com crossfade. clip == null equivale a Stop().</summary>\n        public void Play(AudioClip clip, float fadeTime, bool loop, float targetVolume)\n        {\n            if (clip == null) { Stop(fadeTime); return; }\n            if (CurrentClip == clip && _active.isPlaying) return;\n\n            CurrentClip = clip;\n\n            _standby.clip = clip;\n            _standby.loop = loop;\n            _standby.volume = 0f;\n            _standby.Play();\n\n            if (_fadeRoutine != null) _runner.StopCoroutine(_fadeRoutine);\n            _fadeRoutine = _runner.StartCoroutine(Crossfade(_active, _standby, fadeTime, targetVolume));\n\n            (_active, _standby) = (_standby, _active);\n        }\n\n        /// <summary>Pára o clip actual com fade-out.</summary>\n        public void Stop(float fadeTime)\n        {\n            if (CurrentClip == null && !_active.isPlaying) return;\n\n            CurrentClip = null;\n\n            if (_fadeRoutine != null) _runner.StopCoroutine(_fadeRoutine);\n            _fadeRoutine = _runner.StartCoroutine(FadeOut(_active, fadeTime));\n        }\n\n        /// <summary>Ajusta o volume do source actualmente activo (ex: após mudar as opções de volume).</summary>\n        public void SetActiveVolume(float volume)\n        {\n            if (_active != null && _active.isPlaying) _active.volume = volume;\n        }\n\n        private IEnumerator Crossfade(AudioSource from, AudioSource to, float fadeTime, float targetVolume)\n        {\n            if (fadeTime <= 0f)\n            {\n                to.volume = targetVolume;\n\n                if (from != null)\n                {\n                    from.volume = 0f;\n                    from.Stop();\n                }\n\n                yield break;\n            }\n\n            float fromStart = from != null ? from.volume : 0f;\n            float t = 0f;\n\n            while (t < fadeTime)\n            {\n                t += Time.unscaledDeltaTime;\n                float ratio = Mathf.Clamp01(t / fadeTime);\n\n                to.volume = Mathf.Lerp(0f, targetVolume, ratio);\n                if (from != null) from.volume = Mathf.Lerp(fromStart, 0f, ratio);\n\n                yield return null;\n            }\n\n            to.volume = targetVolume;\n\n            if (from != null)\n            {\n                from.volume = 0f;\n                from.Stop();\n            }\n        }\n\n        private IEnumerator FadeOut(AudioSource source, float fadeTime)\n        {\n            if (source == null) yield break;\n\n            float start = source.volume;\n\n            if (fadeTime <= 0f)\n            {\n                source.volume = 0f;\n                source.Stop();\n                yield break;\n            }\n\n            float t = 0f;\n            while (t < fadeTime)\n            {\n                t += Time.unscaledDeltaTime;\n                source.volume = Mathf.Lerp(start, 0f, Mathf.Clamp01(t / fadeTime));\n                yield return null;\n            }\n\n            source.volume = 0f;\n            source.Stop();\n        }\n    }\n}\n",
+  "source": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\nusing UnityEngine.Audio;\n\n/// <summary>\n/// Singleton central de áudio: música de fundo (BGM), som ambiente (BGS) e\n/// efeitos sonoros (SE). Segue o mesmo padrão de WorldState/PlayerProgress\n/// (Instance, DontDestroyOnLoad, criado automaticamente se não existir na cena).\n///\n/// - BGM e BGS têm cada um dois AudioSources internos para permitir crossfade\n///   (transição suave entre uma música/ambiente e outro).\n/// - SE usa uma pequena pool de AudioSources para tocar vários sons em\n///   simultâneo sem cortar uns aos outros.\n/// - Volumes (master/bgm/bgs/se, 0-1) são opcionalmente persistidos em\n///   PlayerPrefs, prontos a ligar a um menu de opções.\n/// - MusicZone (Etapa 3) regista-se aqui para mudar o BGM/BGS automaticamente\n///   conforme a área onde o player está.\n///\n/// <para><b>Audio Mixer (Tarefa #19, opcional):</b> se <see cref=\"mixer\"/>\n/// estiver definido, os volumes master/bgm/bgs/se deixam de escalar\n/// directamente \"AudioSource.volume\" e passam a controlar os parâmetros\n/// expostos do Mixer (<see cref=\"masterVolumeParam\"/>/<see cref=\"bgmVolumeParam\"/>/\n/// <see cref=\"bgsVolumeParam\"/>/<see cref=\"seVolumeParam\"/>, em dB — conversão\n/// logarítmica a partir do valor 0-1), e as fontes de BGM/BGS/SE são roteadas\n/// para <see cref=\"bgmGroup\"/>/<see cref=\"bgsGroup\"/>/<see cref=\"seGroup\"/>.\n/// Isto permite desenhar ducking, efeitos e snapshots na janela \"Audio Mixer\"\n/// do Unity, sem código adicional. O filtro \"memória\" do Menu de Pausa\n/// (<see cref=\"SetBgmMuffled\"/>) passa a usar\n/// <see cref=\"normalSnapshot\"/>/<see cref=\"pausedSnapshot\"/>\n/// (AudioMixerSnapshot.TransitionTo) em vez do AudioLowPassFilter por código.</para>\n///\n/// <para>Sem \"mixer\" definido (campo vazio, predefinição): funciona\n/// exactamente como antes — os volumes escalam \"AudioSource.volume\"\n/// directamente, e a \"memória\" usa AudioLowPassFilter. Totalmente opcional e\n/// compatível com cenas sem mixer configurado.</para>\n///\n/// <para><b>Configuração do AudioMixer no Unity (uma vez):</b></para>\n/// <para>1. \"Assets &gt; Create &gt; Audio Mixer\" — criar o asset (ex: \"MainMixer\").</para>\n/// <para>2. Na janela \"Audio Mixer\", criar 3 grupos dentro de \"Master\": \"BGM\", \"BGS\", \"SE\".</para>\n/// <para>3. Em cada grupo (\"Master\", \"BGM\", \"BGS\", \"SE\"), botão direito no\n/// slider \"Volume\" → \"Expose ... to script\", depois na aba \"Exposed\n/// Parameters\" (canto superior direito) renomear cada parâmetro exposto para\n/// \"MasterVolume\", \"BGMVolume\", \"BGSVolume\", \"SEVolume\" respectivamente — os\n/// mesmos nomes (por defeito) de <see cref=\"masterVolumeParam\"/> etc.</para>\n/// <para>4. Criar duas Snapshots (painel \"Snapshots\"): \"Normal\" e \"Pausado\".\n/// Seleccionar \"Pausado\" e, no grupo \"BGM\", reduzir o volume e/ou adicionar um\n/// efeito \"Lowpass\" — este é o efeito \"memória\" do Menu de Pausa.</para>\n/// <para>5. No Inspector do AudioManager: arrastar o asset para <see cref=\"mixer\"/>,\n/// os 3 grupos para <see cref=\"bgmGroup\"/>/<see cref=\"bgsGroup\"/>/<see cref=\"seGroup\"/>,\n/// e as 2 snapshots para <see cref=\"normalSnapshot\"/>/<see cref=\"pausedSnapshot\"/>.</para>\n/// </summary>\npublic class AudioManager : MonoBehaviour\n{\n    public static AudioManager Instance { get; private set; }\n\n    [Header(\"Volumes (0-1)\")]\n    [Range(0f, 1f)] [SerializeField] private float masterVolume = 1f;\n    [Range(0f, 1f)] [SerializeField] private float bgmVolume = 1f;\n    [Range(0f, 1f)] [SerializeField] private float bgsVolume = 1f;\n    [Range(0f, 1f)] [SerializeField] private float seVolume = 1f;\n\n    [Header(\"Sound Effects\")]\n    [Tooltip(\"Número de AudioSources usados para tocar SE não-posicionais em simultâneo.\")]\n    [SerializeField] private int sePoolSize = 8;\n\n    [Tooltip(\"Número de AudioSources 3D usados para PlaySEAtPoint (Task #29). \" +\n             \"Substitui AudioSource.PlayClipAtPoint, que criava um GameObject temporário \" +\n             \"por chamada. Aumentar se houver corte em cenas com muitos SE posicionais simultâneos.\")]\n    [SerializeField] private int sePositionalPoolSize = 6;\n\n    [Header(\"Music Zones\")]\n    [Tooltip(\"Tempo de fade quando nenhuma zona activa define um clip para o canal (BGM ou BGS).\")]\n    [SerializeField] private float noZoneFadeTime = 1.5f;\n\n    [Header(\"Persistência\")]\n    [Tooltip(\"Se activo, os volumes são lidos/guardados em PlayerPrefs.\")]\n    [SerializeField] private bool persistVolumes = true;\n\n    [Header(\"Menu de Pausa — Filtro \\\"Memória\\\"\")]\n    [Tooltip(\"Frequência de corte (Hz) do filtro low-pass aplicado ao BGM enquanto o Menu de Pausa está aberto — \\\"como se o jogador estivesse a ouvir o mundo através de uma memória\\\". Usado apenas se 'normalSnapshot'/'pausedSnapshot' não estiverem definidos (fallback sem mixer). Não pára a música, só a abafa.\")]\n    [SerializeField] private float pausedBgmCutoff = 700f;\n\n    [Header(\"Audio Mixer (opcional, Tarefa #19)\")]\n    [Tooltip(\"AudioMixer com grupos Master > BGM/BGS/SE e parâmetros expostos para os volumes. Se vazio, o AudioManager funciona sem mixer (como antes desta tarefa) — ver resumo na documentação da classe.\")]\n    [SerializeField] private AudioMixer mixer;\n\n    [Tooltip(\"Nome do parâmetro exposto (Expose Parameter) para o volume geral, em dB.\")]\n    [SerializeField] private string masterVolumeParam = \"MasterVolume\";\n    [Tooltip(\"Nome do parâmetro exposto para o volume da BGM, em dB.\")]\n    [SerializeField] private string bgmVolumeParam = \"BGMVolume\";\n    [Tooltip(\"Nome do parâmetro exposto para o volume do BGS, em dB.\")]\n    [SerializeField] private string bgsVolumeParam = \"BGSVolume\";\n    [Tooltip(\"Nome do parâmetro exposto para o volume dos SE, em dB.\")]\n    [SerializeField] private string seVolumeParam = \"SEVolume\";\n\n    [Tooltip(\"Grupo do Mixer para as fontes de BGM (crossfade). Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerGroup bgmGroup;\n    [Tooltip(\"Grupo do Mixer para as fontes de BGS (crossfade). Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerGroup bgsGroup;\n    [Tooltip(\"Grupo do Mixer para a pool de SE. Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerGroup seGroup;\n\n    [Tooltip(\"Snapshot \\\"normal\\\" do Mixer (sem efeitos do Menu de Pausa). Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerSnapshot normalSnapshot;\n    [Tooltip(\"Snapshot do Menu de Pausa — efeito \\\"memória\\\" (ex: low-pass/volume reduzido no grupo BGM), configurado na janela Audio Mixer do Unity. Requer 'mixer'.\")]\n    [SerializeField] private AudioMixerSnapshot pausedSnapshot;\n    [Tooltip(\"Duração da transição entre snapshots ao abrir/fechar o Menu de Pausa.\")]\n    [SerializeField] private float snapshotTransitionTime = 0.3f;\n\n    private const string PrefMaster = \"audio_master_volume\";\n    private const string PrefBgm = \"audio_bgm_volume\";\n    private const string PrefBgs = \"audio_bgs_volume\";\n    private const string PrefSe = \"audio_se_volume\";\n\n    private AudioChannel _bgmChannel;\n    private AudioChannel _bgsChannel;\n\n    private AudioSource _bgmSourceA;\n    private AudioSource _bgmSourceB;\n    private bool _bgmMuffled;\n\n    private AudioSource[] _sePool;\n    private int _seNextIndex;\n\n    // Pool de fontes 3D posicionais (Task #29 — substitui PlayClipAtPoint).\n    private AudioSource[] _sePositionalPool;\n    private int _sePositionalNextIndex;\n\n    private readonly List<MusicZone> _activeZones = new List<MusicZone>();\n\n    public float MasterVolume => masterVolume;\n    public float BgmVolume => bgmVolume;\n    public float BgsVolume => bgsVolume;\n    public float SeVolume => seVolume;\n\n    public AudioClip CurrentBgmClip => _bgmChannel?.CurrentClip;\n    public AudioClip CurrentBgsClip => _bgsChannel?.CurrentClip;\n\n    private float EffectiveBgmVolume => bgmVolume * masterVolume;\n    private float EffectiveBgsVolume => bgsVolume * masterVolume;\n    private float EffectiveSeVolume => seVolume * masterVolume;\n\n    /// <summary>\n    /// Volume-alvo do AudioSource activo de BGM durante o crossfade. Com\n    /// mixer configurado, o grupo \"BGM\" já aplica master/bgm em dB, pelo que\n    /// a fonte toca a 1 (cheio); sem mixer, a fonte aplica directamente\n    /// <see cref=\"EffectiveBgmVolume\"/> (comportamento anterior).\n    /// </summary>\n    private float BgmCrossfadeTarget => mixer != null ? 1f : EffectiveBgmVolume;\n\n    /// <summary>Equivalente a <see cref=\"BgmCrossfadeTarget\"/> para o canal de BGS.</summary>\n    private float BgsCrossfadeTarget => mixer != null ? 1f : EffectiveBgsVolume;\n\n    /// <summary>\n    /// Marca instâncias criadas automaticamente por <see cref=\"EnsureExists\"/>\n    /// antes da primeira cena carregar (ver PlayerProgress.cs para a explicação\n    /// completa — Tarefa #15 \"GameBootstrap e singletons\"). Sem isto, um\n    /// AudioManager configurado numa cena (volumes/sePoolSize/etc. no\n    /// Inspector) seria destruído ao encontrar a versão vazia auto-criada como\n    /// Instance.\n    /// </summary>\n    private bool isAutoFallback;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this)\n        {\n            if (Instance.isAutoFallback && !isAutoFallback)\n            {\n                Destroy(Instance.gameObject);\n            }\n            else\n            {\n                Destroy(gameObject);\n                return;\n            }\n        }\n\n        Instance = this;\n        transform.SetParent(null);\n        DontDestroyOnLoad(gameObject);\n\n        if (persistVolumes) LoadVolumes();\n\n        SetupSources();\n        ApplyAllVolumesToMixer();\n    }\n\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]\n    private static void EnsureExists()\n    {\n        if (Instance != null) return;\n        var go = new GameObject(nameof(AudioManager) + \" (Fallback)\");\n        var instance = go.AddComponent<AudioManager>();\n        instance.isAutoFallback = true;\n    }\n\n    private void SetupSources()\n    {\n        _bgmSourceA = CreateSource(\"BGM A\", bgmGroup, true);\n        _bgmSourceB = CreateSource(\"BGM B\", bgmGroup, true);\n        _bgmChannel = new AudioChannel(this, _bgmSourceA, _bgmSourceB);\n\n        _bgsChannel = new AudioChannel(this, CreateSource(\"BGS A\", bgsGroup), CreateSource(\"BGS B\", bgsGroup));\n\n        _sePool = new AudioSource[Mathf.Max(1, sePoolSize)];\n        for (int i = 0; i < _sePool.Length; i++)\n            _sePool[i] = CreateSource($\"SE {i}\", seGroup);\n\n        // Pool de SE posicionais (Task #29): spatialBlend = 1 (áudio 3D).\n        // Ao contrário de PlayClipAtPoint, estas fontes vivem como filhos do\n        // AudioManager (DontDestroyOnLoad) e não criam/destroem GameObjects.\n        _sePositionalPool = new AudioSource[Mathf.Max(1, sePositionalPoolSize)];\n        for (int i = 0; i < _sePositionalPool.Length; i++)\n            _sePositionalPool[i] = CreatePositionalSource($\"SE Pos {i}\", seGroup);\n    }\n\n    private AudioSource CreatePositionalSource(string sourceName, AudioMixerGroup group = null)\n    {\n        var go = new GameObject(sourceName);\n        go.transform.SetParent(transform);\n\n        var source = go.AddComponent<AudioSource>();\n        source.loop         = false;\n        source.playOnAwake  = false;\n        source.volume       = 0f;\n        source.spatialBlend = 1f; // totalmente 3D\n\n        if (group != null) source.outputAudioMixerGroup = group;\n        return source;\n    }\n\n    private AudioSource CreateSource(string sourceName, AudioMixerGroup group = null, bool addLowPassFilter = false)\n    {\n        var go = new GameObject(sourceName);\n        go.transform.SetParent(transform);\n\n        var source = go.AddComponent<AudioSource>();\n        source.loop = true;\n        source.playOnAwake = false;\n        source.volume = 0f;\n\n        if (group != null) source.outputAudioMixerGroup = group;\n\n        if (addLowPassFilter)\n        {\n            var lowPass = go.AddComponent<AudioLowPassFilter>();\n            lowPass.cutoffFrequency = 22000f;\n            lowPass.enabled = false;\n        }\n\n        return source;\n    }\n\n    // ---------------- BGM ----------------\n\n    /// <summary>Toca uma música de fundo, com crossfade. clip == null equivale a StopBGM.</summary>\n    public void PlayBGM(AudioClip clip, float fadeTime = 1f, bool loop = true)\n    {\n        _bgmChannel.Play(clip, fadeTime, loop, BgmCrossfadeTarget);\n    }\n\n    /// <summary>Pára a música de fundo actual com fade-out.</summary>\n    public void StopBGM(float fadeTime = 1f)\n    {\n        _bgmChannel.Stop(fadeTime);\n    }\n\n    /// <summary>\n    /// Activa/desactiva o efeito \"memória\" no BGM (Menu de Pausa — Tarefa #6):\n    /// abafa a música da área sem a parar, \"como se o jogador estivesse a\n    /// ouvir o mundo através de uma memória\". Não afecta BGS nem SE.\n    ///\n    /// Com mixer e <see cref=\"normalSnapshot\"/>/<see cref=\"pausedSnapshot\"/>\n    /// configurados (Tarefa #19), faz a transição entre snapshots do Mixer;\n    /// caso contrário usa o filtro low-pass por código (comportamento anterior).\n    /// </summary>\n    public void SetBgmMuffled(bool muffled)\n    {\n        if (_bgmMuffled == muffled) return;\n        _bgmMuffled = muffled;\n\n        if (mixer != null && normalSnapshot != null && pausedSnapshot != null)\n        {\n            (muffled ? pausedSnapshot : normalSnapshot).TransitionTo(snapshotTransitionTime);\n            return;\n        }\n\n        ApplyLowPass(_bgmSourceA, muffled);\n        ApplyLowPass(_bgmSourceB, muffled);\n    }\n\n    private void ApplyLowPass(AudioSource source, bool enabled)\n    {\n        if (source == null) return;\n\n        var lowPass = source.GetComponent<AudioLowPassFilter>();\n        if (lowPass == null) return;\n\n        lowPass.cutoffFrequency = pausedBgmCutoff;\n        lowPass.enabled = enabled;\n    }\n\n    // ---------------- BGS ----------------\n\n    /// <summary>Toca um som ambiente, com crossfade. clip == null equivale a StopBGS.</summary>\n    public void PlayBGS(AudioClip clip, float fadeTime = 1f, bool loop = true)\n    {\n        _bgsChannel.Play(clip, fadeTime, loop, BgsCrossfadeTarget);\n    }\n\n    /// <summary>Pára o som ambiente actual com fade-out.</summary>\n    public void StopBGS(float fadeTime = 1f)\n    {\n        _bgsChannel.Stop(fadeTime);\n    }\n\n    // ---------------- SE ----------------\n\n    /// <summary>Toca um efeito sonoro uma vez (não-posicional), usando a pool de SE.</summary>\n    /// <param name=\"volumeScale\">Volume relativo deste som (0-1), multiplicado pelo volume de SE.</param>\n    public void PlaySE(AudioClip clip, float volumeScale = 1f, float pitch = 1f)\n    {\n        if (clip == null || _sePool == null || _sePool.Length == 0) return;\n\n        var source = _sePool[_seNextIndex];\n        _seNextIndex = (_seNextIndex + 1) % _sePool.Length;\n\n        source.pitch = pitch;\n        source.volume = mixer != null ? 1f : EffectiveSeVolume;\n        source.PlayOneShot(clip, Mathf.Clamp01(volumeScale));\n    }\n\n    /// <summary>\n    /// Toca um efeito sonoro numa posição do mundo (sons 3D/posicionais).\n    /// Task #29: usa a pool <see cref=\"_sePositionalPool\"/> em vez de\n    /// <see cref=\"AudioSource.PlayClipAtPoint\"/> — evita criar/destruir um\n    /// GameObject temporário por chamada. A fonte é movida para \"position\" e\n    /// PlayOneShot é chamado; a fonte volta a ficar disponível após o clip terminar\n    /// (round-robin da pool). Se o mixer estiver configurado, a roteagem é feita\n    /// automaticamente pelo grupo SE; caso contrário aplica EffectiveSeVolume.\n    /// </summary>\n    public void PlaySEAtPoint(AudioClip clip, Vector3 position, float volumeScale = 1f)\n    {\n        if (clip == null) return;\n        if (_sePositionalPool == null || _sePositionalPool.Length == 0)\n        {\n            // Fallback de segurança (pool não inicializada por algum motivo).\n            AudioSource.PlayClipAtPoint(clip, position, EffectiveSeVolume * Mathf.Clamp01(volumeScale));\n            return;\n        }\n\n        var source = _sePositionalPool[_sePositionalNextIndex];\n        _sePositionalNextIndex = (_sePositionalNextIndex + 1) % _sePositionalPool.Length;\n\n        source.transform.position = position;\n        source.volume = mixer != null ? 1f : EffectiveSeVolume;\n        source.PlayOneShot(clip, Mathf.Clamp01(volumeScale));\n    }\n\n    // ---------------- Volumes ----------------\n\n    public void SetMasterVolume(float value)\n    {\n        masterVolume = Mathf.Clamp01(value);\n        ApplyMixerParam(masterVolumeParam, masterVolume);\n        if (mixer == null)\n        {\n            _bgmChannel.SetActiveVolume(EffectiveBgmVolume);\n            _bgsChannel.SetActiveVolume(EffectiveBgsVolume);\n        }\n        if (persistVolumes) PlayerPrefs.SetFloat(PrefMaster, masterVolume);\n    }\n\n    public void SetBgmVolume(float value)\n    {\n        bgmVolume = Mathf.Clamp01(value);\n        ApplyMixerParam(bgmVolumeParam, bgmVolume);\n        if (mixer == null) _bgmChannel.SetActiveVolume(EffectiveBgmVolume);\n        if (persistVolumes) PlayerPrefs.SetFloat(PrefBgm, bgmVolume);\n    }\n\n    public void SetBgsVolume(float value)\n    {\n        bgsVolume = Mathf.Clamp01(value);\n        ApplyMixerParam(bgsVolumeParam, bgsVolume);\n        if (mixer == null) _bgsChannel.SetActiveVolume(EffectiveBgsVolume);\n        if (persistVolumes) PlayerPrefs.SetFloat(PrefBgs, bgsVolume);\n    }\n\n    public void SetSeVolume(float value)\n    {\n        seVolume = Mathf.Clamp01(value);\n        ApplyMixerParam(seVolumeParam, seVolume);\n        if (persistVolumes) PlayerPrefs.SetFloat(PrefSe, seVolume);\n    }\n\n    private void LoadVolumes()\n    {\n        masterVolume = PlayerPrefs.GetFloat(PrefMaster, masterVolume);\n        bgmVolume = PlayerPrefs.GetFloat(PrefBgm, bgmVolume);\n        bgsVolume = PlayerPrefs.GetFloat(PrefBgs, bgsVolume);\n        seVolume = PlayerPrefs.GetFloat(PrefSe, seVolume);\n    }\n\n    /// <summary>\n    /// Envia os 4 volumes actuais (0-1) para os parâmetros expostos do Mixer,\n    /// em dB. Chamado uma vez em <see cref=\"Awake\"/> (depois de\n    /// <see cref=\"LoadVolumes\"/>) para sincronizar o Mixer com os valores\n    /// persistidos/configurados. Sem efeito se <see cref=\"mixer\"/> for nulo.\n    /// </summary>\n    private void ApplyAllVolumesToMixer()\n    {\n        ApplyMixerParam(masterVolumeParam, masterVolume);\n        ApplyMixerParam(bgmVolumeParam, bgmVolume);\n        ApplyMixerParam(bgsVolumeParam, bgsVolume);\n        ApplyMixerParam(seVolumeParam, seVolume);\n    }\n\n    /// <summary>Converte um volume linear (0-1) para dB e aplica-o a um parâmetro exposto do Mixer. Sem efeito se <see cref=\"mixer\"/> ou o nome do parâmetro estiverem vazios.</summary>\n    private void ApplyMixerParam(string paramName, float linearValue)\n    {\n        if (mixer == null || string.IsNullOrEmpty(paramName)) return;\n        mixer.SetFloat(paramName, LinearToDecibel(linearValue));\n    }\n\n    /// <summary>Conversão padrão linear→dB usada para volumes de AudioMixer (0 → -80dB \"silêncio\", 1 → 0dB).</summary>\n    private static float LinearToDecibel(float value)\n    {\n        return value > 0.0001f ? Mathf.Log10(value) * 20f : -80f;\n    }\n\n    // ---------------- Music Zones ----------------\n\n    /// <summary>Chamado por MusicZone quando o player entra na zona.</summary>\n    public void RegisterZone(MusicZone zone)\n    {\n        if (zone == null || _activeZones.Contains(zone)) return;\n\n        _activeZones.Add(zone);\n        ApplyActiveZones();\n    }\n\n    /// <summary>Chamado por MusicZone quando o player sai da zona.</summary>\n    public void UnregisterZone(MusicZone zone)\n    {\n        if (zone == null) return;\n        if (!_activeZones.Remove(zone)) return;\n\n        ApplyActiveZones();\n    }\n\n    /// <summary>\n    /// Reavalia as zonas activas (BGM/BGS). Chamado por uma MusicZone quando\n    /// uma das suas \"conditions\" (Etapa 8) muda de resultado enquanto o player\n    /// continua dentro dela — sem isto, a zona só seria reavaliada ao entrar/\n    /// sair (OnTriggerEnter2D/OnTriggerExit2D).\n    /// </summary>\n    public void RefreshActiveZones()\n    {\n        ApplyActiveZones();\n    }\n\n    /// <summary>\n    /// Para BGM e BGS, escolhe — entre as zonas activas (com \"conditions\"\n    /// cumpridas) que definem esse clip — a de maior prioridade, e toca-a. Se\n    /// nenhuma zona activa definir esse clip, o canal é silenciado\n    /// (StopBGM/StopBGS). Isto permite zonas \"filhas\" (ex: uma sala) só\n    /// substituírem o BGS sem cortar a música da zona \"mãe\" (ex: a área\n    /// inteira), bastando deixar bgmClip vazio na zona filha.\n    /// </summary>\n    private void ApplyActiveZones()\n    {\n        MusicZone bgmZone = null;\n        MusicZone bgsZone = null;\n\n        foreach (var zone in _activeZones)\n        {\n            if (zone == null || !zone.ConditionsMet()) continue;\n\n            if (zone.bgmClip != null && (bgmZone == null || zone.priority > bgmZone.priority))\n                bgmZone = zone;\n\n            if (zone.bgsClip != null && (bgsZone == null || zone.priority > bgsZone.priority))\n                bgsZone = zone;\n        }\n\n        if (bgmZone != null) PlayBGM(bgmZone.bgmClip, bgmZone.fadeTime, bgmZone.loop);\n        else StopBGM(noZoneFadeTime);\n\n        if (bgsZone != null) PlayBGS(bgsZone.bgsClip, bgsZone.fadeTime, bgsZone.loop);\n        else StopBGS(noZoneFadeTime);\n    }\n\n    /// <summary>\n    /// Canal de áudio com crossfade entre dois AudioSources. Usado internamente\n    /// para BGM e BGS — o código é idêntico para os dois, só muda o volume-alvo.\n    /// </summary>\n    private class AudioChannel\n    {\n        private readonly MonoBehaviour _runner;\n        private AudioSource _active;\n        private AudioSource _standby;\n        private Coroutine _fadeRoutine;\n\n        public AudioClip CurrentClip { get; private set; }\n\n        public AudioChannel(MonoBehaviour runner, AudioSource a, AudioSource b)\n        {\n            _runner = runner;\n            _active = a;\n            _standby = b;\n        }\n\n        /// <summary>Toca \"clip\" com crossfade. clip == null equivale a Stop().</summary>\n        public void Play(AudioClip clip, float fadeTime, bool loop, float targetVolume)\n        {\n            if (clip == null) { Stop(fadeTime); return; }\n            if (CurrentClip == clip && _active.isPlaying) return;\n\n            CurrentClip = clip;\n\n            _standby.clip = clip;\n            _standby.loop = loop;\n            _standby.volume = 0f;\n            _standby.Play();\n\n            if (_fadeRoutine != null) _runner.StopCoroutine(_fadeRoutine);\n            _fadeRoutine = _runner.StartCoroutine(Crossfade(_active, _standby, fadeTime, targetVolume));\n\n            (_active, _standby) = (_standby, _active);\n        }\n\n        /// <summary>Pára o clip actual com fade-out.</summary>\n        public void Stop(float fadeTime)\n        {\n            if (CurrentClip == null && !_active.isPlaying) return;\n\n            CurrentClip = null;\n\n            if (_fadeRoutine != null) _runner.StopCoroutine(_fadeRoutine);\n            _fadeRoutine = _runner.StartCoroutine(FadeOut(_active, fadeTime));\n        }\n\n        /// <summary>Ajusta o volume do source actualmente activo (ex: após mudar as opções de volume).</summary>\n        public void SetActiveVolume(float volume)\n        {\n            if (_active != null && _active.isPlaying) _active.volume = volume;\n        }\n\n        private IEnumerator Crossfade(AudioSource from, AudioSource to, float fadeTime, float targetVolume)\n        {\n            if (fadeTime <= 0f)\n            {\n                to.volume = targetVolume;\n\n                if (from != null)\n                {\n                    from.volume = 0f;\n                    from.Stop();\n                }\n\n                yield break;\n            }\n\n            float fromStart = from != null ? from.volume : 0f;\n            float t = 0f;\n\n            while (t < fadeTime)\n            {\n                t += Time.unscaledDeltaTime;\n                float ratio = Mathf.Clamp01(t / fadeTime);\n\n                to.volume = Mathf.Lerp(0f, targetVolume, ratio);\n                if (from != null) from.volume = Mathf.Lerp(fromStart, 0f, ratio);\n\n                yield return null;\n            }\n\n            to.volume = targetVolume;\n\n            if (from != null)\n            {\n                from.volume = 0f;\n                from.Stop();\n            }\n        }\n\n        private IEnumerator FadeOut(AudioSource source, float fadeTime)\n        {\n            if (source == null) yield break;\n\n            float start = source.volume;\n\n            if (fadeTime <= 0f)\n            {\n                source.volume = 0f;\n                source.Stop();\n                yield break;\n            }\n\n            float t = 0f;\n            while (t < fadeTime)\n            {\n                t += Time.unscaledDeltaTime;\n                source.volume = Mathf.Lerp(start, 0f, Mathf.Clamp01(t / fadeTime));\n                yield return null;\n            }\n\n            source.volume = 0f;\n            source.Stop();\n        }\n    }\n}\n",
   "id": "script-audio-audiomanager-cs",
   "dependencyIds": [
-    "script-audio-musiczone-cs",
-    "script-data-playerprogress-cs",
-    "script-data-worldstate-cs"
+    "script-audio-musiczone-cs"
   ],
   "usedByIds": [
     "script-npc-actions-audioactions-cs",
     "script-npc-actions-reactionactions-cs",
-    "script-forms-animalformdata-cs",
     "script-interactables-animalspiritrescue-cs",
     "script-ui-apolorunacollectui-cs",
     "script-enemy-bosses-bosscontroller-cs",
+    "script-interactables-breakableobject-cs",
     "script-data-challengemanager-cs",
     "script-ui-challengeresultui-cs",
     "script-interactables-challengetrigger-cs",
     "script-interactables-checkpoint-cs",
     "script-interactables-coralbubble-cs",
     "script-ui-deathscreenui-cs",
+    "script-interactables-eggobject-cs",
+    "script-enemy-enemyattackcontroller-cs",
+    "script-enemy-enemyfeedback-cs",
     "script-interactables-fallresetzone-cs",
     "script-platforms-fallingplatform-cs",
     "script-platforms-fallingspike-cs",
@@ -777,11 +533,13 @@
     "script-player-playerconsumableeffects-cs",
     "script-player-playerdeathhandler-cs",
     "script-player-playerfeedback-cs",
-    "script-data-playerprogress-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-abilities-roarability-cs",
     "script-combat-rumblemanager-cs",
     "script-interactables-safehaven-cs",
     "script-ui-secondarymenucontroller-cs",
     "script-ui-shopui-cs",
+    "script-abilities-sonarability-cs",
     "script-ui-tutorialmessagemanager-cs",
     "script-combat-vfxpoolmanager-cs",
     "script-player-watermotor2d-cs",

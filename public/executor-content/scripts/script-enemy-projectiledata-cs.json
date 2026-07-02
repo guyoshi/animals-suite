@@ -315,7 +315,6 @@
     "Boss_GargantaDoFogo",
     "EnemyAttackController",
     "EnemyData",
-    "EnemyFeedback",
     "ProjectileController",
     "ProjectilePool",
     "Switch"
@@ -324,9 +323,14 @@
   "id": "script-enemy-projectiledata-cs",
   "dependencyIds": [
     "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-enemy-attacks-enemyattacks-projectile-cs",
+    "script-enemy-attacks-enemyattacks-projectile-cs",
     "script-enemy-enemyattack-cs",
     "script-enemy-enemyattackcontroller-cs",
     "script-enemy-enemyhealth-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-enemy-projectilecontroller-cs",
+    "script-enemy-projectilecontroller-cs",
     "script-data-playerprogress-cs",
     "script-enemy-projectilecontroller-cs"
   ],
@@ -335,7 +339,6 @@
     "script-enemy-bosses-boss-gargantadofogo-cs",
     "script-enemy-enemyattackcontroller-cs",
     "script-enemy-enemydata-cs",
-    "script-enemy-enemyfeedback-cs",
     "script-enemy-projectilecontroller-cs",
     "script-enemy-projectilepool-cs",
     "script-interactables-switch-cs"

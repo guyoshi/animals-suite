@@ -95,6 +95,7 @@
   ],
   "used_by": [
     "AnimalsDebugPanel",
+    "GameDataValidatorBuildPreprocess",
     "GameDataValidatorWindow",
     "GameDatabase",
     "ItemsInstinctsSectionUI",
@@ -108,11 +109,14 @@
   "source": "using UnityEngine;\n\n/// <summary>\n/// Define um upgrade desbloqueável para uso em condições (\"upgrade activo\")\n/// e na ação \"Desbloquear Upgrade\".\n/// </summary>\n[CreateAssetMenu(menuName = \"Animals/Upgrade Data\", fileName = \"NewUpgrade\")]\npublic class UpgradeData : ScriptableObject\n{\n    [Header(\"Identidade\")]\n    public string upgradeId;\n    public string displayName;\n\n    [Header(\"Apresentação\")]\n    [TextArea] public string description;\n    public Sprite icon;\n\n    [Header(\"Instinto (ligar/desligar)\")]\n    [Tooltip(\"Se true, este upgrade é um 'Instinto' que o jogador pode ligar/desligar livremente depois de comprado (Menu de Pausa > Itens e Instintos). Se false, fica sempre activo depois de desbloqueado. Estado guardado em PlayerProgress.enabledUpgradeIds.\")]\n    public bool toggleable = false;\n\n    [Header(\"Economia (Tarefa #20)\")]\n    [Tooltip(\"Custo para desbloquear este upgrade via Action_BuyUpgrade (Eventos de NPC). 0 = sem custo — desbloqueio continua possível de graça via Action_UnlockUpgrade (recompensa de missão/desafio/diálogo).\")]\n    [Min(0)] public int unlockCost = 0;\n\n    [Tooltip(\"Recurso de PlayerProgress gasto ao comprar este upgrade (Action_BuyUpgrade). Irrelevante se 'unlockCost' for 0.\")]\n    public PlayerResourceType unlockCurrency = PlayerResourceType.Sementes;\n}\n",
   "id": "script-data-upgradedata-cs",
   "dependencyIds": [
+    "script-npc-actions-rewardactions-cs",
+    "script-npc-actions-rewardactions-cs",
     "script-data-playerprogress-cs",
     "script-npc-actions-rewardactions-cs"
   ],
   "usedByIds": [
     "script-test-animalsdebugpanel-cs",
+    "script-data-editor-gamedatavalidatorbuildpreprocess-cs",
     "script-data-editor-gamedatavalidatorwindow-cs",
     "script-data-gamedatabase-cs",
     "script-ui-itemsinstinctssectionui-cs",

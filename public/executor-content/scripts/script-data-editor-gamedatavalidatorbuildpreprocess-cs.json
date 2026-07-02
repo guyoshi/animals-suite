@@ -1,0 +1,155 @@
+{
+  "path": "Data/Editor/GameDataValidatorBuildPreprocess.cs",
+  "filename": "GameDataValidatorBuildPreprocess.cs",
+  "category": "Data",
+  "primary": "GameDataValidatorBuildPreprocess",
+  "kind": "Editor",
+  "summary": "Executa a validação automática dos dados do jogo antes de cada build e impede a compilação quando encontra erros críticos de configuração.",
+  "attach": "Não deve ser adicionado manualmente a um GameObject.",
+  "types": [
+    {
+      "name": "GameDataValidatorBuildPreprocess",
+      "kind": "class",
+      "bases": "IPreprocessBuildWithReport",
+      "attrs": ""
+    }
+  ],
+  "fields": [
+    {
+      "name": "DisabledPrefKey",
+      "type": "string",
+      "mods": "private const",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "callbackOrder",
+      "type": "int",
+      "mods": "public",
+      "default": "> -100",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    }
+  ],
+  "methods": [
+    {
+      "name": "Disable",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação Disable."
+    },
+    {
+      "name": "Enable",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação Enable."
+    },
+    {
+      "name": "CanDisable",
+      "ret": "bool",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação CanDisable."
+    },
+    {
+      "name": "CanEnable",
+      "ret": "bool",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação CanEnable."
+    },
+    {
+      "name": "OnPreprocessBuild",
+      "ret": "void",
+      "mods": "public",
+      "params": "BuildReport report",
+      "description": "Executa a operação OnPreprocessBuild."
+    },
+    {
+      "name": "RunAllChecks",
+      "ret": "void",
+      "mods": "private static",
+      "params": "List<string> errors, List<string> warnings",
+      "description": "Executa a operação RunAllChecks."
+    },
+    {
+      "name": "CheckGameDatabaseRegistration",
+      "ret": "void",
+      "mods": "private static",
+      "params": "List<string> errors, List<string> warnings",
+      "description": "Executa a operação CheckGameDatabaseRegistration."
+    },
+    {
+      "name": "CheckCommonReferences",
+      "ret": "void",
+      "mods": "private static",
+      "params": "List<string> warnings",
+      "description": "Executa a operação CheckCommonReferences."
+    },
+    {
+      "name": "CheckChallengeVariables",
+      "ret": "void",
+      "mods": "private static",
+      "params": "List<string> errors",
+      "description": "Executa a operação CheckChallengeVariables."
+    },
+    {
+      "name": "CheckVariable",
+      "ret": "void",
+      "mods": "private static",
+      "params": "string name, string fieldLabel, string path, Dictionary<string, string> seen, List<string> errors",
+      "description": "Executa a operação CheckVariable."
+    },
+    {
+      "name": "CheckShopItemMixup",
+      "ret": "void",
+      "mods": "private static",
+      "params": "List<string> warnings",
+      "description": "Executa a operação CheckShopItemMixup."
+    },
+    {
+      "name": "CheckDeprecatedComponents",
+      "ret": "void",
+      "mods": "private static",
+      "params": "List<string> warnings",
+      "description": "Executa a operação CheckDeprecatedComponents."
+    }
+  ],
+  "dependencies": [
+    "AnimalFormData",
+    "AreaData",
+    "ChallengeDefinition",
+    "EmblemData",
+    "GameDatabase",
+    "ItemData",
+    "MissionData",
+    "ShopData",
+    "SussurroDaTerraPickup",
+    "UpgradeData",
+    "WorldData"
+  ],
+  "used_by": [],
+  "source": "#if UNITY_EDITOR\nusing System;\nusing System.Collections.Generic;\nusing System.Globalization;\nusing System.Text;\nusing UnityEditor;\nusing UnityEditor.Build;\nusing UnityEditor.Build.Reporting;\nusing UnityEngine;\n\n/// <summary>\n/// Pré-processador de build (Task #25): corre automaticamente o mesmo conjunto\n/// de validações do <see cref=\"GameDataValidatorWindow\"/> antes de cada build.\n/// Se forem encontrados ERROS, o build é cancelado com uma excepção (aparece no\n/// Console como \"Build failed\"). AVISOS são logados mas não cancelam o build.\n///\n/// Para desactivar temporariamente (ex: build de emergência):\n///   Menu \"Animals > Desactivar Validação de Build\"\n///\n/// Para reactivar:\n///   Menu \"Animals > Activar Validação de Build\"\n///\n/// Nota: a chave de preferência (<see cref=\"DisabledPrefKey\"/>) é por-projecto\n/// (EditorPrefs), não vai para controlo de versão.\n/// </summary>\npublic class GameDataValidatorBuildPreprocess : IPreprocessBuildWithReport\n{\n    private const string DisabledPrefKey = \"Animals.BuildValidator.Disabled\";\n\n    // callbackOrder: -100 → corre antes de outros preprocessors (ex: addressables)\n    public int callbackOrder => -100;\n\n    [MenuItem(\"Animals/Desactivar Validação de Build\")]\n    private static void Disable()\n    {\n        EditorPrefs.SetBool(DisabledPrefKey, true);\n        Debug.LogWarning(\"[GameDataValidator] Validação de build DESACTIVADA. Reactivar em Animals > Activar Validação de Build.\");\n    }\n\n    [MenuItem(\"Animals/Activar Validação de Build\")]\n    private static void Enable()\n    {\n        EditorPrefs.DeleteKey(DisabledPrefKey);\n        Debug.Log(\"[GameDataValidator] Validação de build activada.\");\n    }\n\n    [MenuItem(\"Animals/Desactivar Validação de Build\", true)]\n    private static bool CanDisable() => !EditorPrefs.GetBool(DisabledPrefKey);\n\n    [MenuItem(\"Animals/Activar Validação de Build\", true)]\n    private static bool CanEnable() => EditorPrefs.GetBool(DisabledPrefKey);\n\n    public void OnPreprocessBuild(BuildReport report)\n    {\n        if (EditorPrefs.GetBool(DisabledPrefKey))\n        {\n            Debug.LogWarning(\"[GameDataValidator] Validação de build desactivada — a saltar.\");\n            return;\n        }\n\n        var errors   = new List<string>();\n        var warnings = new List<string>();\n\n        RunAllChecks(errors, warnings);\n\n        foreach (var w in warnings)\n            Debug.LogWarning($\"[BuildValidator] {w}\");\n\n        if (errors.Count == 0)\n        {\n            Debug.Log($\"[BuildValidator] Validação OK — {warnings.Count} aviso(s), 0 erros.\");\n            return;\n        }\n\n        var sb = new StringBuilder();\n        sb.AppendLine($\"[BuildValidator] Build cancelado — {errors.Count} erro(s) encontrado(s):\");\n        foreach (var e in errors)\n            sb.AppendLine($\"  • {e}\");\n\n        // Cancela o build: BuildFailedException é a forma oficial de abortar\n        // num IPreprocessBuildWithReport sem crashar o Editor.\n        throw new BuildFailedException(sb.ToString());\n    }\n\n    // ──────────────────────────────────────────────────────────────────────────\n    // Toda a lógica de validação abaixo é mantida sincronizada com\n    // GameDataValidatorWindow.Validate() — qualquer nova verificação deve ser\n    // adicionada em ambos os sítios.\n    // ──────────────────────────────────────────────────────────────────────────\n\n    private static void RunAllChecks(List<string> errors, List<string> warnings)\n    {\n        CheckIds<AreaData>(a => a.areaId, \"areaId\", a => a.displayName, errors);\n        CheckIds<AnimalFormData>(a => a.formId, \"formId\", a => a.displayName, errors);\n        CheckIds<ItemData>(a => a.itemId, \"itemId\", a => a.displayName, errors);\n        CheckIds<UpgradeData>(a => a.upgradeId, \"upgradeId\", a => a.displayName, errors);\n        CheckIds<MissionData>(a => a.missionId, \"missionId\", a => a.displayName, errors);\n        CheckIds<EmblemData>(a => a.emblemId, \"emblemId\", a => a.displayName, errors);\n        CheckIds<WorldData>(a => a.worldId, \"worldId\", a => a.displayName, errors);\n        CheckIds<ChallengeDefinition>(a => a.challengeId, \"challengeId\", a => a.displayName, errors);\n\n        CheckGameDatabaseRegistration(errors, warnings);\n        CheckCommonReferences(warnings);\n        CheckChallengeVariables(errors);\n        CheckShopItemMixup(warnings);\n        CheckDeprecatedComponents(warnings);\n    }\n\n    // ── IDs vazios / duplicados ────────────────────────────────────────────────\n\n    private static void CheckIds<T>(\n        Func<T, string> getId,\n        string fieldName,\n        Func<T, string> getName,\n        List<string> errors) where T : ScriptableObject\n    {\n        string typeName = typeof(T).Name;\n        var seen = new Dictionary<string, string>();\n\n        foreach (var asset in FindAssets<T>())\n        {\n            string id   = getId(asset);\n            string path = AssetDatabase.GetAssetPath(asset);\n            string label = !string.IsNullOrEmpty(getName(asset)) ? getName(asset) : asset.name;\n\n            if (string.IsNullOrEmpty(id))\n            {\n                errors.Add($\"{typeName}: \\\"{label}\\\" ({path}) tem '{fieldName}' vazio.\");\n                continue;\n            }\n\n            if (seen.TryGetValue(id, out var otherPath))\n                errors.Add($\"{typeName}: ID duplicado '{id}' em \\\"{path}\\\" e \\\"{otherPath}\\\".\");\n            else\n                seen[id] = path;\n        }\n    }\n\n    // ── Registo no GameDatabase ───────────────────────────────────────────────\n\n    private static void CheckGameDatabaseRegistration(List<string> errors, List<string> warnings)\n    {\n        var db = GameDatabase.Instance;\n        if (db == null)\n        {\n            warnings.Add(\"GameDatabase não encontrado em Assets/Resources/GameDatabase.asset — verificação de registo saltada.\");\n            return;\n        }\n\n        CheckRegistered(FindAssets<WorldData>(),       db.worlds,      \"WorldData\",       warnings);\n        CheckRegistered(FindAssets<AreaData>(),        db.areas,       \"AreaData\",        warnings);\n        CheckRegistered(FindAssets<AnimalFormData>(),  db.animalForms, \"AnimalFormData\",  warnings);\n        CheckRegistered(FindAssets<ItemData>(),        db.items,       \"ItemData\",        warnings);\n        CheckRegistered(FindAssets<UpgradeData>(),     db.upgrades,    \"UpgradeData\",     warnings);\n        CheckRegistered(FindAssets<MissionData>(),     db.missions,    \"MissionData\",     warnings);\n        CheckRegistered(FindAssets<EmblemData>(),      db.emblems,     \"EmblemData\",      warnings);\n    }\n\n    private static void CheckRegistered<T>(List<T> all, List<T> registered, string typeName, List<string> warnings)\n        where T : ScriptableObject\n    {\n        foreach (var asset in all)\n        {\n            bool found = registered != null && registered.Contains(asset);\n            if (!found)\n                warnings.Add($\"{typeName} \\\"{asset.name}\\\" ({AssetDatabase.GetAssetPath(asset)}) não está registado no GameDatabase.\");\n        }\n    }\n\n    // ── Referências comuns em falta ────────────────────────────────────────────\n\n    private static void CheckCommonReferences(List<string> warnings)\n    {\n        foreach (var area in FindAssets<AreaData>())\n        {\n            if (area.world == null)\n                warnings.Add($\"AreaData \\\"{area.displayName}\\\" ({AssetDatabase.GetAssetPath(area)}) não tem 'world' atribuído.\");\n        }\n\n        foreach (var emblem in FindAssets<EmblemData>())\n        {\n            if (string.IsNullOrEmpty(emblem.obtainedVariable))\n                warnings.Add($\"EmblemData \\\"{emblem.displayName}\\\" ({AssetDatabase.GetAssetPath(emblem)}) não tem 'obtainedVariable' — nunca será contado em GetTotalCompletionPercent.\");\n        }\n    }\n\n    // ── Variáveis de Desafio duplicadas ───────────────────────────────────────\n\n    private static void CheckChallengeVariables(List<string> errors)\n    {\n        var seen = new Dictionary<string, string>();\n\n        foreach (var challenge in FindAssets<ChallengeDefinition>())\n        {\n            if (string.IsNullOrEmpty(challenge.challengeId)) continue;\n\n            string path = AssetDatabase.GetAssetPath(challenge);\n            CheckVariable(challenge.ActiveVariable,    \"ActiveVariable\",    path, seen, errors);\n            CheckVariable(challenge.CompletedVariable, \"CompletedVariable\", path, seen, errors);\n        }\n    }\n\n    private static void CheckVariable(string name, string fieldLabel, string path,\n        Dictionary<string, string> seen, List<string> errors)\n    {\n        if (string.IsNullOrEmpty(name)) return;\n\n        if (seen.TryGetValue(name, out var otherPath))\n            errors.Add($\"ChallengeDefinition: variável '{name}' ({fieldLabel}) duplicada entre \\\"{path}\\\" e \\\"{otherPath}\\\".\");\n        else\n            seen[name] = path;\n    }\n\n    // ── Task #13: BrotoDeVida vs SeivaVital em lojas ──────────────────────────\n\n    /// <summary>\n    /// Emite aviso se uma ShopData vender um item cujo ID ou nome contenha\n    /// \"broto\" (case-insensitive). Segundo o GDD (linha 3601), o Broto de Vida\n    /// é um DROP de chão — nunca deve aparecer em lojas. O item de cura\n    /// instantânea vendido em lojas é a Seiva Vital (effectType = CuraInstantanea).\n    /// </summary>\n    private static void CheckShopItemMixup(List<string> warnings)\n    {\n        foreach (var shop in FindAssets<ShopData>())\n        {\n            if (shop.entries == null) continue;\n            string shopPath = AssetDatabase.GetAssetPath(shop);\n\n            foreach (var entry in shop.entries)\n            {\n                if (entry?.item == null) continue;\n\n                string id   = entry.item.itemId ?? \"\";\n                string name = entry.item.displayName ?? entry.item.name ?? \"\";\n\n                bool looksLikeBroto =\n                    id.IndexOf(\"broto\", System.StringComparison.OrdinalIgnoreCase) >= 0 ||\n                    name.IndexOf(\"Broto de Vida\", System.StringComparison.OrdinalIgnoreCase) >= 0;\n\n                if (looksLikeBroto)\n                    warnings.Add(\n                        $\"[Task #13] ShopData \\\"{shop.shopName}\\\" ({shopPath}) vende \\\"{name}\\\" \" +\n                        $\"(id: '{id}'). O Broto de Vida é um drop de chão e NÃO deve ser \" +\n                        \"vendido em lojas (GDD linha 3601). Substitui pelo item Seiva Vital \" +\n                        \"(effectType = CuraInstantanea).\");\n            }\n        }\n    }\n\n    // ── Componentes obsoletos em prefabs ──────────────────────────────────────\n\n    /// <summary>\n    /// Task #5: SussurroDaTerraPickup contradiz o GDD (Sussurros não são pickups\n    /// físicos) — emite aviso se o componente aparecer em qualquer prefab do projecto.\n    /// Não abre cenas para não perturbar o fluxo de build; prefabs são suficientes\n    /// para detectar usos acidentais.\n    /// </summary>\n    private static void CheckDeprecatedComponents(List<string> warnings)\n    {\n        foreach (var guid in AssetDatabase.FindAssets(\"t:Prefab\"))\n        {\n            string path = AssetDatabase.GUIDToAssetPath(guid);\n            var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);\n            if (go == null) continue;\n\n            if (go.GetComponentInChildren<SussurroDaTerraPickup>(true) != null)\n                warnings.Add(\n                    $\"[Obsoleto] Prefab \\\"{go.name}\\\" ({path}) contém SussurroDaTerraPickup. \" +\n                    \"Segundo o GDD, Sussurros são comprados ao NPC Contador de Histórias — \" +\n                    \"não são pickups físicos. Remove o componente e usa uma Action de diálogo.\");\n        }\n    }\n\n    // ── Util ──────────────────────────────────────────────────────────────────\n\n    private static List<T> FindAssets<T>() where T : ScriptableObject\n    {\n        var result = new List<T>();\n        foreach (var guid in AssetDatabase.FindAssets($\"t:{typeof(T).Name}\"))\n        {\n            var asset = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));\n            if (asset != null) result.Add(asset);\n        }\n        return result;\n    }\n}\n#endif\n",
+  "id": "script-data-editor-gamedatavalidatorbuildpreprocess-cs",
+  "dependencyIds": [
+    "script-forms-animalformdata-cs",
+    "script-data-areadata-cs",
+    "script-data-challengedefinition-cs",
+    "script-data-emblemdata-cs",
+    "script-data-gamedatabase-cs",
+    "script-data-itemdata-cs",
+    "script-data-missiondata-cs",
+    "script-data-shopdata-cs",
+    "script-collectibles-sussurrodaterrapickup-cs",
+    "script-data-upgradedata-cs",
+    "script-data-worlddata-cs"
+  ],
+  "usedByIds": []
+}

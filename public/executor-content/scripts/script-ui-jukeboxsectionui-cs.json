@@ -34,326 +34,6 @@
   ],
   "fields": [
     {
-      "name": "clip",
-      "type": "AudioClip",
-      "mods": "public",
-      "default": "",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "displayName",
-      "type": "string",
-      "mods": "public",
-      "default": "",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "world",
-      "type": "WorldData",
-      "mods": "public",
-      "default": "",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "melodyId",
-      "type": "string",
-      "mods": "public",
-      "default": "",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "id",
-      "type": "string",
-      "mods": "public",
-      "default": "",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "name",
-      "type": "string",
-      "mods": "public",
-      "default": "",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "jukeboxItem",
-      "type": "ItemData",
-      "mods": "private",
-      "default": "",
-      "section": "Desbloqueio por Compra na Loja",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "lockedRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Desbloqueio por Compra na Loja",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "lockedMessageText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Desbloqueio por Compra na Loja",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "lockedMessage",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Compra o Jukebox numa loja para desbloqueá-lo!\"",
-      "section": "Desbloqueio por Compra na Loja",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "lockedBackButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Desbloqueio por Compra na Loja",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "tracks",
-      "type": "List<JukeboxTrack>",
-      "mods": "private",
-      "default": "new List<JukeboxTrack>()",
-      "section": "Faixas Estáticas",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "knownMelodies",
-      "type": "List<WildMelodyData>",
-      "mods": "private",
-      "default": "new List<WildMelodyData>()",
-      "section": "Melodias Selvagens",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "staticSectionLabel",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Trilha Sonora\"",
-      "section": "Secções",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "unknownSectionLabel",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Outras Melodias\"",
-      "section": "Secções",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "favoritesSectionLabel",
-      "type": "string",
-      "mods": "private",
-      "default": "\"Favoritos\"",
-      "section": "Secções",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "trackButtonPrefab",
-      "type": "JukeboxTrackButtonUI",
-      "mods": "private",
-      "default": "",
-      "section": "Prefabs",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "sectionHeaderPrefab",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Prefabs",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "root",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Framework",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "trackContainer",
-      "type": "Transform",
-      "mods": "private",
-      "default": "",
-      "section": "Framework",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "firstSelectable",
-      "type": "Selectable",
-      "mods": "private",
-      "default": "",
-      "section": "Framework",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "backButton",
-      "type": "Button",
-      "mods": "private",
-      "default": "",
-      "section": "Framework",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "nowPlayingText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Framework",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "noTracksText",
-      "type": "string",
-      "mods": "private",
-      "default": "\"— sem músicas —\"",
-      "section": "Framework",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "normalTabHighlight",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Abas (Tab Bar)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "favoritesTabHighlight",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Abas (Tab Bar)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "tabPrevAction",
-      "type": "InputActionReference",
-      "mods": "private",
-      "default": "",
-      "section": "Input — Trocar Aba",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "tabNextAction",
-      "type": "InputActionReference",
-      "mods": "private",
-      "default": "",
-      "section": "Input — Trocar Aba",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "toggleSfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "tabSwitchSfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "favoriteSfx",
-      "type": "AudioClip",
-      "mods": "private",
-      "default": "",
-      "section": "Sons",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "OnWildMelodyCollected",
-      "type": "static event System.Action<WildMelodyData>",
-      "mods": "public",
-      "default": "",
-      "section": "Sons",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "Root",
       "type": "GameObject",
       "mods": "public",
@@ -368,46 +48,6 @@
       "type": "AudioSource",
       "mods": "private",
       "default": "",
-      "section": "Sons",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_allEntries",
-      "type": "List<DisplayEntry>",
-      "mods": "private readonly",
-      "default": "new List<DisplayEntry>()",
-      "section": "Sons",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_visibleEntries",
-      "type": "List<DisplayEntry>",
-      "mods": "private readonly",
-      "default": "new List<DisplayEntry>()",
-      "section": "Sons",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_spawned",
-      "type": "List<JukeboxTrackButtonUI>",
-      "mods": "private readonly",
-      "default": "new List<JukeboxTrackButtonUI>()",
-      "section": "Sons",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_spawnedHeaders",
-      "type": "List<GameObject>",
-      "mods": "private readonly",
-      "default": "new List<GameObject>()",
       "section": "Sons",
       "attrs": "",
       "inspector": false,
@@ -454,6 +94,26 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
+      "name": "_savedBgmClip",
+      "type": "AudioClip",
+      "mods": "private",
+      "default": "",
+      "section": "Sons",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "_bgmOwned",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Sons",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
       "name": "_currentTab",
       "type": "JukeboxTab",
       "mods": "private",
@@ -466,18 +126,18 @@
   ],
   "methods": [
     {
-      "name": "GetDisplayName",
-      "ret": "string",
-      "mods": "public",
-      "params": "",
-      "description": "Executa a operação GetDisplayName."
+      "name": "NotifyMelodyCollected",
+      "ret": "void",
+      "mods": "public static",
+      "params": "WildMelodyData melody",
+      "description": "Executa a operação NotifyMelodyCollected."
     },
     {
-      "name": "GetId",
-      "ret": "string",
-      "mods": "public",
+      "name": "ResetStaticEvents",
+      "ret": "void",
+      "mods": "private static",
       "params": "",
-      "description": "Executa a operação GetId."
+      "description": "Executa a operação ResetStaticEvents."
     },
     {
       "name": "FavKey",
@@ -620,6 +280,20 @@
       "description": "Executa a operação PlayEntry."
     },
     {
+      "name": "AcquireBgmOwnership",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação AcquireBgmOwnership."
+    },
+    {
+      "name": "ReleaseBgmOwnership",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação ReleaseBgmOwnership."
+    },
+    {
       "name": "TogglePlayPause",
       "ret": "void",
       "mods": "private",
@@ -669,15 +343,15 @@
     "JukeboxTrackButtonUI",
     "PlayerProgress",
     "WildMelodyData",
-    "WildMelodyPickup",
     "WorldData"
   ],
   "used_by": [
     "JukeboxShopHandler",
     "MainMenuOptionsUI",
+    "WildMelodyData",
     "WildMelodyPickup"
   ],
-  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.InputSystem;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Sub-painel \"Jukebox\" — lista de faixas organizada por mundo, com aba de\n/// Favoritos (L/R), disco giratório na faixa activa e persistência de favoritos\n/// via <see cref=\"GameVariables\"/>.\n///\n/// ────────────────────────────────────────────────────────────────────────────\n/// <b>ESTRUTURA DA UI (montar no Editor):</b>\n///\n/// JukeboxSectionUI (MonoBehaviour + AudioSource)\n///   ├── Root (GameObject — activado/desactivado em Open/Close)\n///   │     ├── TabBar\n///   │     │     ├── NormalTabHighlight    ← activo na aba Normal\n///   │     │     └── FavoritesTabHighlight ← activo na aba Favoritos\n///   │     ├── ScrollView → Content (trackContainer)\n///   │     │     └── [instanciado: SectionHeaderPrefab e TrackButtonPrefab]\n///   │     ├── NowPlayingText (TMP_Text)\n///   │     └── BackButton (Button)\n///   └── LockedRoot (GameObject — mostrado antes da compra)\n///         ├── LockedMessageText (TMP_Text)\n///         └── LockedBackButton (Button)\n///\n/// ────────────────────────────────────────────────────────────────────────────\n/// <b>SECÇÕES POR MUNDO:</b>\n/// • Faixas estáticas (<see cref=\"tracks\"/>) com <c>world == null</c> →\n///   agrupadas numa secção com <see cref=\"staticSectionLabel\"/> (ex: \"Trilha Sonora\").\n/// • Faixas estáticas com <c>world != null</c> → agrupadas com as wild melodies\n///   desse mundo.\n/// • Wild melodies → agrupadas por <c>WildMelodyData.area.world</c>;\n///   sem área/mundo → secção <see cref=\"unknownSectionLabel\"/> (ex: \"Outras Melodias\").\n///\n/// ────────────────────────────────────────────────────────────────────────────\n/// <b>ABAS:</b>\n/// • L (tabPrevAction) → aba Normal.\n/// • R (tabNextAction) → aba Favoritos.\n/// • B (backButton / cancelAction) → fecha o painel.\n///\n/// ────────────────────────────────────────────────────────────────────────────\n/// <b>FAVORITOS:</b>\n/// Guardados em <see cref=\"GameVariables\"/> como booleans com chave\n/// <c>\"jukebox_fav_&lt;id&gt;\"</c> — persistidos automaticamente no save.\n/// </summary>\n[RequireComponent(typeof(AudioSource))]\npublic class JukeboxSectionUI : MonoBehaviour, ICancelHandler\n{\n    // ═══════════════════════════════════════════════════════════════════════\n    // Tipos internos\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Faixa estática configurada no Inspector.</summary>\n    [System.Serializable]\n    public class JukeboxTrack\n    {\n        [Tooltip(\"Clip de áudio.\")]\n        public AudioClip clip;\n\n        [Tooltip(\"Nome mostrado na lista. Se vazio, usa o nome do clip.\")]\n        public string displayName;\n\n        [Tooltip(\"Mundo a que esta faixa pertence — agrupa-a com as wild melodies desse mundo. Deixar vazio para a secção de trilha sonora base.\")]\n        public WorldData world;\n\n        [Tooltip(\n            \"ID de melodia para desbloqueio individual. Se preenchido, a faixa só aparece quando \" +\n            \"PlayerProgress.HasCollectedMelody(melodyId) for true (ex: encontrada num WildMelodyPickup). \" +\n            \"Deixar VAZIO para faixas sempre visíveis após comprar o Jukebox (trilha sonora base).\")]\n        public string melodyId;\n\n        public string GetDisplayName() =>\n            string.IsNullOrEmpty(displayName) && clip != null ? clip.name : displayName;\n\n        /// <summary>\n        /// Chave estável para favoritos.\n        /// Se <see cref=\"melodyId\"/> estiver preenchido usa-o directamente (mesma chave que o\n        /// <see cref=\"WildMelodyData\"/> correspondente).\n        /// Caso contrário deriva a chave do nome da faixa.\n        /// </summary>\n        public string GetId()\n        {\n            if (!string.IsNullOrEmpty(melodyId)) return melodyId;\n            string raw = string.IsNullOrEmpty(displayName)\n                ? (clip != null ? clip.name : displayName)\n                : displayName;\n            return \"static_\" + raw.ToLowerInvariant().Replace(\" \", \"_\");\n        }\n    }\n\n    /// <summary>Entrada interna da lista de exibição (faixa estática ou wild melody).</summary>\n    private sealed class DisplayEntry\n    {\n        /// <summary>Chave estável para GameVariables de favoritos.</summary>\n        public string id;\n        public AudioClip clip;\n        public string name;\n        /// <summary>Mundo desta faixa (null = trilha sonora base ou sem mundo).</summary>\n        public WorldData world;\n    }\n\n    private enum JukeboxTab { Normal, Favorites }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Inspector\n    // ═══════════════════════════════════════════════════════════════════════\n\n    [Header(\"Desbloqueio por Compra na Loja\")]\n    [SerializeField] private ItemData jukeboxItem;\n    [SerializeField] private GameObject lockedRoot;\n    [SerializeField] private TMP_Text lockedMessageText;\n    [SerializeField] private string lockedMessage = \"Compra o Jukebox numa loja para desbloqueá-lo!\";\n    [SerializeField] private Button lockedBackButton;\n\n    [Header(\"Faixas Estáticas\")]\n    [Tooltip(\"Trilha sonora base. Cada faixa pode ser associada a um WorldData para aparecer na secção desse mundo.\")]\n    [SerializeField] private List<JukeboxTrack> tracks = new List<JukeboxTrack>();\n\n    [Header(\"Melodias Selvagens\")]\n    [Tooltip(\"Todos os WildMelodyData do jogo — o Jukebox filtra as já recolhidas.\")]\n    [SerializeField] private List<WildMelodyData> knownMelodies = new List<WildMelodyData>();\n\n    [Header(\"Secções\")]\n    [Tooltip(\"Etiqueta da secção para faixas estáticas sem mundo.\")]\n    [SerializeField] private string staticSectionLabel = \"Trilha Sonora\";\n    [Tooltip(\"Etiqueta da secção para wild melodies sem área/mundo definido.\")]\n    [SerializeField] private string unknownSectionLabel = \"Outras Melodias\";\n    [Tooltip(\"Etiqueta da aba de Favoritos (usada como título de secção quando a aba está activa).\")]\n    [SerializeField] private string favoritesSectionLabel = \"Favoritos\";\n\n    [Header(\"Prefabs\")]\n    [SerializeField] private JukeboxTrackButtonUI trackButtonPrefab;\n    [Tooltip(\"Prefab de cabeçalho de secção — deve ter um TMP_Text no GameObject raiz ou num filho chamado 'Label'.\")]\n    [SerializeField] private GameObject sectionHeaderPrefab;\n\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject root;\n    [SerializeField] private Transform trackContainer;\n    [SerializeField] private Selectable firstSelectable;\n    [SerializeField] private Button backButton;\n    [SerializeField] private TMP_Text nowPlayingText;\n    [SerializeField] private string noTracksText = \"— sem músicas —\";\n\n    [Header(\"Abas (Tab Bar)\")]\n    [Tooltip(\"Highlight/indicador visual da aba Normal (activo quando na aba Normal).\")]\n    [SerializeField] private GameObject normalTabHighlight;\n    [Tooltip(\"Highlight/indicador visual da aba Favoritos (activo quando na aba Favoritos).\")]\n    [SerializeField] private GameObject favoritesTabHighlight;\n\n    [Header(\"Input — Trocar Aba\")]\n    [Tooltip(\"Acção que muda para a aba anterior (LB / L1) — volta à aba Normal.\")]\n    [SerializeField] private InputActionReference tabPrevAction;\n    [Tooltip(\"Acção que muda para a aba seguinte (RB / R1) — vai para Favoritos.\")]\n    [SerializeField] private InputActionReference tabNextAction;\n\n    [Header(\"Sons\")]\n    [SerializeField] private AudioClip toggleSfx;\n    [SerializeField] private AudioClip tabSwitchSfx;\n    [SerializeField] private AudioClip favoriteSfx;\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Eventos\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Disparado ao fechar o painel.</summary>\n    public event System.Action Closed;\n\n    /// <summary>\n    /// Disparado por <see cref=\"WildMelodyPickup\"/> quando uma Melodia Selvagem é\n    /// recolhida — actualiza a lista em tempo real se o Jukebox estiver aberto.\n    /// </summary>\n    public static event System.Action<WildMelodyData> OnWildMelodyCollected;\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Estado privado\n    // ═══════════════════════════════════════════════════════════════════════\n\n    public GameObject Root => root != null ? root : gameObject;\n\n    private AudioSource _source;\n\n    /// <summary>Lista COMPLETA de entradas (todas as faixas recolhidas + estáticas).</summary>\n    private readonly List<DisplayEntry> _allEntries = new List<DisplayEntry>();\n\n    /// <summary>Entradas actualmente visíveis na lista (Normal = todas; Favoritos = só favoritas).</summary>\n    private readonly List<DisplayEntry> _visibleEntries = new List<DisplayEntry>();\n\n    private readonly List<JukeboxTrackButtonUI> _spawned = new List<JukeboxTrackButtonUI>();\n    private readonly List<GameObject> _spawnedHeaders = new List<GameObject>();\n\n    private int _currentIndex = -1;   // índice em _allEntries da faixa a tocar\n    private int _focusIndex   = -1;   // índice em _visibleEntries do botão com foco\n    private bool _isPlaying;\n    private bool _isOpen;\n    private JukeboxTab _currentTab = JukeboxTab.Normal;\n\n    // Chave GameVariables para favorito de uma entrada\n    private static string FavKey(string id) => \"jukebox_fav_\" + id;\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Unity\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void Awake()\n    {\n        _source = GetComponent<AudioSource>();\n        _source.playOnAwake = false;\n        _source.loop = false;\n\n        if (backButton != null)       backButton.onClick.AddListener(Close);\n        if (lockedBackButton != null) lockedBackButton.onClick.AddListener(Close);\n        if (lockedMessageText != null) lockedMessageText.text = lockedMessage;\n\n        if (root != null)       root.SetActive(false);\n        if (lockedRoot != null) lockedRoot.SetActive(false);\n    }\n\n    private void OnEnable()\n    {\n        OnWildMelodyCollected += HandleMelodyCollected;\n\n        if (tabPrevAction != null) tabPrevAction.action.started += OnTabPrev;\n        if (tabNextAction != null) tabNextAction.action.started += OnTabNext;\n\n        if (tabPrevAction != null) tabPrevAction.action.Enable();\n        if (tabNextAction != null) tabNextAction.action.Enable();\n    }\n\n    private void OnDisable()\n    {\n        OnWildMelodyCollected -= HandleMelodyCollected;\n\n        if (tabPrevAction != null) tabPrevAction.action.started -= OnTabPrev;\n        if (tabNextAction != null) tabNextAction.action.started -= OnTabNext;\n    }\n\n    private void Update()\n    {\n        if (_source == null) return;\n        ApplyVolume();\n\n        // Avança automaticamente ao terminar a faixa.\n        if (_isPlaying && !_source.isPlaying && _allEntries.Count > 0)\n        {\n            int next = (_currentIndex + 1) % _allEntries.Count;\n            PlayEntry(next);\n        }\n    }\n\n    private void ApplyVolume()\n    {\n        var audio = AudioManager.Instance;\n        _source.volume = audio != null ? audio.BgmVolume * audio.MasterVolume : 1f;\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Abrir / Fechar\n    // ═══════════════════════════════════════════════════════════════════════\n\n    public bool IsUnlocked =>\n        jukeboxItem == null ||\n        (PlayerProgress.Instance?.HasCollectedSpecialItem(jukeboxItem.itemId) ?? false);\n\n    public void Open()\n    {\n        if (!IsUnlocked)\n        {\n            if (lockedRoot != null) lockedRoot.SetActive(true);\n            if (EventSystem.current != null && lockedBackButton != null)\n                EventSystem.current.SetSelectedGameObject(lockedBackButton.gameObject);\n            return;\n        }\n\n        _isOpen = true;\n        _currentTab = JukeboxTab.Normal;\n\n        if (root != null) root.SetActive(true);\n\n        SyncAllEntries();\n        RebuildVisible();\n        RefreshTabHighlights();\n\n        SelectFirst();\n    }\n\n    public void Close()\n    {\n        _isOpen = false;\n        if (root != null)       root.SetActive(false);\n        if (lockedRoot != null) lockedRoot.SetActive(false);\n        PlaySfx(toggleSfx);\n        Closed?.Invoke();\n    }\n\n    public void OnCancel(BaseEventData eventData) => Close();\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Abas (L / R)\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void OnTabPrev(InputAction.CallbackContext _)\n    {\n        if (!_isOpen) return;\n        if (_currentTab == JukeboxTab.Normal) return;\n\n        _currentTab = JukeboxTab.Normal;\n        RebuildVisible();\n        RefreshTabHighlights();\n        SelectFirst();\n        PlaySfx(tabSwitchSfx);\n    }\n\n    private void OnTabNext(InputAction.CallbackContext _)\n    {\n        if (!_isOpen) return;\n        if (_currentTab == JukeboxTab.Favorites) return;\n\n        _currentTab = JukeboxTab.Favorites;\n        RebuildVisible();\n        RefreshTabHighlights();\n        SelectFirst();\n        PlaySfx(tabSwitchSfx);\n    }\n\n    private void RefreshTabHighlights()\n    {\n        bool normal = _currentTab == JukeboxTab.Normal;\n        if (normalTabHighlight != null)    normalTabHighlight.SetActive(normal);\n        if (favoritesTabHighlight != null) favoritesTabHighlight.SetActive(!normal);\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Melodias Selvagens — actualização em tempo real\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void HandleMelodyCollected(WildMelodyData melody)\n    {\n        if (!_isOpen || !IsUnlocked) return;\n\n        // Só reconstruir se a melodia for nova na lista.\n        foreach (var e in _allEntries)\n            if (e.id == melody.melodyId) return;\n\n        SyncAllEntries();\n        RebuildVisible();\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Construção das listas\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Reconstrói <see cref=\"_allEntries\"/> a partir das faixas estáticas e wild melodies recolhidas.</summary>\n    private void SyncAllEntries()\n    {\n        _allEntries.Clear();\n\n        // Faixas estáticas\n        var pp = PlayerProgress.Instance;\n        foreach (var t in tracks)\n        {\n            if (t == null) continue;\n\n            // Se tiver melodyId, só aparece após ser recolhida.\n            if (!string.IsNullOrEmpty(t.melodyId) &&\n                (pp == null || !pp.HasCollectedMelody(t.melodyId)))\n                continue;\n\n            _allEntries.Add(new DisplayEntry\n            {\n                id    = t.GetId(),\n                clip  = t.clip,\n                name  = t.GetDisplayName(),\n                world = t.world\n            });\n        }\n\n        // Wild melodies recolhidas\n        if (pp != null && knownMelodies != null)\n        {\n            foreach (var m in knownMelodies)\n            {\n                if (m == null || !pp.HasCollectedMelody(m.melodyId)) continue;\n                _allEntries.Add(new DisplayEntry\n                {\n                    id    = m.melodyId,\n                    clip  = m.clip,\n                    name  = string.IsNullOrEmpty(m.displayName) ? m.melodyId : m.displayName,\n                    world = m.area?.world\n                });\n            }\n        }\n    }\n\n    /// <summary>\n    /// Reconstrói <see cref=\"_visibleEntries\"/> e redesenha os botões de acordo com\n    /// <see cref=\"_currentTab\"/>.\n    /// </summary>\n    private void RebuildVisible()\n    {\n        _visibleEntries.Clear();\n        ClearSpawned();\n\n        var vars = GameVariables.Instance;\n\n        if (_currentTab == JukeboxTab.Favorites)\n        {\n            // Aba Favoritos: mostrar apenas entradas marcadas como favoritas.\n            foreach (var e in _allEntries)\n                if (vars != null && vars.GetBool(FavKey(e.id)))\n                    _visibleEntries.Add(e);\n\n            SpawnSection(favoritesSectionLabel, _visibleEntries, vars);\n        }\n        else\n        {\n            // Aba Normal: agrupar por mundo.\n            // 1. Secção de trilha sonora (faixas sem mundo).\n            var staticEntries = new List<DisplayEntry>();\n            foreach (var e in _allEntries)\n                if (e.world == null) staticEntries.Add(e);\n\n            if (staticEntries.Count > 0)\n            {\n                foreach (var e in staticEntries) _visibleEntries.Add(e);\n                SpawnSection(staticSectionLabel, staticEntries, vars);\n            }\n\n            // 2. Agrupar os restantes por mundo.\n            var byWorld = new Dictionary<WorldData, List<DisplayEntry>>();\n            var worldOrder = new List<WorldData>();\n\n            foreach (var e in _allEntries)\n            {\n                if (e.world == null) continue;\n                if (!byWorld.ContainsKey(e.world))\n                {\n                    byWorld[e.world] = new List<DisplayEntry>();\n                    worldOrder.Add(e.world);\n                }\n                byWorld[e.world].Add(e);\n            }\n\n            foreach (var world in worldOrder)\n            {\n                var entries = byWorld[world];\n                foreach (var e in entries) _visibleEntries.Add(e);\n\n                string label = string.IsNullOrEmpty(world.displayName) ? world.worldId : world.displayName;\n                SpawnSection(label, entries, vars);\n            }\n\n            // 3. Wild melodies sem mundo.\n            var unknownEntries = new List<DisplayEntry>();\n            foreach (var e in _allEntries)\n            {\n                if (e.world != null) continue;\n                // Não duplicar com as estáticas.\n                bool isStatic = false;\n                foreach (var s in staticEntries) if (s == e) { isStatic = true; break; }\n                if (!isStatic) unknownEntries.Add(e);\n            }\n\n            if (unknownEntries.Count > 0)\n            {\n                foreach (var e in unknownEntries) _visibleEntries.Add(e);\n                SpawnSection(unknownSectionLabel, unknownEntries, vars);\n            }\n        }\n\n        RefreshNowPlaying();\n    }\n\n    /// <summary>\n    /// Instancia um cabeçalho de secção e os botões de faixa para uma lista de entradas.\n    /// </summary>\n    private void SpawnSection(string sectionName, List<DisplayEntry> entries, GameVariables vars)\n    {\n        if (entries.Count == 0) return;\n\n        // Cabeçalho\n        if (sectionHeaderPrefab != null && trackContainer != null)\n        {\n            var header = Instantiate(sectionHeaderPrefab, trackContainer);\n            _spawnedHeaders.Add(header);\n\n            // Procurar TMP_Text no raiz ou no primeiro filho chamado \"Label\".\n            var label = header.GetComponent<TMP_Text>();\n            if (label == null)\n            {\n                var child = header.transform.Find(\"Label\");\n                if (child != null) label = child.GetComponent<TMP_Text>();\n            }\n            if (label != null) label.text = sectionName;\n        }\n\n        // Botões de faixa\n        foreach (var entry in entries)\n        {\n            int visibleIndex = _visibleEntries.IndexOf(entry);\n            bool isPlaying   = _allEntries.IndexOf(entry) == _currentIndex && _isPlaying;\n            bool isFavorite  = vars != null && vars.GetBool(FavKey(entry.id));\n\n            var btn = Instantiate(trackButtonPrefab, trackContainer);\n            btn.Setup(visibleIndex, entry.name, isPlaying, isFavorite);\n            btn.Clicked         += OnTrackClicked;\n            btn.FavoriteClicked += OnFavoriteClicked;\n            _spawned.Add(btn);\n        }\n    }\n\n    private void ClearSpawned()\n    {\n        foreach (var btn in _spawned)\n        {\n            if (btn == null) continue;\n            btn.Clicked         -= OnTrackClicked;\n            btn.FavoriteClicked -= OnFavoriteClicked;\n            Destroy(btn.gameObject);\n        }\n        _spawned.Clear();\n\n        foreach (var h in _spawnedHeaders)\n            if (h != null) Destroy(h);\n        _spawnedHeaders.Clear();\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Interacção — Play / Stop / Favorito\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void OnTrackClicked(JukeboxTrackButtonUI btn)\n    {\n        // Índice na lista visível → índice na lista completa.\n        if (btn.Index < 0 || btn.Index >= _visibleEntries.Count) return;\n        var entry      = _visibleEntries[btn.Index];\n        int allIndex   = _allEntries.IndexOf(entry);\n\n        if (allIndex == _currentIndex)\n        {\n            // Mesma faixa: toggle play/pause.\n            TogglePlayPause();\n        }\n        else\n        {\n            // Faixa diferente: iniciar.\n            PlayEntry(allIndex);\n        }\n\n        PlaySfx(toggleSfx);\n    }\n\n    private void OnFavoriteClicked(JukeboxTrackButtonUI btn)\n    {\n        if (btn.Index < 0 || btn.Index >= _visibleEntries.Count) return;\n        var entry = _visibleEntries[btn.Index];\n        ToggleFavorite(entry, btn);\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Reprodução\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Inicia a faixa no índice de <see cref=\"_allEntries\"/>.</summary>\n    private void PlayEntry(int allIndex)\n    {\n        if (_allEntries.Count == 0) return;\n        allIndex = ((allIndex % _allEntries.Count) + _allEntries.Count) % _allEntries.Count;\n\n        var entry = _allEntries[allIndex];\n        _currentIndex = allIndex;\n        _isPlaying    = entry.clip != null;\n\n        _source.clip = entry.clip;\n        ApplyVolume();\n\n        if (_isPlaying) _source.Play();\n        else            _source.Stop();\n\n        RefreshAllButtons();\n        RefreshNowPlaying();\n    }\n\n    private void TogglePlayPause()\n    {\n        if (_currentIndex < 0)\n        {\n            if (_allEntries.Count > 0) PlayEntry(0);\n            return;\n        }\n\n        if (_isPlaying)\n        {\n            _source.Pause();\n            _isPlaying = false;\n        }\n        else\n        {\n            _source.UnPause();\n            if (!_source.isPlaying && _source.clip != null) _source.Play();\n            _isPlaying = true;\n        }\n\n        RefreshAllButtons();\n        RefreshNowPlaying();\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Favoritos\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void ToggleFavorite(DisplayEntry entry, JukeboxTrackButtonUI btn)\n    {\n        var vars = GameVariables.Instance;\n        if (vars == null) return;\n\n        string key = FavKey(entry.id);\n        bool current = vars.GetBool(key);\n        vars.SetBool(key, !current);\n\n        btn.SetFavorite(!current);\n        PlaySfx(favoriteSfx);\n\n        // Na aba de Favoritos, remover imediatamente se desfavoritado.\n        if (_currentTab == JukeboxTab.Favorites && current)\n            RebuildVisible();\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Utilitários de UI\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Actualiza todos os botões instanciados para reflectir a faixa actualmente a tocar.</summary>\n    private void RefreshAllButtons()\n    {\n        var vars = GameVariables.Instance;\n\n        for (int i = 0; i < _spawned.Count; i++)\n        {\n            if (_spawned[i] == null) continue;\n\n            int visibleIndex = _spawned[i].Index;\n            if (visibleIndex < 0 || visibleIndex >= _visibleEntries.Count) continue;\n\n            var entry = _visibleEntries[visibleIndex];\n            int allIndex = _allEntries.IndexOf(entry);\n\n            bool isPlaying  = (allIndex == _currentIndex) && _isPlaying;\n            bool isFavorite = vars != null && vars.GetBool(FavKey(entry.id));\n\n            _spawned[i].SetPlaying(isPlaying);\n            _spawned[i].SetFavorite(isFavorite);\n        }\n    }\n\n    private void RefreshNowPlaying()\n    {\n        if (nowPlayingText == null) return;\n\n        if (_currentIndex < 0 || _currentIndex >= _allEntries.Count || !_isPlaying)\n        {\n            nowPlayingText.text = noTracksText;\n            return;\n        }\n\n        nowPlayingText.text = _allEntries[_currentIndex].name;\n    }\n\n    private void SelectFirst()\n    {\n        if (EventSystem.current == null) return;\n\n        if (_spawned.Count > 0 && _spawned[0] != null)\n            EventSystem.current.SetSelectedGameObject(_spawned[0].gameObject);\n        else if (firstSelectable != null)\n            EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);\n    }\n\n    private void PlaySfx(AudioClip clip)\n    {\n        if (clip != null) AudioManager.Instance?.PlaySE(clip);\n    }\n}\n",
+  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.EventSystems;\nusing UnityEngine.InputSystem;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Sub-painel \"Jukebox\" — lista de faixas organizada por mundo, com aba de\n/// Favoritos (L/R), disco giratório na faixa activa e persistência de favoritos\n/// via <see cref=\"GameVariables\"/>.\n///\n/// ────────────────────────────────────────────────────────────────────────────\n/// <b>ESTRUTURA DA UI (montar no Editor):</b>\n///\n/// JukeboxSectionUI (MonoBehaviour + AudioSource)\n///   ├── Root (GameObject — activado/desactivado em Open/Close)\n///   │     ├── TabBar\n///   │     │     ├── NormalTabHighlight    ← activo na aba Normal\n///   │     │     └── FavoritesTabHighlight ← activo na aba Favoritos\n///   │     ├── ScrollView → Content (trackContainer)\n///   │     │     └── [instanciado: SectionHeaderPrefab e TrackButtonPrefab]\n///   │     ├── NowPlayingText (TMP_Text)\n///   │     └── BackButton (Button)\n///   └── LockedRoot (GameObject — mostrado antes da compra)\n///         ├── LockedMessageText (TMP_Text)\n///         └── LockedBackButton (Button)\n///\n/// ────────────────────────────────────────────────────────────────────────────\n/// <b>SECÇÕES POR MUNDO:</b>\n/// • Faixas estáticas (<see cref=\"tracks\"/>) com <c>world == null</c> →\n///   agrupadas numa secção com <see cref=\"staticSectionLabel\"/> (ex: \"Trilha Sonora\").\n/// • Faixas estáticas com <c>world != null</c> → agrupadas com as wild melodies\n///   desse mundo.\n/// • Wild melodies → agrupadas por <c>WildMelodyData.area.world</c>;\n///   sem área/mundo → secção <see cref=\"unknownSectionLabel\"/> (ex: \"Outras Melodias\").\n///\n/// ────────────────────────────────────────────────────────────────────────────\n/// <b>ABAS:</b>\n/// • L (tabPrevAction) → aba Normal.\n/// • R (tabNextAction) → aba Favoritos.\n/// • B (backButton / cancelAction) → fecha o painel.\n///\n/// ────────────────────────────────────────────────────────────────────────────\n/// <b>FAVORITOS:</b>\n/// Guardados em <see cref=\"GameVariables\"/> como booleans com chave\n/// <c>\"jukebox_fav_&lt;id&gt;\"</c> — persistidos automaticamente no save.\n/// </summary>\n[RequireComponent(typeof(AudioSource))]\npublic class JukeboxSectionUI : MonoBehaviour, ICancelHandler\n{\n    // ═══════════════════════════════════════════════════════════════════════\n    // Tipos internos\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Faixa estática configurada no Inspector.</summary>\n    [System.Serializable]\n    public class JukeboxTrack\n    {\n        [Tooltip(\"Clip de áudio.\")]\n        public AudioClip clip;\n\n        [Tooltip(\"Nome mostrado na lista. Se vazio, usa o nome do clip.\")]\n        public string displayName;\n\n        [Tooltip(\"Mundo a que esta faixa pertence — agrupa-a com as wild melodies desse mundo. Deixar vazio para a secção de trilha sonora base.\")]\n        public WorldData world;\n\n        [Tooltip(\n            \"ID de melodia para desbloqueio individual. Se preenchido, a faixa só aparece quando \" +\n            \"PlayerProgress.HasCollectedMelody(melodyId) for true (ex: encontrada num WildMelodyPickup). \" +\n            \"Deixar VAZIO para faixas sempre visíveis após comprar o Jukebox (trilha sonora base).\")]\n        public string melodyId;\n\n        public string GetDisplayName() =>\n            string.IsNullOrEmpty(displayName) && clip != null ? clip.name : displayName;\n\n        /// <summary>\n        /// Chave estável para favoritos.\n        /// Se <see cref=\"melodyId\"/> estiver preenchido usa-o directamente (mesma chave que o\n        /// <see cref=\"WildMelodyData\"/> correspondente).\n        /// Caso contrário deriva a chave do nome da faixa.\n        /// </summary>\n        public string GetId()\n        {\n            if (!string.IsNullOrEmpty(melodyId)) return melodyId;\n            string raw = string.IsNullOrEmpty(displayName)\n                ? (clip != null ? clip.name : displayName)\n                : displayName;\n            return \"static_\" + raw.ToLowerInvariant().Replace(\" \", \"_\");\n        }\n    }\n\n    /// <summary>Entrada interna da lista de exibição (faixa estática ou wild melody).</summary>\n    private sealed class DisplayEntry\n    {\n        /// <summary>Chave estável para GameVariables de favoritos.</summary>\n        public string id;\n        public AudioClip clip;\n        public string name;\n        /// <summary>Mundo desta faixa (null = trilha sonora base ou sem mundo).</summary>\n        public WorldData world;\n    }\n\n    private enum JukeboxTab { Normal, Favorites }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Inspector\n    // ═══════════════════════════════════════════════════════════════════════\n\n    [Header(\"Desbloqueio por Compra na Loja\")]\n    [SerializeField] private ItemData jukeboxItem;\n    [SerializeField] private GameObject lockedRoot;\n    [SerializeField] private TMP_Text lockedMessageText;\n    [SerializeField] private string lockedMessage = \"Compra o Jukebox numa loja para desbloqueá-lo!\";\n    [SerializeField] private Button lockedBackButton;\n\n    [Header(\"Faixas Estáticas\")]\n    [Tooltip(\"Trilha sonora base. Cada faixa pode ser associada a um WorldData para aparecer na secção desse mundo.\")]\n    [SerializeField] private List<JukeboxTrack> tracks = new List<JukeboxTrack>();\n\n    [Header(\"Melodias Selvagens\")]\n    [Tooltip(\"Todos os WildMelodyData do jogo — o Jukebox filtra as já recolhidas.\")]\n    [SerializeField] private List<WildMelodyData> knownMelodies = new List<WildMelodyData>();\n\n    [Header(\"Secções\")]\n    [Tooltip(\"Etiqueta da secção para faixas estáticas sem mundo.\")]\n    [SerializeField] private string staticSectionLabel = \"Trilha Sonora\";\n    [Tooltip(\"Etiqueta da secção para wild melodies sem área/mundo definido.\")]\n    [SerializeField] private string unknownSectionLabel = \"Outras Melodias\";\n    [Tooltip(\"Etiqueta da aba de Favoritos (usada como título de secção quando a aba está activa).\")]\n    [SerializeField] private string favoritesSectionLabel = \"Favoritos\";\n\n    [Header(\"Prefabs\")]\n    [SerializeField] private JukeboxTrackButtonUI trackButtonPrefab;\n    [Tooltip(\"Prefab de cabeçalho de secção — deve ter um TMP_Text no GameObject raiz ou num filho chamado 'Label'.\")]\n    [SerializeField] private GameObject sectionHeaderPrefab;\n\n    [Header(\"Framework\")]\n    [SerializeField] private GameObject root;\n    [SerializeField] private Transform trackContainer;\n    [SerializeField] private Selectable firstSelectable;\n    [SerializeField] private Button backButton;\n    [SerializeField] private TMP_Text nowPlayingText;\n    [SerializeField] private string noTracksText = \"— sem músicas —\";\n\n    [Header(\"Abas (Tab Bar)\")]\n    [Tooltip(\"Highlight/indicador visual da aba Normal (activo quando na aba Normal).\")]\n    [SerializeField] private GameObject normalTabHighlight;\n    [Tooltip(\"Highlight/indicador visual da aba Favoritos (activo quando na aba Favoritos).\")]\n    [SerializeField] private GameObject favoritesTabHighlight;\n\n    [Header(\"Input — Trocar Aba\")]\n    [Tooltip(\"Acção que muda para a aba anterior (LB / L1) — volta à aba Normal.\")]\n    [SerializeField] private InputActionReference tabPrevAction;\n    [Tooltip(\"Acção que muda para a aba seguinte (RB / R1) — vai para Favoritos.\")]\n    [SerializeField] private InputActionReference tabNextAction;\n\n    [Header(\"Sons\")]\n    [SerializeField] private AudioClip toggleSfx;\n    [SerializeField] private AudioClip tabSwitchSfx;\n    [SerializeField] private AudioClip favoriteSfx;\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Eventos\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Disparado ao fechar o painel.</summary>\n    public event System.Action Closed;\n\n    /// <summary>\n    /// Disparado por <see cref=\"WildMelodyPickup\"/> quando uma Melodia Selvagem é\n    /// recolhida — actualiza a lista em tempo real se o Jukebox estiver aberto.\n    /// </summary>\n    public static event System.Action<WildMelodyData> OnWildMelodyCollected;\n\n    /// <summary>\n    /// Dispara <see cref=\"OnWildMelodyCollected\"/> — chamado por\n    /// WildMelodyPickup ao recolher uma melodia (eventos C# só podem ser\n    /// invocados dentro da classe que os declara).\n    /// </summary>\n    public static void NotifyMelodyCollected(WildMelodyData melody) => OnWildMelodyCollected?.Invoke(melody);\n\n    // Task #11: limpa subscribers ao entrar em Play Mode sem Domain Reload\n    // (mesmo padrão de PlayerLocator/GamePauseUtil/WheelTimeScaleUtil).\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]\n    private static void ResetStaticEvents() => OnWildMelodyCollected = null;\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Estado privado\n    // ═══════════════════════════════════════════════════════════════════════\n\n    public GameObject Root => root != null ? root : gameObject;\n\n    private AudioSource _source;\n\n    /// <summary>Lista COMPLETA de entradas (todas as faixas recolhidas + estáticas).</summary>\n    private readonly List<DisplayEntry> _allEntries = new List<DisplayEntry>();\n\n    /// <summary>Entradas actualmente visíveis na lista (Normal = todas; Favoritos = só favoritas).</summary>\n    private readonly List<DisplayEntry> _visibleEntries = new List<DisplayEntry>();\n\n    // Pool de botões e headers (Task #29): nunca destruídos, activados/desactivados.\n    // Botões da pool têm Clicked/FavoriteClicked subscritos UMA VEZ (na criação).\n    private readonly List<JukeboxTrackButtonUI> _buttonPool  = new List<JukeboxTrackButtonUI>();\n    private readonly List<GameObject>           _headerPool  = new List<GameObject>();\n\n    // Botões/headers actualmente visíveis (subconjunto das pools).\n    private readonly List<JukeboxTrackButtonUI> _spawned        = new List<JukeboxTrackButtonUI>();\n    private readonly List<GameObject>           _spawnedHeaders = new List<GameObject>();\n\n    private int _currentIndex = -1;   // índice em _allEntries da faixa a tocar\n    private int _focusIndex   = -1;   // índice em _visibleEntries do botão com foco\n    private bool _isPlaying;\n    private bool _isOpen;\n\n    // Task — Ownership de BGM: guardamos o clip activo antes de o Jukebox tomar\n    // controlo, para restaurar quando parar ou fechar.\n    private AudioClip _savedBgmClip;\n    private bool _bgmOwned;\n    private JukeboxTab _currentTab = JukeboxTab.Normal;\n\n    // Chave GameVariables para favorito de uma entrada\n    private static string FavKey(string id) => \"jukebox_fav_\" + id;\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Unity\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void Awake()\n    {\n        _source = GetComponent<AudioSource>();\n        _source.playOnAwake = false;\n        _source.loop = false;\n\n        if (backButton != null)       backButton.onClick.AddListener(Close);\n        if (lockedBackButton != null) lockedBackButton.onClick.AddListener(Close);\n        if (lockedMessageText != null) lockedMessageText.text = lockedMessage;\n\n        if (root != null)       root.SetActive(false);\n        if (lockedRoot != null) lockedRoot.SetActive(false);\n    }\n\n    private void OnEnable()\n    {\n        OnWildMelodyCollected += HandleMelodyCollected;\n\n        if (tabPrevAction != null) tabPrevAction.action.started += OnTabPrev;\n        if (tabNextAction != null) tabNextAction.action.started += OnTabNext;\n\n        if (tabPrevAction != null) tabPrevAction.action.Enable();\n        if (tabNextAction != null) tabNextAction.action.Enable();\n    }\n\n    private void OnDisable()\n    {\n        OnWildMelodyCollected -= HandleMelodyCollected;\n\n        if (tabPrevAction != null) tabPrevAction.action.started -= OnTabPrev;\n        if (tabNextAction != null) tabNextAction.action.started -= OnTabNext;\n    }\n\n    private void Update()\n    {\n        if (_source == null) return;\n        ApplyVolume();\n\n        // Avança automaticamente ao terminar a faixa.\n        if (_isPlaying && !_source.isPlaying && _allEntries.Count > 0)\n        {\n            int next = (_currentIndex + 1) % _allEntries.Count;\n            PlayEntry(next);\n        }\n    }\n\n    private void ApplyVolume()\n    {\n        var audio = AudioManager.Instance;\n        _source.volume = audio != null ? audio.BgmVolume * audio.MasterVolume : 1f;\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Abrir / Fechar\n    // ═══════════════════════════════════════════════════════════════════════\n\n    public bool IsUnlocked =>\n        jukeboxItem == null ||\n        (PlayerProgress.Instance?.HasCollectedSpecialItem(jukeboxItem.itemId) ?? false);\n\n    public void Open()\n    {\n        if (!IsUnlocked)\n        {\n            if (lockedRoot != null) lockedRoot.SetActive(true);\n            if (EventSystem.current != null && lockedBackButton != null)\n                EventSystem.current.SetSelectedGameObject(lockedBackButton.gameObject);\n            return;\n        }\n\n        _isOpen = true;\n        _currentTab = JukeboxTab.Normal;\n\n        if (root != null) root.SetActive(true);\n\n        SyncAllEntries();\n        RebuildVisible();\n        RefreshTabHighlights();\n\n        SelectFirst();\n    }\n\n    public void Close()\n    {\n        _isOpen = false;\n        if (root != null)       root.SetActive(false);\n        if (lockedRoot != null) lockedRoot.SetActive(false);\n\n        // Task 16: parar o Jukebox e devolver a BGM ao estado anterior ao fechar.\n        _source.Stop();\n        _isPlaying = false;\n        ReleaseBgmOwnership();\n\n        PlaySfx(toggleSfx);\n        Closed?.Invoke();\n    }\n\n    public void OnCancel(BaseEventData eventData) => Close();\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Abas (L / R)\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void OnTabPrev(InputAction.CallbackContext _)\n    {\n        if (!_isOpen) return;\n        if (_currentTab == JukeboxTab.Normal) return;\n\n        _currentTab = JukeboxTab.Normal;\n        RebuildVisible();\n        RefreshTabHighlights();\n        SelectFirst();\n        PlaySfx(tabSwitchSfx);\n    }\n\n    private void OnTabNext(InputAction.CallbackContext _)\n    {\n        if (!_isOpen) return;\n        if (_currentTab == JukeboxTab.Favorites) return;\n\n        _currentTab = JukeboxTab.Favorites;\n        RebuildVisible();\n        RefreshTabHighlights();\n        SelectFirst();\n        PlaySfx(tabSwitchSfx);\n    }\n\n    private void RefreshTabHighlights()\n    {\n        bool normal = _currentTab == JukeboxTab.Normal;\n        if (normalTabHighlight != null)    normalTabHighlight.SetActive(normal);\n        if (favoritesTabHighlight != null) favoritesTabHighlight.SetActive(!normal);\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Melodias Selvagens — actualização em tempo real\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void HandleMelodyCollected(WildMelodyData melody)\n    {\n        if (!_isOpen || !IsUnlocked) return;\n\n        // Só reconstruir se a melodia for nova na lista.\n        foreach (var e in _allEntries)\n            if (e.id == melody.melodyId) return;\n\n        SyncAllEntries();\n        RebuildVisible();\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Construção das listas\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Reconstrói <see cref=\"_allEntries\"/> a partir das faixas estáticas e wild melodies recolhidas.</summary>\n    private void SyncAllEntries()\n    {\n        _allEntries.Clear();\n\n        // Faixas estáticas\n        var pp = PlayerProgress.Instance;\n        foreach (var t in tracks)\n        {\n            if (t == null) continue;\n\n            // Se tiver melodyId, só aparece após ser recolhida.\n            if (!string.IsNullOrEmpty(t.melodyId) &&\n                (pp == null || !pp.HasCollectedMelody(t.melodyId)))\n                continue;\n\n            _allEntries.Add(new DisplayEntry\n            {\n                id    = t.GetId(),\n                clip  = t.clip,\n                name  = t.GetDisplayName(),\n                world = t.world\n            });\n        }\n\n        // Wild melodies recolhidas\n        if (pp != null && knownMelodies != null)\n        {\n            foreach (var m in knownMelodies)\n            {\n                if (m == null || !pp.HasCollectedMelody(m.melodyId)) continue;\n                _allEntries.Add(new DisplayEntry\n                {\n                    id    = m.melodyId,\n                    clip  = m.clip,\n                    name  = string.IsNullOrEmpty(m.displayName) ? m.melodyId : m.displayName,\n                    world = m.area?.world\n                });\n            }\n        }\n    }\n\n    /// <summary>\n    /// Reconstrói <see cref=\"_visibleEntries\"/> e redesenha os botões de acordo com\n    /// <see cref=\"_currentTab\"/>.\n    /// </summary>\n    private void RebuildVisible()\n    {\n        _visibleEntries.Clear();\n        ClearSpawned();\n\n        var vars = GameVariables.Instance;\n\n        if (_currentTab == JukeboxTab.Favorites)\n        {\n            // Aba Favoritos: mostrar apenas entradas marcadas como favoritas.\n            foreach (var e in _allEntries)\n                if (vars != null && vars.GetBool(FavKey(e.id)))\n                    _visibleEntries.Add(e);\n\n            SpawnSection(favoritesSectionLabel, _visibleEntries, vars);\n        }\n        else\n        {\n            // Aba Normal: agrupar por mundo.\n            // 1. Secção de trilha sonora (faixas sem mundo).\n            var staticEntries = new List<DisplayEntry>();\n            foreach (var e in _allEntries)\n                if (e.world == null) staticEntries.Add(e);\n\n            if (staticEntries.Count > 0)\n            {\n                foreach (var e in staticEntries) _visibleEntries.Add(e);\n                SpawnSection(staticSectionLabel, staticEntries, vars);\n            }\n\n            // 2. Agrupar os restantes por mundo.\n            var byWorld = new Dictionary<WorldData, List<DisplayEntry>>();\n            var worldOrder = new List<WorldData>();\n\n            foreach (var e in _allEntries)\n            {\n                if (e.world == null) continue;\n                if (!byWorld.ContainsKey(e.world))\n                {\n                    byWorld[e.world] = new List<DisplayEntry>();\n                    worldOrder.Add(e.world);\n                }\n                byWorld[e.world].Add(e);\n            }\n\n            foreach (var world in worldOrder)\n            {\n                var entries = byWorld[world];\n                foreach (var e in entries) _visibleEntries.Add(e);\n\n                string label = string.IsNullOrEmpty(world.displayName) ? world.worldId : world.displayName;\n                SpawnSection(label, entries, vars);\n            }\n\n            // 3. Wild melodies sem mundo.\n            var unknownEntries = new List<DisplayEntry>();\n            foreach (var e in _allEntries)\n            {\n                if (e.world != null) continue;\n                // Não duplicar com as estáticas.\n                bool isStatic = false;\n                foreach (var s in staticEntries) if (s == e) { isStatic = true; break; }\n                if (!isStatic) unknownEntries.Add(e);\n            }\n\n            if (unknownEntries.Count > 0)\n            {\n                foreach (var e in unknownEntries) _visibleEntries.Add(e);\n                SpawnSection(unknownSectionLabel, unknownEntries, vars);\n            }\n        }\n\n        RefreshNowPlaying();\n    }\n\n    /// <summary>\n    /// Activa um cabeçalho e os botões de faixa para uma lista de entradas,\n    /// reutilizando objectos já criados (Task #29 — pool). Novos objectos só\n    /// são instanciados quando a pool estiver esgotada. Botões da pool têm\n    /// Clicked/FavoriteClicked subscritos uma única vez na criação.\n    /// </summary>\n    private void SpawnSection(string sectionName, List<DisplayEntry> entries, GameVariables vars)\n    {\n        if (entries.Count == 0) return;\n\n        // Cabeçalho — retirar da pool ou criar novo.\n        if (sectionHeaderPrefab != null && trackContainer != null)\n        {\n            // Encontrar um header desactivado na pool.\n            GameObject header = null;\n            foreach (var h in _headerPool)\n            {\n                if (h != null && !h.activeSelf) { header = h; break; }\n            }\n            if (header == null)\n            {\n                header = Instantiate(sectionHeaderPrefab, trackContainer);\n                _headerPool.Add(header);\n            }\n\n            header.transform.SetAsLastSibling();\n            header.SetActive(true);\n            _spawnedHeaders.Add(header);\n\n            // Procurar TMP_Text no raiz ou no primeiro filho chamado \"Label\".\n            var label = header.GetComponent<TMP_Text>();\n            if (label == null)\n            {\n                var child = header.transform.Find(\"Label\");\n                if (child != null) label = child.GetComponent<TMP_Text>();\n            }\n            if (label != null) label.text = sectionName;\n        }\n\n        // Botões de faixa — retirar da pool ou criar novos.\n        foreach (var entry in entries)\n        {\n            int  visibleIndex = _visibleEntries.IndexOf(entry);\n            bool isPlaying    = _allEntries.IndexOf(entry) == _currentIndex && _isPlaying;\n            bool isFavorite   = vars != null && vars.GetBool(FavKey(entry.id));\n\n            // Encontrar um botão desactivado na pool.\n            JukeboxTrackButtonUI btn = null;\n            foreach (var b in _buttonPool)\n            {\n                if (b != null && !b.gameObject.activeSelf) { btn = b; break; }\n            }\n            if (btn == null)\n            {\n                btn = Instantiate(trackButtonPrefab, trackContainer);\n                // Subscrevia UMA VEZ: a pool reutiliza o mesmo handler para sempre.\n                btn.Clicked         += OnTrackClicked;\n                btn.FavoriteClicked += OnFavoriteClicked;\n                _buttonPool.Add(btn);\n            }\n\n            btn.transform.SetAsLastSibling();\n            btn.gameObject.SetActive(true);\n            btn.Setup(visibleIndex, entry.name, isPlaying, isFavorite);\n            _spawned.Add(btn);\n        }\n    }\n\n    /// <summary>\n    /// Desactiva os botões e headers visíveis (Task #29: não destroys, apenas\n    /// SetActive false). Os objectos ficam na pool para reutilização.\n    /// </summary>\n    private void ClearSpawned()\n    {\n        foreach (var btn in _spawned)\n            if (btn != null) btn.gameObject.SetActive(false);\n        _spawned.Clear();\n\n        foreach (var h in _spawnedHeaders)\n            if (h != null) h.SetActive(false);\n        _spawnedHeaders.Clear();\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Interacção — Play / Stop / Favorito\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void OnTrackClicked(JukeboxTrackButtonUI btn)\n    {\n        // Índice na lista visível → índice na lista completa.\n        if (btn.Index < 0 || btn.Index >= _visibleEntries.Count) return;\n        var entry      = _visibleEntries[btn.Index];\n        int allIndex   = _allEntries.IndexOf(entry);\n\n        if (allIndex == _currentIndex)\n        {\n            // Mesma faixa: toggle play/pause.\n            TogglePlayPause();\n        }\n        else\n        {\n            // Faixa diferente: iniciar.\n            PlayEntry(allIndex);\n        }\n\n        PlaySfx(toggleSfx);\n    }\n\n    private void OnFavoriteClicked(JukeboxTrackButtonUI btn)\n    {\n        if (btn.Index < 0 || btn.Index >= _visibleEntries.Count) return;\n        var entry = _visibleEntries[btn.Index];\n        ToggleFavorite(entry, btn);\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Reprodução\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Inicia a faixa no índice de <see cref=\"_allEntries\"/>.</summary>\n    private void PlayEntry(int allIndex)\n    {\n        if (_allEntries.Count == 0) return;\n        allIndex = ((allIndex % _allEntries.Count) + _allEntries.Count) % _allEntries.Count;\n\n        var entry = _allEntries[allIndex];\n        _currentIndex = allIndex;\n        _isPlaying    = entry.clip != null;\n\n        // Task 16: assumir ownership do BGM ao iniciar a reprodução —\n        // guarda o clip actual e para a BGM para evitar duas faixas simultâneas.\n        if (_isPlaying) AcquireBgmOwnership();\n\n        _source.clip = entry.clip;\n        ApplyVolume();\n\n        if (_isPlaying) _source.Play();\n        else            _source.Stop();\n\n        RefreshAllButtons();\n        RefreshNowPlaying();\n    }\n\n    private void AcquireBgmOwnership()\n    {\n        if (_bgmOwned) return;\n        var am = AudioManager.Instance;\n        if (am == null) return;\n        _savedBgmClip = am.CurrentBgmClip;\n        _bgmOwned = true;\n        am.StopBGM(0.5f);\n    }\n\n    private void ReleaseBgmOwnership()\n    {\n        if (!_bgmOwned) return;\n        _bgmOwned = false;\n        var am = AudioManager.Instance;\n        if (am == null) return;\n        if (_savedBgmClip != null)\n            am.PlayBGM(_savedBgmClip);\n        _savedBgmClip = null;\n    }\n\n    private void TogglePlayPause()\n    {\n        if (_currentIndex < 0)\n        {\n            if (_allEntries.Count > 0) PlayEntry(0);\n            return;\n        }\n\n        if (_isPlaying)\n        {\n            _source.Pause();\n            _isPlaying = false;\n            // Ao pausar o Jukebox, devolver o ownership da BGM\n            // para que a música da área retome enquanto o Jukebox está em pausa.\n            ReleaseBgmOwnership();\n        }\n        else\n        {\n            _source.UnPause();\n            if (!_source.isPlaying && _source.clip != null) _source.Play();\n            _isPlaying = true;\n            AcquireBgmOwnership();\n        }\n\n        RefreshAllButtons();\n        RefreshNowPlaying();\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Favoritos\n    // ═══════════════════════════════════════════════════════════════════════\n\n    private void ToggleFavorite(DisplayEntry entry, JukeboxTrackButtonUI btn)\n    {\n        var vars = GameVariables.Instance;\n        if (vars == null) return;\n\n        string key = FavKey(entry.id);\n        bool current = vars.GetBool(key);\n        vars.SetBool(key, !current);\n\n        btn.SetFavorite(!current);\n        PlaySfx(favoriteSfx);\n\n        // Na aba de Favoritos, remover imediatamente se desfavoritado.\n        if (_currentTab == JukeboxTab.Favorites && current)\n            RebuildVisible();\n    }\n\n    // ═══════════════════════════════════════════════════════════════════════\n    // Utilitários de UI\n    // ═══════════════════════════════════════════════════════════════════════\n\n    /// <summary>Actualiza todos os botões instanciados para reflectir a faixa actualmente a tocar.</summary>\n    private void RefreshAllButtons()\n    {\n        var vars = GameVariables.Instance;\n\n        for (int i = 0; i < _spawned.Count; i++)\n        {\n            if (_spawned[i] == null) continue;\n\n            int visibleIndex = _spawned[i].Index;\n            if (visibleIndex < 0 || visibleIndex >= _visibleEntries.Count) continue;\n\n            var entry = _visibleEntries[visibleIndex];\n            int allIndex = _allEntries.IndexOf(entry);\n\n            bool isPlaying  = (allIndex == _currentIndex) && _isPlaying;\n            bool isFavorite = vars != null && vars.GetBool(FavKey(entry.id));\n\n            _spawned[i].SetPlaying(isPlaying);\n            _spawned[i].SetFavorite(isFavorite);\n        }\n    }\n\n    private void RefreshNowPlaying()\n    {\n        if (nowPlayingText == null) return;\n\n        if (_currentIndex < 0 || _currentIndex >= _allEntries.Count || !_isPlaying)\n        {\n            nowPlayingText.text = noTracksText;\n            return;\n        }\n\n        nowPlayingText.text = _allEntries[_currentIndex].name;\n    }\n\n    private void SelectFirst()\n    {\n        if (EventSystem.current == null) return;\n\n        if (_spawned.Count > 0 && _spawned[0] != null)\n            EventSystem.current.SetSelectedGameObject(_spawned[0].gameObject);\n        else if (firstSelectable != null)\n            EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);\n    }\n\n    private void PlaySfx(AudioClip clip)\n    {\n        if (clip != null) AudioManager.Instance?.PlaySE(clip);\n    }\n}\n",
   "id": "script-ui-jukeboxsectionui-cs",
   "dependencyIds": [
     "script-audio-audiomanager-cs",
@@ -686,12 +360,12 @@
     "script-ui-jukeboxtrackbuttonui-cs",
     "script-data-playerprogress-cs",
     "script-data-wildmelodydata-cs",
-    "script-collectibles-wildmelodypickup-cs",
     "script-data-worlddata-cs"
   ],
   "usedByIds": [
     "script-ui-jukeboxshophandler-cs",
     "script-ui-mainmenuoptionsui-cs",
+    "script-data-wildmelodydata-cs",
     "script-collectibles-wildmelodypickup-cs"
   ]
 }

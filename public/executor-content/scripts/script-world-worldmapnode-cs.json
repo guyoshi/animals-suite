@@ -185,7 +185,6 @@
   ],
   "used_by": [
     "LightBallController",
-    "PlayerProgress",
     "WorldMapCameraRig",
     "WorldMapConnection",
     "WorldMapController",
@@ -195,13 +194,13 @@
   "id": "script-world-worldmapnode-cs",
   "dependencyIds": [
     "script-data-areadata-cs",
+    "script-data-areadata-cs",
     "script-data-playerprogress-cs",
     "script-world-worldmapconnection-cs",
     "script-world-worldmapui-cs"
   ],
   "usedByIds": [
     "script-world-lightballcontroller-cs",
-    "script-data-playerprogress-cs",
     "script-world-worldmapcamerarig-cs",
     "script-world-worldmapconnection-cs",
     "script-world-worldmapcontroller-cs",

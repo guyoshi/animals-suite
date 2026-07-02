@@ -86,16 +86,6 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "CooldownRemaining",
-      "type": "float",
-      "mods": "public",
-      "default": "> Mathf.Max(0f, cooldownTimer)",
-      "section": "Feedback (opcional)",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "CooldownDuration",
       "type": "float",
       "mods": "public",
@@ -162,9 +152,8 @@
   ],
   "dependencies": [
     "AbilityCancelReason",
-    "AbilityRouter",
     "AnimalFormData",
-    "AnimalsDebugPanel",
+    "AudioManager",
     "IAbility",
     "IActiveAbility",
     "IFormAbility",
@@ -175,15 +164,16 @@
     "AbilityRouter",
     "SonarRevealable"
   ],
-  "source": "using UnityEngine;\n\n/// <summary>\n/// Sonar (P5): emite um pulso em área que revela temporariamente objectos\n/// marcados com SonarRevealable (paredes falsas, segredos, itens escondidos)\n/// dentro de \"sonarRadius\" da forma, durante \"sonarRevealDuration\" (P1).\n///\n/// Activado via PrimaryAbility.Sonar (AbilityRouter.OnAbilityPressed → TryPing).\n/// </summary>\npublic class SonarAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Feedback (opcional)\")]\n    [Tooltip(\"Prefab de VFX do pulso (anel a expandir, etc), instanciado no player.\")]\n    public GameObject pingVfxPrefab;\n\n    public AudioClip pingSound;\n\n    private bool enabledForForm;\n    private float radius = 6f;\n    private float revealDuration = 4f;\n    private float cooldown = 5f;\n    private float cooldownTimer;\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && (form.hasSonar || form.primaryAbility == PrimaryAbility.Sonar);\n        radius = form != null ? Mathf.Max(1f, form.sonarRadius) : 6f;\n        revealDuration = form != null ? Mathf.Max(0.5f, form.sonarRevealDuration) : 4f;\n        cooldown = form != null ? Mathf.Max(0f, form.sonarCooldown) : 5f;\n    }\n\n    /// <summary>Emite o pulso (AbilityRouter — PrimaryAbility.Sonar).</summary>\n    public void TryPing()\n    {\n        if (!enabledForForm || cooldownTimer > 0f) return;\n\n        cooldownTimer = cooldown;\n\n        if (pingVfxPrefab != null)\n            Instantiate(pingVfxPrefab, transform.position, Quaternion.identity);\n\n        if (pingSound != null)\n            AudioSource.PlayClipAtPoint(pingSound, transform.position);\n\n        var hits = Physics2D.OverlapCircleAll(transform.position, radius);\n\n        foreach (var hit in hits)\n        {\n            var revealable = hit.GetComponent<SonarRevealable>();\n            if (revealable != null) revealable.Reveal(revealDuration);\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(0.4f, 0.7f, 1f, 0.5f);\n        Gizmos.DrawWireSphere(transform.position, radius > 0f ? radius : 6f);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Instantânea, sem estado persistente — só o cooldown importa para a HUD.\n    void IAbility.Activate() => TryPing();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => cooldown;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do sonar.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Sonar (P5): emite um pulso em área que revela temporariamente objectos\n/// marcados com SonarRevealable (paredes falsas, segredos, itens escondidos)\n/// dentro de \"sonarRadius\" da forma, durante \"sonarRevealDuration\" (P1).\n///\n/// Activado via PrimaryAbility.Sonar (AbilityRouter.OnAbilityPressed → TryPing).\n/// </summary>\npublic class SonarAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Feedback (opcional)\")]\n    [Tooltip(\"Prefab de VFX do pulso (anel a expandir, etc), instanciado no player.\")]\n    public GameObject pingVfxPrefab;\n\n    public AudioClip pingSound;\n\n    private bool enabledForForm;\n    private float radius = 6f;\n    private float revealDuration = 4f;\n    private float cooldown = 5f;\n    private float cooldownTimer;\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData form)\n    {\n        enabledForForm = form != null && (form.hasSonar || form.primaryAbility == PrimaryAbility.Sonar);\n        radius = form != null ? Mathf.Max(1f, form.sonarRadius) : 6f;\n        revealDuration = form != null ? Mathf.Max(0.5f, form.sonarRevealDuration) : 4f;\n        cooldown = form != null ? Mathf.Max(0f, form.sonarCooldown) : 5f;\n    }\n\n    /// <summary>Emite o pulso (AbilityRouter — PrimaryAbility.Sonar).</summary>\n    public void TryPing()\n    {\n        if (!enabledForForm || cooldownTimer > 0f) return;\n\n        cooldownTimer = cooldown;\n\n        if (pingVfxPrefab != null)\n            Instantiate(pingVfxPrefab, transform.position, Quaternion.identity);\n\n        if (pingSound != null)\n            AudioManager.Instance?.PlaySEAtPoint(pingSound, transform.position);\n\n        var hits = Physics2D.OverlapCircleAll(transform.position, radius);\n\n        foreach (var hit in hits)\n        {\n            var revealable = hit.GetComponent<SonarRevealable>();\n            if (revealable != null) revealable.Reveal(revealDuration);\n        }\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(0.4f, 0.7f, 1f, 0.5f);\n        Gizmos.DrawWireSphere(transform.position, radius > 0f ? radius : 6f);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Instantânea, sem estado persistente — só o cooldown importa para a HUD.\n    void IAbility.Activate() => TryPing();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => cooldown;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do sonar.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
   "id": "script-abilities-sonarability-cs",
   "dependencyIds": [
-    "script-abilities-abilityrouter-cs",
+    "script-abilities-iability-cs",
     "script-forms-animalformdata-cs",
-    "script-test-animalsdebugpanel-cs",
+    "script-audio-audiomanager-cs",
     "script-abilities-iability-cs",
     "script-abilities-iactiveability-cs",
     "script-abilities-iformability-cs",
+    "script-forms-animalformdata-cs",
     "script-interactables-sonarrevealable-cs"
   ],
   "usedByIds": [

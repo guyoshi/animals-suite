@@ -76,8 +76,7 @@
     "NpcController"
   ],
   "used_by": [
-    "Condition_NpcReactionState",
-    "NpcController"
+    "Condition_NpcReactionState"
   ],
   "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Mostra ou escode este NPC explicitamente (NpcController.SetVisible) — útil\n/// para revelar um NPC a partir de outro evento (ex: depois de falar com o\n/// Ancião, um animal escondido aparece numa clareira) ou para o esconder após\n/// uma cutscene (ex: foge e desaparece).\n///\n/// Nota (Etapa 7): não combinar com \"visibilityConditions\" preenchida no mesmo\n/// NPC — a avaliação automática dessas condições sobrepõe-se a esta acção no\n/// frame seguinte. Usa um OU o outro mecanismo, não os dois.\n/// </summary>\n[System.Serializable]\npublic class Action_SetNpcVisible : NpcAction\n{\n    [Tooltip(\"true = mostra o NPC (sprite, colliders de trigger e movimento activos). false = esconde.\")]\n    public bool visible = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        npc.SetVisible(visible);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Muda a opacidade (alfa do SpriteRenderer) deste NPC, com transição opcional\n/// ao longo de \"duration\" segundos (0 = aplica imediatamente). Permite fazer um\n/// NPC desaparecer gradualmente (opacity = 0), ficar translúcido (ex: 0.5) ou\n/// voltar a ficar totalmente opaco (1) — sem afectar colliders/movimento (para\n/// esconder/mostrar \"a sério\", incluindo colisões, ver Action_SetNpcVisible).\n/// </summary>\n[System.Serializable]\npublic class Action_SetNpcOpacity : NpcAction\n{\n    [Tooltip(\"Opacidade final do sprite (0 = invisível, 1 = totalmente opaco).\")]\n    [Range(0f, 1f)] public float opacity = 1f;\n\n    [Tooltip(\"Duração da transição, em segundos. 0 = aplica imediatamente (sem transição).\")]\n    public float duration = 0f;\n\n    [Tooltip(\"Se activo, este evento espera a transição terminar antes de avançar para a ação seguinte. Se desactivado (omissão), a transição continua em segundo plano enquanto o evento prossegue (ex: diálogo continua enquanto o NPC se desfaz).\")]\n    public bool waitForCompletion = false;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var routine = npc.SetOpacity(opacity, duration);\n        if (waitForCompletion && routine != null)\n            yield return routine;\n    }\n}\n",
   "id": "script-npc-actions-visibilityactions-cs",
@@ -86,7 +85,6 @@
     "script-npc-npccontroller-cs"
   ],
   "usedByIds": [
-    "script-npc-conditions-npcstateconditions-cs",
-    "script-npc-npccontroller-cs"
+    "script-npc-conditions-npcstateconditions-cs"
   ]
 }

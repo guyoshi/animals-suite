@@ -253,6 +253,7 @@
   "id": "script-world-worldmapcamerarig-cs",
   "dependencyIds": [
     "script-world-worldmapconnection-cs",
+    "script-world-worldmapconnection-cs",
     "script-world-worldmapnode-cs"
   ],
   "usedByIds": [

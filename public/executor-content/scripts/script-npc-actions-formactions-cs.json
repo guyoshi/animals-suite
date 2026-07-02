@@ -48,6 +48,7 @@
   "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Abre o Menu de Pausa na secção \"Formas\" e toca a animação curta de\n/// revelação de \"form\" no seu ramo da árvore das transformações (Tarefa #9:\n/// \"Quando um animal novo é desbloqueado, essa tela abre, e aparece a\n/// animação do animal sendo revelado no ramo\").\n///\n/// Não marca o animal como libertado nem o desbloqueia para jogar — usar em\n/// conjunto com Action_FreeAnimal (RewardActions.cs), DEPOIS dessa acção, no\n/// mesmo evento de diálogo.\n/// </summary>\n[System.Serializable]\npublic class Action_RevealAnimalForm : NpcAction\n{\n    public AnimalFormData form;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        FormsSectionUI.Instance?.PlayUnlockReveal(form);\n        yield break;\n    }\n}\n",
   "id": "script-npc-actions-formactions-cs",
   "dependencyIds": [
+    "script-npc-actions-rewardactions-cs",
     "script-forms-animalformdata-cs",
     "script-ui-formssectionui-cs",
     "script-npc-npcaction-cs",

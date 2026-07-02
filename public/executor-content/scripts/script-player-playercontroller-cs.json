@@ -142,8 +142,7 @@
     "PlayerMotor2D"
   ],
   "used_by": [
-    "AbilityRouter",
-    "CameraManager"
+    "AbilityRouter"
   ],
   "source": "using UnityEngine;\n\npublic class PlayerController : MonoBehaviour\n{\n    [SerializeField] private PlayerInputRouter input;\n    [SerializeField] private PlayerMotor2D motor;\n    [SerializeField] private AbilityRouter abilities;\n\n    private System.Action _onJumpPressed;\n    private System.Action _onJumpReleased;\n    private System.Action _onAbilityPressed;\n    private System.Action _onAbilityReleased;\n    private System.Action _onAttackPressed;\n    private System.Action _onInteractPressed;\n\n    private void Awake()\n    {\n        if (input == null) input = GetComponent<PlayerInputRouter>();\n        if (motor == null) motor = GetComponent<PlayerMotor2D>();\n        if (abilities == null) abilities = GetComponent<AbilityRouter>();\n\n        // Tarefa #5: além de QueueJumpPressed/Released (salto normal), o\n        // botão de Saltar agora também activa/termina o Glide genérico\n        // (qualquer forma com canGlide) quando premido/largado no ar — ver\n        // AbilityRouter.OnJumpPressedAirborne/OnJumpReleasedAirborne.\n        _onJumpPressed = () =>\n        {\n            motor.QueueJumpPressed();\n            abilities?.OnJumpPressedAirborne();\n        };\n        _onJumpReleased = () =>\n        {\n            motor.QueueJumpReleased();\n            abilities?.OnJumpReleasedAirborne();\n        };\n\n        _onAbilityPressed = () => abilities?.OnAbilityPressed();\n        _onAbilityReleased = () => abilities?.OnAbilityReleased();\n\n        // P4: botão de ataque e botão de interagir (agarrar/escalar — sem botão dedicado).\n        _onAttackPressed = () => abilities?.OnAttackPressed();\n        _onInteractPressed = () => abilities?.OnInteractPressed();\n    }\n\n    private void OnEnable()\n    {\n        input.JumpPressed += _onJumpPressed;\n        input.JumpReleased += _onJumpReleased;\n\n        input.AbilityPressed += _onAbilityPressed;\n        input.AbilityReleased += _onAbilityReleased;\n\n        input.AttackPressed += _onAttackPressed;\n        input.InteractPressed += _onInteractPressed;\n    }\n\n    private void OnDisable()\n    {\n        input.JumpPressed -= _onJumpPressed;\n        input.JumpReleased -= _onJumpReleased;\n\n        input.AbilityPressed -= _onAbilityPressed;\n        input.AbilityReleased -= _onAbilityReleased;\n\n        input.AttackPressed -= _onAttackPressed;\n        input.InteractPressed -= _onInteractPressed;\n    }\n\n    private void Update()\n    {\n        motor.SetMoveX(input.Move.x);\n    }\n}\n",
   "id": "script-player-playercontroller-cs",
@@ -153,7 +152,6 @@
     "script-player-playermotor2d-cs"
   ],
   "usedByIds": [
-    "script-abilities-abilityrouter-cs",
-    "script-camera-cameramanager-cs"
+    "script-abilities-abilityrouter-cs"
   ]
 }

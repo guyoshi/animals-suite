@@ -16,46 +16,6 @@
   ],
   "fields": [
     {
-      "name": "panelRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "Referências",
-      "attrs": "[Header(\"Referências\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "imageElement",
-      "type": "Image",
-      "mods": "private",
-      "default": "",
-      "section": "Referências",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "titleText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Referências",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "descriptionText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "Referências",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "_input",
       "type": "PlayerInputRouter",
       "mods": "private",
@@ -138,13 +98,9 @@
     }
   ],
   "dependencies": [
-    "Action_ShowFullscreenImage",
-    "DiarySectionUI",
     "GamePauseUtil",
-    "INpcDialogueDisplay",
-    "NpcController",
-    "NpcDialogueBalloon",
-    "PlayerInputRouter"
+    "PlayerInputRouter",
+    "PlayerLocator"
   ],
   "used_by": [
     "Action_ShowFullscreenImage",
@@ -152,16 +108,12 @@
     "MissionData",
     "RumorData"
   ],
-  "source": "using System.Collections;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Overlay de imagem em ecrã inteiro (Sistema de Pistas/Rumores —\n/// Action_ShowFullscreenImage e reabertura de Pistas/Rumores a partir do\n/// Diário).\n///\n/// Mostra uma imagem (com título/descrição opcionais) por cima de tudo, com o\n/// fundo escurecido, e pausa o jogo (GamePauseUtil) enquanto estiver aberto.\n/// Fecha com o botão normal de Confirmar/Interagir (teclado OU comando —\n/// PlayerInputRouter.InteractPressed, tal como NpcDialogueBalloon).\n///\n/// NÃO implementa INpcDialogueDisplay — é um overlay independente do balão de\n/// diálogo. \"Show\" não recebe um NpcController: encontra o player via a tag\n/// \"Player\", para poder ser chamado tanto a partir de uma acção de diálogo\n/// (Action_ShowFullscreenImage) como a partir do Diário no Menu de Pausa\n/// (DiarySectionUI), onde não há nenhum NPC em contexto.\n///\n/// Configuração esperada (montar no Editor, normalmente dentro de um Canvas\n/// que fique por cima do resto da UI):\n/// - \"panelRoot\": GameObject raiz do overlay (fundo escurecido + imagem +\n///   textos), desactivado por defeito.\n/// - \"imageElement\": Image que mostra o sprite recebido.\n/// - \"titleText\"/\"descriptionText\": TMP_Text opcionais — são desactivados\n///   automaticamente se o respectivo texto vier vazio.\n/// </summary>\npublic class FullscreenImageUI : MonoBehaviour\n{\n    public static FullscreenImageUI Instance { get; private set; }\n\n    [Header(\"Referências\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private Image imageElement;\n    [SerializeField] private TMP_Text titleText;\n    [SerializeField] private TMP_Text descriptionText;\n\n    private PlayerInputRouter _input;\n    private bool _confirmPressed;\n\n    private void Awake()\n    {\n        Instance = this;\n\n        if (panelRoot != null)\n            panelRoot.SetActive(false);\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    private void OnDisable()\n    {\n        Unsubscribe();\n    }\n\n    /// <summary>True enquanto o overlay estiver visível (ex: para outros sistemas evitarem reagir ao mesmo toque de Interagir).</summary>\n    public bool IsOpen => panelRoot != null && panelRoot.activeSelf;\n\n    /// <summary>\n    /// Mostra \"image\" (com \"title\"/\"description\" opcionais) em ecrã inteiro,\n    /// pausa o jogo, e só retorna depois de o jogador premir\n    /// Confirmar/Interagir (teclado ou comando).\n    /// </summary>\n    public IEnumerator Show(Sprite image, string title, string description)\n    {\n        if (panelRoot == null)\n        {\n            Debug.LogWarning($\"[{name}] FullscreenImageUI: 'panelRoot' não está atribuído.\", this);\n            yield break;\n        }\n\n        if (imageElement != null)\n        {\n            imageElement.sprite = image;\n            imageElement.gameObject.SetActive(image != null);\n        }\n\n        if (titleText != null)\n        {\n            bool hasTitle = !string.IsNullOrEmpty(title);\n            titleText.gameObject.SetActive(hasTitle);\n            titleText.text = title;\n        }\n\n        if (descriptionText != null)\n        {\n            bool hasDescription = !string.IsNullOrEmpty(description);\n            descriptionText.gameObject.SetActive(hasDescription);\n            descriptionText.text = description;\n        }\n\n        // Só pausa/retoma se ainda não estava pausado (ex: reaberto a partir do\n        // Diário, com o Menu de Pausa já a usar GamePauseUtil) — evita\n        // despausar o jogo ao fechar a imagem nesse caso.\n        bool didPause = !GamePauseUtil.IsPaused;\n        if (didPause) GamePauseUtil.Pause();\n\n        panelRoot.SetActive(true);\n        Subscribe();\n\n        _confirmPressed = false;\n        while (!_confirmPressed)\n            yield return null;\n\n        Unsubscribe();\n        panelRoot.SetActive(false);\n\n        if (didPause) GamePauseUtil.Resume();\n    }\n\n    // ---------------- Input ----------------\n\n    private void Subscribe()\n    {\n        Unsubscribe();\n\n        var player = GameObject.FindGameObjectWithTag(\"Player\");\n        if (player == null) return;\n\n        _input = player.GetComponent<PlayerInputRouter>();\n        if (_input != null)\n            _input.InteractPressed += OnInteractPressed;\n    }\n\n    private void Unsubscribe()\n    {\n        if (_input != null)\n            _input.InteractPressed -= OnInteractPressed;\n\n        _input = null;\n    }\n\n    private void OnInteractPressed()\n    {\n        _confirmPressed = true;\n\n        // Mesma mitigação do conflito de InteractPressed usada por\n        // NpcDialogueBalloon: este toque pertence ao fecho da imagem em ecrã\n        // inteiro, outros sistemas não devem reagir a ele.\n        if (_input != null) _input.InteractConsumed = true;\n    }\n}\n",
+  "source": "using System.Collections;\nusing TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Overlay de imagem em ecrã inteiro (Sistema de Pistas/Rumores —\n/// Action_ShowFullscreenImage e reabertura de Pistas/Rumores a partir do\n/// Diário).\n///\n/// Mostra uma imagem (com título/descrição opcionais) por cima de tudo, com o\n/// fundo escurecido, e pausa o jogo (GamePauseUtil) enquanto estiver aberto.\n/// Fecha com o botão normal de Confirmar/Interagir (teclado OU comando —\n/// PlayerInputRouter.InteractPressed, tal como NpcDialogueBalloon).\n///\n/// NÃO implementa INpcDialogueDisplay — é um overlay independente do balão de\n/// diálogo. \"Show\" não recebe um NpcController: encontra o player via a tag\n/// \"Player\", para poder ser chamado tanto a partir de uma acção de diálogo\n/// (Action_ShowFullscreenImage) como a partir do Diário no Menu de Pausa\n/// (DiarySectionUI), onde não há nenhum NPC em contexto.\n///\n/// Configuração esperada (montar no Editor, normalmente dentro de um Canvas\n/// que fique por cima do resto da UI):\n/// - \"panelRoot\": GameObject raiz do overlay (fundo escurecido + imagem +\n///   textos), desactivado por defeito.\n/// - \"imageElement\": Image que mostra o sprite recebido.\n/// - \"titleText\"/\"descriptionText\": TMP_Text opcionais — são desactivados\n///   automaticamente se o respectivo texto vier vazio.\n/// </summary>\npublic class FullscreenImageUI : MonoBehaviour\n{\n    public static FullscreenImageUI Instance { get; private set; }\n\n    [Header(\"Referências\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private Image imageElement;\n    [SerializeField] private TMP_Text titleText;\n    [SerializeField] private TMP_Text descriptionText;\n\n    private PlayerInputRouter _input;\n    private bool _confirmPressed;\n\n    private void Awake()\n    {\n        Instance = this;\n\n        if (panelRoot != null)\n            panelRoot.SetActive(false);\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    private void OnDisable()\n    {\n        Unsubscribe();\n    }\n\n    /// <summary>True enquanto o overlay estiver visível (ex: para outros sistemas evitarem reagir ao mesmo toque de Interagir).</summary>\n    public bool IsOpen => panelRoot != null && panelRoot.activeSelf;\n\n    /// <summary>\n    /// Mostra \"image\" (com \"title\"/\"description\" opcionais) em ecrã inteiro,\n    /// pausa o jogo, e só retorna depois de o jogador premir\n    /// Confirmar/Interagir (teclado ou comando).\n    /// </summary>\n    public IEnumerator Show(Sprite image, string title, string description)\n    {\n        if (panelRoot == null)\n        {\n            Debug.LogWarning($\"[{name}] FullscreenImageUI: 'panelRoot' não está atribuído.\", this);\n            yield break;\n        }\n\n        if (imageElement != null)\n        {\n            imageElement.sprite = image;\n            imageElement.gameObject.SetActive(image != null);\n        }\n\n        if (titleText != null)\n        {\n            bool hasTitle = !string.IsNullOrEmpty(title);\n            titleText.gameObject.SetActive(hasTitle);\n            titleText.text = title;\n        }\n\n        if (descriptionText != null)\n        {\n            bool hasDescription = !string.IsNullOrEmpty(description);\n            descriptionText.gameObject.SetActive(hasDescription);\n            descriptionText.text = description;\n        }\n\n        // Só pausa/retoma se ainda não estava pausado (ex: reaberto a partir do\n        // Diário, com o Menu de Pausa já a usar GamePauseUtil) — evita\n        // despausar o jogo ao fechar a imagem nesse caso.\n        bool didPause = !GamePauseUtil.IsPaused;\n        if (didPause) GamePauseUtil.Pause();\n\n        panelRoot.SetActive(true);\n        Subscribe();\n\n        _confirmPressed = false;\n        while (!_confirmPressed)\n            yield return null;\n\n        Unsubscribe();\n        panelRoot.SetActive(false);\n\n        if (didPause) GamePauseUtil.Resume();\n    }\n\n    // ---------------- Input ----------------\n\n    private void Subscribe()\n    {\n        Unsubscribe();\n\n        var playerT = PlayerLocator.Find();\n        if (playerT == null) return;\n\n        _input = playerT.GetComponent<PlayerInputRouter>();\n        if (_input != null)\n            _input.InteractPressed += OnInteractPressed;\n    }\n\n    private void Unsubscribe()\n    {\n        if (_input != null)\n            _input.InteractPressed -= OnInteractPressed;\n\n        _input = null;\n    }\n\n    private void OnInteractPressed()\n    {\n        _confirmPressed = true;\n\n        // Mesma mitigação do conflito de InteractPressed usada por\n        // NpcDialogueBalloon: este toque pertence ao fecho da imagem em ecrã\n        // inteiro, outros sistemas não devem reagir a ele.\n        if (_input != null) _input.InteractConsumed = true;\n    }\n}\n",
   "id": "script-ui-fullscreenimageui-cs",
   "dependencyIds": [
-    "script-npc-actions-journalactions-cs",
-    "script-ui-diarysectionui-cs",
     "script-npc-pauseutil-cs",
-    "script-npc-npcinterfaces-cs",
-    "script-npc-npccontroller-cs",
-    "script-npc-dialogue-npcdialogueballoon-cs",
-    "script-input-playerinputrouter-cs"
+    "script-input-playerinputrouter-cs",
+    "script-player-playerlocator-cs"
   ],
   "usedByIds": [
     "script-npc-actions-journalactions-cs",

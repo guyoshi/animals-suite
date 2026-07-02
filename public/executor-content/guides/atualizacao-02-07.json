@@ -1,0 +1,67 @@
+{
+  "slug": "atualizacao-02-07",
+  "title": "Migração e validação do backup técnico 02/07",
+  "category": "Atualização técnica",
+  "source": "Scripts backup 02-07.rar",
+  "summary": "Passo a passo para importar, configurar e testar as mudanças técnicas do backup 02/07.",
+  "html": "<h1 id=\"inicio\">Migração e validação do backup técnico 02/07</h1>\n<p>Este guia reúne as alterações técnicas introduzidas no backup de 02/07 e explica como importá-las, configurá-las e testá-las no Unity sem perder o progresso do projeto.</p>\n<h2 id=\"antes-de-importar\">1. Antes de importar</h2>\n<ol><li>Feche o Unity e faça uma cópia completa da pasta do projeto.</li><li>Confirme que o projeto usa Unity 6 e que não existem erros de compilação antes da troca.</li><li>Guarde uma cópia do backup técnico anterior para comparação.</li></ol>\n<h2 id=\"importacao\">2. Importação segura</h2>\n<ol><li>Copie a pasta <code>Scripts</code> do backup 02/07 para <code>Assets/Scripts</code>.</li><li>Confirme a substituição dos ficheiros existentes e mantenha os ficheiros <code>.meta</code>.</li><li>Abra o Unity e aguarde a recompilação terminar antes de entrar em Play Mode.</li></ol>\n<h2 id=\"novos-scripts\">3. Novos scripts</h2>\n<ul><li><strong>PlayerLocator:</strong> referência central do Player atual. Deve existir apenas uma fonte ativa e ser usada pelos sistemas que precisam reencontrar o Player depois de mudanças de cena ou forma.</li><li><strong>PlayerProgress.AreaProgress:</strong> separa e restaura progresso por área.</li><li><strong>PlayerProgress.WorldProgress:</strong> separa e restaura progresso por mundo, bosses e estados associados.</li><li><strong>GameDataValidatorBuildPreprocess:</strong> executa o validador antes da build e bloqueia builds com erros críticos.</li></ul>\n<h2 id=\"save\">4. Save e compatibilidade</h2>\n<p>O SaveManager passa a manter uma cópia <code>.bak</code>, tenta recuperar um save principal corrompido e permite eliminar os dois ficheiros juntos. GameVariables incorpora valores padrão novos em saves antigos. PlayerProgress restaura corretamente áreas, mundos, bosses, Runas de Apolo, snapshots e inventário.</p>\n<h2 id=\"unity6\">5. Unity 6 e referências</h2>\n<p>Os scripts atualizados usam as APIs modernas do Unity 6, incluindo <code>linearVelocity</code>, <code>linearDamping</code> e pesquisas modernas de objetos. Não reverta para APIs antigas apenas para remover avisos.</p>\n<h2 id=\"eventos\">6. Eventos e Domain Reload</h2>\n<p>Eventos estáticos importantes são limpos na inicialização para evitar inscrições duplicadas quando a opção Domain Reload está desativada. Teste entrar e sair do Play Mode várias vezes.</p>\n<h2 id=\"jukebox\">7. Jukebox e Melodias Selvagens</h2>\n<p>Ao recolher uma Melodia Selvagem, o Jukebox atualiza a lista imediatamente. Confirme que apenas melodias recolhidas aparecem e que Favoritos continuam persistentes.</p>\n<h2 id=\"itens-debug\">8. Itens e painel de debug</h2>\n<p>O uso de itens possui adaptador para UnityEvent. O AnimalsDebugPanel deixa de modificar listas de leitura direta e deve ser testado para conceder e remover recursos, formas, upgrades e viagens.</p>\n<h2 id=\"validacao\">9. Validação antes da build</h2>\n<ol><li>Abra o validador de dados e corrija todos os erros críticos.</li><li>Teste save novo, save antigo, recuperação pelo <code>.bak</code> e exclusão do slot.</li><li>Teste troca de cena, transformação, morte, Jukebox, missões e painel de debug.</li><li>Gere uma build de desenvolvimento. O preprocessador deve permitir a build apenas sem erros críticos.</li></ol>\n<h2 id=\"resultado\">10. Resultado esperado</h2>\n<p>O projeto compila no Unity 6, carrega saves antigos, recupera backups válidos, mantém referências do Player, atualiza o Jukebox em tempo real e bloqueia builds com dados inválidos.</p>",
+  "toc": [
+    {
+      "id": "inicio",
+      "level": 1,
+      "label": "Migração e validação do backup técnico 02/07"
+    },
+    {
+      "id": "antes-de-importar",
+      "level": 2,
+      "label": "1. Antes de importar"
+    },
+    {
+      "id": "importacao",
+      "level": 2,
+      "label": "2. Importação segura"
+    },
+    {
+      "id": "novos-scripts",
+      "level": 2,
+      "label": "3. Novos scripts"
+    },
+    {
+      "id": "save",
+      "level": 2,
+      "label": "4. Save e compatibilidade"
+    },
+    {
+      "id": "unity6",
+      "level": 2,
+      "label": "5. Unity 6 e referências"
+    },
+    {
+      "id": "eventos",
+      "level": 2,
+      "label": "6. Eventos e Domain Reload"
+    },
+    {
+      "id": "jukebox",
+      "level": 2,
+      "label": "7. Jukebox e Melodias Selvagens"
+    },
+    {
+      "id": "itens-debug",
+      "level": 2,
+      "label": "8. Itens e painel de debug"
+    },
+    {
+      "id": "validacao",
+      "level": 2,
+      "label": "9. Validação antes da build"
+    },
+    {
+      "id": "resultado",
+      "level": 2,
+      "label": "10. Resultado esperado"
+    }
+  ],
+  "searchText": "Migração e validação do backup técnico 02/07 Este guia reúne as alterações técnicas introduzidas no backup de 02/07 e explica como importá-las, configurá-las e testá-las no Unity sem perder o progresso do projeto. 1. Antes de importar Feche o Unity e faça uma cópia completa da pasta do projeto. Confirme que o projeto usa Unity 6 e que não existem erros de compilação antes da troca. Guarde uma cópia do backup técnico anterior para comparação. 2. Importação segura Copie a pasta Scripts do backup 02/07 para Assets/Scripts . Confirme a substituição dos ficheiros existentes e mantenha os ficheiros .meta . Abra o Unity e aguarde a recompilação terminar antes de entrar em Play Mode. 3. Novos scripts PlayerLocator: referência central do Player atual. Deve existir apenas uma fonte ativa e ser usada pelos sistemas que precisam reencontrar o Player depois de mudanças de cena ou forma. PlayerProgress.AreaProgress: separa e restaura progresso por área. PlayerProgress.WorldProgress: separa e restaura progresso por mundo, bosses e estados associados. GameDataValidatorBuildPreprocess: executa o validador antes da build e bloqueia builds com erros críticos. 4. Save e compatibilidade O SaveManager passa a manter uma cópia .bak , tenta recuperar um save principal corrompido e permite eliminar os dois ficheiros juntos. GameVariables incorpora valores padrão novos em saves antigos. PlayerProgress restaura corretamente áreas, mundos, bosses, Runas de Apolo, snapshots e inventário. 5. Unity 6 e referências Os scripts atualizados usam as APIs modernas do Unity 6, incluindo linearVelocity , linearDamping e pesquisas modernas de objetos. Não reverta para APIs antigas apenas para remover avisos. 6. Eventos e Domain Reload Eventos estáticos importantes são limpos na inicialização para evitar inscrições duplicadas quando a opção Domain Reload está desativada. Teste entrar e sair do Play Mode várias vezes. 7. Jukebox e Melodias Selvagens Ao recolher uma Melodia Selvagem, o Jukebox atualiza a lista imediatamente. Confirme que apenas melodias recolhidas aparecem e que Favoritos continuam persistentes. 8. Itens e painel de debug O uso de itens possui adaptador para UnityEvent. O AnimalsDebugPanel deixa de modificar listas de leitura direta e deve ser testado para conceder e remover recursos, formas, upgrades e viagens. 9. Validação antes da build Abra o validador de dados e corrija todos os erros críticos. Teste save novo, save antigo, recuperação pelo .bak e exclusão do slot. Teste troca de cena, transformação, morte, Jukebox, missões e painel de debug. Gere uma build de desenvolvimento. O preprocessador deve permitir a build apenas sem erros críticos. 10. Resultado esperado O projeto compila no Unity 6, carrega saves antigos, recupera backups válidos, mantém referências do Player, atualiza o Jukebox em tempo real e bloqueia builds com dados inválidos.",
+  "historical": false
+}

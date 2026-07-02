@@ -489,7 +489,6 @@
     "MainMenuOptionsUI",
     "OptionsSectionUI",
     "PlayerFeedback",
-    "PlayerProgress",
     "PostGameAuraController",
     "RumbleManager",
     "VfxPoolManager"
@@ -512,7 +511,6 @@
     "script-ui-mainmenuoptionsui-cs",
     "script-ui-optionssectionui-cs",
     "script-player-playerfeedback-cs",
-    "script-data-playerprogress-cs",
     "script-player-postgameauracontroller-cs",
     "script-combat-rumblemanager-cs",
     "script-combat-vfxpoolmanager-cs"

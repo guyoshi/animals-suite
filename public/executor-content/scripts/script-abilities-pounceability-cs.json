@@ -86,16 +86,6 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "CooldownRemaining",
-      "type": "float",
-      "mods": "public",
-      "default": "> Mathf.Max(0f, cooldownTimer)",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "CooldownDuration",
       "type": "float",
       "mods": "public",
@@ -190,32 +180,28 @@
   ],
   "dependencies": [
     "AbilityCancelReason",
-    "AbilityRouter",
     "AnimalFormData",
-    "ChargeAbility",
     "EnemyHealth",
     "IAbility",
     "IActiveAbility",
     "IFormAbility",
-    "PlayerAttack",
     "PlayerMotor2D",
     "PrimaryAbility"
   ],
   "used_by": [
     "AbilityRouter"
   ],
-  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #7 — Onça-pintada: salto ofensivo que impulsiona o corpo\n/// automaticamente contra o inimigo mais próximo dentro de\n/// <see cref=\"AnimalFormData.pounceRange\"/> (ou na direcção em que o player\n/// está virado, se nenhum inimigo estiver no alcance).\n///\n/// O dano é aplicado \"de borla\" via PlayerAttack.damageWhileDashing enquanto\n/// motor.IsDashing estiver activo — tal como ChargeAbility, sem necessidade\n/// de chamar EnemyHealth.TakeDamage directamente aqui.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class PounceAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private bool enabledForForm;\n    private AnimalFormData form;\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    private float cooldownTimer;\n    private Coroutine pounceRoutine;\n\n    /// <summary>true enquanto o salto ofensivo está em curso.</summary>\n    public bool IsPouncing => pounceRoutine != null;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.Pounce;\n        if (!enabledForForm) StopPounceIfRunning();\n    }\n\n    /// <summary>Chamado pelo AbilityRouter (botão de Habilidade).</summary>\n    public void TryPounce()\n    {\n        if (!enabledForForm || cooldownTimer > 0f || pounceRoutine != null) return;\n        if (motor.MovementLocked) return;\n\n        pounceRoutine = StartCoroutine(PounceRoutine());\n    }\n\n    private IEnumerator PounceRoutine()\n    {\n        cooldownTimer = form.pounceCooldown;\n\n        Vector2 dir = FindTargetDirection();\n\n        motor.SetMovementLocked(true, this);\n        motor.SetDashing(true);\n\n        float elapsed = 0f;\n        while (elapsed < form.pounceDuration)\n        {\n            rb.velocity = dir * form.pounceSpeed;\n            elapsed += Time.fixedDeltaTime;\n            yield return new WaitForFixedUpdate();\n        }\n\n        EndPounce();\n    }\n\n    /// <summary>Direcção do inimigo mais próximo dentro de pounceRange, ou a direcção em que o player está virado.</summary>\n    private Vector2 FindTargetDirection()\n    {\n        int facing = motor.FacingSign != 0 ? motor.FacingSign : 1;\n        Vector2 fallback = new Vector2(facing, 0.35f).normalized;\n\n        var hits = Physics2D.OverlapCircleAll(transform.position, form.pounceRange);\n        EnemyHealth nearest = null;\n        float bestDist = float.MaxValue;\n\n        foreach (var hit in hits)\n        {\n            var enemyHealth = hit.GetComponentInParent<EnemyHealth>();\n            if (enemyHealth == null) continue;\n\n            float dist = Vector2.Distance(transform.position, hit.transform.position);\n            if (dist < bestDist)\n            {\n                bestDist = dist;\n                nearest = enemyHealth;\n            }\n        }\n\n        if (nearest == null) return fallback;\n\n        Vector2 toTarget = (Vector2)nearest.transform.position - (Vector2)transform.position;\n        return toTarget.sqrMagnitude > 0.01f ? toTarget.normalized : fallback;\n    }\n\n    private void EndPounce()\n    {\n        motor.SetDashing(false);\n        motor.SetMovementLocked(false, this);\n        pounceRoutine = null;\n    }\n\n    private void StopPounceIfRunning()\n    {\n        if (pounceRoutine == null) return;\n        StopCoroutine(pounceRoutine);\n        EndPounce();\n    }\n\n    public void Cancel(AbilityCancelReason reason) => StopPounceIfRunning();\n\n    void IAbility.Activate() => TryPounce();\n    void IAbility.Release() { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => pounceRoutine != null;\n    public float CooldownDuration => form != null ? form.pounceCooldown : 0f;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && pounceRoutine == null && !motor.MovementLocked;\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #7 — Onça-pintada: salto ofensivo que impulsiona o corpo\n/// automaticamente contra o inimigo mais próximo dentro de\n/// <see cref=\"AnimalFormData.pounceRange\"/> (ou na direcção em que o player\n/// está virado, se nenhum inimigo estiver no alcance).\n///\n/// O dano é aplicado \"de borla\" via PlayerAttack.damageWhileDashing enquanto\n/// motor.IsDashing estiver activo — tal como ChargeAbility, sem necessidade\n/// de chamar EnemyHealth.TakeDamage directamente aqui.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class PounceAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private bool enabledForForm;\n    private AnimalFormData form;\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    private float cooldownTimer;\n    private Coroutine pounceRoutine;\n\n    /// <summary>true enquanto o salto ofensivo está em curso.</summary>\n    public bool IsPouncing => pounceRoutine != null;\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.Pounce;\n        if (!enabledForForm) StopPounceIfRunning();\n    }\n\n    /// <summary>Chamado pelo AbilityRouter (botão de Habilidade).</summary>\n    public void TryPounce()\n    {\n        if (!enabledForForm || cooldownTimer > 0f || pounceRoutine != null) return;\n        if (motor.MovementLocked) return;\n\n        pounceRoutine = StartCoroutine(PounceRoutine());\n    }\n\n    private IEnumerator PounceRoutine()\n    {\n        cooldownTimer = form.pounceCooldown;\n\n        Vector2 dir = FindTargetDirection();\n\n        motor.SetMovementLocked(true, this);\n        motor.SetDashing(true);\n\n        float elapsed = 0f;\n        while (elapsed < form.pounceDuration)\n        {\n            rb.linearVelocity = dir * form.pounceSpeed;\n            elapsed += Time.fixedDeltaTime;\n            yield return new WaitForFixedUpdate();\n        }\n\n        EndPounce();\n    }\n\n    /// <summary>Direcção do inimigo mais próximo dentro de pounceRange, ou a direcção em que o player está virado.</summary>\n    private Vector2 FindTargetDirection()\n    {\n        int facing = motor.FacingSign != 0 ? motor.FacingSign : 1;\n        Vector2 fallback = new Vector2(facing, 0.35f).normalized;\n\n        var hits = Physics2D.OverlapCircleAll(transform.position, form.pounceRange);\n        EnemyHealth nearest = null;\n        float bestDist = float.MaxValue;\n\n        foreach (var hit in hits)\n        {\n            var enemyHealth = hit.GetComponentInParent<EnemyHealth>();\n            if (enemyHealth == null) continue;\n\n            float dist = Vector2.Distance(transform.position, hit.transform.position);\n            if (dist < bestDist)\n            {\n                bestDist = dist;\n                nearest = enemyHealth;\n            }\n        }\n\n        if (nearest == null) return fallback;\n\n        Vector2 toTarget = (Vector2)nearest.transform.position - (Vector2)transform.position;\n        return toTarget.sqrMagnitude > 0.01f ? toTarget.normalized : fallback;\n    }\n\n    private void EndPounce()\n    {\n        motor.SetDashing(false);\n        motor.SetMovementLocked(false, this);\n        pounceRoutine = null;\n    }\n\n    private void StopPounceIfRunning()\n    {\n        if (pounceRoutine == null) return;\n        StopCoroutine(pounceRoutine);\n        EndPounce();\n    }\n\n    public void Cancel(AbilityCancelReason reason) => StopPounceIfRunning();\n\n    void IAbility.Activate() => TryPounce();\n    void IAbility.Release() { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => pounceRoutine != null;\n    public float CooldownDuration => form != null ? form.pounceCooldown : 0f;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && pounceRoutine == null && !motor.MovementLocked;\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
   "id": "script-abilities-pounceability-cs",
   "dependencyIds": [
-    "script-abilities-abilityrouter-cs",
+    "script-abilities-iability-cs",
     "script-forms-animalformdata-cs",
-    "script-abilities-chargeability-cs",
     "script-enemy-enemyhealth-cs",
     "script-abilities-iability-cs",
     "script-abilities-iactiveability-cs",
     "script-abilities-iformability-cs",
-    "script-player-playerattack-cs",
-    "script-player-playermotor2d-cs"
+    "script-player-playermotor2d-cs",
+    "script-forms-animalformdata-cs"
   ],
   "usedByIds": [
     "script-abilities-abilityrouter-cs"

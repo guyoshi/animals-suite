@@ -1774,5 +1774,29 @@
     "stepCount": 8,
     "scripts": [],
     "guide": ""
+  },
+  {
+    "id": "build-mission-097",
+    "legacyId": 97,
+    "number": 97,
+    "stageId": "build-stage-08",
+    "phase": "Fase 8 — Polimento e lançamento",
+    "title": "Migrar e validar o backup técnico 02/07",
+    "summary": "Importar os 282 scripts, validar saves, PlayerLocator, Jukebox, eventos e o bloqueio automático de builds com dados inválidos.",
+    "detailed": true,
+    "roadmap": false,
+    "taskCount": 6,
+    "stepCount": 24,
+    "scripts": [
+      "PlayerLocator",
+      "PlayerProgress",
+      "SaveManager",
+      "GameVariables",
+      "GameDataValidatorBuildPreprocess",
+      "JukeboxSectionUI",
+      "WildMelodyPickup",
+      "AnimalsDebugPanel"
+    ],
+    "guide": "atualizacao-02-07"
   }
 ]

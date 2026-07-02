@@ -133,14 +133,30 @@
     "NpcController",
     "VariableScope"
   ],
-  "used_by": [],
+  "used_by": [
+    "ChallengeDefinition",
+    "Condition_HasItemQuantity",
+    "EmblemData",
+    "FailCondition_BoolVariable",
+    "MissionData",
+    "Objective_BoolVariable"
+  ],
   "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>Operação numérica usada por Action_SetIntVariable / Action_SetFloatVariable.</summary>\npublic enum VariableNumberOp\n{\n    Set,\n    Add,\n    Subtract\n}\n\n/// <summary>\n/// Define o valor de uma variável bool (Etapa 8 — ver GameVariable/GameVariables).\n/// Se a variável ainda não existir (em Global ou nas Variáveis Locais do NPC),\n/// é criada automaticamente com este nome.\n/// </summary>\n[System.Serializable]\npublic class Action_SetBoolVariable : NpcAction\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir ainda, é criada automaticamente com este nome.\")]\n    public string variableName;\n\n    public bool value = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        GameVariableUtil.SetBool(npc, scope, variableName, value);\n        yield break;\n    }\n}\n\n/// <summary>Inverte o valor actual de uma variável bool (true→false, false→true).</summary>\n[System.Serializable]\npublic class Action_ToggleBoolVariable : NpcAction\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir ainda, é criada automaticamente (a começar em false, ficando true após o toggle).\")]\n    public string variableName;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        bool current = GameVariableUtil.GetBool(npc, scope, variableName);\n        GameVariableUtil.SetBool(npc, scope, variableName, !current);\n        yield break;\n    }\n}\n\n/// <summary>Define, soma ou subtrai um valor a uma variável int.</summary>\n[System.Serializable]\npublic class Action_SetIntVariable : NpcAction\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir ainda, é criada automaticamente com este nome.\")]\n    public string variableName;\n\n    [Tooltip(\"Set = define o valor directamente. Add/Subtract = soma/subtrai ao valor actual da variável.\")]\n    public VariableNumberOp operation = VariableNumberOp.Set;\n\n    public int value;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        int result = value;\n\n        if (operation != VariableNumberOp.Set)\n        {\n            int current = GameVariableUtil.GetInt(npc, scope, variableName);\n            result = operation == VariableNumberOp.Add ? current + value : current - value;\n        }\n\n        GameVariableUtil.SetInt(npc, scope, variableName, result);\n        yield break;\n    }\n}\n\n/// <summary>Define, soma ou subtrai um valor a uma variável float.</summary>\n[System.Serializable]\npublic class Action_SetFloatVariable : NpcAction\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir ainda, é criada automaticamente com este nome.\")]\n    public string variableName;\n\n    [Tooltip(\"Set = define o valor directamente. Add/Subtract = soma/subtrai ao valor actual da variável.\")]\n    public VariableNumberOp operation = VariableNumberOp.Set;\n\n    public float value;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        float result = value;\n\n        if (operation != VariableNumberOp.Set)\n        {\n            float current = GameVariableUtil.GetFloat(npc, scope, variableName);\n            result = operation == VariableNumberOp.Add ? current + value : current - value;\n        }\n\n        GameVariableUtil.SetFloat(npc, scope, variableName, result);\n        yield break;\n    }\n}\n\n/// <summary>Define o valor de uma variável de texto.</summary>\n[System.Serializable]\npublic class Action_SetStringVariable : NpcAction\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir ainda, é criada automaticamente com este nome.\")]\n    public string variableName;\n\n    public string value;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        GameVariableUtil.SetString(npc, scope, variableName, value);\n        yield break;\n    }\n}\n",
   "id": "script-npc-actions-variableactions-cs",
   "dependencyIds": [
     "script-data-gamevariable-cs",
+    "script-data-gamevariable-cs",
     "script-data-gamevariables-cs",
     "script-npc-npcaction-cs",
-    "script-npc-npccontroller-cs"
+    "script-npc-npccontroller-cs",
+    "script-data-gamevariable-cs"
   ],
-  "usedByIds": []
+  "usedByIds": [
+    "script-data-challengedefinition-cs",
+    "script-npc-conditions-missionconditions-cs",
+    "script-data-emblemdata-cs",
+    "script-data-objectives-challengefailconditions-variables-cs",
+    "script-data-missiondata-cs",
+    "script-data-objectives-challengeobjectives-variables-cs"
+  ]
 }

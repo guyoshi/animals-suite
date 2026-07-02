@@ -16,72 +16,12 @@
   ],
   "fields": [
     {
-      "name": "globalLight",
-      "type": "Light2D",
-      "mods": "private",
-      "default": "",
-      "section": "Reference",
-      "attrs": "[Header(\"Reference\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "cycleLength",
+      "name": "time01",
       "type": "float",
-      "mods": "private",
-      "default": "180f",
+      "mods": "public",
+      "default": "0f",
       "section": "Cycle",
-      "attrs": "[Header(\"Cycle\")] [Tooltip(\"Seconds for a full cycle: Day -> Dusk -> Night -> Day\")] [SerializeField]",
-      "inspector": true,
-      "description": "Seconds for a full cycle: Day -> Dusk -> Night -> Day"
-    },
-    {
-      "name": "autoRun",
-      "type": "bool",
-      "mods": "private",
-      "default": "true",
-      "section": "Cycle",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "afternoonStart",
-      "type": "float",
-      "mods": "public",
-      "default": "0.25f",
-      "section": "Hora do Dia (para WorldState / condições de NPC)",
-      "attrs": "[Header(\"Hora do Dia (para WorldState / condições de NPC)\")] [Tooltip(\"A partir daqui (0-1) considera-se 'Tarde'.\")] [Range(0f, 1f)]",
-      "inspector": true,
-      "description": "A partir daqui (0-1) considera-se 'Tarde'."
-    },
-    {
-      "name": "nightStart",
-      "type": "float",
-      "mods": "public",
-      "default": "0.5f",
-      "section": "Hora do Dia (para WorldState / condições de NPC)",
-      "attrs": "[Tooltip(\"A partir daqui (0-1) considera-se 'Noite'.\")] [Range(0f, 1f)]",
-      "inspector": true,
-      "description": "A partir daqui (0-1) considera-se 'Noite'."
-    },
-    {
-      "name": "dawnStart",
-      "type": "float",
-      "mods": "public",
-      "default": "0.75f",
-      "section": "Hora do Dia (para WorldState / condições de NPC)",
-      "attrs": "[Tooltip(\"A partir daqui (0-1) considera-se 'Madrugada'.\")] [Range(0f, 1f)]",
-      "inspector": true,
-      "description": "A partir daqui (0-1) considera-se 'Madrugada'."
-    },
-    {
-      "name": "dayColor",
-      "type": "Color",
-      "mods": "public",
-      "default": "new Color(1f, 0.98f, 0.92f)",
-      "section": "Presets",
-      "attrs": "[Header(\"Presets\")]",
+      "attrs": "[Range(0f, 1f)]",
       "inspector": true,
       "description": "Referência/configuração usada por este comportamento."
     },
@@ -96,30 +36,10 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "duskColor",
-      "type": "Color",
-      "mods": "public",
-      "default": "new Color(1f, 0.62f, 0.35f)",
-      "section": "Presets",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "duskIntensity",
       "type": "float",
       "mods": "public",
       "default": "0.75f",
-      "section": "Presets",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "nightColor",
-      "type": "Color",
-      "mods": "public",
-      "default": "new Color(0.25f, 0.35f, 0.60f)",
       "section": "Presets",
       "attrs": "",
       "inspector": true,
@@ -207,17 +127,16 @@
   ],
   "used_by": [
     "Action_SetManualWeather",
-    "ShopData",
-    "WorldState"
+    "ShopData"
   ],
-  "source": "using UnityEngine;\nusing UnityEngine.Rendering.Universal; // Se der erro, troca para: UnityEngine.Experimental.Rendering.Universal\n\npublic class DayNightCycle2D : MonoBehaviour\n{\n    [Header(\"Reference\")]\n    [SerializeField] private Light2D globalLight;\n\n    [Header(\"Cycle\")]\n    [Tooltip(\"Seconds for a full cycle: Day -> Dusk -> Night -> Day\")]\n    [SerializeField] private float cycleLength = 180f;\n\n    [SerializeField] private bool autoRun = true;\n\n    [Range(0f, 1f)]\n    public float time01 = 0f; // 0..1 (debug / manual control)\n\n    [Header(\"Hora do Dia (para WorldState / condições de NPC)\")]\n    [Tooltip(\"A partir daqui (0-1) considera-se 'Tarde'.\")]\n    [Range(0f, 1f)] public float afternoonStart = 0.25f;\n    [Tooltip(\"A partir daqui (0-1) considera-se 'Noite'.\")]\n    [Range(0f, 1f)] public float nightStart = 0.5f;\n    [Tooltip(\"A partir daqui (0-1) considera-se 'Madrugada'.\")]\n    [Range(0f, 1f)] public float dawnStart = 0.75f;\n\n    [Header(\"Presets\")]\n    public Color dayColor = new Color(1f, 0.98f, 0.92f);\n    public float dayIntensity = 1.1f;\n\n    public Color duskColor = new Color(1f, 0.62f, 0.35f);\n    public float duskIntensity = 0.75f;\n\n    public Color nightColor = new Color(0.25f, 0.35f, 0.60f);\n    public float nightIntensity = 0.35f;\n\n    private void Reset()\n    {\n        globalLight = FindObjectOfType<Light2D>();\n    }\n\n    private void Update()\n    {\n        if (autoRun)\n        {\n            time01 += Time.deltaTime / Mathf.Max(0.01f, cycleLength);\n            if (time01 > 1f) time01 -= 1f;\n        }\n\n        WorldState.Instance?.SetTimeOfDay(GetTimeOfDay());\n\n        if (globalLight == null) return;\n\n        ApplyLighting(time01);\n    }\n\n    /// <summary>Converte time01 num TimeOfDay para o WorldState (condições de NPC).</summary>\n    public TimeOfDay GetTimeOfDay()\n    {\n        if (time01 < afternoonStart) return TimeOfDay.Manha;\n        if (time01 < nightStart) return TimeOfDay.Tarde;\n        if (time01 < dawnStart) return TimeOfDay.Noite;\n        return TimeOfDay.Madrugada;\n    }\n\n    public void ApplyLighting(float t)\n    {\n        // 0.00 -> 0.45 : Day to Dusk\n        // 0.45 -> 0.65 : Dusk to Night\n        // 0.65 -> 1.00 : Night to Day\n        if (t < 0.45f)\n        {\n            float u = Mathf.InverseLerp(0f, 0.45f, t);\n            SetLight(Color.Lerp(dayColor, duskColor, Smooth(u)),\n                     Mathf.Lerp(dayIntensity, duskIntensity, Smooth(u)));\n        }\n        else if (t < 0.65f)\n        {\n            float u = Mathf.InverseLerp(0.45f, 0.65f, t);\n            SetLight(Color.Lerp(duskColor, nightColor, Smooth(u)),\n                     Mathf.Lerp(duskIntensity, nightIntensity, Smooth(u)));\n        }\n        else\n        {\n            float u = Mathf.InverseLerp(0.65f, 1f, t);\n            SetLight(Color.Lerp(nightColor, dayColor, Smooth(u)),\n                     Mathf.Lerp(nightIntensity, dayIntensity, Smooth(u)));\n        }\n    }\n\n    private static float Smooth(float x) => x * x * (3f - 2f * x);\n\n    private void SetLight(Color c, float i)\n    {\n        globalLight.color = c;\n        globalLight.intensity = i;\n    }\n\n    // Handy debug buttons (call from inspector via context menu or UI)\n    public void SetDay()  { autoRun = false; time01 = 0.10f; ApplyLighting(time01); }\n    public void SetDusk() { autoRun = false; time01 = 0.50f; ApplyLighting(time01); }\n    public void SetNight(){ autoRun = false; time01 = 0.80f; ApplyLighting(time01); }\n}\n",
+  "source": "using UnityEngine;\nusing UnityEngine.Rendering.Universal; // Se der erro, troca para: UnityEngine.Experimental.Rendering.Universal\n\npublic class DayNightCycle2D : MonoBehaviour\n{\n    [Header(\"Reference\")]\n    [SerializeField] private Light2D globalLight;\n\n    [Header(\"Cycle\")]\n    [Tooltip(\"Seconds for a full cycle: Day -> Dusk -> Night -> Day\")]\n    [SerializeField] private float cycleLength = 180f;\n\n    [SerializeField] private bool autoRun = true;\n\n    [Range(0f, 1f)]\n    public float time01 = 0f; // 0..1 (debug / manual control)\n\n    [Header(\"Hora do Dia (para WorldState / condições de NPC)\")]\n    [Tooltip(\"A partir daqui (0-1) considera-se 'Tarde'.\")]\n    [Range(0f, 1f)] public float afternoonStart = 0.25f;\n    [Tooltip(\"A partir daqui (0-1) considera-se 'Noite'.\")]\n    [Range(0f, 1f)] public float nightStart = 0.5f;\n    [Tooltip(\"A partir daqui (0-1) considera-se 'Madrugada'.\")]\n    [Range(0f, 1f)] public float dawnStart = 0.75f;\n\n    [Header(\"Presets\")]\n    public Color dayColor = new Color(1f, 0.98f, 0.92f);\n    public float dayIntensity = 1.1f;\n\n    public Color duskColor = new Color(1f, 0.62f, 0.35f);\n    public float duskIntensity = 0.75f;\n\n    public Color nightColor = new Color(0.25f, 0.35f, 0.60f);\n    public float nightIntensity = 0.35f;\n\n    private void Reset()\n    {\n        globalLight = FindFirstObjectByType<Light2D>();\n    }\n\n    private void Update()\n    {\n        if (autoRun)\n        {\n            time01 += Time.deltaTime / Mathf.Max(0.01f, cycleLength);\n            if (time01 > 1f) time01 -= 1f;\n        }\n\n        WorldState.Instance?.SetTimeOfDay(GetTimeOfDay());\n\n        if (globalLight == null) return;\n\n        ApplyLighting(time01);\n    }\n\n    /// <summary>Converte time01 num TimeOfDay para o WorldState (condições de NPC).</summary>\n    public TimeOfDay GetTimeOfDay()\n    {\n        if (time01 < afternoonStart) return TimeOfDay.Manha;\n        if (time01 < nightStart) return TimeOfDay.Tarde;\n        if (time01 < dawnStart) return TimeOfDay.Noite;\n        return TimeOfDay.Madrugada;\n    }\n\n    public void ApplyLighting(float t)\n    {\n        // 0.00 -> 0.45 : Day to Dusk\n        // 0.45 -> 0.65 : Dusk to Night\n        // 0.65 -> 1.00 : Night to Day\n        if (t < 0.45f)\n        {\n            float u = Mathf.InverseLerp(0f, 0.45f, t);\n            SetLight(Color.Lerp(dayColor, duskColor, Smooth(u)),\n                     Mathf.Lerp(dayIntensity, duskIntensity, Smooth(u)));\n        }\n        else if (t < 0.65f)\n        {\n            float u = Mathf.InverseLerp(0.45f, 0.65f, t);\n            SetLight(Color.Lerp(duskColor, nightColor, Smooth(u)),\n                     Mathf.Lerp(duskIntensity, nightIntensity, Smooth(u)));\n        }\n        else\n        {\n            float u = Mathf.InverseLerp(0.65f, 1f, t);\n            SetLight(Color.Lerp(nightColor, dayColor, Smooth(u)),\n                     Mathf.Lerp(nightIntensity, dayIntensity, Smooth(u)));\n        }\n    }\n\n    private static float Smooth(float x) => x * x * (3f - 2f * x);\n\n    private void SetLight(Color c, float i)\n    {\n        globalLight.color = c;\n        globalLight.intensity = i;\n    }\n\n    // Handy debug buttons (call from inspector via context menu or UI)\n    public void SetDay()  { autoRun = false; time01 = 0.10f; ApplyLighting(time01); }\n    public void SetDusk() { autoRun = false; time01 = 0.50f; ApplyLighting(time01); }\n    public void SetNight(){ autoRun = false; time01 = 0.80f; ApplyLighting(time01); }\n}\n",
   "id": "script-environment-daynightcycle2d-cs",
   "dependencyIds": [
+    "script-data-worldstate-cs",
     "script-data-worldstate-cs"
   ],
   "usedByIds": [
     "script-npc-actions-worldstateactions-cs",
-    "script-data-shopdata-cs",
-    "script-data-worldstate-cs"
+    "script-data-shopdata-cs"
   ]
 }

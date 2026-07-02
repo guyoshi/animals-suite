@@ -1,4 +1,4 @@
-# Animals Suite 1.0.1
+# Animals Suite 1.1.0
 
 Desktop suite for planning and producing the **Animals** game.
 
@@ -15,3 +15,8 @@ Validation:
 npm ci
 npm run validate:final
 ```
+
+
+## Atualização 02/07
+
+A versão 1.1.0 integra PlayerLocator, recuperação de saves por `.bak`, compatibilidade ampliada de saves antigos, atualização imediata do Jukebox, limpeza de eventos estáticos e validação automática dos dados antes da build. Consulte `MUDANCAS_VERSAO_1.1.0.md`.

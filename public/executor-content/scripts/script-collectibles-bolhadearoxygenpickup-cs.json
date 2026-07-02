@@ -25,7 +25,6 @@
     }
   ],
   "dependencies": [
-    "AnimalFormData",
     "OxygenSystem",
     "PickupBase",
     "PickupType"
@@ -33,11 +32,11 @@
   "used_by": [
     "OxygenSystem"
   ],
-  "source": "using UnityEngine;\n\n/// <summary>\n/// Bolha de Ar — coleccionável subaquático que restaura o oxigênio de animais\n/// terrestres que mergulham (<see cref=\"AnimalFormData.canDiveAsLand\"/> = true).\n///\n/// Colocar em zonas subaquáticas onde o designer quer dar uma \"recarga\" ao\n/// jogador antes que o oxigênio acabe.\n///\n/// Ao tocar:\n/// - Se o <see cref=\"OxygenSystem\"/> do player estiver activo (animal terrestre\n///   submerso), restaura o oxigênio para o máximo da forma actual.\n/// - Se o sistema não estiver activo (animal aquático nativo / fora de água),\n///   a bolha ainda é recolhida mas sem efeito adicional (sem \"desperdício\" de\n///   pickup — o pickupId garante que não aparece outra vez).\n///\n/// Sugestão de configuração:\n/// - <b>Pickup Id</b>: único por instância (ex: \"FlorestaSombria_BolhaAr_01\").\n/// - <b>Popup Text</b>: \"Oxigênio restaurado!\" (ou vazio — sem popup é mais\n///   imersivo para uma bolha de ar automática).\n/// - <b>Can Be Magnetized</b>: false recomendado (não deve ser atraído pelo Íman,\n///   pois é mais natural ter de nadar até à bolha).\n/// - <b>Autosave On Collect</b>: normalmente false (bolhas são auxiliares, não\n///   progresso permanente — a não ser que sejam únicas/escondidas).\n/// </summary>\npublic class BolhaDeArOxygenPickup : PickupBase\n{\n    public override PickupType Type => PickupType.BrotoDeVida; // visual/som genérico enquanto não há PickupType próprio\n\n    protected override void GrantReward()\n    {\n        OxygenSystem.Instance?.RestoreOxygen();\n    }\n}\n",
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Bolha de Ar — coleccionável subaquático que restaura o oxigênio de animais\n/// terrestres que mergulham (<see cref=\"AnimalFormData.canDiveAsLand\"/> = true).\n///\n/// Colocar em zonas subaquáticas onde o designer quer dar uma \"recarga\" ao\n/// jogador antes que o oxigênio acabe.\n///\n/// Ao tocar:\n/// - Se o <see cref=\"OxygenSystem\"/> do player estiver activo (animal terrestre\n///   submerso), restaura o oxigênio para o máximo da forma actual.\n/// - Se o sistema não estiver activo (animal aquático nativo / fora de água),\n///   a bolha ainda é recolhida mas sem efeito adicional (sem \"desperdício\" de\n///   pickup — o pickupId garante que não aparece outra vez).\n///\n/// Sugestão de configuração:\n/// - <b>Pickup Id</b>: único por instância (ex: \"FlorestaSombria_BolhaAr_01\").\n/// - <b>Popup Text</b>: \"Oxigênio restaurado!\" (ou vazio — sem popup é mais\n///   imersivo para uma bolha de ar automática).\n/// - <b>Can Be Magnetized</b>: false recomendado (não deve ser atraído pelo Íman,\n///   pois é mais natural ter de nadar até à bolha).\n/// - <b>Autosave On Collect</b>: normalmente false (bolhas são auxiliares, não\n///   progresso permanente — a não ser que sejam únicas/escondidas).\n/// </summary>\npublic class BolhaDeArOxygenPickup : PickupBase\n{\n    public override PickupType Type => PickupType.BolhaDeAr;\n\n    protected override void GrantReward()\n    {\n        OxygenSystem.Instance?.RestoreOxygen();\n    }\n}\n",
   "id": "script-collectibles-bolhadearoxygenpickup-cs",
   "dependencyIds": [
-    "script-forms-animalformdata-cs",
     "script-player-oxygensystem-cs",
+    "script-collectibles-pickupbase-cs",
     "script-collectibles-pickupbase-cs"
   ],
   "usedByIds": [

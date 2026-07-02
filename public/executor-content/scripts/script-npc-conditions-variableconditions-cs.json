@@ -133,31 +133,26 @@
     "VariableScope"
   ],
   "used_by": [
-    "Action_RescueNpc",
-    "Action_StartChallenge",
     "ChallengeDefinition",
     "EmblemData",
     "MissionData",
-    "MissionManager",
-    "Objective_BoolVariable",
-    "PlayerProgress"
+    "Objective_BoolVariable"
   ],
   "source": "using UnityEngine;\n\n/// <summary>O valor de uma variável bool é igual a \"expectedValue\".</summary>\n[System.Serializable]\npublic class Condition_BoolVariable : NpcCondition\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (false).\")]\n    public string variableName;\n\n    public bool expectedValue = true;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return GameVariableUtil.GetBool(npc, scope, variableName) == expectedValue;\n    }\n}\n\n/// <summary>Compara o valor de uma variável int com \"value\".</summary>\n[System.Serializable]\npublic class Condition_IntVariable : NpcCondition\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (0).\")]\n    public string variableName;\n\n    public Comparison comparison = Comparison.Equal;\n    public int value;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        int actual = GameVariableUtil.GetInt(npc, scope, variableName);\n        return NpcConditionUtil.Compare(actual, comparison, value);\n    }\n}\n\n/// <summary>Compara o valor de uma variável float com \"value\".</summary>\n[System.Serializable]\npublic class Condition_FloatVariable : NpcCondition\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (0).\")]\n    public string variableName;\n\n    public Comparison comparison = Comparison.Equal;\n    public float value;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        float actual = GameVariableUtil.GetFloat(npc, scope, variableName);\n        return NpcConditionUtil.CompareFloat(actual, comparison, value);\n    }\n}\n\n/// <summary>Compara o valor de uma variável de texto com \"value\" (igual ou diferente).</summary>\n[System.Serializable]\npublic class Condition_StringVariable : NpcCondition\n{\n    [Tooltip(\"Onde a variável vive: Global (GameVariables, partilhada por todo o jogo) ou Local (só deste NPC).\")]\n    public VariableScope scope = VariableScope.Global;\n\n    [Tooltip(\"Nome da variável. Se não existir, é tratada como tendo o valor por omissão (\\\"\\\").\")]\n    public string variableName;\n\n    [Tooltip(\"true = a condição cumpre-se quando a variável É IGUAL a 'value'; false = quando é DIFERENTE.\")]\n    public bool mustEqual = true;\n\n    public string value;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        string actual = GameVariableUtil.GetString(npc, scope, variableName);\n        bool equal = actual == value;\n        return equal == mustEqual;\n    }\n}\n",
   "id": "script-npc-conditions-variableconditions-cs",
   "dependencyIds": [
+    "script-npc-npcconditionutil-cs",
+    "script-data-gamevariable-cs",
     "script-data-gamevariables-cs",
     "script-npc-npccondition-cs",
     "script-npc-npcconditionutil-cs",
-    "script-npc-npccontroller-cs"
+    "script-npc-npccontroller-cs",
+    "script-data-gamevariable-cs"
   ],
   "usedByIds": [
-    "script-npc-actions-villageactions-cs",
-    "script-npc-actions-challengeactions-cs",
     "script-data-challengedefinition-cs",
     "script-data-emblemdata-cs",
     "script-data-missiondata-cs",
-    "script-data-missionmanager-cs",
-    "script-data-objectives-challengeobjectives-variables-cs",
-    "script-data-playerprogress-cs"
+    "script-data-objectives-challengeobjectives-variables-cs"
   ]
 }

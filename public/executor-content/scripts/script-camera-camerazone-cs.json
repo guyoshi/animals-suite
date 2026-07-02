@@ -57,6 +57,7 @@
   "source": "using UnityEngine;\n\n[RequireComponent(typeof(BoxCollider2D))]\npublic class CameraZone : MonoBehaviour\n{\n    public CameraManager.ZoneType zoneType = CameraManager.ZoneType.Corridor;\n\n    private void Awake()\n    {\n        var col = GetComponent<BoxCollider2D>();\n        col.isTrigger = true;\n    }\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (CameraManager.Instance != null)\n            CameraManager.Instance.PushZone(zoneType);\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n        if (CameraManager.Instance != null)\n            CameraManager.Instance.PopZone(zoneType);\n    }\n}\n",
   "id": "script-camera-camerazone-cs",
   "dependencyIds": [
+    "script-camera-cameramanager-cs",
     "script-camera-cameramanager-cs"
   ],
   "usedByIds": []

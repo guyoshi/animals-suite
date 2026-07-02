@@ -50,6 +50,16 @@
       "description": "Quantidade de corações a curar."
     },
     {
+      "name": "amount",
+      "type": "int",
+      "mods": "public",
+      "default": "1",
+      "section": "",
+      "attrs": "[Tooltip(\"Quantidade de corações de dano.\")]",
+      "inspector": true,
+      "description": "Quantidade de corações de dano."
+    },
+    {
       "name": "destination",
       "type": "Transform",
       "mods": "public",
@@ -70,16 +80,6 @@
       "description": "Zera a velocidade do player após o teleporte (recomendado, evita herdar momentum antigo, ex: queda)."
     },
     {
-      "name": "force",
-      "type": "Vector2",
-      "mods": "public",
-      "default": "new Vector2(6f, 4f)",
-      "section": "",
-      "attrs": "[Tooltip(\"Velocidade aplicada ao player (X, Y).\")]",
-      "inspector": true,
-      "description": "Velocidade aplicada ao player (X, Y)."
-    },
-    {
       "name": "awayFromNpc",
       "type": "bool",
       "mods": "public",
@@ -87,7 +87,7 @@
       "section": "",
       "attrs": "[Tooltip(\"Se activo, o sinal do eixo X é calculado para empurrar o player para longe deste NPC (usa o valor absoluto de force.x). Se desactivo, usa force.x tal como está (direção fixa).\")]",
       "inspector": true,
-      "description": "Se ativo, o sinal do eixo X é calculado para empurrar o player para longe deste NPC (usa o valor absoluto de force.x). Se desactivo, usa force.x tal como está (direção fixa)."
+      "description": "Se activo, o sinal do eixo X é calculado para empurrar o player para longe deste NPC (usa o valor absoluto de force.x). Se desactivo, usa force.x tal como está (direção fixa)."
     },
     {
       "name": "locked",
@@ -107,7 +107,7 @@
       "section": "",
       "attrs": "[Tooltip(\"Ao bloquear (locked = true), interrompe também qualquer habilidade 'com estado' activa (escalar, dash, balanço, língua, escudo, carregar objecto, ...) — item 8 da auditoria. Evita o player ficar a escalar/balançar durante o diálogo/cutscene.\")]",
       "inspector": true,
-      "description": "Ao bloquear (locked = true), interrompe também qualquer habilidade 'com estado' ativa (escalar, dash, balanço, língua, escudo, carregar objeto, ...) — item 8 da auditoria. Evita o player ficar a escalar/balançar durante o diálogo/cutscene."
+      "description": "Ao bloquear (locked = true), interrompe também qualquer habilidade 'com estado' activa (escalar, dash, balanço, língua, escudo, carregar objecto, ...) — item 8 da auditoria. Evita o player ficar a escalar/balançar durante o diálogo/cutscene."
     },
     {
       "name": "cancelReason",
@@ -132,18 +132,17 @@
   "dependencies": [
     "AbilityCancelReason",
     "AbilityRouter",
-    "IAbility",
     "NpcAction",
     "NpcController",
     "PlayerMotor2D",
     "PlayerProgress"
   ],
   "used_by": [],
-  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>Cura o player em \"amount\" corações (PlayerProgress.Heal — já faz Clamp a maxHearts).</summary>\n[System.Serializable]\npublic class Action_Heal : NpcAction\n{\n    [Tooltip(\"Quantidade de corações a curar.\")]\n    public int amount = 1;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        PlayerProgress.Instance?.Heal(amount);\n        yield break;\n    }\n}\n\n/// <summary>Causa dano ao player em \"amount\" corações (PlayerProgress.Damage — já faz Clamp a 0).</summary>\n[System.Serializable]\npublic class Action_Damage : NpcAction\n{\n    [Tooltip(\"Quantidade de corações de dano.\")]\n    public int amount = 1;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        PlayerProgress.Instance?.Damage(amount);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Teleporta o player para a posição de \"destination\" (ex: um ponto de\n/// cutscene, a entrada de uma sala, depois de um boss). Usa\n/// Rigidbody2D.position quando disponível, para evitar problemas de\n/// interpolação física.\n/// </summary>\n[System.Serializable]\npublic class Action_TeleportPlayer : NpcAction\n{\n    [Tooltip(\"Posição de destino. Vazio = não faz nada.\")]\n    public Transform destination;\n\n    [Tooltip(\"Zera a velocidade do player após o teleporte (recomendado, evita herdar momentum antigo, ex: queda).\")]\n    public bool zeroVelocity = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (destination == null || npc.Player == null) yield break;\n\n        var rb = npc.Player.GetComponent<Rigidbody2D>();\n        if (rb != null)\n        {\n            rb.position = destination.position;\n            if (zeroVelocity) rb.velocity = Vector2.zero;\n        }\n        else\n        {\n            npc.Player.position = destination.position;\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Empurra o player com um impulso de velocidade (knockback) — útil para\n/// explosões, armadilhas, ou um \"soco\" de um NPC hostil.\n/// </summary>\n[System.Serializable]\npublic class Action_PushPlayer : NpcAction\n{\n    [Tooltip(\"Velocidade aplicada ao player (X, Y).\")]\n    public Vector2 force = new Vector2(6f, 4f);\n\n    [Tooltip(\"Se activo, o sinal do eixo X é calculado para empurrar o player para longe deste NPC (usa o valor absoluto de force.x). Se desactivo, usa force.x tal como está (direção fixa).\")]\n    public bool awayFromNpc = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var player = npc.Player;\n        if (player == null) yield break;\n\n        var rb = player.GetComponent<Rigidbody2D>();\n        if (rb == null) yield break;\n\n        float forceX = force.x;\n\n        if (awayFromNpc)\n        {\n            float sign = Mathf.Sign(player.position.x - npc.transform.position.x);\n            if (sign == 0f) sign = 1f;\n            forceX = sign * Mathf.Abs(force.x);\n        }\n\n        rb.velocity = new Vector2(forceX, force.y);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Bloqueia ou desbloqueia o movimento do player (PlayerMotor2D.SetMovementLocked)\n/// — útil para imobilizar o player durante uma cutscene de diálogo ou\n/// enquanto o NPC está a falar/agir sobre ele.\n/// </summary>\n[System.Serializable]\npublic class Action_SetPlayerMovementLocked : NpcAction\n{\n    [Tooltip(\"true = bloqueia o movimento horizontal/salto do player. false = devolve o controlo.\")]\n    public bool locked = true;\n\n    [Tooltip(\"Ao bloquear (locked = true), interrompe também qualquer habilidade 'com estado' activa (escalar, dash, balanço, língua, escudo, carregar objecto, ...) — item 8 da auditoria. Evita o player ficar a escalar/balançar durante o diálogo/cutscene.\")]\n    public bool cancelAbilities = true;\n\n    [Tooltip(\"Motivo do cancelamento, passado a IAbility.Cancel — apenas informativo para as habilidades.\")]\n    public AbilityCancelReason cancelReason = AbilityCancelReason.Dialogue;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var player = npc.Player;\n        if (player == null) yield break;\n\n        var motor = player.GetComponent<PlayerMotor2D>();\n        // \"npc\" (não \"this\") é o source: o mesmo NPC normalmente bloqueia no\n        // início do diálogo/cutscene e desbloqueia no fim através de Actions\n        // diferentes — usar a mesma chave garante que o desbloqueio cancela\n        // o bloqueio correspondente (ver PlayerMotor2D.SetMovementLocked).\n        if (motor != null) motor.SetMovementLocked(locked, npc);\n\n        if (locked && cancelAbilities)\n        {\n            var abilityRouter = player.GetComponent<AbilityRouter>();\n            abilityRouter?.CancelAll(cancelReason);\n        }\n\n        yield break;\n    }\n}\n",
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>Cura o player em \"amount\" corações (PlayerProgress.Heal — já faz Clamp a maxHearts).</summary>\n[System.Serializable]\npublic class Action_Heal : NpcAction\n{\n    [Tooltip(\"Quantidade de corações a curar.\")]\n    public int amount = 1;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        PlayerProgress.Instance?.Heal(amount);\n        yield break;\n    }\n}\n\n/// <summary>Causa dano ao player em \"amount\" corações (PlayerProgress.Damage — já faz Clamp a 0).</summary>\n[System.Serializable]\npublic class Action_Damage : NpcAction\n{\n    [Tooltip(\"Quantidade de corações de dano.\")]\n    public int amount = 1;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        PlayerProgress.Instance?.Damage(amount);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Teleporta o player para a posição de \"destination\" (ex: um ponto de\n/// cutscene, a entrada de uma sala, depois de um boss). Usa\n/// Rigidbody2D.position quando disponível, para evitar problemas de\n/// interpolação física.\n/// </summary>\n[System.Serializable]\npublic class Action_TeleportPlayer : NpcAction\n{\n    [Tooltip(\"Posição de destino. Vazio = não faz nada.\")]\n    public Transform destination;\n\n    [Tooltip(\"Zera a velocidade do player após o teleporte (recomendado, evita herdar momentum antigo, ex: queda).\")]\n    public bool zeroVelocity = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (destination == null || npc.Player == null) yield break;\n\n        var rb = npc.Player.GetComponent<Rigidbody2D>();\n        if (rb != null)\n        {\n            rb.position = destination.position;\n            if (zeroVelocity) rb.linearVelocity = Vector2.zero;\n        }\n        else\n        {\n            npc.Player.position = destination.position;\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Empurra o player com um impulso de velocidade (knockback) — útil para\n/// explosões, armadilhas, ou um \"soco\" de um NPC hostil.\n/// </summary>\n[System.Serializable]\npublic class Action_PushPlayer : NpcAction\n{\n    [Tooltip(\"Velocidade aplicada ao player (X, Y).\")]\n    public Vector2 force = new Vector2(6f, 4f);\n\n    [Tooltip(\"Se activo, o sinal do eixo X é calculado para empurrar o player para longe deste NPC (usa o valor absoluto de force.x). Se desactivo, usa force.x tal como está (direção fixa).\")]\n    public bool awayFromNpc = true;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var player = npc.Player;\n        if (player == null) yield break;\n\n        var rb = player.GetComponent<Rigidbody2D>();\n        if (rb == null) yield break;\n\n        float forceX = force.x;\n\n        if (awayFromNpc)\n        {\n            float sign = Mathf.Sign(player.position.x - npc.transform.position.x);\n            if (sign == 0f) sign = 1f;\n            forceX = sign * Mathf.Abs(force.x);\n        }\n\n        rb.linearVelocity = new Vector2(forceX, force.y);\n        yield break;\n    }\n}\n\n/// <summary>\n/// Bloqueia ou desbloqueia o movimento do player (PlayerMotor2D.SetMovementLocked)\n/// — útil para imobilizar o player durante uma cutscene de diálogo ou\n/// enquanto o NPC está a falar/agir sobre ele.\n/// </summary>\n[System.Serializable]\npublic class Action_SetPlayerMovementLocked : NpcAction\n{\n    [Tooltip(\"true = bloqueia o movimento horizontal/salto do player. false = devolve o controlo.\")]\n    public bool locked = true;\n\n    [Tooltip(\"Ao bloquear (locked = true), interrompe também qualquer habilidade 'com estado' activa (escalar, dash, balanço, língua, escudo, carregar objecto, ...) — item 8 da auditoria. Evita o player ficar a escalar/balançar durante o diálogo/cutscene.\")]\n    public bool cancelAbilities = true;\n\n    [Tooltip(\"Motivo do cancelamento, passado a IAbility.Cancel — apenas informativo para as habilidades.\")]\n    public AbilityCancelReason cancelReason = AbilityCancelReason.Dialogue;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var player = npc.Player;\n        if (player == null) yield break;\n\n        var motor = player.GetComponent<PlayerMotor2D>();\n        // \"npc\" (não \"this\") é o source: o mesmo NPC normalmente bloqueia no\n        // início do diálogo/cutscene e desbloqueia no fim através de Actions\n        // diferentes — usar a mesma chave garante que o desbloqueio cancela\n        // o bloqueio correspondente (ver PlayerMotor2D.SetMovementLocked).\n        if (motor != null) motor.SetMovementLocked(locked, npc);\n\n        if (locked && cancelAbilities)\n        {\n            var abilityRouter = player.GetComponent<AbilityRouter>();\n            abilityRouter?.CancelAll(cancelReason);\n        }\n\n        yield break;\n    }\n}\n",
   "id": "script-npc-actions-playeractions-cs",
   "dependencyIds": [
-    "script-abilities-abilityrouter-cs",
     "script-abilities-iability-cs",
+    "script-abilities-abilityrouter-cs",
     "script-npc-npcaction-cs",
     "script-npc-npccontroller-cs",
     "script-player-playermotor2d-cs",

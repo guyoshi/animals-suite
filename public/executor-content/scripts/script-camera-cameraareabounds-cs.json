@@ -74,10 +74,8 @@
     "WorldState"
   ],
   "used_by": [
-    "AreaManager",
     "CameraManager",
-    "PlayerResourceType",
-    "WorldState"
+    "PlayerResourceType"
   ],
   "source": "using UnityEngine;\n\n[RequireComponent(typeof(BoxCollider2D))]\npublic class CameraAreaBounds : MonoBehaviour\n{\n    [Header(\"Área (opcional)\")]\n    [Tooltip(\"Se definido, ao entrar aqui actualiza WorldState.CurrentArea e marca a área como visitada (PlayerProgress).\")]\n    [SerializeField] private AreaData area;\n\n    private BoxCollider2D bounds;\n\n    private void Awake()\n    {\n        bounds = GetComponent<BoxCollider2D>();\n        bounds.isTrigger = true;\n    }\n\n    private void ApplyIfPlayer(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        if (CameraManager.Instance != null)\n            CameraManager.Instance.SetBaseBounds(bounds);\n\n        if (area != null)\n        {\n            bool areaChanged = WorldState.Instance != null && WorldState.Instance.SetCurrentArea(area);\n            PlayerProgress.Instance?.MarkVisited(area);\n\n            // Autosave ao entrar numa área diferente (cobre também \"entrar/sair\n            // de uma cidade\", já que isso é sempre uma mudança de área).\n            if (areaChanged) SaveManager.Instance?.SaveAutosave();\n        }\n    }\n\n    private void OnTriggerEnter2D(Collider2D other) => ApplyIfPlayer(other);\n\n    private void OnTriggerStay2D(Collider2D other) => ApplyIfPlayer(other);\n}\n",
   "id": "script-camera-cameraareabounds-cs",
@@ -89,9 +87,7 @@
     "script-data-worldstate-cs"
   ],
   "usedByIds": [
-    "script-world-areamanager-cs",
     "script-camera-cameramanager-cs",
-    "script-npc-actions-rewardactions-cs",
-    "script-data-worldstate-cs"
+    "script-npc-actions-rewardactions-cs"
   ]
 }

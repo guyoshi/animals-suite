@@ -29,7 +29,7 @@
       "section": "Identidade",
       "attrs": "[Header(\"Identidade\")] [Tooltip(\"ID único deste refúgio (ex: 'refugio_bosque_bruma'). Guardado em PlayerProgress.lastCheckpointId ao ser activado — usado como checkpoint.\")]",
       "inspector": true,
-      "description": "ID único deste refúgio (ex: 'refugio_bosque_bruma'). Guardado em PlayerProgress.lastCheckpointId ao ser ativado — usado como checkpoint."
+      "description": "ID único deste refúgio (ex: 'refugio_bosque_bruma'). Guardado em PlayerProgress.lastCheckpointId ao ser activado — usado como checkpoint."
     },
     {
       "name": "displayName",
@@ -49,7 +49,7 @@
       "section": "Feedback Visual/Sonoro (opcional)",
       "attrs": "[Header(\"Feedback Visual/Sonoro (opcional)\")] [Tooltip(\"Activado enquanto o player está no alcance (ex: brilho/runa do refúgio).\")]",
       "inspector": true,
-      "description": "Ativado enquanto o player está no alcance (ex: brilho/runa do refúgio)."
+      "description": "Activado enquanto o player está no alcance (ex: brilho/runa do refúgio)."
     },
     {
       "name": "enterRangeSfx",
@@ -69,7 +69,7 @@
       "section": "Feedback Visual/Sonoro (opcional)",
       "attrs": "[Tooltip(\"Som ao premir Interagir dentro do alcance (antes do menu abrir).\")]",
       "inspector": true,
-      "description": "Som ao pressionar Interagir dentro do alcance (antes do menu abrir)."
+      "description": "Som ao premir Interagir dentro do alcance (antes do menu abrir)."
     },
     {
       "name": "onSaveMenuRequested",
@@ -79,7 +79,7 @@
       "section": "Eventos",
       "attrs": "[Header(\"Eventos\")] [Tooltip(\"Disparado quando o player, dentro do alcance, premir Interagir. O SaveMenuController deve ligar-se aqui para abrir o menu de save em modo 'guardar'.\")]",
       "inspector": true,
-      "description": "Disparado quando o player, dentro do alcance, pressionar Interagir. O SaveMenuController deve ligar-se aqui para abrir o menu de save em modo 'guardar'."
+      "description": "Disparado quando o player, dentro do alcance, premir Interagir. O SaveMenuController deve ligar-se aqui para abrir o menu de save em modo 'guardar'."
     },
     {
       "name": "onPlayerRangeChanged",
@@ -90,16 +90,6 @@
       "attrs": "[Tooltip(\"Disparado quando o player entra (true) ou sai (false) do alcance.\")]",
       "inspector": true,
       "description": "Disparado quando o player entra (true) ou sai (false) do alcance."
-    },
-    {
-      "name": "All",
-      "type": "List<SafeHaven>",
-      "mods": "public static readonly",
-      "default": "new List<SafeHaven>()",
-      "section": "Eventos",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
     },
     {
       "name": "_input",
@@ -141,13 +131,6 @@
       "description": "Executa a operação OnEnable."
     },
     {
-      "name": "OnDisable",
-      "ret": "void",
-      "mods": "private",
-      "params": "",
-      "description": "Executa a operação OnDisable."
-    },
-    {
       "name": "OnTriggerEnter2D",
       "ret": "void",
       "mods": "private",
@@ -162,6 +145,13 @@
       "description": "Executa a operação OnTriggerExit2D."
     },
     {
+      "name": "OnDisable",
+      "ret": "void",
+      "mods": "private",
+      "params": "",
+      "description": "Executa a operação OnDisable."
+    },
+    {
       "name": "OnInteractPressed",
       "ret": "void",
       "mods": "private",
@@ -171,47 +161,31 @@
   ],
   "dependencies": [
     "AudioManager",
-    "PlayerDeathHandler",
     "PlayerInputRouter",
-    "PlayerProgress",
-    "SaveManager",
-    "SaveMenuController"
+    "PlayerProgress"
   ],
   "used_by": [
     "AbilityRouter",
-    "AnimalSpiritRescue",
     "Checkpoint",
     "NpcDialogueBalloon",
-    "PickupBase",
     "PlayerDeathHandler",
-    "PlayerInputRouter",
-    "PlayerProgress",
     "SaveData",
-    "SaveManager",
     "SaveMenuController",
     "WaterCurrentZone"
   ],
-  "source": "using System.Collections.Generic;\nusing UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Ponto de \"Refúgio Seguro\" (Save Manual): zona onde o jogador pode gravar\n/// manualmente, mesmo em áreas ainda não totalmente desenhadas.\n///\n/// Detecta o player a entrar/saí no alcance (trigger) e, ao premir Interagir\n/// dentro do alcance, dispara <see cref=\"onSaveMenuRequested\"/> — o\n/// SaveMenuController (Task #5, Menu de Save) liga-se aqui no Inspector para\n/// abrir o menu em modo \"guardar\" (1 slot de autosave + até 30 manuais). A\n/// escolha do slot e a escrita do ficheiro são feitas pelo SaveMenuController/\n/// SaveManager, não por este componente.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class SafeHaven : MonoBehaviour\n{\n    [System.Serializable]\n    public class BoolEvent : UnityEvent<bool> { }\n\n    [Header(\"Identidade\")]\n    [Tooltip(\"ID único deste refúgio (ex: 'refugio_bosque_bruma'). Guardado em PlayerProgress.lastCheckpointId ao ser activado — usado como checkpoint.\")]\n    public string safeHavenId;\n\n    [Tooltip(\"Nome a mostrar no feedback (ex: 'Refúgio Seguro — Bosque de Bruma'). Pode ficar vazio.\")]\n    public string displayName;\n\n    [Header(\"Feedback Visual/Sonoro (opcional)\")]\n    [Tooltip(\"Activado enquanto o player está no alcance (ex: brilho/runa do refúgio).\")]\n    public SpriteRenderer glowSprite;\n\n    [Tooltip(\"Som ao entrar no alcance do refúgio.\")]\n    public AudioClip enterRangeSfx;\n\n    [Tooltip(\"Som ao premir Interagir dentro do alcance (antes do menu abrir).\")]\n    public AudioClip activateSfx;\n\n    [Header(\"Eventos\")]\n    [Tooltip(\"Disparado quando o player, dentro do alcance, premir Interagir. O SaveMenuController deve ligar-se aqui para abrir o menu de save em modo 'guardar'.\")]\n    public UnityEvent onSaveMenuRequested;\n\n    [Tooltip(\"Disparado quando o player entra (true) ou sai (false) do alcance.\")]\n    public BoolEvent onPlayerRangeChanged;\n\n    /// <summary>\n    /// Lista estática de todos os SafeHaven activos na cena — evita\n    /// FindObjectsOfType em PlayerDeathHandler.ResolveCheckpointPosition.\n    /// </summary>\n    public static readonly List<SafeHaven> All = new List<SafeHaven>();\n\n    private PlayerInputRouter _input;\n    private bool _playerInRange;\n\n    public bool PlayerInRange => _playerInRange;\n\n    private void OnEnable()  => All.Add(this);\n    private void OnDisable() => All.Remove(this);\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        _playerInRange = true;\n\n        _input = other.GetComponent<PlayerInputRouter>();\n        if (_input != null) _input.InteractPressed += OnInteractPressed;\n\n        if (glowSprite != null) glowSprite.enabled = true;\n        if (enterRangeSfx != null) AudioManager.Instance?.PlaySE(enterRangeSfx);\n\n        onPlayerRangeChanged?.Invoke(true);\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        _playerInRange = false;\n\n        if (_input != null) _input.InteractPressed -= OnInteractPressed;\n        _input = null;\n\n        if (glowSprite != null) glowSprite.enabled = false;\n\n        onPlayerRangeChanged?.Invoke(false);\n    }\n\n    private void OnDisable()\n    {\n        if (_input != null) _input.InteractPressed -= OnInteractPressed;\n        _input = null;\n    }\n\n    private void OnInteractPressed()\n    {\n        if (!_playerInRange) return;\n\n        // Mitigação do conflito de InteractPressed (pedido \"InteractionManager\"):\n        // se outro sistema já reagiu a este toque (ex.: diálogo activo), não\n        // abrimos também o menu de Safe Haven.\n        if (_input != null && _input.InteractConsumed) return;\n\n        if (activateSfx != null) AudioManager.Instance?.PlaySE(activateSfx);\n\n        PlayerProgress.Instance?.SetLastCheckpoint(safeHavenId);\n\n        onSaveMenuRequested?.Invoke();\n\n        if (_input != null) _input.InteractConsumed = true;\n    }\n}\n",
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\nusing UnityEngine.Events;\n\n/// <summary>\n/// Ponto de \"Refúgio Seguro\" (Save Manual): zona onde o jogador pode gravar\n/// manualmente, mesmo em áreas ainda não totalmente desenhadas.\n///\n/// Detecta o player a entrar/saí no alcance (trigger) e, ao premir Interagir\n/// dentro do alcance, dispara <see cref=\"onSaveMenuRequested\"/> — o\n/// SaveMenuController (Task #5, Menu de Save) liga-se aqui no Inspector para\n/// abrir o menu em modo \"guardar\" (1 slot de autosave + até 30 manuais). A\n/// escolha do slot e a escrita do ficheiro são feitas pelo SaveMenuController/\n/// SaveManager, não por este componente.\n/// </summary>\n[RequireComponent(typeof(Collider2D))]\npublic class SafeHaven : MonoBehaviour\n{\n    [System.Serializable]\n    public class BoolEvent : UnityEvent<bool> { }\n\n    [Header(\"Identidade\")]\n    [Tooltip(\"ID único deste refúgio (ex: 'refugio_bosque_bruma'). Guardado em PlayerProgress.lastCheckpointId ao ser activado — usado como checkpoint.\")]\n    public string safeHavenId;\n\n    [Tooltip(\"Nome a mostrar no feedback (ex: 'Refúgio Seguro — Bosque de Bruma'). Pode ficar vazio.\")]\n    public string displayName;\n\n    [Header(\"Feedback Visual/Sonoro (opcional)\")]\n    [Tooltip(\"Activado enquanto o player está no alcance (ex: brilho/runa do refúgio).\")]\n    public SpriteRenderer glowSprite;\n\n    [Tooltip(\"Som ao entrar no alcance do refúgio.\")]\n    public AudioClip enterRangeSfx;\n\n    [Tooltip(\"Som ao premir Interagir dentro do alcance (antes do menu abrir).\")]\n    public AudioClip activateSfx;\n\n    [Header(\"Eventos\")]\n    [Tooltip(\"Disparado quando o player, dentro do alcance, premir Interagir. O SaveMenuController deve ligar-se aqui para abrir o menu de save em modo 'guardar'.\")]\n    public UnityEvent onSaveMenuRequested;\n\n    [Tooltip(\"Disparado quando o player entra (true) ou sai (false) do alcance.\")]\n    public BoolEvent onPlayerRangeChanged;\n\n    /// <summary>\n    /// Lista estática de todos os SafeHaven activos na cena — evita\n    /// FindObjectsOfType em PlayerDeathHandler.ResolveCheckpointPosition.\n    /// </summary>\n    public static readonly List<SafeHaven> All = new List<SafeHaven>();\n\n    private PlayerInputRouter _input;\n    private bool _playerInRange;\n\n    public bool PlayerInRange => _playerInRange;\n\n    private void OnEnable() => All.Add(this);\n\n    private void OnTriggerEnter2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        _playerInRange = true;\n\n        _input = other.GetComponent<PlayerInputRouter>();\n        if (_input != null) _input.InteractPressed += OnInteractPressed;\n\n        if (glowSprite != null) glowSprite.enabled = true;\n        if (enterRangeSfx != null) AudioManager.Instance?.PlaySE(enterRangeSfx);\n\n        onPlayerRangeChanged?.Invoke(true);\n    }\n\n    private void OnTriggerExit2D(Collider2D other)\n    {\n        if (!other.CompareTag(\"Player\")) return;\n\n        _playerInRange = false;\n\n        if (_input != null) _input.InteractPressed -= OnInteractPressed;\n        _input = null;\n\n        if (glowSprite != null) glowSprite.enabled = false;\n\n        onPlayerRangeChanged?.Invoke(false);\n    }\n\n    private void OnDisable()\n    {\n        All.Remove(this);\n\n        if (_input != null) _input.InteractPressed -= OnInteractPressed;\n        _input = null;\n    }\n\n    private void OnInteractPressed()\n    {\n        if (!_playerInRange) return;\n\n        // Mitigação do conflito de InteractPressed (pedido \"InteractionManager\"):\n        // se outro sistema já reagiu a este toque (ex.: diálogo activo), não\n        // abrimos também o menu de Safe Haven.\n        if (_input != null && _input.InteractConsumed) return;\n\n        if (activateSfx != null) AudioManager.Instance?.PlaySE(activateSfx);\n\n        PlayerProgress.Instance?.SetLastCheckpoint(safeHavenId);\n\n        onSaveMenuRequested?.Invoke();\n\n        if (_input != null) _input.InteractConsumed = true;\n    }\n}\n",
   "id": "script-interactables-safehaven-cs",
   "dependencyIds": [
     "script-audio-audiomanager-cs",
-    "script-player-playerdeathhandler-cs",
     "script-input-playerinputrouter-cs",
-    "script-data-playerprogress-cs",
-    "script-data-savemanager-cs",
-    "script-ui-savemenucontroller-cs"
+    "script-data-playerprogress-cs"
   ],
   "usedByIds": [
     "script-abilities-abilityrouter-cs",
-    "script-interactables-animalspiritrescue-cs",
     "script-interactables-checkpoint-cs",
     "script-npc-dialogue-npcdialogueballoon-cs",
-    "script-collectibles-pickupbase-cs",
     "script-player-playerdeathhandler-cs",
-    "script-input-playerinputrouter-cs",
-    "script-data-playerprogress-cs",
     "script-data-savedata-cs",
-    "script-data-savemanager-cs",
     "script-ui-savemenucontroller-cs",
     "script-interactables-watercurrentzone-cs"
   ]

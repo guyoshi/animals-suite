@@ -174,10 +174,13 @@
   "id": "script-npc-conditions-worldconditions-cs",
   "dependencyIds": [
     "script-data-areadata-cs",
+    "script-npc-npcconditionutil-cs",
     "script-npc-npccondition-cs",
     "script-npc-npcconditionutil-cs",
     "script-npc-npccontroller-cs",
     "script-data-playerprogress-cs",
+    "script-data-worldstate-cs",
+    "script-data-worldstate-cs",
     "script-data-worlddata-cs",
     "script-data-worldstate-cs"
   ],

@@ -1,0 +1,21 @@
+ANIMALS SUITE 1.1.0 — PASTA COMPLETA
+
+Esta pasta está pronta para ser copiada por cima de uma cópia clonada do repositório guyoshi/animals-suite.
+
+ANTES DE PUBLICAR
+1. Não copie nenhuma pasta .git de outro local.
+2. Não adicione node_modules, dist, target ou Instalador ao GitHub.
+3. Confirme package.json e suite.manifest.json na versão 1.1.0.
+4. No GitHub Desktop, faça Commit to main e Push origin.
+5. Só depois execute Actions > Publicar Animals Suite > Run workflow.
+
+VALIDAÇÕES CONCLUÍDAS
+- conteúdo: aprovado;
+- 97 missões, 283 tarefas e 1123 Steps;
+- 27 guias;
+- 282 scripts;
+- ESLint: aprovado;
+- TypeScript: aprovado;
+- fontes dos 282 scripts: conferidas com o backup 02/07.
+
+O build Vite local não foi executado neste ambiente porque as dependências disponíveis eram do Windows e o ambiente de validação era Linux. O GitHub Actions instala dependências limpas em Windows com npm ci antes de compilar.

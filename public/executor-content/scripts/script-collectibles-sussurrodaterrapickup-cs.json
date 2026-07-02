@@ -25,23 +25,25 @@
     }
   ],
   "dependencies": [
-    "AreaData",
-    "AreaProgress",
     "PickupBase",
     "PickupType",
     "PlayerProgress"
   ],
   "used_by": [
+    "GameDataValidatorBuildPreprocess",
+    "GameDataValidatorWindow",
     "PlayerResourceType"
   ],
-  "source": "/// <summary>\n/// Sussurro da Terra — ao recolher, regista \"encontrado\" na área\n/// (<c>AreaProgress.whispersFound</c> / <c>AreaData.totalWhispers</c>) e\n/// actualiza o contador global (<c>PlayerProgress.totalSussurrosCollected</c>,\n/// via <c>AddWhisperFound</c>).\n///\n/// A \"entrega\" (<c>AreaProgress.whispersDelivered</c> — ex: a um NPC/altar\n/// específico) é um passo distinto e NÃO é feita por este pickup; é registada\n/// por uma Acção de diálogo/NPC chamando\n/// <c>PlayerProgress.AddWhisperDelivered(area)</c> separadamente.\n/// </summary>\npublic class SussurroDaTerraPickup : PickupBase\n{\n    public override PickupType Type => PickupType.SussurroDaTerra;\n\n    protected override void GrantReward()\n    {\n        if (area != null) PlayerProgress.Instance?.AddWhisperFound(area);\n    }\n}\n",
+  "source": "/// <summary>\n/// [OBSOLETO — Task #5] Segundo o GDD, Sussurros da Terra NÃO são pickups\n/// físicos no mundo. São adquiridos exclusivamente comprando-os ao NPC\n/// \"Contador de Histórias\" com Ecos Perdidos. Este componente contradiz o GDD\n/// e não deve ser colocado em nenhuma cena ou prefab.\n///\n/// Se precisas de registar um Sussurro (ex: em tests), chama directamente\n/// <c>PlayerProgress.Instance.AddWhisperFound(area)</c> a partir de uma\n/// Action de diálogo.\n///\n/// O validador de dados (<see cref=\"GameDataValidatorBuildPreprocess\"/> /\n/// <see cref=\"GameDataValidatorWindow\"/>) emite um aviso se este componente\n/// for encontrado em qualquer prefab ou cena.\n/// </summary>\n[System.Obsolete(\"SussurroDaTerraPickup contradiz o GDD: Sussurros são comprados ao Contador de Histórias, não são pickups de chão. Usa uma Action de diálogo para chamar PlayerProgress.AddWhisperFound.\")]\npublic class SussurroDaTerraPickup : PickupBase\n{\n    public override PickupType Type => PickupType.SussurroDaTerra;\n\n    protected override void GrantReward()\n    {\n        if (area != null) PlayerProgress.Instance?.AddWhisperFound(area);\n    }\n}\n",
   "id": "script-collectibles-sussurrodaterrapickup-cs",
   "dependencyIds": [
-    "script-data-areadata-cs",
+    "script-collectibles-pickupbase-cs",
     "script-collectibles-pickupbase-cs",
     "script-data-playerprogress-cs"
   ],
   "usedByIds": [
+    "script-data-editor-gamedatavalidatorbuildpreprocess-cs",
+    "script-data-editor-gamedatavalidatorwindow-cs",
     "script-npc-actions-rewardactions-cs"
   ]
 }

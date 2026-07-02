@@ -45,7 +45,6 @@
   "used_by": [
     "ChallengeDefinition",
     "ChallengeDefinitionEditor",
-    "ChallengeManager",
     "ChallengeResultUI",
     "FailCondition_BoolVariable",
     "FailCondition_PlayerDamaged"
@@ -62,7 +61,6 @@
   "usedByIds": [
     "script-data-challengedefinition-cs",
     "script-data-editor-challengedefinitioneditor-cs",
-    "script-data-challengemanager-cs",
     "script-ui-challengeresultui-cs",
     "script-data-objectives-challengefailconditions-variables-cs",
     "script-data-objectives-challengefailconditions-player-cs"

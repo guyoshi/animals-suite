@@ -62,6 +62,16 @@
       "description": "Distância ao alvo considerada 'acertou', verificada no fim do telegraph."
     },
     {
+      "name": "hitRange",
+      "type": "float",
+      "mods": "public",
+      "default": "0.8f",
+      "section": "Mordida",
+      "attrs": "[Header(\"Mordida\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
       "name": "lungeSpeed",
       "type": "float",
       "mods": "public",
@@ -69,7 +79,7 @@
       "section": "Mordida",
       "attrs": "[Tooltip(\"Velocidade do pequeno avanço na direcção do alvo (0 = sem avanço).\")]",
       "inspector": true,
-      "description": "Velocidade do pequeno avanço na direção do alvo (0 = sem avanço)."
+      "description": "Velocidade do pequeno avanço na direcção do alvo (0 = sem avanço)."
     },
     {
       "name": "lungeDuration",
@@ -142,6 +152,16 @@
       "description": "Tempo total no ar (Execute termina ao fim deste tempo; a aterragem/queda é tratada pela física normal durante Recuperando)."
     },
     {
+      "name": "hitRadius",
+      "type": "float",
+      "mods": "public",
+      "default": "0.7f",
+      "section": "Salto",
+      "attrs": "[Tooltip(\"Distância ao alvo considerada 'acertou' enquanto no ar.\")]",
+      "inspector": true,
+      "description": "Distância ao alvo considerada 'acertou' enquanto no ar."
+    },
+    {
       "name": "slamSpeed",
       "type": "float",
       "mods": "public",
@@ -172,6 +192,16 @@
       "description": "Raio do impacto no fim da queda (dano em área)."
     },
     {
+      "name": "hitRadius",
+      "type": "float",
+      "mods": "public",
+      "default": "1.2f",
+      "section": "Empurrão",
+      "attrs": "[Header(\"Empurrão\")] [Tooltip(\"Distância ao alvo considerada 'acertou'.\")]",
+      "inspector": true,
+      "description": "Distância ao alvo considerada 'acertou'."
+    },
+    {
       "name": "pushForce",
       "type": "float",
       "mods": "public",
@@ -179,7 +209,7 @@
       "section": "Empurrão",
       "attrs": "[Tooltip(\"Velocidade aplicada ao player na direcção do empurrão.\")]",
       "inspector": true,
-      "description": "Velocidade aplicada ao player na direção do empurrão."
+      "description": "Velocidade aplicada ao player na direcção do empurrão."
     },
     {
       "name": "pullSpeed",
@@ -214,27 +244,78 @@
   ],
   "methods": [
     {
+      "name": "Attack_ClawShort",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_ClawShort."
+    },
+    {
       "name": "Execute",
       "ret": "IEnumerator",
       "mods": "public override",
       "params": "EnemyAttackController ctx",
       "description": "Executa a operação Execute."
+    },
+    {
+      "name": "Attack_BiteShort",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_BiteShort."
+    },
+    {
+      "name": "Attack_HorizontalDash",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_HorizontalDash."
+    },
+    {
+      "name": "Attack_JumpAtPlayer",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_JumpAtPlayer."
+    },
+    {
+      "name": "Attack_SlamDown",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_SlamDown."
+    },
+    {
+      "name": "Attack_Push",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_Push."
+    },
+    {
+      "name": "Attack_Pull",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_Pull."
     }
   ],
   "dependencies": [
     "EnemyAttack",
-    "EnemyAttackController",
-    "EnemyAttackControllerEditor",
-    "PolymorphicListDrawer"
+    "EnemyAttackController"
   ],
-  "used_by": [],
-  "source": "using System.Collections;\nusing UnityEngine;\n\n// Ataques de contacto/melee e ataques que deslocam o próprio inimigo (Etapa\n// 2.1). Cada subclasse [System.Serializable] é seleccionável no Inspector via\n// PolymorphicListDrawer (prefixo \"Attack_\" removido no menu — ver\n// EnemyAttackControllerEditor).\n\n/// <summary>Garra curta: dano de contacto sem deslocar o inimigo. Verifica o alcance novamente no momento do ataque (depois do telegraph).</summary>\n[System.Serializable]\npublic class Attack_ClawShort : EnemyAttack\n{\n    [Header(\"Garra\")]\n    [Tooltip(\"Distância ao alvo considerada 'acertou', verificada no fim do telegraph.\")]\n    public float hitRange = 1f;\n\n    public Attack_ClawShort()\n    {\n        attackName = \"Garra\";\n        range = 1.2f;\n        prepTime = 0.15f;\n        recoveryTime = 0.3f;\n        cooldown = 1f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (ctx.IsTargetWithin(ctx.transform.position, hitRange))\n            ctx.DamagePlayer(damage, knockbackForce);\n\n        yield break;\n    }\n}\n\n/// <summary>Mordida curta: como a Garra, mas com um pequeno avanço (lunge) na direcção do alvo antes de morder.</summary>\n[System.Serializable]\npublic class Attack_BiteShort : EnemyAttack\n{\n    [Header(\"Mordida\")]\n    public float hitRange = 0.8f;\n\n    [Tooltip(\"Velocidade do pequeno avanço na direcção do alvo (0 = sem avanço).\")]\n    public float lungeSpeed = 3f;\n\n    [Tooltip(\"Duração do avanço, em segundos.\")]\n    public float lungeDuration = 0.1f;\n\n    public Attack_BiteShort()\n    {\n        attackName = \"Mordida\";\n        range = 1f;\n        prepTime = 0.2f;\n        recoveryTime = 0.25f;\n        cooldown = 0.8f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        var rb = ctx.Rb;\n\n        if (rb != null && lungeSpeed > 0f)\n        {\n            float dir = Mathf.Sign(ctx.DirectionToTarget().x);\n            float elapsed = 0f;\n\n            while (elapsed < lungeDuration)\n            {\n                rb.velocity = new Vector2(dir * lungeSpeed, rb.velocity.y);\n                elapsed += Time.deltaTime;\n                yield return null;\n            }\n\n            rb.velocity = new Vector2(0f, rb.velocity.y);\n        }\n\n        if (ctx.IsTargetWithin(ctx.transform.position, hitRange))\n            ctx.DamagePlayer(damage, knockbackForce);\n    }\n}\n\n/// <summary>Investida horizontal: o inimigo lança-se na horizontal em direcção ao alvo durante \"dashDuration\", causando dano se o tocar.</summary>\n[System.Serializable]\npublic class Attack_HorizontalDash : EnemyAttack\n{\n    [Header(\"Investida\")]\n    public float dashSpeed = 8f;\n    public float dashDuration = 0.35f;\n\n    [Tooltip(\"Distância ao alvo considerada 'acertou' durante a investida.\")]\n    public float hitRadius = 0.6f;\n\n    public Attack_HorizontalDash()\n    {\n        attackName = \"Investida\";\n        range = 5f;\n        minRange = 1.5f;\n        prepTime = 0.25f;\n        recoveryTime = 0.4f;\n        cooldown = 2f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        var rb = ctx.Rb;\n        float dir = Mathf.Sign(ctx.DirectionToTarget().x);\n        bool hit = false;\n        float elapsed = 0f;\n\n        while (elapsed < dashDuration)\n        {\n            if (rb != null) rb.velocity = new Vector2(dir * dashSpeed, rb.velocity.y);\n\n            if (!hit && ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n            {\n                hit = true;\n                ctx.DamagePlayer(damage, knockbackForce);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        if (rb != null) rb.velocity = new Vector2(0f, rb.velocity.y);\n    }\n}\n\n/// <summary>Salto em direcção ao player: aplica um impulso de salto com componente horizontal apontada ao alvo, causando dano se o tocar enquanto está no ar.</summary>\n[System.Serializable]\npublic class Attack_JumpAtPlayer : EnemyAttack\n{\n    [Header(\"Salto\")]\n    public float jumpSpeedX = 4f;\n    public float jumpHeight = 6f;\n\n    [Tooltip(\"Tempo total no ar (Execute termina ao fim deste tempo; a aterragem/queda é tratada pela física normal durante Recuperando).\")]\n    public float airTime = 0.8f;\n\n    [Tooltip(\"Distância ao alvo considerada 'acertou' enquanto no ar.\")]\n    public float hitRadius = 0.7f;\n\n    public Attack_JumpAtPlayer()\n    {\n        attackName = \"Salto\";\n        range = 4f;\n        usableOnGround = true;\n        prepTime = 0.2f;\n        recoveryTime = 0.3f;\n        cooldown = 1.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        var rb = ctx.Rb;\n        if (rb == null) yield break;\n\n        float dir = Mathf.Sign(ctx.DirectionToTarget().x);\n        rb.velocity = new Vector2(dir * jumpSpeedX, jumpHeight);\n\n        bool hit = false;\n        float elapsed = 0f;\n\n        while (elapsed < airTime)\n        {\n            if (!hit && ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n            {\n                hit = true;\n                ctx.DamagePlayer(damage, knockbackForce);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n    }\n}\n\n/// <summary>Ataque cima-para-baixo: para inimigos voadores/flutuantes — desce a alta velocidade e causa dano em área no impacto.</summary>\n[System.Serializable]\npublic class Attack_SlamDown : EnemyAttack\n{\n    [Header(\"Ataque Cima-Para-Baixo\")]\n    [Tooltip(\"Velocidade de queda durante o ataque (m/s, positivo).\")]\n    public float slamSpeed = 14f;\n\n    public float maxFallTime = 1f;\n\n    [Tooltip(\"Raio do impacto no fim da queda (dano em área).\")]\n    public float impactRadius = 1.5f;\n\n    public Attack_SlamDown()\n    {\n        attackName = \"Mergulho\";\n        range = 6f;\n        usableOnGround = false;\n        usableInAir = true;\n        prepTime = 0.3f;\n        recoveryTime = 0.5f;\n        cooldown = 2.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        var rb = ctx.Rb;\n        bool hit = false;\n        float elapsed = 0f;\n\n        while (elapsed < maxFallTime)\n        {\n            if (rb != null) rb.velocity = new Vector2(rb.velocity.x, -slamSpeed);\n\n            if (!hit && ctx.IsTargetWithin(ctx.transform.position, impactRadius))\n            {\n                hit = true;\n                ctx.DamagePlayer(damage, knockbackForce, Vector2.up);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        // Impacto final: dano em área mesmo que o alvo só tenha entrado no raio agora.\n        if (!hit && ctx.IsTargetWithin(ctx.transform.position, impactRadius))\n            ctx.DamagePlayer(damage, knockbackForce, Vector2.up);\n\n        if (rb != null) rb.velocity = new Vector2(rb.velocity.x, 0f);\n    }\n}\n\n/// <summary>Empurrão sem dano: afasta o player com um impulso de velocidade, sem causar dano (GDD 12.2 — Robô de limpeza).</summary>\n[System.Serializable]\npublic class Attack_Push : EnemyAttack\n{\n    [Header(\"Empurrão\")]\n    [Tooltip(\"Distância ao alvo considerada 'acertou'.\")]\n    public float hitRadius = 1.2f;\n\n    [Tooltip(\"Velocidade aplicada ao player na direcção do empurrão.\")]\n    public float pushForce = 6f;\n\n    public Attack_Push()\n    {\n        attackName = \"Empurrão\";\n        range = 1.5f;\n        damage = 0; // \"empurrão sem dano\" (GDD — Etapa 2.1)\n        prepTime = 0.2f;\n        recoveryTime = 0.3f;\n        cooldown = 1.2f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n        {\n            Vector2 away = (Vector2)ctx.Target.position - (Vector2)ctx.transform.position;\n            ctx.PushPlayer(pushForce, away);\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>Ataque que puxa o player na direcção do inimigo (ex: \"anzol\" do boss Maré de Rede — GDD 12.3.5), causando dano ao chegar perto.</summary>\n[System.Serializable]\npublic class Attack_Pull : EnemyAttack\n{\n    [Header(\"Puxar (Anzol)\")]\n    public float pullSpeed = 5f;\n    public float pullDuration = 0.8f;\n\n    [Tooltip(\"Distância ao inimigo considerada 'chegou' — dano ao chegar.\")]\n    public float arriveDistance = 1f;\n\n    public Attack_Pull()\n    {\n        attackName = \"Anzol\";\n        range = 6f;\n        minRange = 1.5f;\n        requiresLineOfSight = true;\n        prepTime = 0.4f;\n        recoveryTime = 0.5f;\n        cooldown = 3f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        float elapsed = 0f;\n\n        while (elapsed < pullDuration)\n        {\n            if (ctx.Target == null) yield break;\n\n            Vector2 toSelf = (Vector2)ctx.transform.position - (Vector2)ctx.Target.position;\n            float dist = toSelf.magnitude;\n\n            if (dist <= arriveDistance)\n            {\n                ctx.DamagePlayer(damage, knockbackForce);\n                yield break;\n            }\n\n            ctx.PullPlayer(pullSpeed, toSelf.normalized);\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n    }\n}\n",
+  "used_by": [
+    "Boss_MareDeRede",
+    "Boss_SinoDoRuido"
+  ],
+  "source": "using System.Collections;\nusing UnityEngine;\n\n// Ataques de contacto/melee e ataques que deslocam o próprio inimigo (Etapa\n// 2.1). Cada subclasse [System.Serializable] é seleccionável no Inspector via\n// PolymorphicListDrawer (prefixo \"Attack_\" removido no menu — ver\n// EnemyAttackControllerEditor).\n\n/// <summary>Garra curta: dano de contacto sem deslocar o inimigo. Verifica o alcance novamente no momento do ataque (depois do telegraph).</summary>\n[System.Serializable]\npublic class Attack_ClawShort : EnemyAttack\n{\n    [Header(\"Garra\")]\n    [Tooltip(\"Distância ao alvo considerada 'acertou', verificada no fim do telegraph.\")]\n    public float hitRange = 1f;\n\n    public Attack_ClawShort()\n    {\n        attackName = \"Garra\";\n        range = 1.2f;\n        prepTime = 0.15f;\n        recoveryTime = 0.3f;\n        cooldown = 1f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (ctx.IsTargetWithin(ctx.transform.position, hitRange))\n            ctx.DamagePlayer(damage, knockbackForce);\n\n        yield break;\n    }\n}\n\n/// <summary>Mordida curta: como a Garra, mas com um pequeno avanço (lunge) na direcção do alvo antes de morder.</summary>\n[System.Serializable]\npublic class Attack_BiteShort : EnemyAttack\n{\n    [Header(\"Mordida\")]\n    public float hitRange = 0.8f;\n\n    [Tooltip(\"Velocidade do pequeno avanço na direcção do alvo (0 = sem avanço).\")]\n    public float lungeSpeed = 3f;\n\n    [Tooltip(\"Duração do avanço, em segundos.\")]\n    public float lungeDuration = 0.1f;\n\n    public Attack_BiteShort()\n    {\n        attackName = \"Mordida\";\n        range = 1f;\n        prepTime = 0.2f;\n        recoveryTime = 0.25f;\n        cooldown = 0.8f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        var rb = ctx.Rb;\n\n        if (rb != null && lungeSpeed > 0f)\n        {\n            float dir = Mathf.Sign(ctx.DirectionToTarget().x);\n            float elapsed = 0f;\n\n            while (elapsed < lungeDuration)\n            {\n                rb.linearVelocity = new Vector2(dir * lungeSpeed, rb.linearVelocity.y);\n                elapsed += Time.deltaTime;\n                yield return null;\n            }\n\n            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);\n        }\n\n        if (ctx.IsTargetWithin(ctx.transform.position, hitRange))\n            ctx.DamagePlayer(damage, knockbackForce);\n    }\n}\n\n/// <summary>Investida horizontal: o inimigo lança-se na horizontal em direcção ao alvo durante \"dashDuration\", causando dano se o tocar.</summary>\n[System.Serializable]\npublic class Attack_HorizontalDash : EnemyAttack\n{\n    [Header(\"Investida\")]\n    public float dashSpeed = 8f;\n    public float dashDuration = 0.35f;\n\n    [Tooltip(\"Distância ao alvo considerada 'acertou' durante a investida.\")]\n    public float hitRadius = 0.6f;\n\n    public Attack_HorizontalDash()\n    {\n        attackName = \"Investida\";\n        range = 5f;\n        minRange = 1.5f;\n        prepTime = 0.25f;\n        recoveryTime = 0.4f;\n        cooldown = 2f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        var rb = ctx.Rb;\n        float dir = Mathf.Sign(ctx.DirectionToTarget().x);\n        bool hit = false;\n        float elapsed = 0f;\n\n        while (elapsed < dashDuration)\n        {\n            if (rb != null) rb.linearVelocity = new Vector2(dir * dashSpeed, rb.linearVelocity.y);\n\n            if (!hit && ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n            {\n                hit = true;\n                ctx.DamagePlayer(damage, knockbackForce);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        if (rb != null) rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);\n    }\n}\n\n/// <summary>Salto em direcção ao player: aplica um impulso de salto com componente horizontal apontada ao alvo, causando dano se o tocar enquanto está no ar.</summary>\n[System.Serializable]\npublic class Attack_JumpAtPlayer : EnemyAttack\n{\n    [Header(\"Salto\")]\n    public float jumpSpeedX = 4f;\n    public float jumpHeight = 6f;\n\n    [Tooltip(\"Tempo total no ar (Execute termina ao fim deste tempo; a aterragem/queda é tratada pela física normal durante Recuperando).\")]\n    public float airTime = 0.8f;\n\n    [Tooltip(\"Distância ao alvo considerada 'acertou' enquanto no ar.\")]\n    public float hitRadius = 0.7f;\n\n    public Attack_JumpAtPlayer()\n    {\n        attackName = \"Salto\";\n        range = 4f;\n        usableOnGround = true;\n        prepTime = 0.2f;\n        recoveryTime = 0.3f;\n        cooldown = 1.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        var rb = ctx.Rb;\n        if (rb == null) yield break;\n\n        float dir = Mathf.Sign(ctx.DirectionToTarget().x);\n        rb.linearVelocity = new Vector2(dir * jumpSpeedX, jumpHeight);\n\n        bool hit = false;\n        float elapsed = 0f;\n\n        while (elapsed < airTime)\n        {\n            if (!hit && ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n            {\n                hit = true;\n                ctx.DamagePlayer(damage, knockbackForce);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n    }\n}\n\n/// <summary>Ataque cima-para-baixo: para inimigos voadores/flutuantes — desce a alta velocidade e causa dano em área no impacto.</summary>\n[System.Serializable]\npublic class Attack_SlamDown : EnemyAttack\n{\n    [Header(\"Ataque Cima-Para-Baixo\")]\n    [Tooltip(\"Velocidade de queda durante o ataque (m/s, positivo).\")]\n    public float slamSpeed = 14f;\n\n    public float maxFallTime = 1f;\n\n    [Tooltip(\"Raio do impacto no fim da queda (dano em área).\")]\n    public float impactRadius = 1.5f;\n\n    public Attack_SlamDown()\n    {\n        attackName = \"Mergulho\";\n        range = 6f;\n        usableOnGround = false;\n        usableInAir = true;\n        prepTime = 0.3f;\n        recoveryTime = 0.5f;\n        cooldown = 2.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        var rb = ctx.Rb;\n        bool hit = false;\n        float elapsed = 0f;\n\n        while (elapsed < maxFallTime)\n        {\n            if (rb != null) rb.linearVelocity = new Vector2(rb.linearVelocity.x, -slamSpeed);\n\n            if (!hit && ctx.IsTargetWithin(ctx.transform.position, impactRadius))\n            {\n                hit = true;\n                ctx.DamagePlayer(damage, knockbackForce, Vector2.up);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        // Impacto final: dano em área mesmo que o alvo só tenha entrado no raio agora.\n        if (!hit && ctx.IsTargetWithin(ctx.transform.position, impactRadius))\n            ctx.DamagePlayer(damage, knockbackForce, Vector2.up);\n\n        if (rb != null) rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);\n    }\n}\n\n/// <summary>Empurrão sem dano: afasta o player com um impulso de velocidade, sem causar dano (GDD 12.2 — Robô de limpeza).</summary>\n[System.Serializable]\npublic class Attack_Push : EnemyAttack\n{\n    [Header(\"Empurrão\")]\n    [Tooltip(\"Distância ao alvo considerada 'acertou'.\")]\n    public float hitRadius = 1.2f;\n\n    [Tooltip(\"Velocidade aplicada ao player na direcção do empurrão.\")]\n    public float pushForce = 6f;\n\n    public Attack_Push()\n    {\n        attackName = \"Empurrão\";\n        range = 1.5f;\n        damage = 0; // \"empurrão sem dano\" (GDD — Etapa 2.1)\n        prepTime = 0.2f;\n        recoveryTime = 0.3f;\n        cooldown = 1.2f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n        {\n            Vector2 away = (Vector2)ctx.Target.position - (Vector2)ctx.transform.position;\n            ctx.PushPlayer(pushForce, away);\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>Ataque que puxa o player na direcção do inimigo (ex: \"anzol\" do boss Maré de Rede — GDD 12.3.5), causando dano ao chegar perto.</summary>\n[System.Serializable]\npublic class Attack_Pull : EnemyAttack\n{\n    [Header(\"Puxar (Anzol)\")]\n    public float pullSpeed = 5f;\n    public float pullDuration = 0.8f;\n\n    [Tooltip(\"Distância ao inimigo considerada 'chegou' — dano ao chegar.\")]\n    public float arriveDistance = 1f;\n\n    public Attack_Pull()\n    {\n        attackName = \"Anzol\";\n        range = 6f;\n        minRange = 1.5f;\n        requiresLineOfSight = true;\n        prepTime = 0.4f;\n        recoveryTime = 0.5f;\n        cooldown = 3f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        float elapsed = 0f;\n\n        while (elapsed < pullDuration)\n        {\n            if (ctx.Target == null) yield break;\n\n            Vector2 toSelf = (Vector2)ctx.transform.position - (Vector2)ctx.Target.position;\n            float dist = toSelf.magnitude;\n\n            if (dist <= arriveDistance)\n            {\n                ctx.DamagePlayer(damage, knockbackForce);\n                yield break;\n            }\n\n            ctx.PullPlayer(pullSpeed, toSelf.normalized);\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n    }\n}\n",
   "id": "script-enemy-attacks-enemyattacks-melee-cs",
   "dependencyIds": [
     "script-enemy-enemyattack-cs",
-    "script-enemy-enemyattackcontroller-cs",
-    "script-enemy-editor-enemyattackcontrollereditor-cs",
-    "script-npc-editor-polymorphiclistdrawer-cs"
+    "script-enemy-enemyattackcontroller-cs"
   ],
-  "usedByIds": []
+  "usedByIds": [
+    "script-enemy-bosses-boss-marederede-cs",
+    "script-enemy-bosses-boss-sinodoruido-cs"
+  ]
 }

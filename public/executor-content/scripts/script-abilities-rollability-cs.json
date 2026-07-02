@@ -96,16 +96,6 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "CooldownRemaining",
-      "type": "float",
-      "mods": "public",
-      "default": "> Mathf.Max(0f, cooldownTimer)",
-      "section": "",
-      "attrs": "",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "CooldownDuration",
       "type": "float",
       "mods": "public",
@@ -207,48 +197,33 @@
   ],
   "dependencies": [
     "AbilityCancelReason",
-    "AbilityRouter",
     "AnimalFormData",
-    "AnimalsDebugPanel",
-    "ChargeAbility",
-    "DashAbility",
     "EnemyHealth",
     "IAbility",
     "IActiveAbility",
     "IFormAbility",
-    "PlayerCombat",
     "PlayerMotor2D",
-    "PrimaryAbility",
-    "PushStrength",
-    "PushableBlock"
+    "PrimaryAbility"
   ],
   "used_by": [
     "AbilityRouter",
-    "AnimalFormData",
-    "AnimalsDebugPanel",
     "EnemyHealth",
     "PlayerCombat"
   ],
-  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Rolamento (ROL do GDD — habilidade central do Pangolim):\n///\n/// Ao premir o botão de habilidade (em terra, fora de cooldown), o player\n/// rola na direcção em que está virado durante 'rollDuration' a 'rollSpeed'\n/// (mesmo padrão de DashAbility/ChargeAbility — bloqueia o movimento normal e\n/// move o Rigidbody2D directamente). Enquanto a rolar:\n///\n/// - <see cref=\"IsRolling\"/> fica true — PlayerCombat.TryDamagePlayer consulta\n///   isto e chama <see cref=\"ApplyRollDefense\"/> para aplicar o bónus de\n///   defesa da ficha (rollDefenseBonus), tal como o ShellGuard da Tartaruga.\n/// - Animator.SetBool(\"IsRolling\", true) activa a animação de rolamento.\n/// - Inimigos dentro de 'rollPushRadius' (à frente do player) são empurrados\n///   via EnemyHealth.ApplyExternalKnockback (sem causar dano — só empurrão).\n/// - Blocos empurráveis (PushableBlock) continuam a reagir normalmente ao\n///   contacto/PushStrength da forma, como em qualquer movimento.\n///\n/// Tem cooldown (rollCooldown) e Cancel(), tal como Dash/Charge — interrompe\n/// o rolamento em curso (morte, transformação, etc.).\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class RollAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private const int MaxPushTargets = 8;\n    private static readonly Collider2D[] PushBuffer = new Collider2D[MaxPushTargets];\n\n    private bool enabledForForm;\n    private AnimalFormData form;\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    private float cooldownTimer;\n    private Coroutine rollRoutine;\n\n    /// <summary>true enquanto o player está a rolar — consultado por PlayerCombat.TryDamagePlayer.</summary>\n    public bool IsRolling { get; private set; }\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && (form.canRoll || form.primaryAbility == PrimaryAbility.Roll);\n\n        if (!enabledForForm) StopRollIfRunning();\n    }\n\n    /// <summary>Chamado pelo AbilityRouter (OnAbilityPressed) quando a forma tem PrimaryAbility.Roll.</summary>\n    public void TryRoll()\n    {\n        if (!enabledForForm) return;\n        if (cooldownTimer > 0f) return;\n        if (rollRoutine != null) return;\n        if (motor.MovementLocked) return;\n        if (!motor.IsGrounded) return;\n\n        rollRoutine = StartCoroutine(RollRoutine());\n    }\n\n    private IEnumerator RollRoutine()\n    {\n        cooldownTimer = form.rollCooldown;\n\n        IsRolling = true;\n        motor.SetMovementLocked(true, this);\n        motor.Anim?.SetBool(\"IsRolling\", true);\n\n        int dir = motor.FacingSign != 0 ? motor.FacingSign : 1;\n\n        float elapsed = 0f;\n        while (elapsed < form.rollDuration)\n        {\n            rb.velocity = new Vector2(dir * form.rollSpeed, rb.velocity.y);\n            PushNearbyEnemies(dir);\n\n            elapsed += Time.fixedDeltaTime;\n            yield return new WaitForFixedUpdate();\n        }\n\n        EndRoll();\n    }\n\n    /// <summary>Empurra (sem dano) inimigos dentro de 'rollPushRadius' à frente do player.</summary>\n    private void PushNearbyEnemies(int dir)\n    {\n        if (form.rollPushForce <= 0f) return;\n\n        Vector2 origin = (Vector2)transform.position + new Vector2(dir * form.rollPushRadius * 0.5f, 0f);\n        int count = Physics2D.OverlapCircleNonAlloc(origin, form.rollPushRadius, PushBuffer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var col = PushBuffer[i];\n            if (col == null) continue;\n\n            var enemyHealth = col.GetComponent<EnemyHealth>();\n            if (enemyHealth == null) continue;\n\n            enemyHealth.ApplyExternalKnockback(transform.position, form.rollPushForce);\n        }\n\n        // Limpar referências no buffer após uso — evita reter objetos destruídos entre rolamentos.\n        System.Array.Clear(PushBuffer, 0, count);\n    }\n\n    private void EndRoll()\n    {\n        IsRolling = false;\n        motor.Anim?.SetBool(\"IsRolling\", false);\n        motor.SetMovementLocked(false, this);\n        rollRoutine = null;\n    }\n\n    private void StopRollIfRunning()\n    {\n        if (rollRoutine == null) return;\n\n        StopCoroutine(rollRoutine);\n        EndRoll();\n    }\n\n    /// <summary>Aplica o bónus de defesa do rolamento (chamado por PlayerCombat.TryDamagePlayer).</summary>\n    public int ApplyRollDefense(int damage)\n    {\n        if (!IsRolling || form == null) return damage;\n        return form.ApplyDefense(damage, form.rollDefenseBonus);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    void IAbility.Activate() => TryRoll();\n    void IAbility.Release() { } // rolamento não tem \"soltar\"\n\n    /// <summary>Interrompe o rolamento em curso (morte, transformação, etc.).</summary>\n    public void Cancel(AbilityCancelReason reason) => StopRollIfRunning();\n\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => rollRoutine != null;\n    public float CooldownDuration => form != null ? form.rollCooldown : 0f;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && rollRoutine == null && !motor.MovementLocked;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do rolamento.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
+  "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Rolamento (ROL do GDD — habilidade central do Pangolim):\n///\n/// Ao premir o botão de habilidade (em terra, fora de cooldown), o player\n/// rola na direcção em que está virado durante 'rollDuration' a 'rollSpeed'\n/// (mesmo padrão de DashAbility/ChargeAbility — bloqueia o movimento normal e\n/// move o Rigidbody2D directamente). Enquanto a rolar:\n///\n/// - <see cref=\"IsRolling\"/> fica true — PlayerCombat.TryDamagePlayer consulta\n///   isto e chama <see cref=\"ApplyRollDefense\"/> para aplicar o bónus de\n///   defesa da ficha (rollDefenseBonus), tal como o ShellGuard da Tartaruga.\n/// - Animator.SetBool(\"IsRolling\", true) activa a animação de rolamento.\n/// - Inimigos dentro de 'rollPushRadius' (à frente do player) são empurrados\n///   via EnemyHealth.ApplyExternalKnockback (sem causar dano — só empurrão).\n/// - Blocos empurráveis (PushableBlock) continuam a reagir normalmente ao\n///   contacto/PushStrength da forma, como em qualquer movimento.\n///\n/// Tem cooldown (rollCooldown) e Cancel(), tal como Dash/Charge — interrompe\n/// o rolamento em curso (morte, transformação, etc.).\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class RollAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    private const int MaxPushTargets = 8;\n    private static readonly Collider2D[] PushBuffer = new Collider2D[MaxPushTargets];\n\n    private bool enabledForForm;\n    private AnimalFormData form;\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    private float cooldownTimer;\n    private Coroutine rollRoutine;\n\n    /// <summary>true enquanto o player está a rolar — consultado por PlayerCombat.TryDamagePlayer.</summary>\n    public bool IsRolling { get; private set; }\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && (form.canRoll || form.primaryAbility == PrimaryAbility.Roll);\n\n        if (!enabledForForm) StopRollIfRunning();\n    }\n\n    /// <summary>Chamado pelo AbilityRouter (OnAbilityPressed) quando a forma tem PrimaryAbility.Roll.</summary>\n    public void TryRoll()\n    {\n        if (!enabledForForm) return;\n        if (cooldownTimer > 0f) return;\n        if (rollRoutine != null) return;\n        if (motor.MovementLocked) return;\n        if (!motor.IsGrounded) return;\n\n        rollRoutine = StartCoroutine(RollRoutine());\n    }\n\n    private IEnumerator RollRoutine()\n    {\n        cooldownTimer = form.rollCooldown;\n\n        IsRolling = true;\n        motor.SetMovementLocked(true, this);\n        motor.Anim?.SetBool(\"IsRolling\", true);\n\n        int dir = motor.FacingSign != 0 ? motor.FacingSign : 1;\n\n        float elapsed = 0f;\n        while (elapsed < form.rollDuration)\n        {\n            rb.linearVelocity = new Vector2(dir * form.rollSpeed, rb.linearVelocity.y);\n            PushNearbyEnemies(dir);\n\n            elapsed += Time.fixedDeltaTime;\n            yield return new WaitForFixedUpdate();\n        }\n\n        EndRoll();\n    }\n\n    /// <summary>Empurra (sem dano) inimigos dentro de 'rollPushRadius' à frente do player.</summary>\n    private void PushNearbyEnemies(int dir)\n    {\n        if (form.rollPushForce <= 0f) return;\n\n        Vector2 origin = (Vector2)transform.position + new Vector2(dir * form.rollPushRadius * 0.5f, 0f);\n        int count = Physics2D.OverlapCircleNonAlloc(origin, form.rollPushRadius, PushBuffer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var col = PushBuffer[i];\n            if (col == null) continue;\n\n            var enemyHealth = col.GetComponent<EnemyHealth>();\n            if (enemyHealth == null) continue;\n\n            enemyHealth.ApplyExternalKnockback(transform.position, form.rollPushForce);\n        }\n\n        // Limpar referências no buffer após uso — evita reter objetos destruídos entre rolamentos.\n        System.Array.Clear(PushBuffer, 0, count);\n    }\n\n    private void EndRoll()\n    {\n        IsRolling = false;\n        motor.Anim?.SetBool(\"IsRolling\", false);\n        motor.SetMovementLocked(false, this);\n        rollRoutine = null;\n    }\n\n    private void StopRollIfRunning()\n    {\n        if (rollRoutine == null) return;\n\n        StopCoroutine(rollRoutine);\n        EndRoll();\n    }\n\n    /// <summary>Aplica o bónus de defesa do rolamento (chamado por PlayerCombat.TryDamagePlayer).</summary>\n    public int ApplyRollDefense(int damage)\n    {\n        if (!IsRolling || form == null) return damage;\n        return form.ApplyDefense(damage, form.rollDefenseBonus);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    void IAbility.Activate() => TryRoll();\n    void IAbility.Release() { } // rolamento não tem \"soltar\"\n\n    /// <summary>Interrompe o rolamento em curso (morte, transformação, etc.).</summary>\n    public void Cancel(AbilityCancelReason reason) => StopRollIfRunning();\n\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => rollRoutine != null;\n    public float CooldownDuration => form != null ? form.rollCooldown : 0f;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f && rollRoutine == null && !motor.MovementLocked;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do rolamento.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
   "id": "script-abilities-rollability-cs",
   "dependencyIds": [
-    "script-abilities-abilityrouter-cs",
+    "script-abilities-iability-cs",
     "script-forms-animalformdata-cs",
-    "script-test-animalsdebugpanel-cs",
-    "script-abilities-chargeability-cs",
-    "script-abilities-dashability-cs",
     "script-enemy-enemyhealth-cs",
     "script-abilities-iability-cs",
     "script-abilities-iactiveability-cs",
     "script-abilities-iformability-cs",
-    "script-player-playercombat-cs",
     "script-player-playermotor2d-cs",
-    "script-interactables-pushableblock-cs"
+    "script-forms-animalformdata-cs"
   ],
   "usedByIds": [
     "script-abilities-abilityrouter-cs",
-    "script-forms-animalformdata-cs",
-    "script-test-animalsdebugpanel-cs",
     "script-enemy-enemyhealth-cs",
     "script-player-playercombat-cs"
   ]

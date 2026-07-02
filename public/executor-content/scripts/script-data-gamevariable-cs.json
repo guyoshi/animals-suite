@@ -234,6 +234,7 @@
   ],
   "used_by": [
     "AnimalsDebugPanel",
+    "Condition_BoolVariable",
     "GameVariableListDrawer",
     "GameVariables",
     "NpcController",
@@ -248,6 +249,7 @@
   ],
   "usedByIds": [
     "script-test-animalsdebugpanel-cs",
+    "script-npc-conditions-variableconditions-cs",
     "script-data-editor-gamevariablelistdrawer-cs",
     "script-data-gamevariables-cs",
     "script-npc-npccontroller-cs",

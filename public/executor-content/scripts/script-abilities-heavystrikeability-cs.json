@@ -183,23 +183,23 @@
   ],
   "used_by": [
     "AbilityRouter",
-    "BreakableObject",
     "PlayerAttack"
   ],
   "source": "using UnityEngine;\n\n/// <summary>\n/// Golpe pesado como HABILIDADE (Urso Polar — o ataque normal dele são as\n/// garras/ataque básico; o botão de habilidade dá o golpe pesado que quebra\n/// gelo frágil e objectos). Reutiliza PlayerAttack.PerformStrike com dano\n/// reforçado e cooldown próprio.\n///\n/// Activado via PrimaryAbility.HeavyStrike (AbilityRouter → TryStrike).\n/// </summary>\n[RequireComponent(typeof(PlayerAttack))]\npublic class HeavyStrikeAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Golpe Pesado\")]\n    [Tooltip(\"Dano extra somado ao attackDamage da forma.\")]\n    public int bonusDamage = 2;\n\n    [Tooltip(\"Multiplicador do alcance em relação a attackRange da forma.\")]\n    public float rangeMultiplier = 1.2f;\n\n    [Tooltip(\"Multiplicador do knockback em relação a attackKnockback da forma.\")]\n    public float knockbackMultiplier = 1.5f;\n\n    [Tooltip(\"Cooldown próprio do golpe pesado (mais lento que o ataque básico).\")]\n    public float strikeCooldown = 1.2f;\n\n    private PlayerAttack attack;\n    private AnimalFormData form;\n    private bool enabledForForm;\n    private float cooldownTimer;\n\n    private void Awake()\n    {\n        attack = GetComponent<PlayerAttack>();\n    }\n\n    private void Update()\n    {\n        if (cooldownTimer > 0f) cooldownTimer -= Time.deltaTime;\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n        enabledForForm = form != null && form.primaryAbility == PrimaryAbility.HeavyStrike;\n        cooldownTimer = 0f;\n    }\n\n    /// <summary>Executa o golpe pesado (AbilityRouter — PrimaryAbility.HeavyStrike).</summary>\n    public void TryStrike()\n    {\n        if (!enabledForForm || cooldownTimer > 0f || form == null) return;\n\n        cooldownTimer = strikeCooldown;\n\n        attack.PerformStrike(\n            form.attackDamage + bonusDamage,\n            form.attackRange * rangeMultiplier,\n            form.attackKnockback * knockbackMultiplier,\n            breakObjects: true);\n    }\n\n    // ---- IAbility / IActiveAbility (Tarefa #34 — HUD) ----\n    // Instantânea, sem estado persistente — só o cooldown importa para a HUD.\n    void IAbility.Activate() => TryStrike();\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) { }\n    public float CooldownRemaining => Mathf.Max(0f, cooldownTimer);\n    bool IAbility.IsActive => false;\n    public float CooldownDuration => strikeCooldown;\n    public bool CanActivate => enabledForForm && cooldownTimer <= 0f;\n\n    /// <summary>AnimalsDebugPanel — zera o cooldown do golpe pesado.</summary>\n    public void ResetCooldown() => cooldownTimer = 0f;\n}\n",
   "id": "script-abilities-heavystrikeability-cs",
   "dependencyIds": [
+    "script-abilities-iability-cs",
     "script-abilities-abilityrouter-cs",
     "script-forms-animalformdata-cs",
     "script-test-animalsdebugpanel-cs",
     "script-abilities-iability-cs",
     "script-abilities-iactiveability-cs",
     "script-abilities-iformability-cs",
-    "script-player-playerattack-cs"
+    "script-player-playerattack-cs",
+    "script-forms-animalformdata-cs"
   ],
   "usedByIds": [
     "script-abilities-abilityrouter-cs",
-    "script-interactables-breakableobject-cs",
     "script-player-playerattack-cs"
   ]
 }

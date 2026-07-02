@@ -128,13 +128,14 @@
   ],
   "used_by": [
     "Condition_HasClue",
-    "FullscreenImageUI",
-    "JournalManager",
-    "MissionData"
+    "DiarySectionUI",
+    "MissionData",
+    "RumorData"
   ],
   "source": "using System.Collections;\nusing UnityEngine;\n\n// Ações do Sistema de Pistas/Rumores (Diário) — aparecem automaticamente no\n// \"+ Adicionar Ação\" de qualquer NpcController (incluindo objectos genéricos\n// reutilizados como interactivos, Ponto 9 da especificação).\n\n/// <summary>\n/// Mostra uma imagem em ecrã inteiro (fora do balão de diálogo, fundo\n/// escurecido), pausa o diálogo e o jogo enquanto estiver aberta, e fecha com\n/// o botão normal de Confirmar/Interagir (teclado ou comando) — ver\n/// FullscreenImageUI. Depois de confirmada, a ação termina e o diálogo\n/// continua normalmente.\n///\n/// Se \"saveAsClue\" estiver activo, a pista correspondente\n/// (\"mission.clues[clueId]\") fica marcada como obtida (JournalManager) e\n/// passa a aparecer, permanentemente, na sub-secção \"Pistas\" dessa missão no\n/// Diário — onde pode ser reaberta em ecrã inteiro a qualquer momento.\n/// </summary>\n[System.Serializable]\npublic class Action_ShowFullscreenImage : NpcAction\n{\n    [Header(\"Imagem em Ecrã Inteiro\")]\n    public Sprite image;\n\n    [Tooltip(\"Título opcional mostrado por cima da imagem.\")]\n    public string title;\n\n    [TextArea]\n    [Tooltip(\"Descrição/texto opcional mostrado junto à imagem.\")]\n    public string description;\n\n    [Header(\"Guardar como Pista (Diário)\")]\n    [Tooltip(\"Se activo, ao confirmar a imagem fica guardada na sub-secção \\\"Pistas\\\" da missão indicada, reabrível a partir do Diário.\")]\n    public bool saveAsClue;\n\n    [Tooltip(\"Missão a que esta pista pertence (necessário se \\\"saveAsClue\\\" estiver activo). Tem de ter uma entrada correspondente em \\\"mission.clues\\\" com o mesmo \\\"clueId\\\".\")]\n    public MissionData mission;\n\n    [Tooltip(\"Identificador da pista dentro de \\\"mission.clues\\\" (necessário se \\\"saveAsClue\\\" estiver activo).\")]\n    public string clueId;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (FullscreenImageUI.Instance != null)\n            yield return FullscreenImageUI.Instance.Show(image, title, description);\n\n        if (saveAsClue && mission != null && !string.IsNullOrEmpty(clueId))\n            JournalManager.Instance?.GiveClue(mission, clueId);\n    }\n}\n\n/// <summary>\n/// Regista um Rumor (RumorData) — informação mais indirecta, sem iniciar\n/// nenhuma missão — na secção global \"Rumores\" do Diário (JournalManager).\n/// Um rumor pode ter texto e/ou imagem; nunca desaparece do Diário depois de\n/// ouvido (ver Action_MarkRumorFound para o ícone de \"Check\").\n///\n/// Se \"showImageNow\" estiver activo e o rumor tiver imagem, esta é mostrada em\n/// ecrã inteiro de imediato (ex: o NPC mostra uma fotografia enquanto fala) —\n/// a imagem fica sempre disponível a partir do Diário, mesmo sem isto\n/// activado.\n/// </summary>\n[System.Serializable]\npublic class Action_AddRumor : NpcAction\n{\n    [Tooltip(\"Rumor a registar na secção \\\"Rumores\\\" do Diário (texto e/ou imagem).\")]\n    public RumorData rumor;\n\n    [Tooltip(\"Se activo e o rumor tiver imagem, mostra-a em ecrã inteiro de imediato.\")]\n    public bool showImageNow;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (rumor == null) yield break;\n\n        if (showImageNow && rumor.image != null && FullscreenImageUI.Instance != null)\n            yield return FullscreenImageUI.Instance.Show(rumor.image, rumor.title, rumor.text);\n\n        JournalManager.Instance?.AddRumor(rumor);\n    }\n}\n\n/// <summary>\n/// Marca um Rumor (RumorData) já ouvido como \"encontrado\" — mostra um ícone de\n/// \"Check\" junto a ele na secção \"Rumores\" do Diário, sem o remover da lista\n/// (ver Condition_RumorFound).\n/// </summary>\n[System.Serializable]\npublic class Action_MarkRumorFound : NpcAction\n{\n    [Tooltip(\"Rumor a marcar como \\\"encontrado\\\".\")]\n    public RumorData rumor;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        JournalManager.Instance?.MarkRumorFound(rumor);\n        yield break;\n    }\n}\n",
   "id": "script-npc-actions-journalactions-cs",
   "dependencyIds": [
+    "script-npc-conditions-journalconditions-cs",
     "script-ui-fullscreenimageui-cs",
     "script-data-journalmanager-cs",
     "script-data-missiondata-cs",
@@ -144,8 +145,8 @@
   ],
   "usedByIds": [
     "script-npc-conditions-journalconditions-cs",
-    "script-ui-fullscreenimageui-cs",
-    "script-data-journalmanager-cs",
-    "script-data-missiondata-cs"
+    "script-ui-diarysectionui-cs",
+    "script-data-missiondata-cs",
+    "script-data-rumordata-cs"
   ]
 }

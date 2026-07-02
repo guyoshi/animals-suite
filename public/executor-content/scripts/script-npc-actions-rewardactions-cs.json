@@ -225,6 +225,18 @@
     "WorldData"
   ],
   "used_by": [
+    "Action_RevealAnimalForm",
+    "BossController",
+    "Boss_AMaoQueFere",
+    "Boss_AMenteQueMata",
+    "Boss_GargantaDoFogo",
+    "Boss_GiganteDoDegelo",
+    "Boss_GuardiaoDoFerroEnraizado",
+    "Boss_MareDeRede",
+    "Boss_SinoDoRuido",
+    "Boss_SolDePlastico",
+    "NpcControllerEditor",
+    "NpcPlayerConditionUtil",
     "PlayerProgress",
     "UpgradeData",
     "WorldMapUI"
@@ -235,6 +247,7 @@
     "script-forms-animalformdata-cs",
     "script-data-areadata-cs",
     "script-camera-cameraareabounds-cs",
+    "script-npc-conditions-playerconditions-cs",
     "script-forms-formswitcher-cs",
     "script-data-itemdata-cs",
     "script-npc-npcaction-cs",
@@ -248,6 +261,18 @@
     "script-data-worlddata-cs"
   ],
   "usedByIds": [
+    "script-npc-actions-formactions-cs",
+    "script-enemy-bosses-bosscontroller-cs",
+    "script-enemy-bosses-boss-amaoquefere-cs",
+    "script-enemy-bosses-boss-amentequemata-cs",
+    "script-enemy-bosses-boss-gargantadofogo-cs",
+    "script-enemy-bosses-boss-gigantedodegelo-cs",
+    "script-enemy-bosses-boss-guardiaodoferroenraizado-cs",
+    "script-enemy-bosses-boss-marederede-cs",
+    "script-enemy-bosses-boss-sinodoruido-cs",
+    "script-enemy-bosses-boss-soldeplastico-cs",
+    "script-npc-editor-npccontrollereditor-cs",
+    "script-npc-conditions-playerconditions-cs",
     "script-data-playerprogress-cs",
     "script-data-upgradedata-cs",
     "script-world-worldmapui-cs"

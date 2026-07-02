@@ -54,18 +54,17 @@
     "PickupType",
     "PlayerProgress"
   ],
-  "used_by": [
-    "PickupBase"
-  ],
+  "used_by": [],
   "source": "using UnityEngine;\n\n/// <summary>\n/// Baú — ao \"abrir\" (recolher, como qualquer outro pickup, via\n/// <c>OnTriggerEnter2D</c> ou chamada directa a <see cref=\"PickupBase.Collect\"/>\n/// a partir de uma interacção), entrega o conteúdo configurado\n/// (<see cref=\"loot\"/> + <see cref=\"sementes\"/>, via <c>PlayerProgress.AddItem</c>\n/// / <c>GiveSementes</c>) e regista \"baú aberto\" na área\n/// (<c>AreaProgress.chestsFound</c> / <c>AreaData.totalChests</c>).\n///\n/// Nota: este componente não implementa por si só um botão de \"interagir\" —\n/// se o design quiser que o baú só abra ao apertar Interagir (em vez de\n/// trigger automático), bastar reescrever <see cref=\"PickupBase.OnTriggerEnter2D\"/>\n/// nesta subclasse para apenas marcar \"ao alcance\" e chamar\n/// <c>Collect()</c> a partir do botão de interacção do player.\n/// </summary>\npublic class ChestPickup : PickupBase\n{\n    [Header(\"Conteúdo do Baú\")]\n    [Tooltip(\"Itens entregues ao abrir (PlayerProgress.AddItem — respeita ItemData.maxQuantity / savedAsCollected).\")]\n    public PickupLootEntry[] loot;\n\n    [Tooltip(\"Sementes adicionais dentro do baú (0 = nenhuma).\")]\n    [Min(0)] public int sementes = 0;\n\n    public override PickupType Type => PickupType.Chest;\n\n    protected override void GrantReward()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return;\n\n        if (loot != null)\n        {\n            foreach (var entry in loot)\n            {\n                if (entry == null || entry.item == null) continue;\n                progress.AddItem(entry.item, entry.amount);\n            }\n        }\n\n        if (sementes > 0) progress.GiveSementes(sementes);\n\n        if (area != null) progress.AddChestFound(area);\n    }\n}\n",
   "id": "script-collectibles-chestpickup-cs",
   "dependencyIds": [
     "script-data-areadata-cs",
+    "script-data-playerprogress-cs",
     "script-data-itemdata-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-collectibles-pickupbase-cs",
     "script-collectibles-pickupbase-cs",
     "script-data-playerprogress-cs"
   ],
-  "usedByIds": [
-    "script-collectibles-pickupbase-cs"
-  ]
+  "usedByIds": []
 }

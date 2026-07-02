@@ -16,116 +16,6 @@
   ],
   "fields": [
     {
-      "name": "input",
-      "type": "PlayerInputRouter",
-      "mods": "private",
-      "default": "",
-      "section": "Referências",
-      "attrs": "[Header(\"Referências\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "panelRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[Header(\"UI\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "wheelContainer",
-      "type": "RectTransform",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "nodePrefab",
-      "type": "ItemWheelNodeUI",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "itemNameText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[Tooltip(\"Nome do item seleccionado (opcional).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Nome do item selecionado (opcional)."
-    },
-    {
-      "name": "radius",
-      "type": "float",
-      "mods": "private",
-      "default": "180f",
-      "section": "Layout (círculo)",
-      "attrs": "[Header(\"Layout (círculo)\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "startAngleDeg",
-      "type": "float",
-      "mods": "private",
-      "default": "0f",
-      "section": "Layout (círculo)",
-      "attrs": "[Tooltip(\"Ângulo (graus) do primeiro nó, medido a partir do topo, sentido horário.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Ângulo (graus) do primeiro nó, medido a partir do topo, sentido horário."
-    },
-    {
-      "name": "slowTimeScale",
-      "type": "float",
-      "mods": "private",
-      "default": "0.2f",
-      "section": "Câmara Lenta",
-      "attrs": "[Header(\"Câmara Lenta\")] [Range(0.05f, 1f)] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_nodes",
-      "type": "List<ItemWheelNodeUI>",
-      "mods": "private readonly",
-      "default": "new List<ItemWheelNodeUI>()",
-      "section": "Câmara Lenta",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_usableItems",
-      "type": "List<ItemData>",
-      "mods": "private readonly",
-      "default": "new List<ItemData>()",
-      "section": "Câmara Lenta",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_usableQuantities",
-      "type": "List<int>",
-      "mods": "private readonly",
-      "default": "new List<int>()",
-      "section": "Câmara Lenta",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "_selectedIndex",
       "type": "int",
       "mods": "private",
@@ -259,31 +149,24 @@
     "ItemData",
     "ItemWheelNodeUI",
     "PlayerInputRouter",
-    "PlayerItemUser",
     "PlayerProgress",
     "WheelTimeScaleUtil"
   ],
   "used_by": [
-    "ItemWheelNodeUI",
-    "PlayerInputRouter",
-    "PlayerProgress",
-    "WheelTimeScaleUtil"
+    "ItemWheelNodeUI"
   ],
-  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Roda de Itens (Tarefa #21 — \"Roda de animais/itens\"): UI radial que\n/// aparece/desaparece ao premir o botão da Roda de Itens\n/// (<see cref=\"PlayerInputRouter.ItemWheelPressed\"/> — toggle), mostrando\n/// todos os itens utilizáveis (<see cref=\"ItemData.usableByPlayer\"/>) com\n/// quantidade &gt; 0 no inventário (<see cref=\"PlayerProgress.inventory\"/>).\n///\n/// - Navegação: analógico direito / D-pad\n///   (<see cref=\"PlayerInputRouter.ItemNext\"/>/<see cref=\"PlayerInputRouter.ItemPrev\"/>)\n///   move a selecção e EQUIPA imediatamente o item seleccionado\n///   (<see cref=\"PlayerProgress.EquipItem\"/> — \"preview ao vivo\": navegar já\n///   troca o item activo, sem precisar de confirmar). Funciona tanto com a\n///   roda aberta como fechada (troca rápida do item equipado sem abrir a\n///   roda) — <see cref=\"PlayerInputRouter\"/> só bloqueia esta navegação\n///   enquanto a Roda de Formas estiver aberta.\n/// - Usar o item equipado continua a ser feito fora da roda, com\n///   <see cref=\"PlayerInputRouter.UseItemHold\"/> (PlayerItemUser) — a roda só\n///   troca QUAL item está equipado.\n/// - Confirmação/cancelamento: como a troca já é aplicada ao navegar, abrir e\n///   fechar a roda sem mover a selecção não tem qualquer efeito (\"cancelar\" =\n///   não mover a selecção); fechar mantém o último item seleccionado equipado.\n/// - Câmara lenta: Time.timeScale ≈ 0.2 enquanto a roda estiver aberta\n///   (<see cref=\"WheelTimeScaleUtil\"/>), partilhado com a Roda de Formas.\n///\n/// Montagem no Editor:\n/// - \"panelRoot\": GameObject raiz da roda (activado/desactivado ao abrir/fechar).\n/// - \"wheelContainer\": RectTransform vazio, centro da roda — os nós são\n///   instanciados como filhos, posicionados em círculo.\n/// - \"nodePrefab\": prefab com <see cref=\"ItemWheelNodeUI\"/> (ícone + quantidade\n///   + destaque + marcador \"equipado\").\n/// - \"itemNameText\": TMP_Text opcional com o nome do item seleccionado.\n/// </summary>\npublic class ItemWheelUI : MonoBehaviour\n{\n    [Header(\"Referências\")]\n    [SerializeField] private PlayerInputRouter input;\n\n    [Header(\"UI\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private RectTransform wheelContainer;\n    [SerializeField] private ItemWheelNodeUI nodePrefab;\n\n    [Tooltip(\"Nome do item seleccionado (opcional).\")]\n    [SerializeField] private TMP_Text itemNameText;\n\n    [Header(\"Layout (círculo)\")]\n    [SerializeField] private float radius = 180f;\n    [Tooltip(\"Ângulo (graus) do primeiro nó, medido a partir do topo, sentido horário.\")]\n    [SerializeField] private float startAngleDeg = 0f;\n\n    [Header(\"Câmara Lenta\")]\n    [Range(0.05f, 1f)]\n    [SerializeField] private float slowTimeScale = 0.2f;\n\n    private readonly List<ItemWheelNodeUI> _nodes = new List<ItemWheelNodeUI>();\n\n    // Itens utilizáveis actualmente no inventário (reconstruída sempre que a\n    // selecção muda ou a roda abre — inventário pequeno, custo desprezável).\n    private readonly List<ItemData> _usableItems = new List<ItemData>();\n    private readonly List<int> _usableQuantities = new List<int>();\n\n    private int _selectedIndex;\n    private bool _isOpen;\n\n    private void Awake()\n    {\n        if (input == null) input = GetComponentInParent<PlayerInputRouter>();\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    private void OnEnable()\n    {\n        if (input == null)\n        {\n            Debug.LogError(\"[ItemWheelUI] input não atribuído. Liga no Inspector.\");\n            enabled = false;\n            return;\n        }\n\n        input.ItemWheelPressed += OnItemWheelPressed;\n        input.ItemNext += OnItemNext;\n        input.ItemPrev += OnItemPrev;\n    }\n\n    private void OnDisable()\n    {\n        if (input != null)\n        {\n            input.ItemWheelPressed -= OnItemWheelPressed;\n            input.ItemNext -= OnItemNext;\n            input.ItemPrev -= OnItemPrev;\n        }\n\n        // Salvaguarda: se este componente for desactivado enquanto a roda\n        // estava aberta, garante que o modo de input e a câmara lenta não\n        // ficam \"pendurados\".\n        if (_isOpen)\n        {\n            WheelTimeScaleUtil.EndSlowdown();\n            if (input != null) input.SetMode(PlayerInputRouter.InputMode.Gameplay);\n            _isOpen = false;\n        }\n    }\n\n    private void OnItemWheelPressed()\n    {\n        if (_isOpen)\n            Close();\n        else\n            Open();\n    }\n\n    private void Open()\n    {\n        // Com a Roda de Formas aberta não faz sentido abrir também a Roda de\n        // Itens (o Router já bloqueia ItemNext/Prev nesse modo).\n        if (input.Mode == PlayerInputRouter.InputMode.FormWheel) return;\n\n        _isOpen = true;\n        input.SetMode(PlayerInputRouter.InputMode.ItemWheel);\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        RebuildUsableItems();\n        SelectEquippedOrFirst();\n        BuildNodes();\n        RefreshNodes();\n\n        WheelTimeScaleUtil.BeginSlowdown(slowTimeScale);\n    }\n\n    private void Close()\n    {\n        if (!_isOpen) return;\n        _isOpen = false;\n\n        input.SetMode(PlayerInputRouter.InputMode.Gameplay);\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        WheelTimeScaleUtil.EndSlowdown();\n    }\n\n    private void OnItemNext() => Navigate(+1);\n    private void OnItemPrev() => Navigate(-1);\n\n    /// <summary>\n    /// Move a selecção (com ou sem a roda aberta) e equipa imediatamente o\n    /// item seleccionado — ver resumo da classe (\"preview ao vivo\").\n    /// </summary>\n    private void Navigate(int direction)\n    {\n        RebuildUsableItems();\n        if (_usableItems.Count == 0) return;\n\n        // Garante que a selecção parte do item actualmente equipado, mesmo\n        // que o inventário tenha mudado desde a última navegação (item\n        // consumido, novo item recebido, etc.).\n        SyncSelectionToEquipped();\n\n        _selectedIndex = (_selectedIndex + direction + _usableItems.Count) % _usableItems.Count;\n        EquipSelected();\n\n        if (_isOpen)\n        {\n            BuildNodes();\n            RefreshNodes();\n        }\n    }\n\n    private void EquipSelected()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || _usableItems.Count == 0) return;\n\n        progress.EquipItem(_usableItems[_selectedIndex]);\n    }\n\n    /// <summary>Selecciona o item actualmente equipado, ou o primeiro utilizável se nenhum estiver equipado/o equipado não for utilizável.</summary>\n    private void SelectEquippedOrFirst()\n    {\n        SyncSelectionToEquipped();\n    }\n\n    private void SyncSelectionToEquipped()\n    {\n        var progress = PlayerProgress.Instance;\n        string equippedId = progress != null ? progress.equippedItemId : null;\n\n        int idx = -1;\n        for (int i = 0; i < _usableItems.Count; i++)\n        {\n            if (_usableItems[i] != null && _usableItems[i].itemId == equippedId)\n            {\n                idx = i;\n                break;\n            }\n        }\n\n        _selectedIndex = idx >= 0 ? idx : 0;\n    }\n\n    /// <summary>\n    /// Reconstrói \"_usableItems\"/\"_usableQuantities\" a partir de\n    /// PlayerProgress.inventory: apenas itens com ItemData.usableByPlayer ==\n    /// true e quantidade &gt; 0 (resolvidos via GameDatabase).\n    /// </summary>\n    private void RebuildUsableItems()\n    {\n        _usableItems.Clear();\n        _usableQuantities.Clear();\n\n        var progress = PlayerProgress.Instance;\n        var db = GameDatabase.Instance;\n        if (progress == null || db == null) return;\n\n        foreach (var entry in progress.inventory)\n        {\n            if (entry == null || entry.quantity <= 0) continue;\n\n            var item = db.FindItem(entry.itemId);\n            if (item == null || !item.usableByPlayer) continue;\n\n            _usableItems.Add(item);\n            _usableQuantities.Add(entry.quantity);\n        }\n\n        if (_selectedIndex >= _usableItems.Count)\n            _selectedIndex = Mathf.Max(0, _usableItems.Count - 1);\n    }\n\n    /// <summary>\n    /// (Re)cria um nó por item utilizável, posicionado em círculo\n    /// (\"wheelContainer\" como centro). Chamado ao abrir a roda ou navegar — o\n    /// número de itens utilizáveis pode ter mudado.\n    /// </summary>\n    private void BuildNodes()\n    {\n        if (!_isOpen || wheelContainer == null || nodePrefab == null) return;\n\n        foreach (var node in _nodes)\n            if (node != null) Destroy(node.gameObject);\n        _nodes.Clear();\n\n        int count = _usableItems.Count;\n        if (count == 0) return;\n\n        float stepDeg = 360f / count;\n\n        for (int i = 0; i < count; i++)\n        {\n            var node = Instantiate(nodePrefab, wheelContainer);\n            node.gameObject.SetActive(true);\n\n            float angleDeg = startAngleDeg + stepDeg * i;\n            float angleRad = angleDeg * Mathf.Deg2Rad;\n\n            // Ângulo medido a partir do topo (0° = topo), sentido horário.\n            Vector2 pos = new Vector2(Mathf.Sin(angleRad), Mathf.Cos(angleRad)) * radius;\n            node.GetComponent<RectTransform>().anchoredPosition = pos;\n\n            _nodes.Add(node);\n        }\n    }\n\n    /// <summary>Actualiza cada nó (quantidade, destaque na selecção, marcador \"equipado\") e o nome do item seleccionado.</summary>\n    private void RefreshNodes()\n    {\n        if (!_isOpen) return;\n\n        var progress = PlayerProgress.Instance;\n        string equippedId = progress != null ? progress.equippedItemId : null;\n\n        for (int i = 0; i < _nodes.Count && i < _usableItems.Count; i++)\n        {\n            var item = _usableItems[i];\n            bool isEquipped = item != null && item.itemId == equippedId;\n            bool isSelected = i == _selectedIndex;\n\n            _nodes[i].Setup(item, _usableQuantities[i], isEquipped, isSelected);\n        }\n\n        if (itemNameText != null)\n        {\n            var selected = _selectedIndex >= 0 && _selectedIndex < _usableItems.Count ? _usableItems[_selectedIndex] : null;\n            itemNameText.text = selected != null ? selected.displayName : string.Empty;\n        }\n    }\n}\n",
+  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Roda de Itens (Tarefa #21 — \"Roda de animais/itens\"): UI radial que\n/// aparece/desaparece ao premir o botão da Roda de Itens\n/// (<see cref=\"PlayerInputRouter.ItemWheelPressed\"/> — toggle), mostrando\n/// todos os itens utilizáveis (<see cref=\"ItemData.usableByPlayer\"/>) com\n/// quantidade &gt; 0 no inventário (<see cref=\"PlayerProgress.inventory\"/>).\n///\n/// - Navegação: analógico direito / D-pad\n///   (<see cref=\"PlayerInputRouter.ItemNext\"/>/<see cref=\"PlayerInputRouter.ItemPrev\"/>)\n///   move a selecção e EQUIPA imediatamente o item seleccionado\n///   (<see cref=\"PlayerProgress.EquipItem\"/> — \"preview ao vivo\": navegar já\n///   troca o item activo, sem precisar de confirmar). Funciona tanto com a\n///   roda aberta como fechada (troca rápida do item equipado sem abrir a\n///   roda) — <see cref=\"PlayerInputRouter\"/> só bloqueia esta navegação\n///   enquanto a Roda de Formas estiver aberta.\n/// - Usar o item equipado continua a ser feito fora da roda, com\n///   <see cref=\"PlayerInputRouter.UseItemHold\"/> (PlayerItemUser) — a roda só\n///   troca QUAL item está equipado.\n/// - Confirmação/cancelamento: como a troca já é aplicada ao navegar, abrir e\n///   fechar a roda sem mover a selecção não tem qualquer efeito (\"cancelar\" =\n///   não mover a selecção); fechar mantém o último item seleccionado equipado.\n/// - Câmara lenta: Time.timeScale ≈ 0.2 enquanto a roda estiver aberta\n///   (<see cref=\"WheelTimeScaleUtil\"/>), partilhado com a Roda de Formas.\n///\n/// Montagem no Editor:\n/// - \"panelRoot\": GameObject raiz da roda (activado/desactivado ao abrir/fechar).\n/// - \"wheelContainer\": RectTransform vazio, centro da roda — os nós são\n///   instanciados como filhos, posicionados em círculo.\n/// - \"nodePrefab\": prefab com <see cref=\"ItemWheelNodeUI\"/> (ícone + quantidade\n///   + destaque + marcador \"equipado\").\n/// - \"itemNameText\": TMP_Text opcional com o nome do item seleccionado.\n/// </summary>\npublic class ItemWheelUI : MonoBehaviour\n{\n    [Header(\"Referências\")]\n    [SerializeField] private PlayerInputRouter input;\n\n    [Header(\"UI\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private RectTransform wheelContainer;\n    [SerializeField] private ItemWheelNodeUI nodePrefab;\n\n    [Tooltip(\"Nome do item seleccionado (opcional).\")]\n    [SerializeField] private TMP_Text itemNameText;\n\n    [Header(\"Layout (círculo)\")]\n    [SerializeField] private float radius = 180f;\n    [Tooltip(\"Ângulo (graus) do primeiro nó, medido a partir do topo, sentido horário.\")]\n    [SerializeField] private float startAngleDeg = 0f;\n\n    [Header(\"Câmara Lenta\")]\n    [Range(0.05f, 1f)]\n    [SerializeField] private float slowTimeScale = 0.2f;\n\n    // Pool de nós (Task #29): nunca destruídos, só activados/desactivados.\n    private readonly List<ItemWheelNodeUI> _nodePool = new List<ItemWheelNodeUI>();\n    private readonly List<ItemWheelNodeUI> _nodes    = new List<ItemWheelNodeUI>();\n\n    // Itens utilizáveis actualmente no inventário (reconstruída sempre que a\n    // selecção muda ou a roda abre — inventário pequeno, custo desprezável).\n    private readonly List<ItemData> _usableItems = new List<ItemData>();\n    private readonly List<int> _usableQuantities = new List<int>();\n\n    private int _selectedIndex;\n    private bool _isOpen;\n\n    private void Awake()\n    {\n        if (input == null) input = GetComponentInParent<PlayerInputRouter>();\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    private void OnEnable()\n    {\n        if (input == null)\n        {\n            Debug.LogError(\"[ItemWheelUI] input não atribuído. Liga no Inspector.\");\n            enabled = false;\n            return;\n        }\n\n        input.ItemWheelPressed += OnItemWheelPressed;\n        input.ItemNext += OnItemNext;\n        input.ItemPrev += OnItemPrev;\n    }\n\n    private void OnDisable()\n    {\n        if (input != null)\n        {\n            input.ItemWheelPressed -= OnItemWheelPressed;\n            input.ItemNext -= OnItemNext;\n            input.ItemPrev -= OnItemPrev;\n        }\n\n        // Salvaguarda: se este componente for desactivado enquanto a roda\n        // estava aberta, garante que o modo de input e a câmara lenta não\n        // ficam \"pendurados\".\n        if (_isOpen)\n        {\n            WheelTimeScaleUtil.EndSlowdown();\n            if (input != null) input.SetMode(PlayerInputRouter.InputMode.Gameplay);\n            _isOpen = false;\n        }\n    }\n\n    private void OnItemWheelPressed()\n    {\n        if (_isOpen)\n            Close();\n        else\n            Open();\n    }\n\n    private void Open()\n    {\n        // Com a Roda de Formas aberta não faz sentido abrir também a Roda de\n        // Itens (o Router já bloqueia ItemNext/Prev nesse modo).\n        if (input.Mode == PlayerInputRouter.InputMode.FormWheel) return;\n\n        _isOpen = true;\n        input.SetMode(PlayerInputRouter.InputMode.ItemWheel);\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        RebuildUsableItems();\n        SelectEquippedOrFirst();\n        BuildNodes();\n        RefreshNodes();\n\n        WheelTimeScaleUtil.BeginSlowdown(slowTimeScale);\n    }\n\n    private void Close()\n    {\n        if (!_isOpen) return;\n        _isOpen = false;\n\n        input.SetMode(PlayerInputRouter.InputMode.Gameplay);\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        WheelTimeScaleUtil.EndSlowdown();\n    }\n\n    private void OnItemNext() => Navigate(+1);\n    private void OnItemPrev() => Navigate(-1);\n\n    /// <summary>\n    /// Move a selecção (com ou sem a roda aberta) e equipa imediatamente o\n    /// item seleccionado — ver resumo da classe (\"preview ao vivo\").\n    /// </summary>\n    private void Navigate(int direction)\n    {\n        RebuildUsableItems();\n        if (_usableItems.Count == 0) return;\n\n        // Garante que a selecção parte do item actualmente equipado, mesmo\n        // que o inventário tenha mudado desde a última navegação (item\n        // consumido, novo item recebido, etc.).\n        SyncSelectionToEquipped();\n\n        _selectedIndex = (_selectedIndex + direction + _usableItems.Count) % _usableItems.Count;\n        EquipSelected();\n\n        if (_isOpen)\n        {\n            BuildNodes();\n            RefreshNodes();\n        }\n    }\n\n    private void EquipSelected()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || _usableItems.Count == 0) return;\n\n        progress.EquipItem(_usableItems[_selectedIndex]);\n    }\n\n    /// <summary>Selecciona o item actualmente equipado, ou o primeiro utilizável se nenhum estiver equipado/o equipado não for utilizável.</summary>\n    private void SelectEquippedOrFirst()\n    {\n        SyncSelectionToEquipped();\n    }\n\n    private void SyncSelectionToEquipped()\n    {\n        var progress = PlayerProgress.Instance;\n        string equippedId = progress != null ? progress.equippedItemId : null;\n\n        int idx = -1;\n        for (int i = 0; i < _usableItems.Count; i++)\n        {\n            if (_usableItems[i] != null && _usableItems[i].itemId == equippedId)\n            {\n                idx = i;\n                break;\n            }\n        }\n\n        _selectedIndex = idx >= 0 ? idx : 0;\n    }\n\n    /// <summary>\n    /// Reconstrói \"_usableItems\"/\"_usableQuantities\" a partir de\n    /// PlayerProgress.inventory: apenas itens com ItemData.usableByPlayer ==\n    /// true e quantidade &gt; 0 (resolvidos via GameDatabase).\n    /// </summary>\n    private void RebuildUsableItems()\n    {\n        _usableItems.Clear();\n        _usableQuantities.Clear();\n\n        var progress = PlayerProgress.Instance;\n        var db = GameDatabase.Instance;\n        if (progress == null || db == null) return;\n\n        foreach (var entry in progress.inventory)\n        {\n            if (entry == null || entry.quantity <= 0) continue;\n\n            var item = db.FindItem(entry.itemId);\n            if (item == null || !item.usableByPlayer) continue;\n\n            _usableItems.Add(item);\n            _usableQuantities.Add(entry.quantity);\n        }\n\n        if (_selectedIndex >= _usableItems.Count)\n            _selectedIndex = Mathf.Max(0, _usableItems.Count - 1);\n    }\n\n    /// <summary>\n    /// Activa/posiciona nós para os itens utilizáveis, reutilizando os já\n    /// criados (Task #29 — pool). Nós excedentes ficam desactivados mas não são\n    /// destruídos; novos só são instanciados se a pool não tiver suficientes.\n    /// </summary>\n    private void BuildNodes()\n    {\n        if (!_isOpen || wheelContainer == null || nodePrefab == null) return;\n\n        // Desactiva toda a pool — vai reactivar só os necessários abaixo.\n        foreach (var n in _nodePool)\n            if (n != null) n.gameObject.SetActive(false);\n        _nodes.Clear();\n\n        int count = _usableItems.Count;\n        if (count == 0) return;\n\n        // Crescer a pool se necessário.\n        while (_nodePool.Count < count)\n        {\n            var fresh = Instantiate(nodePrefab, wheelContainer);\n            fresh.gameObject.SetActive(false);\n            _nodePool.Add(fresh);\n        }\n\n        float stepDeg = 360f / count;\n\n        for (int i = 0; i < count; i++)\n        {\n            var node = _nodePool[i];\n            node.gameObject.SetActive(true);\n\n            float angleDeg = startAngleDeg + stepDeg * i;\n            float angleRad = angleDeg * Mathf.Deg2Rad;\n\n            // Ângulo medido a partir do topo (0° = topo), sentido horário.\n            Vector2 pos = new Vector2(Mathf.Sin(angleRad), Mathf.Cos(angleRad)) * radius;\n            node.GetComponent<RectTransform>().anchoredPosition = pos;\n\n            _nodes.Add(node);\n        }\n    }\n\n    /// <summary>Actualiza cada nó (quantidade, destaque na selecção, marcador \"equipado\") e o nome do item seleccionado.</summary>\n    private void RefreshNodes()\n    {\n        if (!_isOpen) return;\n\n        var progress = PlayerProgress.Instance;\n        string equippedId = progress != null ? progress.equippedItemId : null;\n\n        for (int i = 0; i < _nodes.Count && i < _usableItems.Count; i++)\n        {\n            var item = _usableItems[i];\n            bool isEquipped = item != null && item.itemId == equippedId;\n            bool isSelected = i == _selectedIndex;\n\n            _nodes[i].Setup(item, _usableQuantities[i], isEquipped, isSelected);\n        }\n\n        if (itemNameText != null)\n        {\n            var selected = _selectedIndex >= 0 && _selectedIndex < _usableItems.Count ? _usableItems[_selectedIndex] : null;\n            itemNameText.text = selected != null ? selected.displayName : string.Empty;\n        }\n    }\n}\n",
   "id": "script-ui-itemwheelui-cs",
   "dependencyIds": [
     "script-data-gamedatabase-cs",
+    "script-input-playerinputrouter-cs",
     "script-data-itemdata-cs",
     "script-ui-itemwheelnodeui-cs",
     "script-input-playerinputrouter-cs",
-    "script-player-playeritemuser-cs",
     "script-data-playerprogress-cs",
     "script-ui-wheeltimescaleutil-cs"
   ],
   "usedByIds": [
-    "script-ui-itemwheelnodeui-cs",
-    "script-input-playerinputrouter-cs",
-    "script-data-playerprogress-cs",
-    "script-ui-wheeltimescaleutil-cs"
+    "script-ui-itemwheelnodeui-cs"
   ]
 }

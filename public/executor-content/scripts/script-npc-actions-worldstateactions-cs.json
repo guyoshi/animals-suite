@@ -71,18 +71,16 @@
     "WeatherType",
     "WorldState"
   ],
-  "used_by": [
-    "WorldState"
-  ],
+  "used_by": [],
   "source": "using System.Collections;\n\n/// <summary>\n/// Activa o clima manual: fixa o clima neste valor e ignora alterações\n/// automáticas até Action_DisableManualWeather ser executada (que restaura o\n/// clima de antes desta ação). Útil para zonas onde não se quer interferência\n/// do clima global, ou que precisam de um clima específico (Etapa 8).\n/// </summary>\n[System.Serializable]\npublic class Action_SetManualWeather : NpcAction\n{\n    public WeatherType weather = WeatherType.Limpo;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        WorldState.Instance?.SetManualWeather(weather);\n        yield break;\n    }\n}\n\n/// <summary>Desactiva o clima manual, restaurando o clima de antes de Action_SetManualWeather.</summary>\n[System.Serializable]\npublic class Action_DisableManualWeather : NpcAction\n{\n    public override IEnumerator Execute(NpcController npc)\n    {\n        WorldState.Instance?.DisableManualWeather();\n        yield break;\n    }\n}\n\n/// <summary>\n/// Activa a hora manual: fixa a hora do dia neste valor e ignora o\n/// DayNightCycle2D até Action_DisableManualTimeOfDay ser executada (que\n/// restaura a hora de antes desta ação, e deixa o ciclo dia/noite voltar a\n/// correr normalmente). Útil para zonas que precisam de um horário específico\n/// (Etapa 8).\n/// </summary>\n[System.Serializable]\npublic class Action_SetManualTimeOfDay : NpcAction\n{\n    public TimeOfDay timeOfDay = TimeOfDay.Manha;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        WorldState.Instance?.SetManualTimeOfDay(timeOfDay);\n        yield break;\n    }\n}\n\n/// <summary>Desactiva a hora manual, restaurando a hora de antes de Action_SetManualTimeOfDay e devolvendo o controlo ao DayNightCycle2D.</summary>\n[System.Serializable]\npublic class Action_DisableManualTimeOfDay : NpcAction\n{\n    public override IEnumerator Execute(NpcController npc)\n    {\n        WorldState.Instance?.DisableManualTimeOfDay();\n        yield break;\n    }\n}\n",
   "id": "script-npc-actions-worldstateactions-cs",
   "dependencyIds": [
     "script-environment-daynightcycle2d-cs",
     "script-npc-npcaction-cs",
     "script-npc-npccontroller-cs",
+    "script-data-worldstate-cs",
+    "script-data-worldstate-cs",
     "script-data-worldstate-cs"
   ],
-  "usedByIds": [
-    "script-data-worldstate-cs"
-  ]
+  "usedByIds": []
 }

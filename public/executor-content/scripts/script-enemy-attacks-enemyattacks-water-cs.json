@@ -53,7 +53,7 @@
       "section": "Corrente na Água",
       "attrs": "[Header(\"Corrente na Água\")] [Tooltip(\"Direcção fixa / empurrar do inimigo / puxar para o inimigo (Etapa 3.2).\")]",
       "inspector": true,
-      "description": "Direção fixa / empurrar do inimigo / puxar para o inimigo (Etapa 3.2)."
+      "description": "Direcção fixa / empurrar do inimigo / puxar para o inimigo (Etapa 3.2)."
     },
     {
       "name": "currentDirection",
@@ -63,7 +63,7 @@
       "section": "Corrente na Água",
       "attrs": "[Tooltip(\"Direcção da corrente (usada apenas com mode = DirecaoFixa).\")]",
       "inspector": true,
-      "description": "Direção da corrente (usada apenas com mode = DirecaoFixa)."
+      "description": "Direcção da corrente (usada apenas com mode = DirecaoFixa)."
     },
     {
       "name": "currentForce",
@@ -92,6 +92,16 @@
       "default": "5f",
       "section": "Electrificar Água",
       "attrs": "[Header(\"Electrificar Água\")]",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "duration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Electrificar Água",
+      "attrs": "",
       "inspector": true,
       "description": "Referência/configuração usada por este comportamento."
     },
@@ -136,6 +146,16 @@
       "description": "Velocidade com que o player é puxado para baixo."
     },
     {
+      "name": "duration",
+      "type": "float",
+      "mods": "public",
+      "default": "1f",
+      "section": "Gancho (Puxar Para Baixo)",
+      "attrs": "[Tooltip(\"Duração do puxão, em segundos.\")]",
+      "inspector": true,
+      "description": "Duração do puxão, em segundos."
+    },
+    {
       "name": "onlyWhileTargetInWater",
       "type": "bool",
       "mods": "public",
@@ -168,36 +188,64 @@
   ],
   "methods": [
     {
+      "name": "Attack_WaterCurrent",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_WaterCurrent."
+    },
+    {
       "name": "Execute",
       "ret": "IEnumerator",
       "mods": "public override",
       "params": "EnemyAttackController ctx",
       "description": "Executa a operação Execute."
+    },
+    {
+      "name": "Attack_ElectrifyWater",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_ElectrifyWater."
+    },
+    {
+      "name": "Attack_ExplodeOnContact",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_ExplodeOnContact."
+    },
+    {
+      "name": "Attack_HookPullDown",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_HookPullDown."
+    },
+    {
+      "name": "Attack_UnderwaterDash",
+      "ret": "",
+      "mods": "public",
+      "params": "",
+      "description": "Executa a operação Attack_UnderwaterDash."
     }
   ],
   "dependencies": [
-    "Attack_Net",
-    "Attack_ProjectileStraight",
     "EnemyAttack",
     "EnemyAttackController",
     "EnemyHealth",
-    "EnemyMovement",
     "EnemyState",
-    "EnemyWaterConfig",
-    "WaterAttackPosition",
-    "WaterDetector"
+    "WaterAttackPosition"
   ],
   "used_by": [],
-  "source": "using System.Collections;\nusing UnityEngine;\n\n// Ataques aquáticos (Etapas 2.1 e 3.2). Apenas afectam o alvo se este estiver\n// em água (WaterDetector — ver EnemyAttackController.IsTargetInWater/Submerged).\n//\n// Exemplos do GDD como combinações reutilizáveis (Etapa 3.2):\n// - Mina flutuante:        Nada (sem Mergulha) + Attack_ExplodeOnContact.\n// - Boia com rede:         Nada (superfície) + Attack_Net (usableInWater, waterPosition = SoSuperficie).\n// - Rede temporária:       Attack_Net (trapDuration curto) em qualquer máquina aquática.\n// - Motor com corrente:    Estático/Flutuante + Attack_WaterCurrent (mode = PuxarParaInimigo).\n// - Turbina (empurra para hazards): Attack_WaterCurrent (mode = DirecaoFixa apontada ao hazard, ou EmpurrarDoInimigo).\n// - Drone submarino:       Mergulha + EnemyMovement Mergulhador + Attack_UnderwaterDash e/ou\n//                          Attack_ProjectileStraight (usableInWater, waterPosition = SoSubmerso).\n// - Cabo eléctrico:        Estático + Attack_ElectrifyWater.\n// - Gancho que puxa para baixo: Attack_HookPullDown (afogar o player).\n\n/// <summary>Modo de direcção da corrente de água (Attack_WaterCurrent — Etapa 3.2).</summary>\npublic enum WaterCurrentMode\n{\n    /// <summary>Empurra o player numa direcção fixa (\"currentDirection\") — ex: turbina que empurra contra hazards.</summary>\n    DirecaoFixa,\n\n    /// <summary>Empurra o player para longe do inimigo.</summary>\n    EmpurrarDoInimigo,\n\n    /// <summary>Puxa o player em direcção ao inimigo — ex: motor que cria corrente de sucção.</summary>\n    PuxarParaInimigo\n}\n\n/// <summary>Corrente na água: empurra/puxa o player (conforme \"mode\") enquanto este estiver em água, durante \"duration\" segundos.</summary>\n[System.Serializable]\npublic class Attack_WaterCurrent : EnemyAttack\n{\n    [Header(\"Corrente na Água\")]\n    [Tooltip(\"Direcção fixa / empurrar do inimigo / puxar para o inimigo (Etapa 3.2).\")]\n    public WaterCurrentMode mode = WaterCurrentMode.DirecaoFixa;\n\n    [Tooltip(\"Direcção da corrente (usada apenas com mode = DirecaoFixa).\")]\n    public Vector2 currentDirection = Vector2.left;\n\n    public float currentForce = 4f;\n    public float duration = 1.5f;\n\n    public Attack_WaterCurrent()\n    {\n        attackName = \"Corrente\";\n        range = 5f;\n        damage = 0;\n        usableOnGround = false;\n        usableInWater = true;\n        prepTime = 0.3f;\n        recoveryTime = 0.4f;\n        cooldown = 2.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            if (ctx.IsTargetInWater())\n            {\n                Vector2 dir;\n                switch (mode)\n                {\n                    case WaterCurrentMode.EmpurrarDoInimigo: dir = ctx.DirectionToTarget(); break;\n                    case WaterCurrentMode.PuxarParaInimigo: dir = -ctx.DirectionToTarget(); break;\n                    default: dir = currentDirection; break;\n                }\n\n                ctx.PushPlayer(currentForce, dir);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        if (damage > 0 && ctx.IsTargetInWater())\n            ctx.DamagePlayer(damage, knockbackForce);\n    }\n}\n\n/// <summary>Electrifica a água: causa dano periódico a quem estiver em água dentro de \"electrifyRadius\", durante \"duration\" segundos.</summary>\n[System.Serializable]\npublic class Attack_ElectrifyWater : EnemyAttack\n{\n    [Header(\"Electrificar Água\")]\n    public float electrifyRadius = 5f;\n    public float duration = 1f;\n    public float tickInterval = 0.25f;\n\n    public Attack_ElectrifyWater()\n    {\n        attackName = \"Electrificar Água\";\n        range = 6f;\n        usableOnGround = false;\n        usableInWater = true;\n        prepTime = 0.5f;\n        recoveryTime = 0.6f;\n        cooldown = 4f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            if (ctx.IsTargetInWater() && ctx.IsTargetWithin(ctx.transform.position, electrifyRadius))\n                ctx.DamagePlayer(damage, knockbackForce);\n\n            yield return new WaitForSeconds(tickInterval);\n            elapsed += tickInterval;\n        }\n    }\n}\n\n/// <summary>\n/// Mina (explosão por proximidade — Etapa 3.2): quando o alvo se aproxima\n/// (CanUse com \"range\" pequeno), o telegraph (prepTime = \"beep\") corre e a mina\n/// explode, causando dano em área e destruindo-se a si própria\n/// (\"destroySelf\"). Combinar com EnemyWaterConfig.canSwim (sem Mergulha) para a\n/// \"mina flutuante\" do GDD; também funciona fora de água (mina terrestre).\n/// </summary>\n[System.Serializable]\npublic class Attack_ExplodeOnContact : EnemyAttack\n{\n    [Header(\"Mina (Explosão por Proximidade)\")]\n    [Tooltip(\"Raio da explosão (dano em área a partir do centro da mina).\")]\n    public float explosionRadius = 2f;\n\n    [Tooltip(\"A mina destrói-se ao explodir (passa por EnemyHealth.Kill — respeita 'canOnlyBeDeactivated').\")]\n    public bool destroySelf = true;\n\n    public Attack_ExplodeOnContact()\n    {\n        attackName = \"Mina\";\n        range = 1.5f; // distância de \"armar\" a explosão\n        damage = 2;\n        knockbackForce = 8f;\n        usableOnGround = false;\n        usableInWater = true;\n        prepTime = 0.4f; // \"beep\" de aviso\n        recoveryTime = 0.1f;\n        cooldown = 1f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (ctx.IsTargetWithin(ctx.transform.position, explosionRadius))\n            ctx.DamagePlayer(damage, knockbackForce);\n\n        if (destroySelf)\n        {\n            var health = ctx.Controller.GetEnemyComponent<EnemyHealth>();\n            if (health != null) health.Kill();\n            else ctx.Controller.SetState(EnemyState.Morto);\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Gancho que puxa o player para baixo (Etapa 3.2 — afogar): durante\n/// \"duration\", puxa o alvo para o fundo enquanto este estiver em água.\n/// </summary>\n[System.Serializable]\npublic class Attack_HookPullDown : EnemyAttack\n{\n    [Header(\"Gancho (Puxar Para Baixo)\")]\n    [Tooltip(\"Velocidade com que o player é puxado para baixo.\")]\n    public float pullSpeed = 5f;\n\n    [Tooltip(\"Duração do puxão, em segundos.\")]\n    public float duration = 1f;\n\n    [Tooltip(\"Só puxa enquanto o alvo estiver em água (desligar para ganchos que apanham o player à beira de água).\")]\n    public bool onlyWhileTargetInWater = true;\n\n    public Attack_HookPullDown()\n    {\n        attackName = \"Gancho Para Baixo\";\n        range = 4f;\n        damage = 0;\n        requiresLineOfSight = true;\n        usableOnGround = false;\n        usableInWater = true;\n        prepTime = 0.4f;\n        recoveryTime = 0.6f;\n        cooldown = 3.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            if (ctx.Target == null) yield break;\n\n            if (!onlyWhileTargetInWater || ctx.IsTargetInWater())\n                ctx.PullPlayer(pullSpeed, Vector2.down);\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        if (damage > 0 && (!onlyWhileTargetInWater || ctx.IsTargetInWater()))\n            ctx.DamagePlayer(damage, knockbackForce);\n    }\n}\n\n/// <summary>\n/// Investida aquática (Etapa 3.2 — ex: drone submarino): nada em direcção ao\n/// alvo a \"attackSwimSpeed\" durante \"dashDuration\", causando dano ao tocar.\n/// </summary>\n[System.Serializable]\npublic class Attack_UnderwaterDash : EnemyAttack\n{\n    [Header(\"Investida Aquática\")]\n    public float dashDuration = 0.5f;\n\n    [Tooltip(\"Distância ao alvo considerada 'acertou' durante a investida.\")]\n    public float hitRadius = 0.7f;\n\n    public Attack_UnderwaterDash()\n    {\n        attackName = \"Investida Aquática\";\n        range = 5f;\n        minRange = 1f;\n        usableOnGround = false;\n        usableInWater = true;\n        waterPosition = WaterAttackPosition.SoSubmerso;\n        attackSwimSpeed = 8f;\n        prepTime = 0.3f;\n        recoveryTime = 0.4f;\n        cooldown = 2f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        bool hit = false;\n        float elapsed = 0f;\n\n        while (elapsed < dashDuration)\n        {\n            ctx.SwimTowardsTarget(attackSwimSpeed > 0f ? attackSwimSpeed : 8f);\n\n            if (!hit && ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n            {\n                hit = true;\n                ctx.DamagePlayer(damage, knockbackForce);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        if (ctx.Rb != null) ctx.Rb.velocity = Vector2.zero;\n    }\n}\n",
+  "source": "using System.Collections;\nusing UnityEngine;\n\n// Ataques aquáticos (Etapas 2.1 e 3.2). Apenas afectam o alvo se este estiver\n// em água (WaterDetector — ver EnemyAttackController.IsTargetInWater/Submerged).\n//\n// Exemplos do GDD como combinações reutilizáveis (Etapa 3.2):\n// - Mina flutuante:        Nada (sem Mergulha) + Attack_ExplodeOnContact.\n// - Boia com rede:         Nada (superfície) + Attack_Net (usableInWater, waterPosition = SoSuperficie).\n// - Rede temporária:       Attack_Net (trapDuration curto) em qualquer máquina aquática.\n// - Motor com corrente:    Estático/Flutuante + Attack_WaterCurrent (mode = PuxarParaInimigo).\n// - Turbina (empurra para hazards): Attack_WaterCurrent (mode = DirecaoFixa apontada ao hazard, ou EmpurrarDoInimigo).\n// - Drone submarino:       Mergulha + EnemyMovement Mergulhador + Attack_UnderwaterDash e/ou\n//                          Attack_ProjectileStraight (usableInWater, waterPosition = SoSubmerso).\n// - Cabo eléctrico:        Estático + Attack_ElectrifyWater.\n// - Gancho que puxa para baixo: Attack_HookPullDown (afogar o player).\n\n/// <summary>Modo de direcção da corrente de água (Attack_WaterCurrent — Etapa 3.2).</summary>\npublic enum WaterCurrentMode\n{\n    /// <summary>Empurra o player numa direcção fixa (\"currentDirection\") — ex: turbina que empurra contra hazards.</summary>\n    DirecaoFixa,\n\n    /// <summary>Empurra o player para longe do inimigo.</summary>\n    EmpurrarDoInimigo,\n\n    /// <summary>Puxa o player em direcção ao inimigo — ex: motor que cria corrente de sucção.</summary>\n    PuxarParaInimigo\n}\n\n/// <summary>Corrente na água: empurra/puxa o player (conforme \"mode\") enquanto este estiver em água, durante \"duration\" segundos.</summary>\n[System.Serializable]\npublic class Attack_WaterCurrent : EnemyAttack\n{\n    [Header(\"Corrente na Água\")]\n    [Tooltip(\"Direcção fixa / empurrar do inimigo / puxar para o inimigo (Etapa 3.2).\")]\n    public WaterCurrentMode mode = WaterCurrentMode.DirecaoFixa;\n\n    [Tooltip(\"Direcção da corrente (usada apenas com mode = DirecaoFixa).\")]\n    public Vector2 currentDirection = Vector2.left;\n\n    public float currentForce = 4f;\n    public float duration = 1.5f;\n\n    public Attack_WaterCurrent()\n    {\n        attackName = \"Corrente\";\n        range = 5f;\n        damage = 0;\n        usableOnGround = false;\n        usableInWater = true;\n        prepTime = 0.3f;\n        recoveryTime = 0.4f;\n        cooldown = 2.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            if (ctx.IsTargetInWater())\n            {\n                Vector2 dir;\n                switch (mode)\n                {\n                    case WaterCurrentMode.EmpurrarDoInimigo: dir = ctx.DirectionToTarget(); break;\n                    case WaterCurrentMode.PuxarParaInimigo: dir = -ctx.DirectionToTarget(); break;\n                    default: dir = currentDirection; break;\n                }\n\n                ctx.PushPlayer(currentForce, dir);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        if (damage > 0 && ctx.IsTargetInWater())\n            ctx.DamagePlayer(damage, knockbackForce);\n    }\n}\n\n/// <summary>Electrifica a água: causa dano periódico a quem estiver em água dentro de \"electrifyRadius\", durante \"duration\" segundos.</summary>\n[System.Serializable]\npublic class Attack_ElectrifyWater : EnemyAttack\n{\n    [Header(\"Electrificar Água\")]\n    public float electrifyRadius = 5f;\n    public float duration = 1f;\n    public float tickInterval = 0.25f;\n\n    public Attack_ElectrifyWater()\n    {\n        attackName = \"Electrificar Água\";\n        range = 6f;\n        usableOnGround = false;\n        usableInWater = true;\n        prepTime = 0.5f;\n        recoveryTime = 0.6f;\n        cooldown = 4f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            if (ctx.IsTargetInWater() && ctx.IsTargetWithin(ctx.transform.position, electrifyRadius))\n                ctx.DamagePlayer(damage, knockbackForce);\n\n            yield return new WaitForSeconds(tickInterval);\n            elapsed += tickInterval;\n        }\n    }\n}\n\n/// <summary>\n/// Mina (explosão por proximidade — Etapa 3.2): quando o alvo se aproxima\n/// (CanUse com \"range\" pequeno), o telegraph (prepTime = \"beep\") corre e a mina\n/// explode, causando dano em área e destruindo-se a si própria\n/// (\"destroySelf\"). Combinar com EnemyWaterConfig.canSwim (sem Mergulha) para a\n/// \"mina flutuante\" do GDD; também funciona fora de água (mina terrestre).\n/// </summary>\n[System.Serializable]\npublic class Attack_ExplodeOnContact : EnemyAttack\n{\n    [Header(\"Mina (Explosão por Proximidade)\")]\n    [Tooltip(\"Raio da explosão (dano em área a partir do centro da mina).\")]\n    public float explosionRadius = 2f;\n\n    [Tooltip(\"A mina destrói-se ao explodir (passa por EnemyHealth.Kill — respeita 'canOnlyBeDeactivated').\")]\n    public bool destroySelf = true;\n\n    public Attack_ExplodeOnContact()\n    {\n        attackName = \"Mina\";\n        range = 1.5f; // distância de \"armar\" a explosão\n        damage = 2;\n        knockbackForce = 8f;\n        usableOnGround = false;\n        usableInWater = true;\n        prepTime = 0.4f; // \"beep\" de aviso\n        recoveryTime = 0.1f;\n        cooldown = 1f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        if (ctx.IsTargetWithin(ctx.transform.position, explosionRadius))\n            ctx.DamagePlayer(damage, knockbackForce);\n\n        if (destroySelf)\n        {\n            var health = ctx.Controller.GetEnemyComponent<EnemyHealth>();\n            if (health != null) health.Kill();\n            else ctx.Controller.SetState(EnemyState.Morto);\n        }\n\n        yield break;\n    }\n}\n\n/// <summary>\n/// Gancho que puxa o player para baixo (Etapa 3.2 — afogar): durante\n/// \"duration\", puxa o alvo para o fundo enquanto este estiver em água.\n/// </summary>\n[System.Serializable]\npublic class Attack_HookPullDown : EnemyAttack\n{\n    [Header(\"Gancho (Puxar Para Baixo)\")]\n    [Tooltip(\"Velocidade com que o player é puxado para baixo.\")]\n    public float pullSpeed = 5f;\n\n    [Tooltip(\"Duração do puxão, em segundos.\")]\n    public float duration = 1f;\n\n    [Tooltip(\"Só puxa enquanto o alvo estiver em água (desligar para ganchos que apanham o player à beira de água).\")]\n    public bool onlyWhileTargetInWater = true;\n\n    public Attack_HookPullDown()\n    {\n        attackName = \"Gancho Para Baixo\";\n        range = 4f;\n        damage = 0;\n        requiresLineOfSight = true;\n        usableOnGround = false;\n        usableInWater = true;\n        prepTime = 0.4f;\n        recoveryTime = 0.6f;\n        cooldown = 3.5f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        float elapsed = 0f;\n\n        while (elapsed < duration)\n        {\n            if (ctx.Target == null) yield break;\n\n            if (!onlyWhileTargetInWater || ctx.IsTargetInWater())\n                ctx.PullPlayer(pullSpeed, Vector2.down);\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        if (damage > 0 && (!onlyWhileTargetInWater || ctx.IsTargetInWater()))\n            ctx.DamagePlayer(damage, knockbackForce);\n    }\n}\n\n/// <summary>\n/// Investida aquática (Etapa 3.2 — ex: drone submarino): nada em direcção ao\n/// alvo a \"attackSwimSpeed\" durante \"dashDuration\", causando dano ao tocar.\n/// </summary>\n[System.Serializable]\npublic class Attack_UnderwaterDash : EnemyAttack\n{\n    [Header(\"Investida Aquática\")]\n    public float dashDuration = 0.5f;\n\n    [Tooltip(\"Distância ao alvo considerada 'acertou' durante a investida.\")]\n    public float hitRadius = 0.7f;\n\n    public Attack_UnderwaterDash()\n    {\n        attackName = \"Investida Aquática\";\n        range = 5f;\n        minRange = 1f;\n        usableOnGround = false;\n        usableInWater = true;\n        waterPosition = WaterAttackPosition.SoSubmerso;\n        attackSwimSpeed = 8f;\n        prepTime = 0.3f;\n        recoveryTime = 0.4f;\n        cooldown = 2f;\n    }\n\n    public override IEnumerator Execute(EnemyAttackController ctx)\n    {\n        bool hit = false;\n        float elapsed = 0f;\n\n        while (elapsed < dashDuration)\n        {\n            ctx.SwimTowardsTarget(attackSwimSpeed > 0f ? attackSwimSpeed : 8f);\n\n            if (!hit && ctx.IsTargetWithin(ctx.transform.position, hitRadius))\n            {\n                hit = true;\n                ctx.DamagePlayer(damage, knockbackForce);\n            }\n\n            elapsed += Time.deltaTime;\n            yield return null;\n        }\n\n        if (ctx.Rb != null) ctx.Rb.linearVelocity = Vector2.zero;\n    }\n}\n",
   "id": "script-enemy-attacks-enemyattacks-water-cs",
   "dependencyIds": [
-    "script-enemy-attacks-enemyattacks-areacontrol-cs",
-    "script-enemy-attacks-enemyattacks-projectile-cs",
     "script-enemy-enemyattack-cs",
     "script-enemy-enemyattackcontroller-cs",
     "script-enemy-enemyhealth-cs",
-    "script-enemy-enemymovement-cs",
-    "script-player-waterdetector-cs"
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemyattack-cs"
   ],
   "usedByIds": []
 }

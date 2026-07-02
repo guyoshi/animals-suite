@@ -83,7 +83,9 @@
   "id": "script-enemy-enemyvoidtrigger-cs",
   "dependencyIds": [
     "script-enemy-enemycontroller-cs",
-    "script-enemy-enemyhealth-cs"
+    "script-enemy-enemyhealth-cs",
+    "script-enemy-enemycontroller-cs",
+    "script-enemy-enemydata-cs"
   ],
   "usedByIds": []
 }

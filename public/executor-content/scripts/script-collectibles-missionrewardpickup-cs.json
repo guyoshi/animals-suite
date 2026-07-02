@@ -74,9 +74,7 @@
     "PickupType",
     "PlayerProgress"
   ],
-  "used_by": [
-    "PickupBase"
-  ],
+  "used_by": [],
   "source": "using UnityEngine;\n\n/// <summary>\n/// Recompensa de missão — ao recolher, entrega os itens/recursos configurados\n/// (<see cref=\"itemRewards\"/>, <see cref=\"sementes\"/>, <see cref=\"runasDeGaia\"/>)\n/// e, opcionalmente, marca <see cref=\"mission\"/> como concluída\n/// (<c>MissionManager.CompleteMission</c>).\n///\n/// Útil para missões cuja recompensa é representada por um objecto físico no\n/// mundo (ex: um baú/item especial que aparece só depois de a missão avançar).\n/// Para missões cuja conclusão já é tratada por diálogo/Acção de NPC, deixar\n/// <see cref=\"mission\"/> vazio e usar isto apenas como \"entrega de itens\".\n/// </summary>\npublic class MissionRewardPickup : PickupBase\n{\n    [Header(\"Missão (opcional)\")]\n    [Tooltip(\"Se definida, marca esta missão como concluída ao recolher (MissionManager.CompleteMission). Deixar vazio se a conclusão da missão já é tratada por outro meio (diálogo/Acção de NPC).\")]\n    public MissionData mission;\n\n    [Header(\"Recompensa\")]\n    [Tooltip(\"Itens entregues ao recolher (PlayerProgress.AddItem — respeita ItemData.maxQuantity / savedAsCollected).\")]\n    public PickupLootEntry[] itemRewards;\n\n    [Tooltip(\"Sementes concedidas (0 = nenhuma).\")]\n    [Min(0)] public int sementes = 0;\n\n    [Tooltip(\"Runas de Gaia concedidas (0 = nenhuma).\")]\n    [Min(0)] public int runasDeGaia = 0;\n\n    public override PickupType Type => PickupType.MissionReward;\n\n    protected override void GrantReward()\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null) return;\n\n        if (itemRewards != null)\n        {\n            foreach (var entry in itemRewards)\n            {\n                if (entry == null || entry.item == null) continue;\n                progress.AddItem(entry.item, entry.amount);\n            }\n        }\n\n        if (sementes > 0) progress.GiveSementes(sementes);\n\n        if (runasDeGaia > 0)\n        {\n            progress.GiveRunasDeGaia(runasDeGaia);\n\n            if (area != null)\n                for (int i = 0; i < runasDeGaia; i++) progress.AddRunaFound(area);\n        }\n\n        if (mission != null) MissionManager.Instance?.CompleteMission(mission);\n    }\n}\n",
   "id": "script-collectibles-missionrewardpickup-cs",
   "dependencyIds": [
@@ -84,9 +82,9 @@
     "script-data-missiondata-cs",
     "script-data-missionmanager-cs",
     "script-collectibles-pickupbase-cs",
+    "script-collectibles-pickupbase-cs",
+    "script-collectibles-pickupbase-cs",
     "script-data-playerprogress-cs"
   ],
-  "usedByIds": [
-    "script-collectibles-pickupbase-cs"
-  ]
+  "usedByIds": []
 }

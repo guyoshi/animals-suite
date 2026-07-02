@@ -16,136 +16,6 @@
   ],
   "fields": [
     {
-      "name": "lookUpHoldDelay",
-      "type": "float",
-      "mods": "private",
-      "default": "1.5f",
-      "section": "Look Up (Exploration)",
-      "attrs": "[Header(\"Look Up (Exploration)\")] [Tooltip(\"Tempo segurando 'cima' para activar olhar pra cima.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Tempo segurando 'cima' para ativar olhar pra cima."
-    },
-    {
-      "name": "lookUpAmount",
-      "type": "float",
-      "mods": "private",
-      "default": "2.0f",
-      "section": "Look Up (Exploration)",
-      "attrs": "[Tooltip(\"Quanto a camera sobe quando activa olhar pra cima.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Quanto a camera sobe quando ativa olhar pra cima."
-    },
-    {
-      "name": "lookUpSmoothTime",
-      "type": "float",
-      "mods": "private",
-      "default": "0.15f",
-      "section": "Look Up (Exploration)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "lookUpRestSpeedThreshold",
-      "type": "float",
-      "mods": "private",
-      "default": "0.15f",
-      "section": "Look Up (Exploration)",
-      "attrs": "[Tooltip(\"Só activa look up se estiver praticamente parado (velocidade X)\")] [SerializeField]",
-      "inspector": true,
-      "description": "Só ativa look up se estiver praticamente parado (velocidade X)"
-    },
-    {
-      "name": "enableDynamicZoom",
-      "type": "bool",
-      "mods": "private",
-      "default": "true",
-      "section": "Dynamic Zoom (by speed)",
-      "attrs": "[Header(\"Dynamic Zoom (by speed)\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "zoomIdle",
-      "type": "float",
-      "mods": "private",
-      "default": "5.8f",
-      "section": "Dynamic Zoom (by speed)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "zoomRun",
-      "type": "float",
-      "mods": "private",
-      "default": "6.6f",
-      "section": "Dynamic Zoom (by speed)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "speedForMaxZoom",
-      "type": "float",
-      "mods": "private",
-      "default": "10.5f",
-      "section": "Dynamic Zoom (by speed)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "zoomSmoothTime",
-      "type": "float",
-      "mods": "private",
-      "default": "0.20f",
-      "section": "Dynamic Zoom (by speed)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "baseOffsetX",
-      "type": "float",
-      "mods": "private",
-      "default": "1.4f",
-      "section": "Offset / Facing",
-      "attrs": "[Header(\"Offset / Facing\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "baseOffsetY",
-      "type": "float",
-      "mods": "private",
-      "default": "-0.6f",
-      "section": "Offset / Facing",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "lookaheadTime",
-      "type": "float",
-      "mods": "private",
-      "default": "0.15f",
-      "section": "Lookahead (horizontal only)",
-      "attrs": "[Header(\"Lookahead (horizontal only)\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "lookaheadSmoothing",
-      "type": "float",
-      "mods": "private",
-      "default": "8f",
-      "section": "Lookahead (horizontal only)",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "lookUpHoldTimer",
       "type": "float",
       "mods": "private",
@@ -244,23 +114,9 @@
     }
   ],
   "dependencies": [],
-  "used_by": [
-    "AreaManager",
-    "CameraAreaBounds",
-    "CameraBlocker",
-    "CameraFocusMode",
-    "CameraZone",
-    "PlayerFeedback"
-  ],
-  "source": "using UnityEngine;\nusing Cinemachine;\n\n/// <summary>\n/// CameraManager — efeitos de seguimento do player (Tarefa #21):\n/// look up (olhar pra cima ao ficar parado), zoom dinâmico por velocidade,\n/// offset/facing e lookahead horizontal. Aplica-se às 3 vcams automáticas\n/// (Normal/Corridor/Boss) em <see cref=\"CameraManager.Update\"/>.\n/// </summary>\npublic partial class CameraManager\n{\n    [Header(\"Look Up (Exploration)\")]\n    [Tooltip(\"Tempo segurando 'cima' para activar olhar pra cima.\")]\n    [SerializeField] private float lookUpHoldDelay = 1.5f;\n\n    [Tooltip(\"Quanto a camera sobe quando activa olhar pra cima.\")]\n    [SerializeField] private float lookUpAmount = 2.0f;\n\n    [SerializeField] private float lookUpSmoothTime = 0.15f;\n\n    [Tooltip(\"Só activa look up se estiver praticamente parado (velocidade X)\")]\n    [SerializeField] private float lookUpRestSpeedThreshold = 0.15f;\n\n    [Header(\"Dynamic Zoom (by speed)\")]\n    [SerializeField] private bool enableDynamicZoom = true;\n    [SerializeField] private float zoomIdle = 5.8f;\n    [SerializeField] private float zoomRun = 6.6f;\n    [SerializeField] private float speedForMaxZoom = 10.5f;\n    [SerializeField] private float zoomSmoothTime = 0.20f;\n\n    [Header(\"Offset / Facing\")]\n    [SerializeField] private float baseOffsetX = 1.4f;\n    [SerializeField] private float baseOffsetY = -0.6f;\n\n    [Header(\"Lookahead (horizontal only)\")]\n    [SerializeField] private float lookaheadTime = 0.15f;\n    [SerializeField] private float lookaheadSmoothing = 8f;\n\n    // Look up state\n    private float lookUpHoldTimer = 0f;\n    private float lookUpCurrent = 0f;\n    private float lookUpVel = 0f;\n\n    // Zoom smoothing (separado por vcam)\n    private float zoomVelNormal = 0f;\n    private float zoomVelCorridor = 0f;\n    private float zoomVelBoss = 0f;\n\n    private void UpdateLookUpHold()\n    {\n        // regra: só olha pra cima se estiver no chão e parado\n        bool grounded = playerMotor != null && playerMotor.IsGrounded;\n        bool stopped = playerRb != null && Mathf.Abs(playerRb.velocity.x) <= lookUpRestSpeedThreshold;\n\n        Vector2 move = GetMoveInput();\n        bool upHeld = move.y > 0.5f;\n\n        if (grounded && stopped && upHeld)\n            lookUpHoldTimer += Time.deltaTime;\n        else\n            lookUpHoldTimer = 0f;\n\n        float target = (lookUpHoldTimer >= lookUpHoldDelay) ? lookUpAmount : 0f;\n        lookUpCurrent = Mathf.SmoothDamp(lookUpCurrent, target, ref lookUpVel, lookUpSmoothTime);\n    }\n\n    private void UpdateAutoCameraParams()\n    {\n        ApplyParamsToAuto(vcamNormal);\n        ApplyParamsToAuto(vcamCorridor);\n        ApplyParamsToAuto(vcamBoss);\n    }\n\n    private void ApplyParamsToAuto(CinemachineVirtualCamera vcam)\n    {\n        if (vcam == null) return;\n\n        var transposer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();\n        if (transposer != null)\n        {\n            float ox = baseOffsetX * facingSign;\n            float oy = baseOffsetY + lookUpCurrent;\n\n            transposer.m_TrackedObjectOffset = new Vector3(ox, oy, 0f);\n\n            transposer.m_LookaheadTime = lookaheadTime;\n            transposer.m_LookaheadSmoothing = lookaheadSmoothing;\n            transposer.m_LookaheadIgnoreY = true;\n        }\n    }\n\n    private void UpdateDynamicZoom()\n    {\n        if (playerRb == null) return;\n\n        float speed = Mathf.Abs(playerRb.velocity.x);\n        float t = Mathf.Clamp01(speed / Mathf.Max(0.01f, speedForMaxZoom));\n        float desired = Mathf.Lerp(zoomIdle, zoomRun, t);\n\n        ApplyZoomToAuto(vcamNormal, desired, ref zoomVelNormal);\n        ApplyZoomToAuto(vcamCorridor, desired, ref zoomVelCorridor);\n        ApplyZoomToAuto(vcamBoss, desired, ref zoomVelBoss);\n    }\n\n    private void ApplyZoomToAuto(CinemachineVirtualCamera vcam, float desired, ref float vel)\n    {\n        if (vcam == null) return;\n        float current = vcam.m_Lens.OrthographicSize;\n        float next = Mathf.SmoothDamp(current, desired, ref vel, zoomSmoothTime);\n        vcam.m_Lens.OrthographicSize = next;\n    }\n}\n",
+  "used_by": [],
+  "source": "using UnityEngine;\nusing Cinemachine;\n\n/// <summary>\n/// CameraManager — efeitos de seguimento do player (Tarefa #21):\n/// look up (olhar pra cima ao ficar parado), zoom dinâmico por velocidade,\n/// offset/facing e lookahead horizontal. Aplica-se às 3 vcams automáticas\n/// (Normal/Corridor/Boss) em <see cref=\"CameraManager.Update\"/>.\n/// </summary>\npublic partial class CameraManager\n{\n    [Header(\"Look Up (Exploration)\")]\n    [Tooltip(\"Tempo segurando 'cima' para activar olhar pra cima.\")]\n    [SerializeField] private float lookUpHoldDelay = 1.5f;\n\n    [Tooltip(\"Quanto a camera sobe quando activa olhar pra cima.\")]\n    [SerializeField] private float lookUpAmount = 2.0f;\n\n    [SerializeField] private float lookUpSmoothTime = 0.15f;\n\n    [Tooltip(\"Só activa look up se estiver praticamente parado (velocidade X)\")]\n    [SerializeField] private float lookUpRestSpeedThreshold = 0.15f;\n\n    [Header(\"Dynamic Zoom (by speed)\")]\n    [SerializeField] private bool enableDynamicZoom = true;\n    [SerializeField] private float zoomIdle = 5.8f;\n    [SerializeField] private float zoomRun = 6.6f;\n    [SerializeField] private float speedForMaxZoom = 10.5f;\n    [SerializeField] private float zoomSmoothTime = 0.20f;\n\n    [Header(\"Offset / Facing\")]\n    [SerializeField] private float baseOffsetX = 1.4f;\n    [SerializeField] private float baseOffsetY = -0.6f;\n\n    [Header(\"Lookahead (horizontal only)\")]\n    [SerializeField] private float lookaheadTime = 0.15f;\n    [SerializeField] private float lookaheadSmoothing = 8f;\n\n    // Look up state\n    private float lookUpHoldTimer = 0f;\n    private float lookUpCurrent = 0f;\n    private float lookUpVel = 0f;\n\n    // Zoom smoothing (separado por vcam)\n    private float zoomVelNormal = 0f;\n    private float zoomVelCorridor = 0f;\n    private float zoomVelBoss = 0f;\n\n    private void UpdateLookUpHold()\n    {\n        // regra: só olha pra cima se estiver no chão e parado\n        bool grounded = playerMotor != null && playerMotor.IsGrounded;\n        bool stopped = playerRb != null && Mathf.Abs(playerRb.linearVelocity.x) <= lookUpRestSpeedThreshold;\n\n        Vector2 move = GetMoveInput();\n        bool upHeld = move.y > 0.5f;\n\n        if (grounded && stopped && upHeld)\n            lookUpHoldTimer += Time.deltaTime;\n        else\n            lookUpHoldTimer = 0f;\n\n        float target = (lookUpHoldTimer >= lookUpHoldDelay) ? lookUpAmount : 0f;\n        lookUpCurrent = Mathf.SmoothDamp(lookUpCurrent, target, ref lookUpVel, lookUpSmoothTime);\n    }\n\n    private void UpdateAutoCameraParams()\n    {\n        ApplyParamsToAuto(vcamNormal);\n        ApplyParamsToAuto(vcamCorridor);\n        ApplyParamsToAuto(vcamBoss);\n    }\n\n    private void ApplyParamsToAuto(CinemachineVirtualCamera vcam)\n    {\n        if (vcam == null) return;\n\n        var transposer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();\n        if (transposer != null)\n        {\n            float ox = baseOffsetX * facingSign;\n            float oy = baseOffsetY + lookUpCurrent;\n\n            transposer.m_TrackedObjectOffset = new Vector3(ox, oy, 0f);\n\n            transposer.m_LookaheadTime = lookaheadTime;\n            transposer.m_LookaheadSmoothing = lookaheadSmoothing;\n            transposer.m_LookaheadIgnoreY = true;\n        }\n    }\n\n    private void UpdateDynamicZoom()\n    {\n        if (playerRb == null) return;\n\n        float speed = Mathf.Abs(playerRb.linearVelocity.x);\n        float t = Mathf.Clamp01(speed / Mathf.Max(0.01f, speedForMaxZoom));\n        float desired = Mathf.Lerp(zoomIdle, zoomRun, t);\n\n        ApplyZoomToAuto(vcamNormal, desired, ref zoomVelNormal);\n        ApplyZoomToAuto(vcamCorridor, desired, ref zoomVelCorridor);\n        ApplyZoomToAuto(vcamBoss, desired, ref zoomVelBoss);\n    }\n\n    private void ApplyZoomToAuto(CinemachineVirtualCamera vcam, float desired, ref float vel)\n    {\n        if (vcam == null) return;\n        float current = vcam.m_Lens.OrthographicSize;\n        float next = Mathf.SmoothDamp(current, desired, ref vel, zoomSmoothTime);\n        vcam.m_Lens.OrthographicSize = next;\n    }\n}\n",
   "id": "script-camera-cameramanager-follow-cs",
   "dependencyIds": [],
-  "usedByIds": [
-    "script-world-areamanager-cs",
-    "script-camera-cameraareabounds-cs",
-    "script-camera-camerablocker-cs",
-    "script-npc-actions-cameraactions-cs",
-    "script-camera-camerazone-cs",
-    "script-player-playerfeedback-cs"
-  ]
+  "usedByIds": []
 }

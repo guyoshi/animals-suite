@@ -107,7 +107,6 @@
     "Boss_MareDeRede",
     "Boss_SinoDoRuido",
     "Boss_SolDePlastico",
-    "HUDController",
     "PlayerHealthRegen"
   ],
   "source": "using TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\n\n/// <summary>\n/// Barra de vida de boss do HUD (Tarefa #32) — scaffolding genérico, sem\n/// lógica de combate própria: o script do boss (fora do âmbito desta tarefa)\n/// chama <see cref=\"Show\"/> ao iniciar o combate, <see cref=\"SetHealth\"/> a\n/// cada dano sofrido e <see cref=\"Hide\"/> ao morrer ou ao terminar o combate.\n///\n/// Singleton simples (Instance), como <see cref=\"InteractionPromptUI\"/>.\n/// </summary>\npublic class BossHealthBarUI : MonoBehaviour\n{\n    public static BossHealthBarUI Instance { get; private set; }\n\n    [SerializeField] private GameObject root;\n    [SerializeField] private TMP_Text nameText;\n    [Tooltip(\"Image do tipo 'Filled' (horizontal) — fillAmount = vida actual / vida máxima.\")]\n    [SerializeField] private Image fillImage;\n\n    private float _maxHealth = 1f;\n\n    private void Awake()\n    {\n        Instance = this;\n        if (root != null) root.SetActive(false);\n    }\n\n    private void OnDestroy()\n    {\n        if (Instance == this) Instance = null;\n    }\n\n    /// <summary>Mostra a barra (cheia) para \"bossName\" com vida máxima \"maxHealth\".</summary>\n    public void Show(string bossName, float maxHealth)\n    {\n        _maxHealth = Mathf.Max(1f, maxHealth);\n\n        if (nameText != null) nameText.text = bossName;\n        if (fillImage != null) fillImage.fillAmount = 1f;\n        if (root != null) root.SetActive(true);\n\n        // Tarefa #28 — bosses bloqueiam a regeneração automática de vida.\n        PlayerHealthRegen.Instance?.SetBlocked(this, true);\n    }\n\n    /// <summary>Actualiza o preenchimento da barra para \"currentHealth\" (0..maxHealth definido em Show).</summary>\n    public void SetHealth(float currentHealth)\n    {\n        if (fillImage != null) fillImage.fillAmount = Mathf.Clamp01(currentHealth / _maxHealth);\n    }\n\n    public void Hide()\n    {\n        if (root != null) root.SetActive(false);\n\n        // Tarefa #28 — fim do combate de boss: desbloqueia a regeneração automática.\n        PlayerHealthRegen.Instance?.SetBlocked(this, false);\n    }\n}\n",
@@ -126,7 +125,6 @@
     "script-enemy-bosses-boss-marederede-cs",
     "script-enemy-bosses-boss-sinodoruido-cs",
     "script-enemy-bosses-boss-soldeplastico-cs",
-    "script-ui-hudcontroller-cs",
     "script-player-playerhealthregen-cs"
   ]
 }

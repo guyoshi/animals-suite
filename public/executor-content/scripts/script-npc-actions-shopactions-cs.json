@@ -43,8 +43,7 @@
     "ShopUI"
   ],
   "used_by": [
-    "ShopData",
-    "ShopUI"
+    "ShopData"
   ],
   "source": "using System.Collections;\nusing UnityEngine;\n\n/// <summary>\n/// Tarefa #35 — abre a loja \"shop\" (ShopUI) e espera até o jogador a fechar,\n/// pausando o jogo entretanto (mesma lógica de pausa do diálogo —\n/// GamePauseUtil, via ShopUI.OpenAndWait). Sem efeito se \"shop\" ou\n/// ShopUI.Instance forem nulos.\n/// </summary>\n[System.Serializable]\npublic class Action_OpenShop : NpcAction\n{\n    public ShopData shop;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (shop == null || ShopUI.Instance == null)\n        {\n            if (shop == null) Debug.LogWarning(\"Action_OpenShop: 'shop' não atribuído.\");\n            else Debug.LogWarning(\"Action_OpenShop: nenhuma ShopUI encontrada na cena.\");\n            yield break;\n        }\n\n        yield return ShopUI.Instance.OpenAndWait(shop);\n    }\n}\n",
   "id": "script-npc-actions-shopactions-cs",
@@ -56,7 +55,6 @@
     "script-ui-shopui-cs"
   ],
   "usedByIds": [
-    "script-data-shopdata-cs",
-    "script-ui-shopui-cs"
+    "script-data-shopdata-cs"
   ]
 }

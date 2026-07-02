@@ -79,12 +79,16 @@
     "RumorData"
   ],
   "used_by": [
-    "JournalManager",
-    "MissionData"
+    "Action_ShowFullscreenImage",
+    "MissionData",
+    "RumorData"
   ],
   "source": "using UnityEngine;\n\n// Condições do Sistema de Pistas/Rumores (Diário) — aparecem automaticamente\n// no \"+ Adicionar Condição\" de qualquer NpcController, incluindo objectos\n// genéricos reutilizados como interactivos (Ponto 9 da especificação): um\n// objecto pode verificar se o jogador tem uma pista ou ouviu um rumor e, em\n// caso afirmativo, executar ações configuradas no Inspector (revelar portal,\n// activar objecto, alterar variável, avançar tarefa, etc.) através de\n// Action_ConditionalBranch.\n\n/// <summary>O jogador já obteve a pista \"clueId\" da missão indicada (Action_ShowFullscreenImage com \"saveAsClue\").</summary>\n[System.Serializable]\npublic class Condition_HasClue : NpcCondition\n{\n    public MissionData mission;\n\n    [Tooltip(\"Identificador da pista dentro de \\\"mission.clues\\\".\")]\n    public string clueId;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return JournalManager.Instance != null && mission != null && JournalManager.Instance.HasClue(mission, clueId);\n    }\n}\n\n/// <summary>O jogador já ouviu este rumor (Action_AddRumor) — aparece na secção \"Rumores\" do Diário.</summary>\n[System.Serializable]\npublic class Condition_HeardRumor : NpcCondition\n{\n    public RumorData rumor;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return JournalManager.Instance != null && JournalManager.Instance.HasHeardRumor(rumor);\n    }\n}\n\n/// <summary>Este rumor já foi marcado como \"encontrado\" (Action_MarkRumorFound — ícone de \"Check\" no Diário).</summary>\n[System.Serializable]\npublic class Condition_RumorFound : NpcCondition\n{\n    public RumorData rumor;\n\n    public override bool Evaluate(NpcController npc)\n    {\n        return JournalManager.Instance != null && JournalManager.Instance.IsRumorFound(rumor);\n    }\n}\n",
   "id": "script-npc-conditions-journalconditions-cs",
   "dependencyIds": [
+    "script-npc-actions-journalactions-cs",
+    "script-npc-actions-missionactions-cs",
+    "script-npc-actions-journalactions-cs",
     "script-npc-actions-journalactions-cs",
     "script-data-journalmanager-cs",
     "script-data-missiondata-cs",
@@ -93,7 +97,8 @@
     "script-data-rumordata-cs"
   ],
   "usedByIds": [
-    "script-data-journalmanager-cs",
-    "script-data-missiondata-cs"
+    "script-npc-actions-journalactions-cs",
+    "script-data-missiondata-cs",
+    "script-data-rumordata-cs"
   ]
 }

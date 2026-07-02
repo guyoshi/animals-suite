@@ -54,6 +54,16 @@
       "description": "Referência/configuração usada por este comportamento."
     },
     {
+      "name": "area",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
       "name": "completed",
       "type": "bool",
       "mods": "public",
@@ -61,7 +71,17 @@
       "section": "",
       "attrs": "[Tooltip(\"Se activo, marca o desafio como concluído (e descoberto). Se inactivo, só marca como descoberto — mostra \\\"Não concluído\\\" em vez de \\\"?\\\".\")]",
       "inspector": true,
-      "description": "Se ativo, marca o desafio como concluído (e descoberto). Se inactivo, só marca como descoberto — mostra \"Não concluído\" em vez de \"?\"."
+      "description": "Se activo, marca o desafio como concluído (e descoberto). Se inactivo, só marca como descoberto — mostra \"Não concluído\" em vez de \"?\"."
+    },
+    {
+      "name": "area",
+      "type": "AreaData",
+      "mods": "public",
+      "default": "",
+      "section": "",
+      "attrs": "",
+      "inspector": true,
+      "description": "Referência/configuração usada por este comportamento."
     },
     {
       "name": "phrase",
@@ -84,16 +104,14 @@
     }
   ],
   "dependencies": [
-    "Action_GiveResource",
     "AreaData",
-    "AreaProgress",
     "NpcAction",
     "NpcController",
     "PauseMenuController",
     "PlayerProgress"
   ],
   "used_by": [],
-  "source": "using System.Collections;\nusing UnityEngine;\nusing UnityEngine.Scripting.APIUpdating;\n\n/// <summary>\n/// Tipo de descoberta permanente de área, registado em\n/// PlayerProgress.AreaProgress para a secção \"Área Atual\" do Menu de Pausa\n/// (Tarefa #7 — DESCOBERTAS: Runas/NPCs/Sussurros/Baús/Fragmentos).\n/// </summary>\npublic enum AreaDiscoveryType\n{\n    RunaDeGaia,\n    NpcResgatado,\n    SussurroDaTerra,\n    BauEncontrado,\n    FragmentoVital\n}\n\n/// <summary>\n/// Regista uma descoberta permanente de \"area\" (Runa/NPC/Sussurro/Baú/Fragmento)\n/// para a secção \"Área Atual\" do Menu de Pausa. Independente de dar o recurso\n/// em si — combinar com Action_GiveResource quando o recurso também deve\n/// somar ao saldo global do jogador (ex: Runas de Gaia, Fragmentos Vitais).\n/// </summary>\n[System.Serializable]\npublic class Action_AddAreaDiscovery : NpcAction\n{\n    public AreaData area;\n    public AreaDiscoveryType discovery = AreaDiscoveryType.RunaDeGaia;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || area == null) yield break;\n\n        switch (discovery)\n        {\n            case AreaDiscoveryType.RunaDeGaia:\n                progress.AddRunaFound(area);\n                break;\n\n            case AreaDiscoveryType.NpcResgatado:\n                progress.AddNpcRescued(area);\n                break;\n\n            case AreaDiscoveryType.SussurroDaTerra:\n                // Forma \"só contagem\" (sem frase) — preferir Action_AddAreaSussurroDaTerra\n                // quando houver uma frase de NPC para registar (regista contagem + frase).\n                progress.AddWhisperFound(area);\n                break;\n\n            case AreaDiscoveryType.BauEncontrado:\n                progress.AddChestFound(area);\n                break;\n\n            case AreaDiscoveryType.FragmentoVital:\n                progress.AddFragmentFound(area);\n                break;\n        }\n\n        PauseMenuController.Instance?.RefreshHeader_External();\n        yield break;\n    }\n}\n\n/// <summary>\n/// Marca o desafio opcional de \"area\" como descoberto (deixa de mostrar \"?\" e\n/// passa a \"Não concluído\") e, opcionalmente, como concluído.\n/// </summary>\n[System.Serializable]\npublic class Action_SetAreaChallenge : NpcAction\n{\n    public AreaData area;\n\n    [Tooltip(\"Se activo, marca o desafio como concluído (e descoberto). Se inactivo, só marca como descoberto — mostra \\\"Não concluído\\\" em vez de \\\"?\\\".\")]\n    public bool completed;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || area == null) yield break;\n\n        if (completed) progress.MarkChallengeCompleted(area);\n        else progress.MarkChallengeDiscovered(area);\n\n        PauseMenuController.Instance?.RefreshHeader_External();\n        yield break;\n    }\n}\n\n/// <summary>\n/// Adiciona um Sussurro da Terra — frase exacta dita por este NPC sobre \"area\" —\n/// à secção \"SUSSURROS DA TERRA\" da página \"Área Atual\" do Menu de Pausa, e conta\n/// também como um Sussurro da Terra encontrado (mesma colecionável da contagem\n/// \"Sussurros da Terra\" nas Descobertas). A frase NÃO é gerada automaticamente:\n/// deve ser escrita tal como o NPC a diz no diálogo.\n/// </summary>\n[System.Serializable]\n[MovedFrom(true, sourceClassName: \"Action_AddAreaEcho\")]\npublic class Action_AddAreaSussurroDaTerra : NpcAction\n{\n    public AreaData area;\n\n    [TextArea]\n    public string phrase;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (area == null || string.IsNullOrEmpty(phrase)) yield break;\n\n        PlayerProgress.Instance?.AddSussurroDaTerra(area, phrase);\n        PauseMenuController.Instance?.RefreshHeader_External();\n        yield break;\n    }\n}\n",
+  "source": "using System.Collections;\nusing UnityEngine;\nusing UnityEngine.Scripting.APIUpdating;\n\n/// <summary>\n/// Tipo de descoberta permanente de área, registado em\n/// PlayerProgress.AreaProgress para a secção \"Área Atual\" do Menu de Pausa\n/// (Tarefa #7 — DESCOBERTAS: Runas/NPCs/Sussurros/Baús/Fragmentos).\n/// </summary>\npublic enum AreaDiscoveryType\n{\n    RunaDeGaia,\n    NpcResgatado,\n    SussurroDaTerra,\n    BauEncontrado,\n    FragmentoVital\n}\n\n/// <summary>\n/// Regista uma descoberta permanente de \"area\" (Runa/NPC/Sussurro/Baú/Fragmento)\n/// para a secção \"Área Atual\" do Menu de Pausa. Independente de dar o recurso\n/// em si — combinar com Action_GiveResource quando o recurso também deve\n/// somar ao saldo global do jogador (ex: Runas de Gaia, Fragmentos Vitais).\n/// </summary>\n[System.Serializable]\npublic class Action_AddAreaDiscovery : NpcAction\n{\n    public AreaData area;\n    public AreaDiscoveryType discovery = AreaDiscoveryType.RunaDeGaia;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || area == null) yield break;\n\n        switch (discovery)\n        {\n            case AreaDiscoveryType.RunaDeGaia:\n                progress.AddRunaFound(area);\n                break;\n\n            case AreaDiscoveryType.NpcResgatado:\n                // Task #21: AddNpcRescued requer npcId para garantir idempotência.\n                // Usar Action_RescueNpc (com npcId preenchido) em vez desta acção.\n                Debug.LogWarning(\"[Action_AddAreaDiscovery] NpcResgatado não suportado sem npcId. Usa Action_RescueNpc com o campo npcId preenchido.\");\n                break;\n\n            case AreaDiscoveryType.SussurroDaTerra:\n                // Forma \"só contagem\" (sem frase) — preferir Action_AddAreaSussurroDaTerra\n                // quando houver uma frase de NPC para registar (regista contagem + frase).\n                progress.AddWhisperFound(area);\n                break;\n\n            case AreaDiscoveryType.BauEncontrado:\n                progress.AddChestFound(area);\n                break;\n\n            case AreaDiscoveryType.FragmentoVital:\n                progress.AddFragmentFound(area);\n                break;\n        }\n\n        PauseMenuController.Instance?.RefreshHeader_External();\n        yield break;\n    }\n}\n\n/// <summary>\n/// Marca o desafio opcional de \"area\" como descoberto (deixa de mostrar \"?\" e\n/// passa a \"Não concluído\") e, opcionalmente, como concluído.\n/// </summary>\n[System.Serializable]\npublic class Action_SetAreaChallenge : NpcAction\n{\n    public AreaData area;\n\n    [Tooltip(\"Se activo, marca o desafio como concluído (e descoberto). Se inactivo, só marca como descoberto — mostra \\\"Não concluído\\\" em vez de \\\"?\\\".\")]\n    public bool completed;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        var progress = PlayerProgress.Instance;\n        if (progress == null || area == null) yield break;\n\n        if (completed) progress.MarkChallengeCompleted(area);\n        else progress.MarkChallengeDiscovered(area);\n\n        PauseMenuController.Instance?.RefreshHeader_External();\n        yield break;\n    }\n}\n\n/// <summary>\n/// Adiciona um Sussurro da Terra — frase exacta dita por este NPC sobre \"area\" —\n/// à secção \"SUSSURROS DA TERRA\" da página \"Área Atual\" do Menu de Pausa, e conta\n/// também como um Sussurro da Terra encontrado (mesma colecionável da contagem\n/// \"Sussurros da Terra\" nas Descobertas). A frase NÃO é gerada automaticamente:\n/// deve ser escrita tal como o NPC a diz no diálogo.\n/// </summary>\n[System.Serializable]\n[MovedFrom(true, sourceClassName: \"Action_AddAreaEcho\")]\npublic class Action_AddAreaSussurroDaTerra : NpcAction\n{\n    public AreaData area;\n\n    [TextArea]\n    public string phrase;\n\n    public override IEnumerator Execute(NpcController npc)\n    {\n        if (area == null || string.IsNullOrEmpty(phrase)) yield break;\n\n        PlayerProgress.Instance?.AddSussurroDaTerra(area, phrase);\n        PauseMenuController.Instance?.RefreshHeader_External();\n        yield break;\n    }\n}\n",
   "id": "script-npc-actions-areaactions-cs",
   "dependencyIds": [
     "script-data-areadata-cs",

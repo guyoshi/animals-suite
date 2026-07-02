@@ -87,11 +87,11 @@
     "PlayerCombat"
   ],
   "used_by": [
+    "AnimalsDebugPanel",
     "FallingPlatform",
     "FallingSpike",
     "InvertingSpikes",
     "PlayerCombat",
-    "PlayerConsumableEffects",
     "PlayerFeedback",
     "PlayerHealthRegen",
     "ProjectileController"
@@ -102,11 +102,11 @@
     "script-player-playercombat-cs"
   ],
   "usedByIds": [
+    "script-test-animalsdebugpanel-cs",
     "script-platforms-fallingplatform-cs",
     "script-platforms-fallingspike-cs",
     "script-platforms-invertingspikes-cs",
     "script-player-playercombat-cs",
-    "script-player-playerconsumableeffects-cs",
     "script-player-playerfeedback-cs",
     "script-player-playerhealthregen-cs",
     "script-enemy-projectilecontroller-cs"

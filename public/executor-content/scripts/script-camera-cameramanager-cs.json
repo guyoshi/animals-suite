@@ -22,136 +22,6 @@
   ],
   "fields": [
     {
-      "name": "player",
-      "type": "Transform",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[Header(\"References\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "playerRb",
-      "type": "Rigidbody2D",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "playerMotor",
-      "type": "PlayerMotor2D",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "inputRouter",
-      "type": "PlayerInputRouter",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "vcamNormal",
-      "type": "CinemachineVirtualCamera",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "vcamCorridor",
-      "type": "CinemachineVirtualCamera",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "vcamBoss",
-      "type": "CinemachineVirtualCamera",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "vcamManual",
-      "type": "CinemachineVirtualCamera",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "manualAnchor",
-      "type": "Transform",
-      "mods": "private",
-      "default": "",
-      "section": "References",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "prioActive",
-      "type": "int",
-      "mods": "private",
-      "default": "20",
-      "section": "Auto Camera Priorities",
-      "attrs": "[Header(\"Auto Camera Priorities\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "prioInactive",
-      "type": "int",
-      "mods": "private",
-      "default": "10",
-      "section": "Auto Camera Priorities",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "prioManual",
-      "type": "int",
-      "mods": "private",
-      "default": "30",
-      "section": "Auto Camera Priorities",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "zoneStack",
-      "type": "List<ZoneType>",
-      "mods": "private readonly",
-      "default": "new()",
-      "section": "Auto Camera Priorities",
-      "attrs": "",
-      "inspector": false,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
       "name": "manualMode",
       "type": "bool",
       "mods": "private",
@@ -311,33 +181,19 @@
     }
   ],
   "dependencies": [
-    "Action_ShakeCamera",
-    "PlayerController",
     "PlayerInputRouter",
-    "PlayerMotor2D",
-    "State"
+    "PlayerMotor2D"
   ],
   "used_by": [
-    "AreaManager",
-    "CameraAreaBounds",
-    "CameraBlocker",
-    "CameraFocusMode",
-    "CameraZone",
-    "PlayerFeedback"
+    "CameraZone"
   ],
-  "source": "using System.Collections.Generic;\nusing UnityEngine;\nusing Cinemachine;\n\n/// <summary>\n/// Orquestrador central da câmara (Tarefa #21 — responsabilidades separadas\n/// por ficheiro, todos como \"partial class\" da mesma CameraManager):\n///\n/// - CameraManager.cs (este ficheiro): referências, zonas/prioridades das\n///   vcams automáticas, modo manual/cutscene, facing.\n/// - CameraManager.Follow.cs: efeitos de seguimento do player (look up,\n///   zoom dinâmico, lookahead/offset).\n/// - CameraManager.Shake.cs: shake de câmara (hit, morte, Action_ShakeCamera).\n/// - CameraManager.Bounds.cs: bounds/blockers e confiner (interseção de áreas).\n///\n/// API pública (Instance, PushZone/PopZone/SetZone, EnterManualLock/Follow/\n/// ExitManual, Shake/ShakeHit, SetBaseBounds/AddBlocker/RemoveBlocker) mantém-se\n/// inalterada — esta divisão é só organização interna do código.\n/// </summary>\npublic partial class CameraManager : MonoBehaviour\n{\n    public static CameraManager Instance { get; private set; }\n\n    public enum ZoneType { Normal, Corridor, Boss }\n\n    [Header(\"References\")]\n    [SerializeField] private Transform player;\n    [SerializeField] private Rigidbody2D playerRb;\n    [SerializeField] private PlayerMotor2D playerMotor;\n    [SerializeField] private PlayerInputRouter inputRouter;\n\n    [SerializeField] private CinemachineVirtualCamera vcamNormal;\n    [SerializeField] private CinemachineVirtualCamera vcamCorridor;\n    [SerializeField] private CinemachineVirtualCamera vcamBoss;\n    [SerializeField] private CinemachineVirtualCamera vcamManual;\n\n    [SerializeField] private Transform manualAnchor;\n\n    [Header(\"Auto Camera Priorities\")]\n    [SerializeField] private int prioActive = 20;\n    [SerializeField] private int prioInactive = 10;\n    [SerializeField] private int prioManual = 30;\n\n    // Zone stack\n    private readonly List<ZoneType> zoneStack = new();\n\n    // State\n    private bool manualMode = false;\n\n    // Facing\n    private int facingSign = 1;\n\n    // Cached move (fallback se não tiver inputRouter)\n    private Vector2 cachedMoveInput;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this) { Destroy(gameObject); return; }\n        Instance = this;\n    }\n\n    private void Start()\n    {\n        // Auto-captura se não veio no inspector\n        if (player != null)\n        {\n            if (playerRb == null) playerRb = player.GetComponent<Rigidbody2D>();\n            if (playerMotor == null) playerMotor = player.GetComponent<PlayerMotor2D>();\n            if (inputRouter == null) inputRouter = player.GetComponent<PlayerInputRouter>();\n\n            SetFollows(player);\n        }\n\n        SetZone(ZoneType.Normal);\n        ApplyAutoPriorities();\n        UpdateConfinerBounds();\n    }\n\n    private void Update()\n    {\n        if (player == null) return;\n\n        UpdateFacing();\n\n        if (!manualMode)\n        {\n            UpdateLookUpHold();\n            UpdateAutoCameraParams();\n            if (enableDynamicZoom) UpdateDynamicZoom();\n        }\n    }\n\n    // -------------------- PUBLIC API --------------------\n\n    public void SetPlayer(Transform t)\n    {\n        player = t;\n        playerRb = t != null ? t.GetComponent<Rigidbody2D>() : null;\n        playerMotor = t != null ? t.GetComponent<PlayerMotor2D>() : null;\n        inputRouter = t != null ? t.GetComponent<PlayerInputRouter>() : null;\n\n        SetFollows(t);\n    }\n\n    public void SetMoveInput(Vector2 move)\n    {\n        // opcional: se quiseres alimentar via PlayerController em vez de referenciar o Router aqui\n        cachedMoveInput = move;\n    }\n\n    public void PushZone(ZoneType z)\n    {\n        zoneStack.Add(z);\n        ApplyAutoPriorities();\n    }\n\n    public void PopZone(ZoneType z)\n    {\n        int idx = zoneStack.LastIndexOf(z);\n        if (idx >= 0) zoneStack.RemoveAt(idx);\n        ApplyAutoPriorities();\n    }\n\n    public void SetZone(ZoneType z)\n    {\n        zoneStack.Clear();\n        zoneStack.Add(z);\n        ApplyAutoPriorities();\n    }\n\n    public void EnterManualLock(Vector2 worldPos)\n    {\n        manualMode = true;\n        if (manualAnchor != null) manualAnchor.position = worldPos;\n\n        if (vcamManual != null)\n        {\n            vcamManual.Follow = manualAnchor;\n            vcamManual.Priority = prioManual;\n        }\n\n        // baixa prioridades das auto (mas não deixa sem camera se manual falhar)\n        vcamNormal.Priority = 0;\n        vcamCorridor.Priority = 0;\n        vcamBoss.Priority = 0;\n    }\n\n    public void EnterManualFollow(Transform target)\n    {\n        manualMode = true;\n        if (vcamManual != null)\n        {\n            vcamManual.Follow = target;\n            vcamManual.Priority = prioManual;\n        }\n\n        vcamNormal.Priority = 0;\n        vcamCorridor.Priority = 0;\n        vcamBoss.Priority = 0;\n    }\n\n    public void ExitManual()\n    {\n        manualMode = false;\n        if (vcamManual != null) vcamManual.Priority = 0;\n        ApplyAutoPriorities();\n    }\n\n    // -------------------- INTERNAL LOGIC --------------------\n\n    private void SetFollows(Transform t)\n    {\n        if (vcamNormal != null) vcamNormal.Follow = t;\n        if (vcamCorridor != null) vcamCorridor.Follow = t;\n        if (vcamBoss != null) vcamBoss.Follow = t;\n    }\n\n    private void ApplyAutoPriorities()\n    {\n        if (manualMode) return;\n\n        ZoneType top = GetTopZone();\n\n        vcamNormal.Priority = prioInactive;\n        vcamCorridor.Priority = prioInactive;\n        vcamBoss.Priority = prioInactive;\n\n        switch (top)\n        {\n            case ZoneType.Corridor:\n                vcamCorridor.Priority = prioActive;\n                break;\n            case ZoneType.Boss:\n                vcamBoss.Priority = prioActive;\n                break;\n            default:\n                vcamNormal.Priority = prioActive;\n                break;\n        }\n\n        if (vcamManual != null) vcamManual.Priority = 0;\n    }\n\n    private ZoneType GetTopZone()\n    {\n        if (zoneStack.Contains(ZoneType.Boss)) return ZoneType.Boss;\n        if (zoneStack.Contains(ZoneType.Corridor)) return ZoneType.Corridor;\n        return ZoneType.Normal;\n    }\n\n    private CinemachineVirtualCamera GetActiveAutoVcam()\n    {\n        CinemachineVirtualCamera best = vcamNormal;\n        int p = (best != null) ? best.Priority : int.MinValue;\n\n        if (vcamCorridor != null && vcamCorridor.Priority > p) { best = vcamCorridor; p = best.Priority; }\n        if (vcamBoss != null && vcamBoss.Priority > p) { best = vcamBoss; p = best.Priority; }\n\n        return best;\n    }\n\n    /// <summary>Devolve a vcam realmente activa agora: vcamManual durante uma cutscene (Etapa 6), ou a melhor vcam automática caso contrário.</summary>\n    private CinemachineVirtualCamera GetActiveVcam()\n    {\n        if (manualMode && vcamManual != null) return vcamManual;\n        return GetActiveAutoVcam();\n    }\n\n    private void UpdateFacing()\n    {\n        // Preferência: usa facing do motor (mais consistente com o teu gameplay)\n        if (playerMotor != null)\n        {\n            facingSign = playerMotor.FacingSign != 0 ? playerMotor.FacingSign : facingSign;\n            return;\n        }\n\n        // Fallback: usa velocidade\n        if (playerRb == null) return;\n        float vx = playerRb.velocity.x;\n        if (vx > 0.2f) facingSign = 1;\n        else if (vx < -0.2f) facingSign = -1;\n    }\n\n    private Vector2 GetMoveInput()\n    {\n        if (inputRouter != null) return inputRouter.Move;\n        return cachedMoveInput;\n    }\n}\n",
+  "source": "using System.Collections.Generic;\nusing UnityEngine;\nusing Cinemachine;\n\n/// <summary>\n/// Orquestrador central da câmara (Tarefa #21 — responsabilidades separadas\n/// por ficheiro, todos como \"partial class\" da mesma CameraManager):\n///\n/// - CameraManager.cs (este ficheiro): referências, zonas/prioridades das\n///   vcams automáticas, modo manual/cutscene, facing.\n/// - CameraManager.Follow.cs: efeitos de seguimento do player (look up,\n///   zoom dinâmico, lookahead/offset).\n/// - CameraManager.Shake.cs: shake de câmara (hit, morte, Action_ShakeCamera).\n/// - CameraManager.Bounds.cs: bounds/blockers e confiner (interseção de áreas).\n///\n/// API pública (Instance, PushZone/PopZone/SetZone, EnterManualLock/Follow/\n/// ExitManual, Shake/ShakeHit, SetBaseBounds/AddBlocker/RemoveBlocker) mantém-se\n/// inalterada — esta divisão é só organização interna do código.\n/// </summary>\npublic partial class CameraManager : MonoBehaviour\n{\n    public static CameraManager Instance { get; private set; }\n\n    public enum ZoneType { Normal, Corridor, Boss }\n\n    [Header(\"References\")]\n    [SerializeField] private Transform player;\n    [SerializeField] private Rigidbody2D playerRb;\n    [SerializeField] private PlayerMotor2D playerMotor;\n    [SerializeField] private PlayerInputRouter inputRouter;\n\n    [SerializeField] private CinemachineVirtualCamera vcamNormal;\n    [SerializeField] private CinemachineVirtualCamera vcamCorridor;\n    [SerializeField] private CinemachineVirtualCamera vcamBoss;\n    [SerializeField] private CinemachineVirtualCamera vcamManual;\n\n    [SerializeField] private Transform manualAnchor;\n\n    [Header(\"Auto Camera Priorities\")]\n    [SerializeField] private int prioActive = 20;\n    [SerializeField] private int prioInactive = 10;\n    [SerializeField] private int prioManual = 30;\n\n    // Zone stack\n    private readonly List<ZoneType> zoneStack = new();\n\n    // State\n    private bool manualMode = false;\n\n    // Facing\n    private int facingSign = 1;\n\n    // Cached move (fallback se não tiver inputRouter)\n    private Vector2 cachedMoveInput;\n\n    private void Awake()\n    {\n        if (Instance != null && Instance != this) { Destroy(gameObject); return; }\n        Instance = this;\n    }\n\n    private void Start()\n    {\n        // Auto-captura se não veio no inspector\n        if (player != null)\n        {\n            if (playerRb == null) playerRb = player.GetComponent<Rigidbody2D>();\n            if (playerMotor == null) playerMotor = player.GetComponent<PlayerMotor2D>();\n            if (inputRouter == null) inputRouter = player.GetComponent<PlayerInputRouter>();\n\n            SetFollows(player);\n        }\n\n        SetZone(ZoneType.Normal);\n        ApplyAutoPriorities();\n        UpdateConfinerBounds();\n    }\n\n    private void Update()\n    {\n        if (player == null) return;\n\n        UpdateFacing();\n\n        if (!manualMode)\n        {\n            UpdateLookUpHold();\n            UpdateAutoCameraParams();\n            if (enableDynamicZoom) UpdateDynamicZoom();\n        }\n    }\n\n    // -------------------- PUBLIC API --------------------\n\n    public void SetPlayer(Transform t)\n    {\n        player = t;\n        playerRb = t != null ? t.GetComponent<Rigidbody2D>() : null;\n        playerMotor = t != null ? t.GetComponent<PlayerMotor2D>() : null;\n        inputRouter = t != null ? t.GetComponent<PlayerInputRouter>() : null;\n\n        SetFollows(t);\n    }\n\n    public void SetMoveInput(Vector2 move)\n    {\n        // opcional: se quiseres alimentar via PlayerController em vez de referenciar o Router aqui\n        cachedMoveInput = move;\n    }\n\n    public void PushZone(ZoneType z)\n    {\n        zoneStack.Add(z);\n        ApplyAutoPriorities();\n    }\n\n    public void PopZone(ZoneType z)\n    {\n        int idx = zoneStack.LastIndexOf(z);\n        if (idx >= 0) zoneStack.RemoveAt(idx);\n        ApplyAutoPriorities();\n    }\n\n    public void SetZone(ZoneType z)\n    {\n        zoneStack.Clear();\n        zoneStack.Add(z);\n        ApplyAutoPriorities();\n    }\n\n    public void EnterManualLock(Vector2 worldPos)\n    {\n        manualMode = true;\n        if (manualAnchor != null) manualAnchor.position = worldPos;\n\n        if (vcamManual != null)\n        {\n            vcamManual.Follow = manualAnchor;\n            vcamManual.Priority = prioManual;\n        }\n\n        // baixa prioridades das auto (mas não deixa sem camera se manual falhar)\n        vcamNormal.Priority = 0;\n        vcamCorridor.Priority = 0;\n        vcamBoss.Priority = 0;\n    }\n\n    public void EnterManualFollow(Transform target)\n    {\n        manualMode = true;\n        if (vcamManual != null)\n        {\n            vcamManual.Follow = target;\n            vcamManual.Priority = prioManual;\n        }\n\n        vcamNormal.Priority = 0;\n        vcamCorridor.Priority = 0;\n        vcamBoss.Priority = 0;\n    }\n\n    public void ExitManual()\n    {\n        manualMode = false;\n        if (vcamManual != null) vcamManual.Priority = 0;\n        ApplyAutoPriorities();\n    }\n\n    // -------------------- INTERNAL LOGIC --------------------\n\n    private void SetFollows(Transform t)\n    {\n        if (vcamNormal != null) vcamNormal.Follow = t;\n        if (vcamCorridor != null) vcamCorridor.Follow = t;\n        if (vcamBoss != null) vcamBoss.Follow = t;\n    }\n\n    private void ApplyAutoPriorities()\n    {\n        if (manualMode) return;\n\n        ZoneType top = GetTopZone();\n\n        vcamNormal.Priority = prioInactive;\n        vcamCorridor.Priority = prioInactive;\n        vcamBoss.Priority = prioInactive;\n\n        switch (top)\n        {\n            case ZoneType.Corridor:\n                vcamCorridor.Priority = prioActive;\n                break;\n            case ZoneType.Boss:\n                vcamBoss.Priority = prioActive;\n                break;\n            default:\n                vcamNormal.Priority = prioActive;\n                break;\n        }\n\n        if (vcamManual != null) vcamManual.Priority = 0;\n    }\n\n    private ZoneType GetTopZone()\n    {\n        if (zoneStack.Contains(ZoneType.Boss)) return ZoneType.Boss;\n        if (zoneStack.Contains(ZoneType.Corridor)) return ZoneType.Corridor;\n        return ZoneType.Normal;\n    }\n\n    private CinemachineVirtualCamera GetActiveAutoVcam()\n    {\n        CinemachineVirtualCamera best = vcamNormal;\n        int p = (best != null) ? best.Priority : int.MinValue;\n\n        if (vcamCorridor != null && vcamCorridor.Priority > p) { best = vcamCorridor; p = best.Priority; }\n        if (vcamBoss != null && vcamBoss.Priority > p) { best = vcamBoss; p = best.Priority; }\n\n        return best;\n    }\n\n    /// <summary>Devolve a vcam realmente activa agora: vcamManual durante uma cutscene (Etapa 6), ou a melhor vcam automática caso contrário.</summary>\n    private CinemachineVirtualCamera GetActiveVcam()\n    {\n        if (manualMode && vcamManual != null) return vcamManual;\n        return GetActiveAutoVcam();\n    }\n\n    private void UpdateFacing()\n    {\n        // Preferência: usa facing do motor (mais consistente com o teu gameplay)\n        if (playerMotor != null)\n        {\n            facingSign = playerMotor.FacingSign != 0 ? playerMotor.FacingSign : facingSign;\n            return;\n        }\n\n        // Fallback: usa velocidade\n        if (playerRb == null) return;\n        float vx = playerRb.linearVelocity.x;\n        if (vx > 0.2f) facingSign = 1;\n        else if (vx < -0.2f) facingSign = -1;\n    }\n\n    private Vector2 GetMoveInput()\n    {\n        if (inputRouter != null) return inputRouter.Move;\n        return cachedMoveInput;\n    }\n}\n",
   "id": "script-camera-cameramanager-cs",
   "dependencyIds": [
-    "script-player-playercontroller-cs",
     "script-input-playerinputrouter-cs",
     "script-player-playermotor2d-cs"
   ],
   "usedByIds": [
-    "script-world-areamanager-cs",
-    "script-camera-cameraareabounds-cs",
-    "script-camera-camerablocker-cs",
-    "script-npc-actions-cameraactions-cs",
-    "script-camera-camerazone-cs",
-    "script-player-playerfeedback-cs"
+    "script-camera-camerazone-cs"
   ]
 }

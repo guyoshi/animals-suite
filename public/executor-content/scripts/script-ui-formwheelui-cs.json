@@ -16,121 +16,21 @@
   ],
   "fields": [
     {
-      "name": "input",
-      "type": "PlayerInputRouter",
+      "name": "_isOpen",
+      "type": "bool",
       "mods": "private",
       "default": "",
-      "section": "Referências",
-      "attrs": "[Header(\"Referências\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "formSwitcher",
-      "type": "FormSwitcher",
-      "mods": "private",
-      "default": "",
-      "section": "Referências",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "panelRoot",
-      "type": "GameObject",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[Header(\"UI\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "wheelContainer",
-      "type": "RectTransform",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "nodePrefab",
-      "type": "FormWheelNodeUI",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "formNameText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[Tooltip(\"Nome da forma seleccionada (opcional).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Nome da forma selecionada (opcional)."
-    },
-    {
-      "name": "reasonText",
-      "type": "TMP_Text",
-      "mods": "private",
-      "default": "",
-      "section": "UI",
-      "attrs": "[Tooltip(\"Motivo pelo qual a forma seleccionada está indisponível (vazio se disponível).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Motivo pelo qual a forma selecionada está indisponível (vazio se disponível)."
-    },
-    {
-      "name": "radius",
-      "type": "float",
-      "mods": "private",
-      "default": "180f",
-      "section": "Layout (círculo)",
-      "attrs": "[Header(\"Layout (círculo)\")] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "startAngleDeg",
-      "type": "float",
-      "mods": "private",
-      "default": "0f",
-      "section": "Layout (círculo)",
-      "attrs": "[Tooltip(\"Ângulo (graus) do primeiro nó, medido a partir do topo, sentido horário.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Ângulo (graus) do primeiro nó, medido a partir do topo, sentido horário."
-    },
-    {
-      "name": "slowTimeScale",
-      "type": "float",
-      "mods": "private",
-      "default": "0.2f",
-      "section": "Câmara Lenta",
-      "attrs": "[Header(\"Câmara Lenta\")] [Range(0.05f, 1f)] [SerializeField]",
-      "inspector": true,
-      "description": "Referência/configuração usada por este comportamento."
-    },
-    {
-      "name": "_nodes",
-      "type": "List<FormWheelNodeUI>",
-      "mods": "private readonly",
-      "default": "new List<FormWheelNodeUI>()",
-      "section": "Câmara Lenta",
+      "section": "Performance",
       "attrs": "",
       "inspector": false,
       "description": "Referência/configuração usada por este comportamento."
     },
     {
-      "name": "_isOpen",
-      "type": "bool",
+      "name": "_nextAvailabilityRefresh",
+      "type": "float",
       "mods": "private",
       "default": "",
-      "section": "Câmara Lenta",
+      "section": "Performance",
       "attrs": "",
       "inspector": false,
       "description": "Referência/configuração usada por este comportamento."
@@ -209,12 +109,9 @@
     "WheelTimeScaleUtil"
   ],
   "used_by": [
-    "FormSwitcher",
-    "FormWheelNodeUI",
-    "HUDController",
-    "WheelTimeScaleUtil"
+    "FormWheelNodeUI"
   ],
-  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Roda de Animais (Tarefa #21 — \"Roda de animais/itens\"): UI radial que\n/// aparece enquanto o jogador mantém o botão da Roda de Formas premido\n/// (<see cref=\"PlayerInputRouter.FormWheelOpened\"/>/<see cref=\"PlayerInputRouter.FormWheelClosed\"/>),\n/// mostrando todas as <see cref=\"FormSwitcher.unlockedForms\"/> num círculo.\n///\n/// - Navegação: L/R (<see cref=\"PlayerInputRouter.PrevFormTapped\"/>/<see cref=\"PlayerInputRouter.NextFormTapped\"/>)\n///   já mudam <see cref=\"FormSwitcher.SelectedIndex\"/> via FormSwitcher\n///   (OnSelectionChanged) sem trocar de forma enquanto a roda está aberta —\n///   este componente só reflecte a selecção.\n/// - Formas indisponíveis AGORA (<see cref=\"FormSwitcher.CanSwitchTo\"/> ==\n///   false — ex: no ar, submerso, em cooldown) aparecem acinzentadas com um\n///   ícone de cadeado (<see cref=\"FormWheelNodeUI\"/>); o motivo aparece em\n///   <see cref=\"reasonText\"/> quando essa forma está seleccionada.\n/// - Confirmação: <see cref=\"PlayerInputRouter.ConfirmTransformHold\"/> (já\n///   ligado em FormSwitcher.OnConfirmTransformHold) aplica a forma\n///   seleccionada.\n/// - Cancelamento: soltar o botão da roda sem confirmar\n///   (FormWheelClosed) fecha sem aplicar nada — a forma actual mantém-se.\n/// - Câmara lenta: Time.timeScale ≈ 0.2 enquanto a roda estiver aberta\n///   (<see cref=\"WheelTimeScaleUtil\"/>), partilhado com a Roda de Itens.\n///\n/// Montagem no Editor:\n/// - \"panelRoot\": GameObject raiz da roda (activado/desactivado ao abrir/fechar).\n/// - \"wheelContainer\": RectTransform vazio, centro da roda — os nós são\n///   instanciados como filhos, posicionados em círculo.\n/// - \"nodePrefab\": prefab com <see cref=\"FormWheelNodeUI\"/> (ícone + cadeado +\n///   destaque + marcador de forma actual).\n/// - \"reasonText\"/\"formNameText\": TMP_Text opcionais para nome/motivo da forma\n///   seleccionada.\n/// </summary>\npublic class FormWheelUI : MonoBehaviour\n{\n    [Header(\"Referências\")]\n    [SerializeField] private PlayerInputRouter input;\n    [SerializeField] private FormSwitcher formSwitcher;\n\n    [Header(\"UI\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private RectTransform wheelContainer;\n    [SerializeField] private FormWheelNodeUI nodePrefab;\n\n    [Tooltip(\"Nome da forma seleccionada (opcional).\")]\n    [SerializeField] private TMP_Text formNameText;\n\n    [Tooltip(\"Motivo pelo qual a forma seleccionada está indisponível (vazio se disponível).\")]\n    [SerializeField] private TMP_Text reasonText;\n\n    [Header(\"Layout (círculo)\")]\n    [SerializeField] private float radius = 180f;\n    [Tooltip(\"Ângulo (graus) do primeiro nó, medido a partir do topo, sentido horário.\")]\n    [SerializeField] private float startAngleDeg = 0f;\n\n    [Header(\"Câmara Lenta\")]\n    [Range(0.05f, 1f)]\n    [SerializeField] private float slowTimeScale = 0.2f;\n\n    private readonly List<FormWheelNodeUI> _nodes = new List<FormWheelNodeUI>();\n    private bool _isOpen;\n\n    private void Awake()\n    {\n        if (input == null) input = GetComponentInParent<PlayerInputRouter>();\n        if (formSwitcher == null) formSwitcher = GetComponentInParent<FormSwitcher>();\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    private void OnEnable()\n    {\n        if (input == null || formSwitcher == null)\n        {\n            Debug.LogError(\"[FormWheelUI] input/formSwitcher não atribuídos. Liga no Inspector.\");\n            enabled = false;\n            return;\n        }\n\n        input.FormWheelOpened += OnWheelOpened;\n        input.FormWheelClosed += OnWheelClosed;\n        formSwitcher.OnSelectionChanged += OnSelectionChanged;\n    }\n\n    private void OnDisable()\n    {\n        if (input != null)\n        {\n            input.FormWheelOpened -= OnWheelOpened;\n            input.FormWheelClosed -= OnWheelClosed;\n        }\n\n        if (formSwitcher != null)\n            formSwitcher.OnSelectionChanged -= OnSelectionChanged;\n\n        // Salvaguarda: se este componente for desactivado enquanto a roda\n        // estava aberta, garante que a câmara lenta não fica \"pendurada\".\n        if (_isOpen)\n        {\n            WheelTimeScaleUtil.EndSlowdown();\n            _isOpen = false;\n        }\n    }\n\n    private void Update()\n    {\n        if (!_isOpen) return;\n\n        // Reavalia disponibilidade a cada frame: o estado do jogador (chão/\n        // água/submerso/cooldown) pode mudar enquanto a roda está aberta,\n        // mesmo em câmara lenta.\n        RefreshAvailability();\n    }\n\n    private void OnWheelOpened()\n    {\n        _isOpen = true;\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        BuildNodes();\n        RefreshAvailability();\n\n        WheelTimeScaleUtil.BeginSlowdown(slowTimeScale);\n    }\n\n    private void OnWheelClosed()\n    {\n        if (!_isOpen) return;\n        _isOpen = false;\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        WheelTimeScaleUtil.EndSlowdown();\n    }\n\n    private void OnSelectionChanged(int index)\n    {\n        RefreshAvailability();\n    }\n\n    /// <summary>\n    /// (Re)cria um nó por forma desbloqueada, posicionado em círculo\n    /// (\"wheelContainer\" como centro). Chamado ao abrir a roda — o número de\n    /// formas desbloqueadas pode ter mudado desde a última vez.\n    /// </summary>\n    private void BuildNodes()\n    {\n        if (wheelContainer == null || nodePrefab == null) return;\n\n        foreach (var node in _nodes)\n            if (node != null) Destroy(node.gameObject);\n        _nodes.Clear();\n\n        var forms = formSwitcher.unlockedForms;\n        int count = forms.Count;\n        if (count == 0) return;\n\n        float stepDeg = 360f / count;\n\n        for (int i = 0; i < count; i++)\n        {\n            var node = Instantiate(nodePrefab, wheelContainer);\n            node.gameObject.SetActive(true);\n\n            float angleDeg = startAngleDeg + stepDeg * i;\n            float angleRad = angleDeg * Mathf.Deg2Rad;\n\n            // Ângulo medido a partir do topo (0° = topo), sentido horário.\n            Vector2 pos = new Vector2(Mathf.Sin(angleRad), Mathf.Cos(angleRad)) * radius;\n            node.GetComponent<RectTransform>().anchoredPosition = pos;\n\n            _nodes.Add(node);\n        }\n    }\n\n    /// <summary>\n    /// Actualiza cada nó (acinzentado + cadeado se indisponível, destaque na\n    /// forma seleccionada, marcador na forma actual) e o texto de nome/motivo\n    /// da forma actualmente seleccionada.\n    /// </summary>\n    private void RefreshAvailability()\n    {\n        var forms = formSwitcher.unlockedForms;\n        int selected = formSwitcher.SelectedIndex;\n        var current = formSwitcher.CurrentForm;\n\n        string selectedReason = null;\n        AnimalFormData selectedForm = null;\n\n        for (int i = 0; i < _nodes.Count && i < forms.Count; i++)\n        {\n            var form = forms[i];\n            bool available = formSwitcher.CanSwitchTo(form, out string reason);\n            bool isCurrent = form == current;\n            bool isSelected = i == selected;\n\n            _nodes[i].Setup(form, isCurrent, isSelected, available);\n\n            if (isSelected)\n            {\n                selectedForm = form;\n                selectedReason = available ? null : reason;\n            }\n        }\n\n        if (formNameText != null)\n            formNameText.text = selectedForm != null ? selectedForm.displayName : string.Empty;\n\n        if (reasonText != null)\n            reasonText.text = selectedReason ?? string.Empty;\n    }\n}\n",
+  "source": "using System.Collections.Generic;\nusing TMPro;\nusing UnityEngine;\n\n/// <summary>\n/// Roda de Animais (Tarefa #21 — \"Roda de animais/itens\"): UI radial que\n/// aparece enquanto o jogador mantém o botão da Roda de Formas premido\n/// (<see cref=\"PlayerInputRouter.FormWheelOpened\"/>/<see cref=\"PlayerInputRouter.FormWheelClosed\"/>),\n/// mostrando todas as <see cref=\"FormSwitcher.unlockedForms\"/> num círculo.\n///\n/// - Navegação: L/R (<see cref=\"PlayerInputRouter.PrevFormTapped\"/>/<see cref=\"PlayerInputRouter.NextFormTapped\"/>)\n///   já mudam <see cref=\"FormSwitcher.SelectedIndex\"/> via FormSwitcher\n///   (OnSelectionChanged) sem trocar de forma enquanto a roda está aberta —\n///   este componente só reflecte a selecção.\n/// - Formas indisponíveis AGORA (<see cref=\"FormSwitcher.CanSwitchTo\"/> ==\n///   false — ex: no ar, submerso, em cooldown) aparecem acinzentadas com um\n///   ícone de cadeado (<see cref=\"FormWheelNodeUI\"/>); o motivo aparece em\n///   <see cref=\"reasonText\"/> quando essa forma está seleccionada.\n/// - Confirmação: <see cref=\"PlayerInputRouter.ConfirmTransformHold\"/> (já\n///   ligado em FormSwitcher.OnConfirmTransformHold) aplica a forma\n///   seleccionada.\n/// - Cancelamento: soltar o botão da roda sem confirmar\n///   (FormWheelClosed) fecha sem aplicar nada — a forma actual mantém-se.\n/// - Câmara lenta: Time.timeScale ≈ 0.2 enquanto a roda estiver aberta\n///   (<see cref=\"WheelTimeScaleUtil\"/>), partilhado com a Roda de Itens.\n///\n/// Montagem no Editor:\n/// - \"panelRoot\": GameObject raiz da roda (activado/desactivado ao abrir/fechar).\n/// - \"wheelContainer\": RectTransform vazio, centro da roda — os nós são\n///   instanciados como filhos, posicionados em círculo.\n/// - \"nodePrefab\": prefab com <see cref=\"FormWheelNodeUI\"/> (ícone + cadeado +\n///   destaque + marcador de forma actual).\n/// - \"reasonText\"/\"formNameText\": TMP_Text opcionais para nome/motivo da forma\n///   seleccionada.\n/// </summary>\npublic class FormWheelUI : MonoBehaviour\n{\n    [Header(\"Referências\")]\n    [SerializeField] private PlayerInputRouter input;\n    [SerializeField] private FormSwitcher formSwitcher;\n\n    [Header(\"UI\")]\n    [SerializeField] private GameObject panelRoot;\n    [SerializeField] private RectTransform wheelContainer;\n    [SerializeField] private FormWheelNodeUI nodePrefab;\n\n    [Tooltip(\"Nome da forma seleccionada (opcional).\")]\n    [SerializeField] private TMP_Text formNameText;\n\n    [Tooltip(\"Motivo pelo qual a forma seleccionada está indisponível (vazio se disponível).\")]\n    [SerializeField] private TMP_Text reasonText;\n\n    [Header(\"Layout (círculo)\")]\n    [SerializeField] private float radius = 180f;\n    [Tooltip(\"Ângulo (graus) do primeiro nó, medido a partir do topo, sentido horário.\")]\n    [SerializeField] private float startAngleDeg = 0f;\n\n    [Header(\"Câmara Lenta\")]\n    [Range(0.05f, 1f)]\n    [SerializeField] private float slowTimeScale = 0.2f;\n\n    [Header(\"Performance\")]\n    [Tooltip(\"Intervalo mínimo (em segundos reais, ignorando timeScale) entre actualizações de disponibilidade em Update. \" +\n             \"Reduz Physics2D.OverlapCapsule de N×60/s para N×(1/intervalo)/s enquanto a roda está aberta. \" +\n             \"0 = actualiza a cada frame (comportamento anterior). Recomendado: 0.1.\")]\n    [SerializeField] [Range(0f, 0.5f)] private float availabilityRefreshInterval = 0.1f;\n\n    // _nodePool: todos os nós já criados (nunca destruídos — Task #29).\n    // _nodes:    subconjunto activo (SetActive true) na abertura actual.\n    private readonly List<FormWheelNodeUI> _nodePool = new List<FormWheelNodeUI>();\n    private readonly List<FormWheelNodeUI> _nodes    = new List<FormWheelNodeUI>();\n    private bool _isOpen;\n    private float _nextAvailabilityRefresh;\n\n    private void Awake()\n    {\n        if (input == null) input = GetComponentInParent<PlayerInputRouter>();\n        if (formSwitcher == null) formSwitcher = GetComponentInParent<FormSwitcher>();\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n    }\n\n    private void OnEnable()\n    {\n        if (input == null || formSwitcher == null)\n        {\n            Debug.LogError(\"[FormWheelUI] input/formSwitcher não atribuídos. Liga no Inspector.\");\n            enabled = false;\n            return;\n        }\n\n        input.FormWheelOpened += OnWheelOpened;\n        input.FormWheelClosed += OnWheelClosed;\n        formSwitcher.OnSelectionChanged += OnSelectionChanged;\n    }\n\n    private void OnDisable()\n    {\n        if (input != null)\n        {\n            input.FormWheelOpened -= OnWheelOpened;\n            input.FormWheelClosed -= OnWheelClosed;\n        }\n\n        if (formSwitcher != null)\n            formSwitcher.OnSelectionChanged -= OnSelectionChanged;\n\n        // Salvaguarda: se este componente for desactivado enquanto a roda\n        // estava aberta, garante que a câmara lenta não fica \"pendurada\".\n        if (_isOpen)\n        {\n            WheelTimeScaleUtil.EndSlowdown();\n            _isOpen = false;\n        }\n    }\n\n    private void Update()\n    {\n        if (!_isOpen) return;\n\n        // Reavalia disponibilidade com throttle (Task #23): CanSwitchTo chama\n        // Physics2D.OverlapCapsule (fit check) por cada forma — sem throttle\n        // seriam N×60 queries/s mesmo em câmara lenta. Com o intervalo padrão\n        // de 0.1 s reais reduz para N×10/s sem perda de resposta percetível.\n        // Usa Time.unscaledTime para não ser afectado pelo timeScale da roda.\n        // RefreshAvailability continua a ser chamado imediatamente em\n        // OnWheelOpened e OnSelectionChanged para resposta instantânea.\n        if (availabilityRefreshInterval <= 0f || Time.unscaledTime >= _nextAvailabilityRefresh)\n        {\n            RefreshAvailability();\n            _nextAvailabilityRefresh = Time.unscaledTime + availabilityRefreshInterval;\n        }\n    }\n\n    private void OnWheelOpened()\n    {\n        _isOpen = true;\n\n        if (panelRoot != null) panelRoot.SetActive(true);\n\n        BuildNodes();\n        RefreshAvailability();\n        _nextAvailabilityRefresh = Time.unscaledTime + availabilityRefreshInterval;\n\n        WheelTimeScaleUtil.BeginSlowdown(slowTimeScale);\n    }\n\n    private void OnWheelClosed()\n    {\n        if (!_isOpen) return;\n        _isOpen = false;\n\n        if (panelRoot != null) panelRoot.SetActive(false);\n\n        WheelTimeScaleUtil.EndSlowdown();\n    }\n\n    private void OnSelectionChanged(int index)\n    {\n        RefreshAvailability();\n    }\n\n    /// <summary>\n    /// Activa/posiciona nós para as formas desbloqueadas, reutilizando os já\n    /// criados (Task #29 — pool). Nós excedentes ficam desactivados mas não são\n    /// destruídos; novos só são instanciados se a pool não tiver suficientes.\n    /// </summary>\n    private void BuildNodes()\n    {\n        if (wheelContainer == null || nodePrefab == null) return;\n\n        // Desactiva toda a pool — vai reactivar só os necessários abaixo.\n        foreach (var n in _nodePool)\n            if (n != null) n.gameObject.SetActive(false);\n        _nodes.Clear();\n\n        var forms = formSwitcher.unlockedForms;\n        int count = forms.Count;\n        if (count == 0) return;\n\n        // Crescer a pool se necessário.\n        while (_nodePool.Count < count)\n        {\n            var fresh = Instantiate(nodePrefab, wheelContainer);\n            fresh.gameObject.SetActive(false);\n            _nodePool.Add(fresh);\n        }\n\n        float stepDeg = 360f / count;\n\n        for (int i = 0; i < count; i++)\n        {\n            var node = _nodePool[i];\n            node.gameObject.SetActive(true);\n\n            float angleDeg = startAngleDeg + stepDeg * i;\n            float angleRad = angleDeg * Mathf.Deg2Rad;\n\n            // Ângulo medido a partir do topo (0° = topo), sentido horário.\n            Vector2 pos = new Vector2(Mathf.Sin(angleRad), Mathf.Cos(angleRad)) * radius;\n            node.GetComponent<RectTransform>().anchoredPosition = pos;\n\n            _nodes.Add(node);\n        }\n    }\n\n    /// <summary>\n    /// Actualiza cada nó (acinzentado + cadeado se indisponível, destaque na\n    /// forma seleccionada, marcador na forma actual) e o texto de nome/motivo\n    /// da forma actualmente seleccionada.\n    /// </summary>\n    private void RefreshAvailability()\n    {\n        var forms = formSwitcher.unlockedForms;\n        int selected = formSwitcher.SelectedIndex;\n        var current = formSwitcher.CurrentForm;\n\n        string selectedReason = null;\n        AnimalFormData selectedForm = null;\n\n        for (int i = 0; i < _nodes.Count && i < forms.Count; i++)\n        {\n            var form = forms[i];\n            bool available = formSwitcher.CanSwitchTo(form, out string reason);\n            bool isCurrent = form == current;\n            bool isSelected = i == selected;\n\n            _nodes[i].Setup(form, isCurrent, isSelected, available);\n\n            if (isSelected)\n            {\n                selectedForm = form;\n                selectedReason = available ? null : reason;\n            }\n        }\n\n        if (formNameText != null)\n            formNameText.text = selectedForm != null ? selectedForm.displayName : string.Empty;\n\n        if (reasonText != null)\n            reasonText.text = selectedReason ?? string.Empty;\n    }\n}\n",
   "id": "script-ui-formwheelui-cs",
   "dependencyIds": [
     "script-forms-animalformdata-cs",
@@ -224,9 +121,6 @@
     "script-ui-wheeltimescaleutil-cs"
   ],
   "usedByIds": [
-    "script-forms-formswitcher-cs",
-    "script-ui-formwheelnodeui-cs",
-    "script-ui-hudcontroller-cs",
-    "script-ui-wheeltimescaleutil-cs"
+    "script-ui-formwheelnodeui-cs"
   ]
 }

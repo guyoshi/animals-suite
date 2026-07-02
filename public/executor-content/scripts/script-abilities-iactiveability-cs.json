@@ -33,7 +33,6 @@
     "EggAbility",
     "GlideAbility",
     "GrabThrowAbility",
-    "HUDController",
     "HeavyStrikeAbility",
     "IceBrakeAbility",
     "NightVisionAbility",
@@ -53,7 +52,8 @@
     "script-abilities-abilityrouter-cs",
     "script-test-animalsdebugpanel-cs",
     "script-ui-hudcontroller-cs",
-    "script-abilities-iability-cs"
+    "script-abilities-iability-cs",
+    "script-forms-animalformdata-cs"
   ],
   "usedByIds": [
     "script-abilities-abilityrouter-cs",
@@ -65,7 +65,6 @@
     "script-abilities-eggability-cs",
     "script-abilities-glideability-cs",
     "script-abilities-grabthrowability-cs",
-    "script-ui-hudcontroller-cs",
     "script-abilities-heavystrikeability-cs",
     "script-abilities-icebrakeability-cs",
     "script-abilities-nightvisionability-cs",

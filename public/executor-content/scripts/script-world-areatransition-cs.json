@@ -59,7 +59,6 @@
   ],
   "used_by": [
     "AreaData",
-    "AreaManager",
     "AreaSpawnPoint",
     "SceneLoader"
   ],
@@ -72,7 +71,6 @@
   ],
   "usedByIds": [
     "script-data-areadata-cs",
-    "script-world-areamanager-cs",
     "script-world-areaspawnpoint-cs",
     "script-world-sceneloader-cs"
   ]

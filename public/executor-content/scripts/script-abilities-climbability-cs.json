@@ -16,56 +16,6 @@
   ],
   "fields": [
     {
-      "name": "climbableLayer",
-      "type": "LayerMask",
-      "mods": "private",
-      "default": "",
-      "section": "Detecção de superfície escalável",
-      "attrs": "[Header(\"Detecção de superfície escalável\")] [Tooltip(\"Layers escaláveis SEM componente ClimbableSurface (legado — tratadas como Parede, exigem canClimb).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Layers escaláveis SEM componente ClimbableSurface (legado — tratadas como Parede, exigem canClimb)."
-    },
-    {
-      "name": "checkOffset",
-      "type": "Vector2",
-      "mods": "private",
-      "default": "Vector2.zero",
-      "section": "Detecção de superfície escalável",
-      "attrs": "[Tooltip(\"Offset (a partir do transform do player) do centro da caixa de procura.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Offset (a partir do transform do player) do centro da caixa de procura."
-    },
-    {
-      "name": "checkSize",
-      "type": "Vector2",
-      "mods": "private",
-      "default": "new Vector2(1f, 1.2f)",
-      "section": "Detecção de superfície escalável",
-      "attrs": "[Tooltip(\"Tamanho da caixa de procura de superfícies escaláveis (cobre a frente e o corpo do player — apanha cordas/escadas sobrepostas).\")] [SerializeField]",
-      "inspector": true,
-      "description": "Tamanho da caixa de procura de superfícies escaláveis (cobre a frente e o corpo do player — coleta cordas/escadas sobrepostas)."
-    },
-    {
-      "name": "input",
-      "type": "PlayerInputRouter",
-      "mods": "private",
-      "default": "",
-      "section": "Input",
-      "attrs": "[Header(\"Input\")] [Tooltip(\"Auto-preenchido.\")] [SerializeField]",
-      "inspector": true,
-      "description": "Auto-preenchido."
-    },
-    {
-      "name": "upInputThreshold",
-      "type": "float",
-      "mods": "public",
-      "default": "0.3f",
-      "section": "Input",
-      "attrs": "[Tooltip(\"Quanto de input para CIMA é preciso para agarrar uma Parede (0..1).\")] [Range(0.1f, 1f)]",
-      "inspector": true,
-      "description": "Quanto de input para CIMA é preciso para agarrar uma Parede (0..1)."
-    },
-    {
       "name": "motor",
       "type": "PlayerMotor2D",
       "mods": "private",
@@ -137,6 +87,16 @@
     },
     {
       "name": "isClimbing",
+      "type": "bool",
+      "mods": "private",
+      "default": "",
+      "section": "Input",
+      "attrs": "",
+      "inspector": false,
+      "description": "Referência/configuração usada por este comportamento."
+    },
+    {
+      "name": "climbingVine",
       "type": "bool",
       "mods": "private",
       "default": "",
@@ -284,52 +244,40 @@
   ],
   "dependencies": [
     "AbilityCancelReason",
-    "AbilityRouter",
     "AnimalFormData",
-    "AnimalsDebugPanel",
     "ClimbableKind",
     "ClimbableSurface",
     "IAbility",
     "IActiveAbility",
     "IFormAbility",
-    "PlayerCombat",
     "PlayerInputRouter",
-    "PlayerMotor2D",
-    "SwingAbility"
+    "PlayerMotor2D"
   ],
   "used_by": [
     "AbilityRouter",
-    "AnimalFormData",
     "ClimbableSurface",
-    "FormSwitcher",
     "GrabThrowAbility",
     "PlayerCombat",
-    "PullAbility",
-    "SwingAbility"
+    "PullAbility"
   ],
-  "source": "using UnityEngine;\nusing System.Collections.Generic;\n\n/// <summary>\n/// Escalar (CLM do GDD) — REFORMULADO (P4 + correcção do botão de agarrar):\n/// escalar usa o botão de INTERAGIR (não há botão de \"agarrar\" dedicado).\n///\n/// - Paredes/cipós verticais (ClimbableSurface.Parede, exige 'canClimb'):\n///   SEGURAR Interagir + carregar para CIMA junto à parede agarra-se e\n///   sobe/desce. Soltar Interagir larga a parede.\n/// - Cordas/Escadas (ClimbableSurface.Corda/Escada, aceitam 'canClimb' OU\n///   'canGrab'): basta APERTAR Interagir enquanto estiver dentro da área para\n///   agarrar/largar (toggle) — não precisa segurar nem carregar para cima.\n/// - Layers \"climbableLayer\" (legado, sem componente): tratadas como Parede.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class ClimbAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Detecção de superfície escalável\")]\n    [Tooltip(\"Layers escaláveis SEM componente ClimbableSurface (legado — tratadas como Parede, exigem canClimb).\")]\n    [SerializeField] private LayerMask climbableLayer;\n\n    [Tooltip(\"Offset (a partir do transform do player) do centro da caixa de procura.\")]\n    [SerializeField] private Vector2 checkOffset = Vector2.zero;\n\n    [Tooltip(\"Tamanho da caixa de procura de superfícies escaláveis (cobre a frente e o corpo do player — apanha cordas/escadas sobrepostas).\")]\n    [SerializeField] private Vector2 checkSize = new Vector2(1f, 1.2f);\n\n    [Header(\"Input\")]\n    [Tooltip(\"Auto-preenchido.\")]\n    [SerializeField] private PlayerInputRouter input;\n\n    [Tooltip(\"Quanto de input para CIMA é preciso para agarrar uma Parede (0..1).\")]\n    [Range(0.1f, 1f)] public float upInputThreshold = 0.3f;\n\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    // Buffer NonAlloc reutilizável — evita alocação por frame em OverlapBox.\n    private static readonly Collider2D[] _overlapBuffer = new Collider2D[16];\n\n    private AnimalFormData form;\n    private bool enabledForForm;\n    private float climbSpeed;\n    private float gravityBeforeClimb;\n\n    private bool isClimbing;\n    private bool climbingVine; // true se agarrado por toggle (Corda/Escada) — ignora InteractHeld para soltar.\n    private float surfaceSpeedMultiplier = 1f;\n\n    /// <summary>true enquanto o player está agarrado a uma superfície escalável.</summary>\n    public bool IsClimbing => isClimbing;\n\n    // ---- IAbility (item 8) ----\n    // Climb não usa o botão de habilidade (entra/sai via Interagir/Update — ver\n    // TryToggleVineAttach e Update acima). Activate/Release ficam sem efeito;\n    // o que importa para o cancelamento central é Cancel/IsActive.\n    void IAbility.Activate() { }\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) => StopClimb();\n    public float CooldownRemaining => 0f;\n    bool IAbility.IsActive => isClimbing;\n\n    // ---- IActiveAbility (Tarefa #34 — HUD) ----\n    // Sem cooldown: a HUD não mostra indicador para esta habilidade.\n    public float CooldownDuration => 0f;\n    public bool CanActivate => enabledForForm;\n\n    /// <summary>AnimalsDebugPanel — sem cooldown próprio (no-op).</summary>\n    public void ResetCooldown() { }\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n\n        if (input == null) input = GetComponent<PlayerInputRouter>();\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n\n        // canClimb (paredes/cordas/escadas) OU canGrab (cordas/escadas).\n        enabledForForm = form != null && (form.canClimb || form.canGrab);\n\n        if (!enabledForForm)\n        {\n            StopClimb();\n            return;\n        }\n\n        climbSpeed = form.climbSpeed > 0f ? form.climbSpeed : 4f;\n    }\n\n    /// <summary>\n    /// Chamado pelo AbilityRouter ao apertar Interagir (toque, não hold): se o\n    /// player estiver dentro de uma Corda/Escada compatível com a forma,\n    /// agarra-se (ou larga, se já estiver agarrado a uma). Devolve true se\n    /// consumiu o toque (o AbilityRouter não deve tratar mais nada nesse caso).\n    /// </summary>\n    public bool TryToggleVineAttach()\n    {\n        if (isClimbing && climbingVine)\n        {\n            StopClimb();\n            return true;\n        }\n\n        if (!enabledForForm || isClimbing) return false;\n\n        Vector2 center = (Vector2)transform.position + checkOffset;\n        int count = Physics2D.OverlapBoxNonAlloc(center, checkSize, 0f, _overlapBuffer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var hit = _overlapBuffer[i];\n            if (hit == null || hit.gameObject == gameObject) continue;\n\n            var surface = hit.GetComponent<ClimbableSurface>();\n            if (surface == null) continue;\n            if (surface.kind == ClimbableKind.Parede) continue; // paredes usam hold+cima, não toggle.\n            if (surface.kind == ClimbableKind.CipoBalanco) continue; // tratado pelo SwingAbility (balanço), não aqui.\n            if (!surface.AllowsForm(form)) continue;\n\n            StartClimb(surface.climbSpeedMultiplier, vine: true);\n            return true;\n        }\n\n        return false;\n    }\n\n    private void Update()\n    {\n        if (!isClimbing)\n        {\n            // Início (Parede): Interagir premido + input para cima + parede ao alcance.\n            if (!enabledForForm || !form.canClimb) return;\n            if (input == null || !input.InteractHeld || motor.MovementLocked) return;\n\n            float upInput = input.Move.y;\n            if (upInput < upInputThreshold) return;\n\n            if (TryFindClimbableWall(out float multiplier))\n                StartClimb(multiplier, vine: false);\n\n            return;\n        }\n\n        // Parede: soltar Interagir larga.\n        if (!climbingVine && (input == null || !input.InteractHeld))\n        {\n            StopClimb();\n            return;\n        }\n\n        // Já não há superfície (chegou ao topo/fim) -> solta.\n        if (!TryFindClimbable(out surfaceSpeedMultiplier))\n        {\n            StopClimb();\n            return;\n        }\n\n        float vY = input != null ? input.Move.y : 0f;\n        rb.velocity = new Vector2(0f, vY * climbSpeed * surfaceSpeedMultiplier);\n    }\n\n    private void StartClimb(float multiplier, bool vine)\n    {\n        isClimbing = true;\n        climbingVine = vine;\n        surfaceSpeedMultiplier = multiplier;\n        gravityBeforeClimb = rb.gravityScale;\n\n        rb.gravityScale = 0f;\n        rb.velocity = Vector2.zero;\n        motor.SetMovementLocked(true, this);\n    }\n\n    /// <summary>Tarefa #7 — Coala: aplica o bónus de defesa (climbDefenseBonus) enquanto agarrado/a escalar. Chamado por PlayerCombat.TryDamagePlayer.</summary>\n    public int ApplyClimbDefense(int damage)\n    {\n        if (!isClimbing || form == null) return damage;\n        return form.ApplyDefense(damage, form.climbDefenseBonus);\n    }\n\n    /// <summary>Larga a superfície: restaura a gravidade e devolve o controlo ao motor.</summary>\n    public void StopClimb()\n    {\n        if (!isClimbing) return;\n\n        isClimbing = false;\n        climbingVine = false;\n        rb.gravityScale = gravityBeforeClimb;\n        rb.velocity = Vector2.zero;\n        motor.SetMovementLocked(false, this);\n    }\n\n    /// <summary>Procura qualquer superfície escalável válida (usado enquanto já está agarrado).</summary>\n    private bool TryFindClimbable(out float speedMultiplier)\n    {\n        speedMultiplier = 1f;\n\n        Vector2 center = (Vector2)transform.position + checkOffset;\n        int count = Physics2D.OverlapBoxNonAlloc(center, checkSize, 0f, _overlapBuffer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var hit = _overlapBuffer[i];\n            if (hit == null || hit.gameObject == gameObject) continue;\n\n            var surface = hit.GetComponent<ClimbableSurface>();\n            if (surface != null && surface.AllowsForm(form))\n            {\n                speedMultiplier = surface.climbSpeedMultiplier;\n                return true;\n            }\n\n            if (form != null && form.canClimb && climbableLayer.value != 0 &&\n                (climbableLayer.value & (1 << hit.gameObject.layer)) != 0)\n            {\n                return true;\n            }\n        }\n\n        return false;\n    }\n\n    /// <summary>Procura apenas Paredes (ClimbableSurface.Parede ou layer legada) — usado para iniciar com hold+cima.</summary>\n    private bool TryFindClimbableWall(out float speedMultiplier)\n    {\n        speedMultiplier = 1f;\n\n        Vector2 center = (Vector2)transform.position + checkOffset;\n        int count = Physics2D.OverlapBoxNonAlloc(center, checkSize, 0f, _overlapBuffer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var hit = _overlapBuffer[i];\n            if (hit == null || hit.gameObject == gameObject) continue;\n\n            var surface = hit.GetComponent<ClimbableSurface>();\n            if (surface != null)\n            {\n                if (surface.kind == ClimbableKind.Parede && surface.AllowsForm(form))\n                {\n                    speedMultiplier = surface.climbSpeedMultiplier;\n                    return true;\n                }\n                continue;\n            }\n\n            // Layer legada = Parede (exige canClimb).\n            if (climbableLayer.value != 0 && (climbableLayer.value & (1 << hit.gameObject.layer)) != 0)\n                return true;\n        }\n\n        return false;\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(0.3f, 1f, 0.3f, 0.5f);\n        Gizmos.DrawWireCube((Vector2)transform.position + checkOffset, checkSize);\n    }\n}\n",
+  "source": "using UnityEngine;\nusing System.Collections.Generic;\n\n/// <summary>\n/// Escalar (CLM do GDD) — REFORMULADO (P4 + correcção do botão de agarrar):\n/// escalar usa o botão de INTERAGIR (não há botão de \"agarrar\" dedicado).\n///\n/// - Paredes/cipós verticais (ClimbableSurface.Parede, exige 'canClimb'):\n///   SEGURAR Interagir + carregar para CIMA junto à parede agarra-se e\n///   sobe/desce. Soltar Interagir larga a parede.\n/// - Cordas/Escadas (ClimbableSurface.Corda/Escada, aceitam 'canClimb' OU\n///   'canGrab'): basta APERTAR Interagir enquanto estiver dentro da área para\n///   agarrar/largar (toggle) — não precisa segurar nem carregar para cima.\n/// - Layers \"climbableLayer\" (legado, sem componente): tratadas como Parede.\n/// </summary>\n[RequireComponent(typeof(PlayerMotor2D), typeof(Rigidbody2D))]\npublic class ClimbAbility : MonoBehaviour, IFormAbility, IAbility, IActiveAbility\n{\n    [Header(\"Detecção de superfície escalável\")]\n    [Tooltip(\"Layers escaláveis SEM componente ClimbableSurface (legado — tratadas como Parede, exigem canClimb).\")]\n    [SerializeField] private LayerMask climbableLayer;\n\n    [Tooltip(\"Offset (a partir do transform do player) do centro da caixa de procura.\")]\n    [SerializeField] private Vector2 checkOffset = Vector2.zero;\n\n    [Tooltip(\"Tamanho da caixa de procura de superfícies escaláveis (cobre a frente e o corpo do player — apanha cordas/escadas sobrepostas).\")]\n    [SerializeField] private Vector2 checkSize = new Vector2(1f, 1.2f);\n\n    [Header(\"Input\")]\n    [Tooltip(\"Auto-preenchido.\")]\n    [SerializeField] private PlayerInputRouter input;\n\n    [Tooltip(\"Quanto de input para CIMA é preciso para agarrar uma Parede (0..1).\")]\n    [Range(0.1f, 1f)] public float upInputThreshold = 0.3f;\n\n    private PlayerMotor2D motor;\n    private Rigidbody2D rb;\n\n    // Buffer NonAlloc reutilizável — evita alocação por frame em OverlapBox.\n    private static readonly Collider2D[] _overlapBuffer = new Collider2D[16];\n\n    private AnimalFormData form;\n    private bool enabledForForm;\n    private float climbSpeed;\n    private float gravityBeforeClimb;\n\n    private bool isClimbing;\n    private bool climbingVine; // true se agarrado por toggle (Corda/Escada) — ignora InteractHeld para soltar.\n    private float surfaceSpeedMultiplier = 1f;\n\n    /// <summary>true enquanto o player está agarrado a uma superfície escalável.</summary>\n    public bool IsClimbing => isClimbing;\n\n    // ---- IAbility (item 8) ----\n    // Climb não usa o botão de habilidade (entra/sai via Interagir/Update — ver\n    // TryToggleVineAttach e Update acima). Activate/Release ficam sem efeito;\n    // o que importa para o cancelamento central é Cancel/IsActive.\n    void IAbility.Activate() { }\n    void IAbility.Release() { }\n    public void Cancel(AbilityCancelReason reason) => StopClimb();\n    public float CooldownRemaining => 0f;\n    bool IAbility.IsActive => isClimbing;\n\n    // ---- IActiveAbility (Tarefa #34 — HUD) ----\n    // Sem cooldown: a HUD não mostra indicador para esta habilidade.\n    public float CooldownDuration => 0f;\n    public bool CanActivate => enabledForForm;\n\n    /// <summary>AnimalsDebugPanel — sem cooldown próprio (no-op).</summary>\n    public void ResetCooldown() { }\n\n    private void Awake()\n    {\n        motor = GetComponent<PlayerMotor2D>();\n        rb = GetComponent<Rigidbody2D>();\n\n        if (input == null) input = GetComponent<PlayerInputRouter>();\n    }\n\n    public void ConfigureFromForm(AnimalFormData newForm)\n    {\n        form = newForm;\n\n        // canClimb (paredes/cordas/escadas) OU canGrab (cordas/escadas).\n        enabledForForm = form != null && (form.canClimb || form.canGrab);\n\n        if (!enabledForForm)\n        {\n            StopClimb();\n            return;\n        }\n\n        climbSpeed = form.climbSpeed > 0f ? form.climbSpeed : 4f;\n    }\n\n    /// <summary>\n    /// Chamado pelo AbilityRouter ao apertar Interagir (toque, não hold): se o\n    /// player estiver dentro de uma Corda/Escada compatível com a forma,\n    /// agarra-se (ou larga, se já estiver agarrado a uma). Devolve true se\n    /// consumiu o toque (o AbilityRouter não deve tratar mais nada nesse caso).\n    /// </summary>\n    public bool TryToggleVineAttach()\n    {\n        if (isClimbing && climbingVine)\n        {\n            StopClimb();\n            return true;\n        }\n\n        if (!enabledForForm || isClimbing) return false;\n\n        Vector2 center = (Vector2)transform.position + checkOffset;\n        int count = Physics2D.OverlapBoxNonAlloc(center, checkSize, 0f, _overlapBuffer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var hit = _overlapBuffer[i];\n            if (hit == null || hit.gameObject == gameObject) continue;\n\n            var surface = hit.GetComponent<ClimbableSurface>();\n            if (surface == null) continue;\n            if (surface.kind == ClimbableKind.Parede) continue; // paredes usam hold+cima, não toggle.\n            if (surface.kind == ClimbableKind.CipoBalanco) continue; // tratado pelo SwingAbility (balanço), não aqui.\n            if (!surface.AllowsForm(form)) continue;\n\n            StartClimb(surface.climbSpeedMultiplier, vine: true);\n            return true;\n        }\n\n        return false;\n    }\n\n    private void Update()\n    {\n        if (!isClimbing)\n        {\n            // Início (Parede): Interagir premido + input para cima + parede ao alcance.\n            if (!enabledForForm || !form.canClimb) return;\n            if (input == null || !input.InteractHeld || motor.MovementLocked) return;\n\n            float upInput = input.Move.y;\n            if (upInput < upInputThreshold) return;\n\n            if (TryFindClimbableWall(out float multiplier))\n                StartClimb(multiplier, vine: false);\n\n            return;\n        }\n\n        // Parede: soltar Interagir larga.\n        if (!climbingVine && (input == null || !input.InteractHeld))\n        {\n            StopClimb();\n            return;\n        }\n\n        // Já não há superfície (chegou ao topo/fim) -> solta.\n        if (!TryFindClimbable(out surfaceSpeedMultiplier))\n        {\n            StopClimb();\n            return;\n        }\n\n        float vY = input != null ? input.Move.y : 0f;\n        rb.linearVelocity = new Vector2(0f, vY * climbSpeed * surfaceSpeedMultiplier);\n    }\n\n    private void StartClimb(float multiplier, bool vine)\n    {\n        isClimbing = true;\n        climbingVine = vine;\n        surfaceSpeedMultiplier = multiplier;\n        gravityBeforeClimb = rb.gravityScale;\n\n        rb.gravityScale = 0f;\n        rb.linearVelocity = Vector2.zero;\n        motor.SetMovementLocked(true, this);\n    }\n\n    /// <summary>Tarefa #7 — Coala: aplica o bónus de defesa (climbDefenseBonus) enquanto agarrado/a escalar. Chamado por PlayerCombat.TryDamagePlayer.</summary>\n    public int ApplyClimbDefense(int damage)\n    {\n        if (!isClimbing || form == null) return damage;\n        return form.ApplyDefense(damage, form.climbDefenseBonus);\n    }\n\n    /// <summary>Larga a superfície: restaura a gravidade e devolve o controlo ao motor.</summary>\n    public void StopClimb()\n    {\n        if (!isClimbing) return;\n\n        isClimbing = false;\n        climbingVine = false;\n        rb.gravityScale = gravityBeforeClimb;\n        rb.linearVelocity = Vector2.zero;\n        motor.SetMovementLocked(false, this);\n    }\n\n    /// <summary>Procura qualquer superfície escalável válida (usado enquanto já está agarrado).</summary>\n    private bool TryFindClimbable(out float speedMultiplier)\n    {\n        speedMultiplier = 1f;\n\n        Vector2 center = (Vector2)transform.position + checkOffset;\n        int count = Physics2D.OverlapBoxNonAlloc(center, checkSize, 0f, _overlapBuffer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var hit = _overlapBuffer[i];\n            if (hit == null || hit.gameObject == gameObject) continue;\n\n            var surface = hit.GetComponent<ClimbableSurface>();\n            if (surface != null && surface.AllowsForm(form))\n            {\n                speedMultiplier = surface.climbSpeedMultiplier;\n                return true;\n            }\n\n            if (form != null && form.canClimb && climbableLayer.value != 0 &&\n                (climbableLayer.value & (1 << hit.gameObject.layer)) != 0)\n            {\n                return true;\n            }\n        }\n\n        return false;\n    }\n\n    /// <summary>Procura apenas Paredes (ClimbableSurface.Parede ou layer legada) — usado para iniciar com hold+cima.</summary>\n    private bool TryFindClimbableWall(out float speedMultiplier)\n    {\n        speedMultiplier = 1f;\n\n        Vector2 center = (Vector2)transform.position + checkOffset;\n        int count = Physics2D.OverlapBoxNonAlloc(center, checkSize, 0f, _overlapBuffer);\n\n        for (int i = 0; i < count; i++)\n        {\n            var hit = _overlapBuffer[i];\n            if (hit == null || hit.gameObject == gameObject) continue;\n\n            var surface = hit.GetComponent<ClimbableSurface>();\n            if (surface != null)\n            {\n                if (surface.kind == ClimbableKind.Parede && surface.AllowsForm(form))\n                {\n                    speedMultiplier = surface.climbSpeedMultiplier;\n                    return true;\n                }\n                continue;\n            }\n\n            // Layer legada = Parede (exige canClimb).\n            if (climbableLayer.value != 0 && (climbableLayer.value & (1 << hit.gameObject.layer)) != 0)\n                return true;\n        }\n\n        return false;\n    }\n\n    private void OnDrawGizmosSelected()\n    {\n        Gizmos.color = new Color(0.3f, 1f, 0.3f, 0.5f);\n        Gizmos.DrawWireCube((Vector2)transform.position + checkOffset, checkSize);\n    }\n}\n",
   "id": "script-abilities-climbability-cs",
   "dependencyIds": [
-    "script-abilities-abilityrouter-cs",
+    "script-abilities-iability-cs",
     "script-forms-animalformdata-cs",
-    "script-test-animalsdebugpanel-cs",
+    "script-interactables-climbablesurface-cs",
     "script-interactables-climbablesurface-cs",
     "script-abilities-iability-cs",
     "script-abilities-iactiveability-cs",
     "script-abilities-iformability-cs",
-    "script-player-playercombat-cs",
     "script-input-playerinputrouter-cs",
-    "script-player-playermotor2d-cs",
-    "script-abilities-swingability-cs"
+    "script-player-playermotor2d-cs"
   ],
   "usedByIds": [
     "script-abilities-abilityrouter-cs",
-    "script-forms-animalformdata-cs",
     "script-interactables-climbablesurface-cs",
-    "script-forms-formswitcher-cs",
     "script-abilities-grabthrowability-cs",
     "script-player-playercombat-cs",
-    "script-abilities-pullability-cs",
-    "script-abilities-swingability-cs"
+    "script-abilities-pullability-cs"
   ]
 }

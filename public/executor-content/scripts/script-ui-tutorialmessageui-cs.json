@@ -325,6 +325,8 @@
   "id": "script-ui-tutorialmessageui-cs",
   "dependencyIds": [
     "script-npc-pauseutil-cs",
+    "script-ui-tutorialmessagemanager-cs",
+    "script-ui-tutorialmessagemanager-cs",
     "script-ui-tutorialmessagemanager-cs"
   ],
   "usedByIds": [

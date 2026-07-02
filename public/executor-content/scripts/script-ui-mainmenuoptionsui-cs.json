@@ -516,9 +516,11 @@
     "script-audio-audiomanager-cs",
     "script-ui-controlsrebindsectionui-cs",
     "script-data-gamesettings-cs",
+    "script-data-gamesettings-cs",
     "script-ui-jukeboxsectionui-cs",
     "script-ui-mainmenucontroller-cs",
-    "script-ui-optionssectionui-cs"
+    "script-ui-optionssectionui-cs",
+    "script-data-gamesettings-cs"
   ],
   "usedByIds": [
     "script-ui-mainmenucontroller-cs"

@@ -48,6 +48,13 @@
   ],
   "methods": [
     {
+      "name": "ResetStatics",
+      "ret": "void",
+      "mods": "private static",
+      "params": "",
+      "description": "Executa a operação ResetStatics."
+    },
+    {
       "name": "BeginSlowdown",
       "ret": "void",
       "mods": "public static",
@@ -63,20 +70,16 @@
     }
   ],
   "dependencies": [
-    "FormWheelUI",
-    "GamePauseUtil",
-    "ItemWheelUI"
+    "GamePauseUtil"
   ],
   "used_by": [
     "FormWheelUI",
     "ItemWheelUI"
   ],
-  "source": "using UnityEngine;\n\n/// <summary>\n/// Helper estático para a \"câmara lenta\" das rodas (Roda de Animais —\n/// FormWheelUI, Roda de Itens — ItemWheelUI): aplica um Time.timeScale\n/// reduzido (ex: 0.2) enquanto qualquer uma das rodas estiver aberta, sem\n/// pausar totalmente o jogo (diferente de <see cref=\"GamePauseUtil\"/>, que usa\n/// Time.timeScale = 0).\n///\n/// Com contagem de referências (_activeCount): se, por algum motivo, as duas\n/// rodas pedirem câmara lenta \"ao mesmo tempo\", só a última a fechar restaura\n/// o Time.timeScale original — evita que uma roda restaure o tempo normal\n/// enquanto a outra ainda está aberta.\n///\n/// Verifica <see cref=\"GamePauseUtil.IsPaused\"/> para não conflituar com o\n/// Menu de Pausa (Time.timeScale = 0 tem prioridade — não substituído por 0.2).\n/// </summary>\npublic static class WheelTimeScaleUtil\n{\n    private static float _savedTimeScale = 1f;\n    private static int _activeCount;\n\n    public static bool IsActive => _activeCount > 0;\n\n    /// <summary>Pede câmara lenta a \"scale\" (ex: 0.2). Seguro chamar mesmo se já estiver activa.</summary>\n    public static void BeginSlowdown(float scale)\n    {\n        if (_activeCount == 0)\n            _savedTimeScale = Time.timeScale;\n\n        _activeCount++;\n\n        if (!GamePauseUtil.IsPaused)\n            Time.timeScale = scale;\n    }\n\n    /// <summary>Liberta um pedido de câmara lenta. Só restaura o tempo normal quando todos os pedidos tiverem sido libertados.</summary>\n    public static void EndSlowdown()\n    {\n        if (_activeCount == 0) return;\n\n        _activeCount--;\n\n        if (_activeCount == 0 && !GamePauseUtil.IsPaused)\n            Time.timeScale = _savedTimeScale;\n    }\n}\n",
+  "source": "using UnityEngine;\n\n/// <summary>\n/// Helper estático para a \"câmara lenta\" das rodas (Roda de Animais —\n/// FormWheelUI, Roda de Itens — ItemWheelUI): aplica um Time.timeScale\n/// reduzido (ex: 0.2) enquanto qualquer uma das rodas estiver aberta, sem\n/// pausar totalmente o jogo (diferente de <see cref=\"GamePauseUtil\"/>, que usa\n/// Time.timeScale = 0).\n///\n/// Com contagem de referências (_activeCount): se, por algum motivo, as duas\n/// rodas pedirem câmara lenta \"ao mesmo tempo\", só a última a fechar restaura\n/// o Time.timeScale original — evita que uma roda restaure o tempo normal\n/// enquanto a outra ainda está aberta.\n///\n/// Verifica <see cref=\"GamePauseUtil.IsPaused\"/> para não conflituar com o\n/// Menu de Pausa (Time.timeScale = 0 tem prioridade — não substituído por 0.2).\n/// </summary>\npublic static class WheelTimeScaleUtil\n{\n    private static float _savedTimeScale = 1f;\n    private static int _activeCount;\n\n    public static bool IsActive => _activeCount > 0;\n\n    // Task #11: reset ao entrar em Play Mode, mesmo sem domain reload. Garante\n    // que a roda não fica \"aberta\" entre sessões e que Time.timeScale não fica\n    // em câmara lenta (ex: 0.2) na nova sessão. O reset de Time.timeScale já é\n    // feito por GamePauseUtil.ResetStatics — aqui só limpamos o contador.\n    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]\n    private static void ResetStatics()\n    {\n        _savedTimeScale = 1f;\n        _activeCount = 0;\n    }\n\n    /// <summary>Pede câmara lenta a \"scale\" (ex: 0.2). Seguro chamar mesmo se já estiver activa.</summary>\n    public static void BeginSlowdown(float scale)\n    {\n        if (_activeCount == 0)\n            _savedTimeScale = Time.timeScale;\n\n        _activeCount++;\n\n        if (!GamePauseUtil.IsPaused)\n            Time.timeScale = scale;\n    }\n\n    /// <summary>Liberta um pedido de câmara lenta. Só restaura o tempo normal quando todos os pedidos tiverem sido libertados.</summary>\n    public static void EndSlowdown()\n    {\n        if (_activeCount == 0) return;\n\n        _activeCount--;\n\n        if (_activeCount == 0)\n        {\n            if (!GamePauseUtil.IsPaused)\n            {\n                Time.timeScale = _savedTimeScale;\n            }\n            else\n            {\n                // Task 1.3: a roda fechou enquanto o jogo estava pausado.\n                // O GamePauseUtil guardou 0.2 (escala da roda) como valor a restaurar.\n                // Corrigir para que ao despauzar o jogo volte à escala correcta (_savedTimeScale)\n                // e não fique preso em câmara lenta sem nenhuma roda aberta.\n                GamePauseUtil.UpdateSavedTimeScale(_savedTimeScale);\n            }\n        }\n    }\n}\n",
   "id": "script-ui-wheeltimescaleutil-cs",
   "dependencyIds": [
-    "script-ui-formwheelui-cs",
-    "script-npc-pauseutil-cs",
-    "script-ui-itemwheelui-cs"
+    "script-npc-pauseutil-cs"
   ],
   "usedByIds": [
     "script-ui-formwheelui-cs",
