@@ -32,7 +32,6 @@ export function ExecutorDashboardPage() {
     </div>
 
     <div className="executor-dashboard-stats">
-      <Link to="/executor/focus"><ClipboardCheck/><div><strong>{executor.focusItems.filter(item=>(item.sessionDate||item.addedAt.slice(0,10))===new Date().toISOString().slice(0,10)).length}</strong><span>Itens no foco de hoje</span></div></Link>
       <Link to="/executor/roadmap"><Layers3/><div><strong>{completed}</strong><span>Missões concluídas</span></div></Link>
       <Link to="/executor/roadmap"><Clock3/><div><strong>{inProgress}</strong><span>Em andamento</span></div></Link>
       <Link to="/executor/guides"><BookOpen/><div><strong>{manifest?.counts.guides||26}</strong><span>Guias e tutoriais</span></div></Link>

@@ -12,6 +12,7 @@ export function ProductionPage() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const [search, setSearch] = useState('');
+  const [limit, setLimit] = useState(150);
   const rows = useMemo(()=>buildProductionRows(project),[project]);
   const metrics = useMemo(()=>buildMetricDetails(project,rows),[project,rows]);
   const warnings = useMemo(()=>buildWarnings(project),[project]);
@@ -59,10 +60,10 @@ export function ProductionPage() {
         <label>Estado<select value={status} onChange={e=>set('status',e.target.value)}><option value="">Todos</option><option value="planejado">Planejado</option><option value="unity">Unity</option><option value="erro">Erro</option></select></label>
         <label>Filtro<select value={filter} onChange={e=>set('filter',e.target.value)}><option value="all">Todos</option><option value="unplaced">Ainda não colocados</option><option value="placed">Colocados no mapa</option><option value="no-relations">Sem relações</option><option value="errors">Com erro</option><option value="unity">Configurados no Unity</option><option value="planned">Planejados</option><option value="runes">Runas</option><option value="chests">Baús</option><option value="fragments">Fragmentos</option></select></label>
       </div>
-      <div className="production-table-wrap"><table className="production-table"><thead><tr><th>Elemento</th><th>Tipo</th><th>Mundo/área</th><th>Estado</th><th>Mapa</th><th>Relações</th><th></th></tr></thead><tbody>{filtered.map(row=>{
+      <div className="production-table-wrap"><table className="production-table"><thead><tr><th>Elemento</th><th>Tipo</th><th>Mundo/área</th><th>Estado</th><th>Mapa</th><th>Relações</th><th></th></tr></thead><tbody>{filtered.slice(0,limit).map(row=>{
         const world=project.worlds.find(w=>w.id===row.worldId);const area=project.areas.find(a=>a.id===row.areaId);
         return <tr key={row.key} onDoubleClick={()=>navigate(row.route)}><td><strong>{row.name}</strong><small>{row.id}</small></td><td>{row.typeLabel}</td><td>{world?.name??'—'}<small>{area?.name}</small></td><td><StatusBadge status={row.status}/></td><td><span className={row.placed?'placed-chip':'unplaced-chip'}>{row.placed?'Colocado':'Fora do mapa'}</span></td><td>{row.relationCount}</td><td><button className="icon-button" onClick={()=>navigate(row.route)} title="Abrir"><Wrench/></button></td></tr>
-      })}</tbody></table>{filtered.length===0&&<div className="empty-state">Nenhum elemento corresponde aos filtros.</div>}</div>
+      })}</tbody></table>{filtered.length===0&&<div className="empty-state">Nenhum elemento corresponde aos filtros.</div>}{filtered.length>limit&&<div className="list-more"><span>Mostrando {limit} de {filtered.length}</span><button className="secondary-button" onClick={()=>setLimit(l=>l+150)}>Mostrar mais</button></div>}</div>
     </Card>
   </div>;
 }

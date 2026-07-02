@@ -8,6 +8,7 @@ import { Card, Field, PageHeader, SectionTitle } from '../components/Ui';
 import { GalleryManager } from '../components/GalleryManager';
 import { mediaDisplayUrl, persistMediaFile } from '../lib/storage';
 import { useProjectStore } from '../store/useProjectStore';
+import { useUiStore } from '../store/useUiStore';
 import type { MapBackgroundImage, WorldVisualPlan } from '../types';
 
 const layerNames: Record<string,string>={images:'Imagens',drawings:'Desenhos',labels:'Legendas',grid:'Grelha'};
@@ -27,6 +28,8 @@ export function WorldVisualPage(){
   const [drawing,setDrawing]=useState(false);
   const [draftPoints,setDraftPoints]=useState<number[]>([]);
   const [fullscreen,setFullscreen]=useState(false);
+  const setImmersive=useUiStore(s=>s.setImmersive);
+  useEffect(()=>{setImmersive(fullscreen);return()=>setImmersive(false)},[fullscreen,setImmersive]);
   useEffect(()=>{if(!shellRef.current)return;const ob=new ResizeObserver(([e])=>setSize({w:Math.max(620,e.contentRect.width),h:Math.max(520,e.contentRect.height)}));ob.observe(shellRef.current);return()=>ob.disconnect()},[]);
   if(!world||!plan)return <div>Mundo não encontrado.</div>;
   const patch=(fn:(value:WorldVisualPlan)=>void)=>mutate(d=>{const target=d.worldVisuals.find(v=>v.worldId===world.id);if(target)fn(target)},false,`world-visual:${world.id}`);

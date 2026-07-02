@@ -204,7 +204,7 @@ export function buildProductionRows(project: ProjectState): ProductionRow[] {
 
 export function buildMetricDetails(project: ProjectState, rows = buildProductionRows(project)): MetricDetail[] {
   const active = rows.filter(row => !row.archived);
-  const metric = (key: string, label: string, type: ProductionKind, planned: number, route = `/production?type=${type}`): MetricDetail => {
+  const metric = (key: string, label: string, type: ProductionKind, planned: number, route = `/executor/production?type=${type}`): MetricDetail => {
     const list = active.filter(row => row.type === type);
     return {
       key, label, type, planned, created: list.length, placed: list.filter(row => row.placed).length,
@@ -218,7 +218,7 @@ export function buildMetricDetails(project: ProjectState, rows = buildProduction
   const customMetric = (key: string, label: string, list: ProductionRow[], planned: number, filter: string): MetricDetail => ({
     key, label, planned, created: list.length, placed: list.filter(row => row.placed).length,
     unity: list.filter(row => row.status === 'unity').length, errors: list.filter(row => row.status === 'erro').length,
-    withoutRelations: list.filter(row => row.relationCount === 0).length, route: `/production?filter=${filter}`,
+    withoutRelations: list.filter(row => row.relationCount === 0).length, route: `/executor/production?filter=${filter}`,
   });
   return [
     metric('areas', 'Áreas', 'area', project.areas.length),

@@ -8,6 +8,7 @@ import { Home, ImagePlus, MapPin, Music, Store, UsersRound } from 'lucide-react'
 import { Card, Field, PageHeader, SectionTitle } from '../components/Ui';
 import { mediaDisplayUrl, persistMediaFile } from '../lib/storage';
 import { useProjectStore } from '../store/useProjectStore';
+import { useUiStore } from '../store/useUiStore';
 import type { MapBackgroundImage, VillagePlan } from '../types';
 
 const stateLabels={vazia:'Vazia',primeiros_resgates:'Primeiros Resgates',viva:'Viva',restaurada:'Restaurada',pos_boss:'Pós-boss'} as const;
@@ -24,6 +25,8 @@ export function VillagePage(){
   const [size,setSize]=useState({w:900,h:620});
   const [selectedBg,setSelectedBg]=useState<string>();
   const [fullscreen,setFullscreen]=useState(false);
+  const setImmersive=useUiStore(s=>s.setImmersive);
+  useEffect(()=>{setImmersive(fullscreen);return()=>setImmersive(false)},[fullscreen,setImmersive]);
   useEffect(()=>{if(!shellRef.current)return;const ob=new ResizeObserver(([e])=>setSize({w:Math.max(600,e.contentRect.width),h:Math.max(500,e.contentRect.height)}));ob.observe(shellRef.current);return()=>ob.disconnect()},[]);
   if(!area||!world||!plan)return <div>Vila não encontrada.</div>;
   const villageNpcs=project.npcs.filter(n=>n.villageAreaId===area.id&&!n.archived);

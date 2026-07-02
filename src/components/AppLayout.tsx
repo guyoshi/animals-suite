@@ -2,26 +2,40 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import {
-  Archive, ArrowLeft, Award, Bot, Boxes, ChevronLeft, ChevronRight, CircleHelp, Crown, Database, GraduationCap,
+  Archive, ArrowLeft, Bot, Boxes, ChevronLeft, ChevronRight, CircleHelp, Crown, Database, GraduationCap,
   Globe2, Home, Layers3, PawPrint, Lightbulb, Menu, MessageCircleQuestion, Moon, Music, Network, Pause, Play,
-  Redo2, Repeat2, RotateCcw, Save, Search, Settings, Sun, Trash2, Undo2, UsersRound, Volume2, VolumeX, Wrench, Activity, HardDrive, Pin, PinOff, Workflow,
+  Redo2, Repeat2, RotateCcw, Save, Search, Settings, Sun, Trash2, Undo2, UsersRound, Volume2, VolumeX, Activity, HardDrive, Pin, PinOff, MessageSquareText,
 } from 'lucide-react';
 import { useProjectStore } from '../store/useProjectStore';
+import { useUiStore } from '../store/useUiStore';
 import { createSnapshot, exportProject } from '../lib/storage';
 import { CommandPalette } from './CommandPalette';
+import { ModeSwitch } from './ModeSwitch';
 import { WhatsNewModal } from '../pages/WhatsNewPage';
 import { APP_VERSION } from '../config/suiteManifest';
 import { attachmentStorageValue, hasPlannerMusicAttachment } from '../lib/musicAttachments';
 
-const nav = [
-  ['/', Home, 'Início'], ['/worlds', Globe2, 'Mundos'], ['/animals', PawPrint, 'Animais'], ['/world-map', Network, 'Terra de Gaia'],
-  ['/missions', Archive, 'Missões do jogo'], ['/bosses', Crown, 'Bosses'], ['/npcs', UsersRound, 'NPCs'], ['/lore', MessageCircleQuestion, 'Lore'], ['/enemies', Bot, 'Inimigos'], ['/items', Boxes, 'Itens'],
-  ['/mechanics', Layers3, 'Mecânicas'], ['/ideas', Lightbulb, 'Ideias'], ['/music', Music, 'Músicas'], ['/production', Wrench, 'Produção'], ['/coverage', Activity, 'Cobertura'], ['/progress', Award, 'Progresso'],
-  ['/school', GraduationCap, 'Escola'], ['/systems', Wrench, 'Sistemas 18/06'], ['/backups', HardDrive, 'Backups'], ['/trash', Trash2, 'Lixeira'], ['/help', CircleHelp, 'Ajuda'], ['/settings', Settings, 'Configurações'],
+const navGroups = [
+  { section: '', items: [['/', Home, 'Início']] },
+  { section: 'Conteúdo', items: [
+    ['/worlds', Globe2, 'Mundos'], ['/animals', PawPrint, 'Animais'], ['/world-map', Network, 'Terra de Gaia'],
+    ['/npcs', UsersRound, 'NPCs'], ['/enemies', Bot, 'Inimigos'], ['/bosses', Crown, 'Bosses'], ['/items', Boxes, 'Itens'], ['/lore', MessageCircleQuestion, 'Lore'],
+  ] },
+  { section: 'Design', items: [
+    ['/missions', Archive, 'Missões e Provações'], ['/mechanics', Layers3, 'Mecânicas'], ['/tutorials', MessageSquareText, 'Tutoriais'], ['/ideas', Lightbulb, 'Ideias'], ['/music', Music, 'Músicas'],
+  ] },
+  { section: 'Análise', items: [
+    ['/analysis', Activity, 'Análise'],
+  ] },
+  { section: 'Sistema', items: [
+    ['/backups', HardDrive, 'Backups'], ['/trash', Trash2, 'Lixeira'], ['/settings', Settings, 'Configurações'],
+  ] },
 ] as const;
+const nav = navGroups.flatMap((group) => group.items);
 
 export function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const immersive = useUiStore((s) => s.immersive);
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [trackId, setTrackId] = useState<string | undefined>();
@@ -106,11 +120,12 @@ export function AppLayout() {
   };
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${immersive ? 'immersive' : ''}`}>
       <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-brand"><span className="brand-rune">🐾</span>{!collapsed && <div><strong>Animals</strong><small>Planejador</small></div>}</div>
-        <nav>{nav.map(([to, Icon, label]) => <NavLink key={to} to={to} end={to === '/'} className={({isActive})=>isActive?'active':''}><Icon size={19}/>{!collapsed && <span>{label}</span>}</NavLink>)}</nav>
-        <div className="suite-switch-area"><Link to="/executor" title="Abrir Animals — Executor"><Workflow/>{!collapsed && <span>Executor</span>}</Link></div>
+        <ModeSwitch mode="planner" collapsed={collapsed}/>
+        <nav>{navGroups.map((group, gi) => <div className="nav-group" key={group.section || gi}>{group.section && !collapsed && <span className="nav-section">{group.section}</span>}{group.items.map(([to, Icon, label]) => <NavLink key={to} to={to} end={to === '/'} className={({isActive})=>isActive?'active':''}><Icon size={19}/>{!collapsed && <span>{label}</span>}</NavLink>)}</div>)}</nav>
+        <div className="suite-switch-area"><NavLink to="/school" title="Escola de Level Design"><GraduationCap/>{!collapsed && <span>Escola</span>}</NavLink></div>
         <button className="sidebar-collapse" onClick={()=>setCollapsed(v=>!v)}>{collapsed?<ChevronRight/>:<ChevronLeft/>}</button>
       </aside>
 
@@ -118,11 +133,12 @@ export function AppLayout() {
         <header className="topbar">
           <div className="topbar-left"><button className="icon-button mobile-menu"><Menu/></button><button className="icon-button back-button" onClick={()=>navigate(-1)} title="Voltar à última página"><ArrowLeft/></button><Breadcrumbs path={location.pathname} project={project}/></div>
           <div className="global-search" onClick={()=>setSearchOpen(true)}><Search size={17}/><input value={search} onFocus={()=>setSearchOpen(true)} onChange={(e)=>{setSearch(e.target.value);setSearchOpen(true)}} placeholder="Buscar no projeto"/><kbd>Ctrl K</kbd></div>
-          <div className="top-actions"><Link className="version-whats-new" to="/whats-new"><span>Animals Suite · Planejador</span><strong>v{APP_VERSION}</strong><small>O que há de novo</small></Link>
+          <div className="top-actions"><Link className="suite-version" to="/whats-new" title="Versão e novidades">v{APP_VERSION}</Link>
             <button className="icon-button" disabled={pastCount===0} onClick={undo} title="Desfazer alteração (Ctrl+Z)"><Undo2/></button>
             <button className="icon-button" disabled={futureCount===0} onClick={redo} title="Refazer alteração (Ctrl+Y)"><Redo2/></button>
             <button className="save-indicator" onClick={()=>void flushSave()} title="Salvar e verificar agora"><Save size={16}/><span>{saveState === 'saving' ? 'Salvando…' : saveState === 'error' ? 'Falha no save' : project.settings.saveVerificationOk ? 'Salvo e verificado' : 'Não verificado'}</span></button>
             <button className="icon-button" onClick={toggleTheme} title="Alternar tema">{project.settings.theme==='dark'?<Sun/>:<Moon/>}</button>
+            <Link className="icon-button" to="/help" title="Ajuda"><CircleHelp/></Link>
           </div>
         </header>
 
@@ -134,8 +150,10 @@ export function AppLayout() {
           <button className="icon-button" onClick={()=>{setPlaying(false); mutate((d)=>{d.settings.musicAutoplay=false;}); if(audioRef.current){audioRef.current.pause();audioRef.current.currentTime=0;}}} title="Parar e impedir reprodução automática"><RotateCcw/></button>
           <button className={`icon-button ${project.settings.loopPlayback?'active':''}`} title={project.settings.loopPlayback?'Desativar repetição':'Repetir faixa'} onClick={()=>mutate(d=>{d.settings.loopPlayback=!d.settings.loopPlayback},false,'music:loop')}><Repeat2/></button>
           <button className={`icon-button ${project.settings.persistentTrackId?'active':''}`} title={project.settings.persistentTrackId?'Desafixar faixa':'Fixar faixa ao navegar'} onClick={()=>mutate((d)=>{d.settings.persistentTrackId=d.settings.persistentTrackId?undefined:currentTrack?.id},false,'music:persistent')}>{project.settings.persistentTrackId?<Pin/>:<PinOff/>}</button>
-          <NavLink className="text-button" to="/backups"><Database size={15}/> Backups</NavLink>
-          <button className="text-button" onClick={()=>void exportProject(project)}><Archive size={15}/> Exportar</button>
+          <div className="music-actions">
+            <NavLink className="text-button" to="/backups"><Database size={15}/> Backups</NavLink>
+            <button className="text-button" onClick={()=>void exportProject(project)}><Archive size={15}/> Exportar</button>
+          </div>
           <audio ref={audioRef} onEnded={()=>setPlaying(false)}/>
         </div>
 

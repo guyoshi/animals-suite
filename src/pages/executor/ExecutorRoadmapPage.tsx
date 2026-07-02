@@ -34,7 +34,7 @@ export function ExecutorRoadmapPage(){
   if(error||!missions)return <EmptyState title="Não foi possível abrir o roteiro" text={error||'Conteúdo ausente.'}/>;
 
   return <div>
-    <PageHeader title="Roteiro de Produção" subtitle={`${missions.length} missões agrupadas em ${stages?.length||8} etapas. As missões planejadas podem ser consultadas; as detalhadas possuem tarefas e Steps executáveis.`}/>
+    <PageHeader title="Roteiro de Produção" subtitle={`${missions.length} missões agrupadas em ${stages?.length||8} etapas. As missões planejadas podem ser consultadas; as detalhadas possuem tarefas e Steps executáveis.`} actions={<Link className="secondary-button" to="/executor/journey">Ver como Jornada</Link>}/>
     <div className="executor-toolbar">
       <label><Search/><input value={term} onChange={event=>setTerm(event.target.value)} placeholder="Buscar missão, sistema ou script…"/></label>
       <label><Filter/><select value={stage} onChange={event=>setStage(event.target.value)}><option value="">Todas as etapas</option>{stages?.map(item=><option key={item.id} value={item.id}>{item.title}</option>)}</select></label>

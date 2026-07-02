@@ -47,7 +47,7 @@ export function ExecutorJourneyPage(){
   if(error||!missions||!stages)return <EmptyState title="Não foi possível abrir a Jornada" text={error||'Conteúdo do roteiro ausente.'}/>;
 
   if(!executor.settings.gamifiedModeEnabled)return <div>
-    <PageHeader title="Jornada de Produção" subtitle="Uma visualização orgânica e gamificada do roteiro. O Roteiro tradicional continua disponível em paralelo."/>
+    <PageHeader title="Jornada de Produção" subtitle="Uma visualização orgânica e gamificada do roteiro. O Roteiro tradicional continua disponível em paralelo." actions={<Link className="secondary-button" to="/executor/roadmap">Voltar ao Roteiro</Link>}/>
     <section className="journey-disabled-card"><div className="journey-disabled-orb"><Sparkles/></div><span>MODO OPCIONAL</span><h2>Transforme as Etapas numa jornada pelo Coração de Gaia</h2><p>Use WASD ou as setas para mover o orbe entre as regiões. Cada região mostra o progresso, as missões e os caminhos ainda cobertos pela névoa.</p><button className="primary-button" onClick={()=>mutate(draft=>{draft.settings.gamifiedModeEnabled=true})}><Gamepad2/>Ativar Jornada</button></section>
   </div>;
 
@@ -63,7 +63,7 @@ export function ExecutorJourneyPage(){
     {id:'all-stages',title:'Coração Restaurado',description:'Concluir todas as Etapas detalhadas.',unlocked:stageStats.length>0&&stageStats.every(stage=>stage.percent===100),icon:<Trophy/>},
   ];
   return <div className="executor-journey-page">
-    <PageHeader title="Jornada de Produção" subtitle="Mova o orbe com WASD/setas. Enter abre a Etapa selecionada. A névoa indica caminhos ainda não concluídos." actions={<button className="secondary-button" onClick={()=>mutate(draft=>{draft.settings.gamifiedModeEnabled=false})}>Desativar modo</button>}/>
+    <PageHeader title="Jornada de Produção" subtitle="Mova o orbe com WASD/setas. Enter abre a Etapa selecionada. A névoa indica caminhos ainda não concluídos." actions={<><Link className="secondary-button" to="/executor/roadmap">Voltar ao Roteiro</Link><button className="secondary-button" onClick={()=>mutate(draft=>{draft.settings.gamifiedModeEnabled=false})}>Desativar modo</button></>}/>
     <section className="journey-map" aria-label="Mapa gamificado das Etapas">
       <div className="journey-stars"/>
       <svg className="journey-paths" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">

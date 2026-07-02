@@ -4,6 +4,7 @@ import { GitBranch, Link2, MapPin, Plus, Trash2, Zap } from 'lucide-react';
 import { Card, EmptyState, Field, PageHeader, SectionTitle, StatusBadge, WarningDot } from '../components/Ui';
 import { useProjectStore } from '../store/useProjectStore';
 import { EntityTools } from '../components/EntityTools';
+import { ApoloTrials } from '../components/ApoloTrials';
 import type {
   MissionAutoCondition, MissionCompletionLink, MissionDef, MissionTask,
   ProjectState, TaskTriggerType,
@@ -23,6 +24,7 @@ export function MissionsPage(){
   const [selectedId,setSelectedId]=useState<string|undefined>(project.missions.find(m=>!m.archived)?.id);
   useEffect(()=>{const id=params.get('entity');if(id)setSelectedId(id);const task=params.get('task');if(task)window.setTimeout(()=>document.getElementById(`task-${task}`)?.scrollIntoView({behavior:'smooth',block:'center'}),100)},[params]);
   const [filter,setFilter]=useState('todas');
+  const [tab,setTab]=useState<'missoes'|'apolo'>('missoes');
   const missions=useMemo(()=>project.missions.filter(m=>!m.archived&&(filter==='todas'||m.type===filter)),[project.missions,filter]);
   const mission=project.missions.find(m=>m.id===selectedId&&!m.archived) ?? missions[0];
 
@@ -49,8 +51,9 @@ export function MissionsPage(){
 
 
   return <div>
-    <PageHeader title="Missões do jogo" subtitle="Missões que existem dentro de Animals. Modelo sincronizado com o backup 16/06: Missão → tarefas não-lineares com dependências e condições automáticas. Uma tarefa fica ativa quando todas as dependências estiverem concluídas." actions={<button className="primary-button" onClick={createMission}><Plus/> Nova missão</button>}/>
-    <div className="split-editor">
+    <PageHeader title="Missões e Provações" subtitle={tab==='apolo'?"Provações de Apolo liberadas ao chegar a 100% em cada mundo. Cada conclusão entrega uma Runa de Apolo; a sexta ativa o Emblema de Apolo e a aura de fogo.":"Missões que existem dentro de Animals. Modelo sincronizado com o backup 16/06: Missão → tarefas não-lineares com dependências e condições automáticas. Uma tarefa fica ativa quando todas as dependências estiverem concluídas."} actions={tab==='missoes'?<button className="primary-button" onClick={createMission}><Plus/> Nova missão</button>:undefined}/>
+    <div className="tabs"><button className={tab==='missoes'?'active':''} onClick={()=>setTab('missoes')}>Missões do jogo</button><button className={tab==='apolo'?'active':''} onClick={()=>setTab('apolo')}>Provações de Apolo</button></div>
+    {tab==='apolo'?<ApoloTrials/>:<div className="split-editor">
       <aside className="entity-list">
         <div className="filter-row"><select value={filter} onChange={e=>setFilter(e.target.value)}><option value="todas">Todas</option><option value="principal">Principais</option><option value="secundaria">Secundárias</option><option value="quest">Quests</option></select></div>
         {missions.map(item=>{
@@ -81,7 +84,7 @@ export function MissionsPage(){
         <Field label="Notas técnicas"><textarea value={mission.notes??''} onChange={e=>update(m=>{m.notes=e.target.value})} placeholder="Observações de configuração no Unity, variáveis ou decisões de design."/></Field>
         <EntityTools entityRef={{type:'mission',id:mission.id}} onArchived={()=>setSelectedId(undefined)}/>
       </>}</section>
-    </div>
+    </div>}
   </div>;
 }
 
